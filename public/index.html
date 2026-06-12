@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1b4332">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Health Engine">
 <title>Karthik | Health Engine</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -73,7 +78,90 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 @media(max-width:1100px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr 1fr}}
-@media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.hamburger{display:block}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.content{padding:16px}}
+/* BOTTOM NAV */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--sidebar);z-index:200;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1);box-shadow:0 -4px 20px rgba(0,0,0,.2)}
+.bottom-nav-items{display:flex;justify-content:space-around;align-items:center}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px;cursor:pointer;border-radius:10px;transition:all .2s;min-width:44px;color:rgba(255,255,255,.55);border:none;background:none;flex:1}
+.bn-item.active{color:#fff;background:rgba(255,255,255,.12)}
+.bn-item .bn-icon{font-size:1.2rem;line-height:1}
+.bn-item .bn-label{font-size:.58rem;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+/* SCROLL WRAPPERS */
+.hscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
+.hscroll::-webkit-scrollbar{display:none}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);z-index:300}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.4)}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:299}
+  .sidebar-overlay.show{display:block}
+  .main{margin-left:0}
+  .hamburger{display:block}
+  .bottom-nav{display:block}
+  .content{padding:14px 14px calc(80px + env(safe-area-inset-bottom));overflow-x:hidden}
+  .topbar{padding:10px 14px;gap:8px;flex-wrap:nowrap}
+  .topbar-left{gap:10px;flex:1;min-width:0}
+  .page-title{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar-right{gap:8px;flex-shrink:0}
+  .date-badge input{font-size:.75rem;max-width:120px}
+  .weight-input-wrap{padding:3px 8px}
+  .weight-input-wrap input{width:40px;font-size:.82rem}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .section-header{flex-direction:column;align-items:flex-start;gap:8px}
+  .section-header h2{font-size:1.05rem}
+  /* STAT CHIPS — 2x2 on mobile */
+  #statsRow{grid-template-columns:1fr 1fr !important;gap:10px}
+  .stat-chip .value{font-size:1.3rem}
+  /* TIMELINE */
+  .timeline-item{padding:10px 10px}
+  .timeline-item .t-time{min-width:62px;font-size:.72rem}
+  .timeline-item .t-text{font-size:.78rem}
+  .timeline-item input[type=checkbox]{width:22px;height:22px}
+  /* WATER */
+  .water-btn{padding:16px 0;font-size:1rem;font-weight:800}
+  /* SCORE BUTTONS */
+  .score-btn{padding:8px 16px;font-size:.85rem;flex:1;text-align:center}
+  .score-row{gap:6px}
+  /* MEAL CARDS */
+  .meal-card{grid-template-columns:auto 1fr;gap:8px}
+  .meal-macros{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px}
+  /* DAY TABS */
+  .day-tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:6px;gap:8px}
+  .day-tabs::-webkit-scrollbar{display:none}
+  .day-tab{flex-shrink:0;padding:8px 16px;font-size:.85rem}
+  /* FILTER PILLS */
+  .filter-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:6px}
+  .filter-row::-webkit-scrollbar{display:none}
+  .filter-pill{flex-shrink:0}
+  /* RECIPE GRID */
+  .recipe-grid{grid-template-columns:1fr}
+  /* WORKOUT DAY GRID */
+  .workout-day-grid{grid-template-columns:repeat(7,minmax(44px,1fr));overflow-x:auto;gap:6px}
+  .wday{padding:8px 4px}
+  .wday .wd-name{font-size:.62rem}
+  .wday .wd-icon{font-size:1rem}
+  .wday .wd-type{display:none}
+  /* EXERCISE */
+  .exercise-item{flex-wrap:wrap;gap:8px}
+  /* STREAKS */
+  .streak-row{gap:8px}
+  .streak-chip{min-width:calc(50% - 4px);padding:12px 14px}
+  .streak-chip .s-val{font-size:1.1rem}
+  /* MILESTONE */
+  .milestone-grid{grid-template-columns:repeat(3,1fr)}
+  /* CARDIO TABLE */
+  .cardio-table td:nth-child(4),.cardio-table th:nth-child(4){display:none}
+  /* CHART */
+  .chart-wrap canvas{max-height:220px}
+  /* PHASE CARD */
+  .phase-card{padding:16px}
+  /* SEED BAR */
+  .seed-label{flex-direction:column;gap:1px}
+  .seed-label span:last-child{font-size:.68rem}
+  /* DAY TOTAL BAR */
+  .day-total-bar{gap:8px;padding:10px 12px}
+  .day-total-bar span{font-size:.75rem}
+  /* CARDS */
+  .card{padding:14px}
+}
 /* STAT CHIPS */
 .stat-chip{background:var(--card);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px;border-left:4px solid var(--primary)}
 .stat-chip .label{font-size:.75rem;color:var(--text-light);font-weight:500;text-transform:uppercase;letter-spacing:.5px}
@@ -248,12 +336,34 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     Thyronorm 12.5mg · LCHF Diet
   </div>
 </aside>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bottom-nav-items">
+    <button class="bn-item active" id="bn-dashboard" onclick="showSection('dashboard',null)">
+      <span class="bn-icon">🏠</span><span class="bn-label">Home</span>
+    </button>
+    <button class="bn-item" id="bn-diet" onclick="showSection('diet',null)">
+      <span class="bn-icon">🥗</span><span class="bn-label">Diet</span>
+    </button>
+    <button class="bn-item" id="bn-workout" onclick="showSection('workout',null)">
+      <span class="bn-icon">💪</span><span class="bn-label">Workout</span>
+    </button>
+    <button class="bn-item" id="bn-progress" onclick="showSection('progress',null)">
+      <span class="bn-icon">📈</span><span class="bn-label">Progress</span>
+    </button>
+    <button class="bn-item" id="bn-more" onclick="toggleMoreMenu()">
+      <span class="bn-icon">⋯</span><span class="bn-label">More</span>
+    </button>
+  </div>
+</nav>
 
 <!-- MAIN CONTENT -->
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
-      <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <button class="hamburger" onclick="openSidebar()">☰</button>
       <div>
         <div class="page-title" id="pageTitle">🏠 Dashboard</div>
       </div>
@@ -392,7 +502,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       </ul>
     </div>
 
-    <div class="workout-day-grid" id="workoutDayGrid"></div>
+    <div class="hscroll"><div class="workout-day-grid" id="workoutDayGrid"></div></div>
     <div id="workoutDayContent"></div>
   </div>
 
@@ -893,8 +1003,27 @@ function showSection(id, el) {
   document.getElementById("sec-" + id).classList.add("active");
   if(el) el.classList.add("active");
   document.getElementById("pageTitle").textContent = pageTitles[id] || id;
-  document.getElementById("sidebar").classList.remove("open");
+  closeSidebar();
+  // Sync bottom nav
+  const bnMap = { dashboard:"bn-dashboard", diet:"bn-diet", workout:"bn-workout", progress:"bn-progress" };
+  document.querySelectorAll(".bn-item").forEach(b => b.classList.remove("active"));
+  if(bnMap[id]) document.getElementById(bnMap[id]).classList.add("active");
+  else { const more = document.getElementById("bn-more"); if(more) more.classList.add("active"); }
   if(id === "progress") loadProgress();
+}
+function openSidebar() {
+  document.getElementById("sidebar").classList.add("open");
+  document.getElementById("sidebarOverlay").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+function closeSidebar() {
+  document.getElementById("sidebar").classList.remove("open");
+  const ov = document.getElementById("sidebarOverlay");
+  if(ov) ov.classList.remove("show");
+  document.body.style.overflow = "";
+}
+function toggleMoreMenu() {
+  openSidebar();
 }
 
 // =====================================================
@@ -1344,6 +1473,25 @@ function setGreeting() {
 }
 
 // =====================================================
+// TOUCH SWIPE NAVIGATION
+// =====================================================
+(function() {
+  let touchStartX = 0, touchStartY = 0;
+  const SECTIONS = ["dashboard","diet","recipes","workout","cardio","progress","guidelines"];
+  document.addEventListener("touchstart", e => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+  document.addEventListener("touchend", e => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    if(Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)) return; // not a horizontal swipe
+    // Only swipe from edge (left 30px) to open sidebar
+    if(dx > 60 && touchStartX < 30) { openSidebar(); return; }
+  }, { passive: true });
+})();
+
+// =====================================================
 // INIT
 // =====================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -1362,3 +1510,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
+
+
+
