@@ -1,0 +1,1364 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karthik | Health Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --sidebar-w: 260px;
+  --bg: #f0f4f0;
+  --sidebar: #1b4332;
+  --sidebar-hover: #2d6a4f;
+  --sidebar-active: #40916c;
+  --card: #ffffff;
+  --primary: #1b4332;
+  --primary-light: #2d6a4f;
+  --accent: #f4a261;
+  --accent-dark: #e07c3a;
+  --success: #52b788;
+  --danger: #e63946;
+  --warning: #ffd166;
+  --info: #4cc9f0;
+  --text: #1a1a2e;
+  --text-med: #4a5568;
+  --text-light: #718096;
+  --border: #e2e8f0;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden}
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--sidebar);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .3s;overflow-y:auto}
+.sidebar-logo{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar-logo h2{font-size:.95rem;font-weight:700;letter-spacing:.5px;color:#95d5b2}
+.sidebar-logo p{font-size:.72rem;color:rgba(255,255,255,.5);margin-top:3px}
+.nav-list{list-style:none;padding:12px 0;flex:1}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:all .2s;border-left:3px solid transparent;font-size:.88rem;font-weight:500;color:rgba(255,255,255,.75)}
+.nav-item:hover{background:var(--sidebar-hover);color:#fff;border-left-color:var(--accent)}
+.nav-item.active{background:var(--sidebar-hover);color:#fff;border-left-color:var(--accent);font-weight:600}
+.nav-icon{font-size:1.1rem;min-width:20px}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.1);font-size:.72rem;color:rgba(255,255,255,.4)}
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.page-title{font-size:1.1rem;font-weight:700;color:var(--primary)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.date-badge{background:#f0fdf4;border:1px solid #bbf7d0;color:var(--primary);padding:6px 12px;border-radius:20px;font-size:.82rem;font-weight:600}
+.weight-input-wrap{display:flex;align-items:center;gap:6px;background:#f8f9fa;border:1px solid var(--border);border-radius:20px;padding:4px 12px}
+.weight-input-wrap label{font-size:.78rem;color:var(--text-light);font-weight:500}
+.weight-input-wrap input{border:none;background:transparent;width:52px;font-size:.88rem;font-weight:700;color:var(--primary);outline:none}
+.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--primary)}
+.content{padding:24px 28px;flex:1}
+/* SECTIONS */
+.section{display:none;animation:fadeIn .25s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+/* CARDS */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;border-top:3px solid var(--primary)}
+.card.accent{border-top-color:var(--accent)}
+.card.success{border-top-color:var(--success)}
+.card.danger{border-top-color:var(--danger)}
+.card.info{border-top-color:var(--info)}
+.card.warning{border-top-color:var(--warning)}
+.card-title{font-size:.95rem;font-weight:700;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:1100px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.hamburger{display:block}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.content{padding:16px}}
+/* STAT CHIPS */
+.stat-chip{background:var(--card);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px;border-left:4px solid var(--primary)}
+.stat-chip .label{font-size:.75rem;color:var(--text-light);font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.stat-chip .value{font-size:1.6rem;font-weight:800;color:var(--primary)}
+.stat-chip .sub{font-size:.75rem;color:var(--text-med)}
+/* TIMELINE */
+.timeline-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:#f8fafb;border-radius:var(--radius-sm);margin-bottom:8px;transition:all .2s;border-left:3px solid transparent}
+.timeline-item.done{background:#f0fdf4;border-left-color:var(--success)}
+.timeline-item .t-time{font-size:.78rem;font-weight:700;color:var(--primary);min-width:72px}
+.timeline-item .t-text{flex:1;font-size:.83rem;color:var(--text-med)}
+.timeline-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--success);cursor:pointer;flex-shrink:0}
+/* WATER */
+.water-row{display:flex;gap:10px;margin-top:12px}
+.water-btn{flex:1;padding:14px 0;border:2px solid #93c5fd;border-radius:var(--radius-sm);background:#eff6ff;color:#1d4ed8;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;text-align:center}
+.water-btn.filled{background:#3b82f6;border-color:#3b82f6;color:#fff}
+/* MOOD/ENERGY */
+.score-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.score-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:#f8f9fa;cursor:pointer;font-size:.82rem;font-weight:500;transition:all .2s;color:var(--text-med)}
+.score-btn.sel{background:var(--accent);border-color:var(--accent-dark);color:#fff;font-weight:700}
+/* ALERT BOX */
+.alert-box{background:#fff5f5;border:1px solid #fecaca;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:16px}
+.alert-box.green{background:#f0fdf4;border-color:#bbf7d0}
+.alert-box.yellow{background:#fffbeb;border-color:#fde68a}
+.alert-title{font-size:.85rem;font-weight:700;color:var(--danger);margin-bottom:6px}
+.alert-box.green .alert-title{color:#166534}
+.alert-box.yellow .alert-title{color:#92400e}
+.alert-box ul{padding-left:18px;margin:0}
+.alert-box li{font-size:.82rem;color:var(--text-med);margin-bottom:3px}
+/* MEAL PLAN */
+.day-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.day-tab{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:.82rem;font-weight:500;transition:all .2s;color:var(--text-med)}
+.day-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.meal-card{background:#f8fafb;border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border-left:3px solid var(--accent)}
+.meal-card.b{border-left-color:#f59e0b}
+.meal-card.l{border-left-color:#10b981}
+.meal-card.s{border-left-color:#8b5cf6}
+.meal-card.d{border-left-color:#3b82f6}
+.meal-icon{font-size:1.6rem}
+.meal-info .meal-name{font-size:.9rem;font-weight:700;color:var(--text)}
+.meal-info .meal-time{font-size:.75rem;color:var(--text-light);margin-top:2px}
+.meal-macros{text-align:right}
+.macro-pill{display:inline-block;font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:10px;margin:2px}
+.macro-pill.cal{background:#fef3c7;color:#92400e}
+.macro-pill.p{background:#dbeafe;color:#1e40af}
+.macro-pill.f{background:#fce7f3;color:#9d174d}
+.macro-pill.c{background:#d1fae5;color:#065f46}
+.macro-pill.total{background:var(--primary);color:#fff;font-size:.72rem;padding:3px 10px}
+.day-theme{font-size:.8rem;font-weight:600;color:var(--accent-dark);background:#fff7ed;padding:6px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.day-total-bar{background:var(--primary);color:#fff;border-radius:var(--radius-sm);padding:12px 16px;display:flex;gap:20px;flex-wrap:wrap;margin-top:10px}
+.day-total-bar span{font-size:.8rem;font-weight:600}
+/* RECIPES */
+.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.recipe-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:pointer}
+.recipe-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.recipe-header{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:18px;position:relative}
+.recipe-header .r-icon{font-size:2rem;margin-bottom:6px}
+.recipe-header .r-name{font-size:.95rem;font-weight:700}
+.recipe-header .r-time{font-size:.75rem;opacity:.8;margin-top:2px}
+.recipe-body{padding:16px}
+.recipe-macros{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.recipe-tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:.68rem;font-weight:600;padding:3px 8px;border-radius:10px;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.tag.red{background:#fff5f5;color:#991b1b;border-color:#fecaca}
+.tag.blue{background:#eff6ff;color:#1e40af;border-color:#bfdbfe}
+.recipe-expand{display:none;padding:16px;border-top:1px solid var(--border);background:#fafafa}
+.recipe-expand.open{display:block}
+.recipe-expand h4{font-size:.82rem;font-weight:700;color:var(--primary);margin-bottom:8px}
+.recipe-expand ul,.recipe-expand ol{padding-left:18px;margin-bottom:10px}
+.recipe-expand li{font-size:.8rem;color:var(--text-med);margin-bottom:4px}
+.recipe-tip{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:8px 12px;font-size:.78rem;color:#92400e}
+/* FILTER PILLS */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.filter-pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:.8rem;font-weight:500;transition:all .2s;color:var(--text-med)}
+.filter-pill.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+/* WORKOUT */
+.workout-day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px}
+.wday{background:var(--card);border-radius:var(--radius-sm);padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent;box-shadow:var(--shadow)}
+.wday:hover{border-color:var(--primary-light)}
+.wday.active{border-color:var(--primary);background:#f0fdf4}
+.wday.rest{background:#fafafa;opacity:.7}
+.wday .wd-name{font-size:.7rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px}
+.wday .wd-type{font-size:.65rem;color:var(--text-light);margin-top:3px}
+.wday .wd-icon{font-size:1.2rem;margin:4px 0}
+.exercise-list{display:flex;flex-direction:column;gap:8px}
+.exercise-item{background:#f8fafb;border-radius:var(--radius-sm);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;border-left:3px solid var(--border)}
+.exercise-item.core{border-left-color:#8b5cf6}
+.exercise-item.push{border-left-color:#f59e0b}
+.exercise-item.pull{border-left-color:#3b82f6}
+.exercise-item.glute{border-left-color:#ec4899}
+.exercise-item.compound{border-left-color:#10b981}
+.exercise-item.cardio{border-left-color:#06b6d4}
+.exercise-cat{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 6px;border-radius:6px;background:#f3f4f6;color:var(--text-light);white-space:nowrap}
+.exercise-name{font-size:.9rem;font-weight:700;color:var(--text)}
+.exercise-detail{font-size:.78rem;color:var(--text-med);margin-top:2px}
+.exercise-note{font-size:.72rem;color:var(--text-light);margin-top:3px;font-style:italic}
+.spine-badge{background:#fff5f5;border:1px solid #fecaca;color:#991b1b;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:4px}
+/* CARDIO */
+.phase-card{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:var(--radius);padding:22px;margin-bottom:16px}
+.phase-card h3{font-size:1rem;font-weight:700;margin-bottom:6px}
+.phase-card p{font-size:.83rem;opacity:.85;margin-bottom:12px}
+.phase-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600}
+.cardio-table{width:100%;border-collapse:collapse;font-size:.83rem}
+.cardio-table th{background:#f8fafb;padding:10px 12px;text-align:left;font-weight:700;color:var(--primary);border-bottom:2px solid var(--border);font-size:.78rem;text-transform:uppercase;letter-spacing:.5px}
+.cardio-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text-med)}
+.cardio-table tr:hover td{background:#f8fafb}
+/* PROGRESS */
+.chart-wrap{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:20px}
+.chart-wrap canvas{max-height:300px}
+.milestone-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.milestone{background:var(--card);border-radius:var(--radius-sm);padding:14px;text-align:center;box-shadow:var(--shadow);opacity:.4;transition:.2s}
+.milestone.unlocked{opacity:1;border:2px solid var(--success)}
+.milestone .m-icon{font-size:1.8rem;margin-bottom:6px}
+.milestone .m-label{font-size:.72rem;font-weight:600;color:var(--text-med)}
+.milestone .m-weight{font-size:.68rem;color:var(--text-light)}
+/* SEED TRACKER */
+.seed-bar-wrap{margin-bottom:8px}
+.seed-label{display:flex;justify-content:space-between;font-size:.78rem;font-weight:600;color:var(--text-med);margin-bottom:4px}
+.seed-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.seed-fill{height:100%;border-radius:4px;background:var(--success);transition:width .5s}
+/* STREAK */
+.streak-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.streak-chip{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;border-radius:var(--radius-sm);padding:14px 18px;display:flex;align-items:center;gap:10px;flex:1;min-width:140px}
+.streak-chip .s-icon{font-size:1.5rem}
+.streak-chip .s-val{font-size:1.3rem;font-weight:800}
+.streak-chip .s-lbl{font-size:.72rem;opacity:.85}
+/* BMI GAUGE */
+.bmi-display{text-align:center;padding:16px 0}
+.bmi-value{font-size:2.5rem;font-weight:800;color:var(--primary)}
+.bmi-category{font-size:.9rem;font-weight:600;color:var(--accent-dark);margin-top:4px}
+/* NOTES */
+.notes-area{width:100%;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:.83rem;resize:vertical;min-height:80px;outline:none;transition:border-color .2s}
+.notes-area:focus{border-color:var(--primary)}
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:var(--radius-sm);border:none;cursor:pointer;font-family:inherit;font-size:.85rem;font-weight:600;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-light)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-dark)}
+.btn-sm{padding:6px 12px;font-size:.78rem}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.section-header h2{font-size:1.2rem;font-weight:800;color:var(--primary)}
+.section-header p{font-size:.82rem;color:var(--text-light);margin-top:2px}
+/* WORKOUT LOG BTN */
+.workout-log-row{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--card);border-radius:var(--radius-sm);box-shadow:var(--shadow);margin-bottom:16px}
+.workout-toggle{position:relative;display:inline-block;width:48px;height:26px;flex-shrink:0}
+.workout-toggle input{opacity:0;width:0;height:0}
+.wt-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#cbd5e0;border-radius:26px;transition:.3s}
+.wt-slider:before{content:"";position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
+input:checked + .wt-slider{background:var(--success)}
+input:checked + .wt-slider:before{transform:translateX(22px)}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h2>⚡ HEALTH ENGINE</h2>
+    <p>Karthik Chary · 32yr · 178cm</p>
+  </div>
+  <ul class="nav-list">
+    <li class="nav-item active" onclick="showSection('dashboard',this)"><span class="nav-icon">🏠</span>Dashboard</li>
+    <li class="nav-item" onclick="showSection('diet',this)"><span class="nav-icon">🥗</span>Diet Plan</li>
+    <li class="nav-item" onclick="showSection('recipes',this)"><span class="nav-icon">📖</span>Recipes</li>
+    <li class="nav-item" onclick="showSection('workout',this)"><span class="nav-icon">💪</span>Workout</li>
+    <li class="nav-item" onclick="showSection('cardio',this)"><span class="nav-icon">🏃</span>Cardio</li>
+    <li class="nav-item" onclick="showSection('progress',this)"><span class="nav-icon">📈</span>Progress</li>
+    <li class="nav-item" onclick="showSection('guidelines',this)"><span class="nav-icon">🛡️</span>Guidelines</li>
+  </ul>
+  <div class="sidebar-footer">
+    Phase 1: Weight Loss · Target 85kg<br>
+    Thyronorm 12.5mg · LCHF Diet
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <div>
+        <div class="page-title" id="pageTitle">🏠 Dashboard</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="date-badge">
+        <input type="date" id="logDate" style="border:none;background:transparent;font-size:.82rem;font-weight:600;color:#1b4332;outline:none;cursor:pointer" onchange="loadDateData()">
+      </div>
+      <div class="weight-input-wrap">
+        <label>⚖️</label>
+        <input type="number" id="currentWeight" value="95" step="0.1" min="50" max="200" onchange="syncData()">
+        <label style="font-size:.72rem;color:#718096">kg</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+  <!-- ===== DASHBOARD ===== -->
+  <div id="sec-dashboard" class="section active">
+    <div class="section-header">
+      <div><h2>Daily Overview</h2><p id="dashGreeting">Loading...</p></div>
+      <button class="btn btn-primary btn-sm" onclick="syncData()">💾 Save Log</button>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid-4" style="margin-bottom:20px" id="statsRow">
+      <div class="stat-chip" style="border-left-color:#f59e0b"><div class="label">Target Calories</div><div class="value">1600</div><div class="sub">kcal/day · LCHF</div></div>
+      <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div></div>
+      <div class="stat-chip" style="border-left-color:#10b981"><div class="label">Checklist</div><div class="value" id="checkStat">0/12</div><div class="sub">Daily tasks done</div></div>
+      <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">95</div><div class="sub">kg · Goal: 85kg</div></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Timeline -->
+      <div class="card">
+        <div class="card-title">📅 Daily Timeline</div>
+        <div id="timelineContainer"></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <!-- Water -->
+        <div class="card info">
+          <div class="card-title">💧 Hydration Tracker</div>
+          <p style="font-size:.78rem;color:var(--text-light);margin-bottom:4px">Click to log cumulative water intake</p>
+          <div class="water-row">
+            <div class="water-btn" id="w1" onclick="toggleWater(1)">1L</div>
+            <div class="water-btn" id="w2" onclick="toggleWater(2)">2L</div>
+            <div class="water-btn" id="w3" onclick="toggleWater(3)">3L</div>
+            <div class="water-btn" id="w4" onclick="toggleWater(4)">4L</div>
+          </div>
+        </div>
+
+        <!-- Workout Log -->
+        <div class="card success">
+          <div class="card-title">💪 Workout Completed Today?</div>
+          <div class="workout-log-row" style="box-shadow:none;background:#f0fdf4;padding:10px 12px">
+            <label class="workout-toggle">
+              <input type="checkbox" id="workoutToggle" onchange="syncData()">
+              <span class="wt-slider"></span>
+            </label>
+            <span style="font-size:.88rem;font-weight:600;color:var(--text)">Mark workout as done</span>
+          </div>
+          <div style="margin-top:10px">
+            <label style="font-size:.78rem;font-weight:600;color:var(--text-med)">Notes (optional):</label>
+            <textarea id="workoutNotes" class="notes-area" placeholder="e.g. Completed upper push day, increased DB press weight..." style="margin-top:6px" onchange="syncData()"></textarea>
+          </div>
+        </div>
+
+        <!-- Mood & Energy -->
+        <div class="card warning">
+          <div class="card-title">🧠 Mood & Energy Check-in</div>
+          <label style="font-size:.8rem;font-weight:600;color:var(--text-med)">Mood (1=Low, 5=Great)</label>
+          <div class="score-row" id="moodRow">
+            <button class="score-btn" onclick="setScore('mood',1,this)">😔 1</button>
+            <button class="score-btn" onclick="setScore('mood',2,this)">😕 2</button>
+            <button class="score-btn sel" onclick="setScore('mood',3,this)">😐 3</button>
+            <button class="score-btn" onclick="setScore('mood',4,this)">🙂 4</button>
+            <button class="score-btn" onclick="setScore('mood',5,this)">😄 5</button>
+          </div>
+          <label style="font-size:.8rem;font-weight:600;color:var(--text-med);margin-top:10px;display:block">Energy Level</label>
+          <div class="score-row" id="energyRow">
+            <button class="score-btn" onclick="setScore('energy',1,this)">🔋 1</button>
+            <button class="score-btn" onclick="setScore('energy',2,this)">🔋 2</button>
+            <button class="score-btn sel" onclick="setScore('energy',3,this)">⚡ 3</button>
+            <button class="score-btn" onclick="setScore('energy',4,this)">⚡ 4</button>
+            <button class="score-btn" onclick="setScore('energy',5,this)">🔥 5</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DIET PLAN ===== -->
+  <div id="sec-diet" class="section">
+    <div class="section-header">
+      <div><h2>7-Day Meal Plan</h2><p>LCHF/Keto Indian · ~1600 kcal/day · Vegetarian + Eggs + Chicken</p></div>
+      <div class="spine-badge" style="background:#fff7ed;border-color:#fed7aa;color:#92400e">⚠️ Strict Guardrails Active</div>
+    </div>
+
+    <div class="alert-box yellow">
+      <div class="alert-title">⚡ Phase 1 Macro Targets (Weight Loss)</div>
+      <ul>
+        <li>Calories: 1500–1650 kcal/day · Protein: 100–120g · Fat: 90–110g · Net Carbs: &lt;45g</li>
+        <li>Eating window: 9:30 AM – 8:00 PM (16:8 intermittent fasting)</li>
+        <li>Seed &amp; Nut allotment: MAX 30g combined per day (pumpkin + watermelon + sesame + flax + sunflower + almonds + walnuts + pistachios)</li>
+      </ul>
+    </div>
+
+    <div class="day-tabs" id="dayTabs"></div>
+    <div id="dietDayContent"></div>
+  </div>
+
+  <!-- ===== RECIPES ===== -->
+  <div id="sec-recipes" class="section">
+    <div class="section-header">
+      <div><h2>Keto Indian Recipes</h2><p>12 thyroid-safe, fatty-liver-safe, LCHF recipes</p></div>
+    </div>
+    <div class="filter-row" id="recipeFilters"></div>
+    <div class="recipe-grid" id="recipeGrid"></div>
+  </div>
+
+  <!-- ===== WORKOUT ===== -->
+  <div id="sec-workout" class="section">
+    <div class="section-header">
+      <div><h2>Weekly Workout Split</h2><p>Spinal-safe · Home dumbbells/barbells · No axial compression</p></div>
+    </div>
+
+    <div class="alert-box">
+      <div class="alert-title">⚠️ Spinal Safety Protocol — Always Active</div>
+      <ul>
+        <li>NO heavy conventional deadlifts or barbell back squats (axial loading banned)</li>
+        <li>Core bracing (Cat-Cow → Bird-Dog → Dead Bug) MANDATORY before every session</li>
+        <li>Stop immediately if sharp lower-back pain occurs. Substitute with floor-based variation</li>
+        <li>All pressing done floor or incline (no overhead axial compression)</li>
+      </ul>
+    </div>
+
+    <div class="workout-day-grid" id="workoutDayGrid"></div>
+    <div id="workoutDayContent"></div>
+  </div>
+
+  <!-- ===== CARDIO ===== -->
+  <div id="sec-cardio" class="section">
+    <div class="section-header">
+      <div><h2>Cardio Plan</h2><p>Low-impact progressive · Back-safe · Fat-burning</p></div>
+    </div>
+
+    <div class="phase-card">
+      <h3>🚶 Phase 1 (Weeks 1–4): Foundation Walking</h3>
+      <p>Fasted morning walks before breakfast. Primary fat-burning tool. Zero spinal compression.</p>
+      <span class="phase-badge">CURRENT PHASE</span>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-title">📅 Weekly Cardio Schedule</div>
+        <table class="cardio-table">
+          <thead><tr><th>Day</th><th>Session</th><th>Duration</th><th>Intensity</th></tr></thead>
+          <tbody id="cardioTableBody"></tbody>
+        </table>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">📈 Phase Progression</div>
+          <div id="cardioPhases"></div>
+        </div>
+        <div class="card success">
+          <div class="card-title">🎯 Heart Rate Zones</div>
+          <div id="hrZones"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PROGRESS ===== -->
+  <div id="sec-progress" class="section">
+    <div class="section-header">
+      <div><h2>Progress Tracker</h2><p>Weight loss journey · Target: 85kg (−10kg from 95kg)</p></div>
+      <button class="btn btn-primary btn-sm" onclick="loadProgress()">🔄 Refresh</button>
+    </div>
+
+    <div class="streak-row" id="streakRow">
+      <div class="streak-chip"><span class="s-icon">🔥</span><div><div class="s-val" id="workoutStreakVal">-</div><div class="s-lbl">Workout Streak</div></div></div>
+      <div class="streak-chip" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><span class="s-icon">💧</span><div><div class="s-val" id="waterStreakVal">-</div><div class="s-lbl">Water Streak (3L+)</div></div></div>
+      <div class="streak-chip" style="background:linear-gradient(135deg,#10b981,#065f46)"><span class="s-icon">📋</span><div><div class="s-val" id="completionVal">-%</div><div class="s-lbl">Avg Checklist Done</div></div></div>
+      <div class="streak-chip" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95)"><span class="s-icon">⚖️</span><div><div class="s-val" id="weightLostVal">-kg</div><div class="s-lbl">Weight Lost</div></div></div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="chart-wrap">
+          <div class="card-title" style="margin-bottom:14px">📉 Weight Loss Chart</div>
+          <canvas id="weightChart"></canvas>
+          <p style="font-size:.72rem;color:var(--text-light);text-align:center;margin-top:8px">Green dashed line = 85kg target</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🏆 Milestones</div>
+          <div class="milestone-grid" id="milestoneGrid"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-title">⚖️ BMI Tracker</div>
+          <div class="bmi-display">
+            <div class="bmi-value" id="bmiVal">29.9</div>
+            <div class="bmi-category" id="bmiCat">Overweight</div>
+          </div>
+          <div style="font-size:.78rem;color:var(--text-light);text-align:center">
+            Height: 178cm · Current: <span id="bmiWeightDisplay">95kg</span><br>
+            Target BMI at 85kg: <strong>26.8</strong> (Normal range &lt;25)
+          </div>
+          <div style="margin-top:12px">
+            <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-light);margin-bottom:4px"><span>Obese &gt;30</span><span>Overweight 25–30</span><span>Normal &lt;25</span></div>
+            <div style="height:10px;background:linear-gradient(to right,#ef4444 0%,#f59e0b 40%,#22c55e 100%);border-radius:5px;position:relative">
+              <div id="bmiMarker" style="position:absolute;top:-4px;width:3px;height:18px;background:#1b4332;border-radius:2px;transition:left .5s"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📊 Last 30-Day Stats</div>
+          <div id="statDetails"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GUIDELINES ===== -->
+  <div id="sec-guidelines" class="section">
+    <div class="section-header">
+      <div><h2>Medical Guidelines</h2><p>Clinical guardrails · Thyroid, Fatty Liver, Lumbar Spine</p></div>
+    </div>
+    <div class="grid-2">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card danger">
+          <div class="card-title">🔴 Thyroid (Hypothyroid · Thyronorm 12.5mg)</div>
+          <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
+            <li style="margin-bottom:6px">Take Thyronorm at <strong>06:30 AM</strong> on empty stomach · Wait 45–60 min before eating</li>
+            <li style="margin-bottom:6px"><strong>Zero Soy/Soya</strong> — blocks hormone absorption (soy milk, tofu, soya chunks ALL banned)</li>
+            <li style="margin-bottom:6px">Cruciferous vegetables (cauliflower, broccoli, cabbage) — <strong>ALWAYS fully steamed/cooked</strong> to deactivate goitrogens</li>
+            <li style="margin-bottom:6px">Avoid raw cruciferous in any form (salads with raw cabbage, uncooked cauliflower)</li>
+            <li style="margin-bottom:6px">High selenium foods encouraged: eggs, brazil nuts (1–2/day max)</li>
+            <li>Recheck thyroid levels every 3 months</li>
+          </ul>
+        </div>
+        <div class="card warning">
+          <div class="card-title">🟡 Fatty Liver (Early Stage)</div>
+          <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
+            <li style="margin-bottom:6px"><strong>Zero refined sugars, jaggery, glucose, fructose syrups</strong></li>
+            <li style="margin-bottom:6px">Zero processed foods, packaged snacks, bread, rice, wheat</li>
+            <li style="margin-bottom:6px">Limit alcohol completely</li>
+            <li style="margin-bottom:6px">Apple Cider Vinegar (with mother) 1 tsp in warm water every morning — aids liver detox</li>
+            <li style="margin-bottom:6px">Prioritise natural fats (ghee, eggs, nuts) over refined seed oils</li>
+            <li>Turmeric + black pepper daily — potent anti-inflammatory for liver</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top-color:#3b82f6">
+          <div class="card-title">🔵 Lumbar Spine (Mechanical LBP)</div>
+          <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
+            <li style="margin-bottom:6px">No heavy axial loading — barbell back squats &amp; conventional deadlifts <strong>BANNED</strong></li>
+            <li style="margin-bottom:6px">Core stability work (Cat-Cow, Bird-Dog, Dead Bug) before every gym session</li>
+            <li style="margin-bottom:6px">Motorcycle commuting: use lumbar support cushion, limit rides &gt;30 min</li>
+            <li style="margin-bottom:6px">Sleep posture: side-lying with pillow between knees recommended</li>
+            <li style="margin-bottom:6px">Desk setup: monitor at eye level, lumbar-supported chair</li>
+            <li>Glute activation (bridges) daily — weak glutes = primary cause of mechanical LBP</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card success">
+          <div class="card-title">🌱 Daily Seed &amp; Nut Allocation (30g MAX)</div>
+          <p style="font-size:.78rem;color:var(--text-light);margin-bottom:14px">250g stock each. 30g combined daily cap to prevent caloric surplus.</p>
+          <div id="seedTracker"></div>
+          <div style="margin-top:14px;padding:10px;background:#f0fdf4;border-radius:8px;font-size:.78rem;color:#166534">
+            <strong>💡 Tip:</strong> Weigh daily on a kitchen scale. Mix all 8 seeds in a jar = custom trail mix. Pumpkin seeds = highest magnesium for thyroid support.
+          </div>
+        </div>
+
+        <div class="card accent">
+          <div class="card-title">⏰ Daily Medication &amp; Supplement Timing</div>
+          <div id="suppTiming"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🍽️ Foods Recommended vs Banned</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <div style="font-size:.78rem;font-weight:700;color:#166534;margin-bottom:8px">✅ EAT FREELY</div>
+              <ul style="padding-left:14px;font-size:.78rem;color:var(--text-med)">
+                <li>Eggs (all forms)</li>
+                <li>Chicken (all cuts)</li>
+                <li>Paneer (full fat)</li>
+                <li>Ghee, Butter</li>
+                <li>Coconut oil/milk</li>
+                <li>Leafy greens</li>
+                <li>Cucumber, Zucchini</li>
+                <li>Bell peppers</li>
+                <li>Green tea, Herbal tea</li>
+                <li>ACV (with mother)</li>
+              </ul>
+            </div>
+            <div>
+              <div style="font-size:.78rem;font-weight:700;color:#991b1b;margin-bottom:8px">❌ BANNED</div>
+              <ul style="padding-left:14px;font-size:.78rem;color:var(--text-med)">
+                <li>ALL soy products</li>
+                <li>Raw cruciferous veg</li>
+                <li>Sugar / Jaggery</li>
+                <li>Rice / Wheat / Bread</li>
+                <li>Processed snacks</li>
+                <li>Fruit juices</li>
+                <li>Refined seed oils</li>
+                <li>Alcohol</li>
+                <li>High-sugar fruits</li>
+                <li>Packaged foods</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- end .content -->
+</div><!-- end .main -->
+<script>
+// =====================================================
+// DATA: 7-DAY MEAL PLAN
+// =====================================================
+const MEAL_PLAN = {
+  Monday: {
+    theme: "Upper Push Day Fuel",
+    meals: {
+      breakfast: { icon:"🍳", label:"Breakfast", cls:"b", name:"3-Egg Ghee Masala Omelet + 15g Walnuts", time:"09:30 AM", cal:345, p:22, f:28, c:3, recipe:0 },
+      lunch:     { icon:"🍗", label:"Lunch",     cls:"l", name:"Chicken Pepper Curry + Cauliflower Rice (200g chicken)", time:"01:30 PM", cal:460, p:52, f:17, c:8, recipe:3 },
+      snack:     { icon:"🌱", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
+      dinner:    { icon:"🍜", label:"Dinner",    cls:"d", name:"Clear Chicken Pepper Soup (150g chicken)", time:"07:30 PM", cal:285, p:38, f:9, c:5, recipe:4 }
+    }, totals:{ cal:1265, p:118, f:68, c:22 }
+  },
+  Tuesday: {
+    theme: "Lower Body Recovery Fuel",
+    meals: {
+      breakfast: { icon:"🧀", label:"Breakfast", cls:"b", name:"Paneer Bhurji (120g paneer + spices + ghee)", time:"09:30 AM", cal:430, p:25, f:32, c:6, recipe:1 },
+      lunch:     { icon:"🥚", label:"Lunch",     cls:"l", name:"3-Egg Curry (No-tomato, coconut gravy) + Sautéed Spinach", time:"01:30 PM", cal:310, p:22, f:22, c:7, recipe:6 },
+      snack:     { icon:"🌱", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
+      dinner:    { icon:"🔥", label:"Dinner",    cls:"d", name:"Tawa Paneer Tikka (120g)", time:"07:30 PM", cal:345, p:24, f:26, c:4, recipe:5 }
+    }, totals:{ cal:1260, p:77, f:94, c:23 }
+  },
+  Wednesday: {
+    theme: "Rest Day – Light Protein",
+    meals: {
+      breakfast: { icon:"🍳", label:"Breakfast", cls:"b", name:"3-Egg Omelet with Capsicum & Ghee", time:"09:30 AM", cal:330, p:22, f:25, c:3, recipe:0 },
+      lunch:     { icon:"🍗", label:"Lunch",     cls:"l", name:"Chicken Tikka (200g) + Cucumber Raita (no sugar)", time:"01:30 PM", cal:385, p:48, f:14, c:6, recipe:7 },
+      snack:     { icon:"🌱", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
+      dinner:    { icon:"🥚", label:"Dinner",    cls:"d", name:"Egg Drop Soup (2 eggs, clear broth)", time:"07:30 PM", cal:200, p:14, f:12, c:4, recipe:8 }
+    }, totals:{ cal:1090, p:90, f:65, c:19 }
+  },
+  Thursday: {
+    theme: "Upper Pull Day Fuel",
+    meals: {
+      breakfast: { icon:"🥚", label:"Breakfast", cls:"b", name:"Paneer & Egg Scramble (60g paneer + 2 eggs + ghee)", time:"09:30 AM", cal:360, p:28, f:26, c:3, recipe:9 },
+      lunch:     { icon:"🍗", label:"Lunch",     cls:"l", name:"Chicken Curry No-Gravy (200g) + Steamed Cauliflower", time:"01:30 PM", cal:370, p:46, f:14, c:7, recipe:3 },
+      snack:     { icon:"🌱", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
+      dinner:    { icon:"🍜", label:"Dinner",    cls:"d", name:"Clear Chicken Broth + 2 Boiled Eggs", time:"07:30 PM", cal:250, p:30, f:11, c:3, recipe:4 }
+    }, totals:{ cal:1155, p:110, f:65, c:19 }
+  },
+  Friday: {
+    theme: "Full Body Compound Fuel",
+    meals: {
+      breakfast: { icon:"🍳", label:"Breakfast", cls:"b", name:"3-Egg Ghee Omelet + 15g Walnut Mix", time:"09:30 AM", cal:345, p:22, f:28, c:3, recipe:0 },
+      lunch:     { icon:"🧀", label:"Lunch",     cls:"l", name:"Paneer Tikka (150g) + Cucumber Salad", time:"01:30 PM", cal:460, p:30, f:34, c:5, recipe:5 },
+      snack:     { icon:"🌱", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
+      dinner:    { icon:"🍜", label:"Dinner",    cls:"d", name:"Clear Chicken Pepper Soup (150g)", time:"07:30 PM", cal:285, p:38, f:9, c:5, recipe:4 }
+    }, totals:{ cal:1265, p:96, f:85, c:19 }
+  },
+  Saturday: {
+    theme: "Active Recovery Refuel",
+    meals: {
+      breakfast: { icon:"🧀", label:"Breakfast", cls:"b", name:"Paneer Bhurji (120g)", time:"09:30 AM", cal:430, p:25, f:32, c:6, recipe:1 },
+      lunch:     { icon:"🍗", label:"Lunch",     cls:"l", name:"Chicken Stir-Fry with Bell Peppers (200g)", time:"01:30 PM", cal:385, p:46, f:16, c:8, recipe:10 },
+      snack:     { icon:"🌱", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
+      dinner:    { icon:"🔥", label:"Dinner",    cls:"d", name:"Tawa Paneer Tikka (120g)", time:"07:30 PM", cal:345, p:24, f:26, c:4, recipe:5 }
+    }, totals:{ cal:1335, p:101, f:88, c:24 }
+  },
+  Sunday: {
+    theme: "Full Rest – Minimum Cooking",
+    meals: {
+      breakfast: { icon:"🍳", label:"Breakfast", cls:"b", name:"Spanish-Style Egg Omelet (3 eggs, onion, capsicum)", time:"09:30 AM", cal:335, p:22, f:25, c:5, recipe:0 },
+      lunch:     { icon:"🍗", label:"Lunch",     cls:"l", name:"Chicken Bone Broth (200ml) + 3 Boiled Eggs", time:"01:30 PM", cal:365, p:40, f:18, c:3, recipe:4 },
+      snack:     { icon:"🌱", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
+      dinner:    { icon:"🍗", label:"Dinner",    cls:"d", name:"Grilled Chicken (150g) with Herb Rub", time:"07:30 PM", cal:248, p:36, f:9, c:2, recipe:7 }
+    }, totals:{ cal:1123, p:104, f:66, c:16 }
+  }
+};
+
+// =====================================================
+// DATA: RECIPES
+// =====================================================
+const RECIPES = [
+  { id:0, icon:"🍳", cat:"breakfast", name:"Keto Ghee Masala Omelet", time:"10 min", cal:345, p:22, f:28, c:3,
+    tags:["thyroid-safe","keto","high-protein"], ingredients:["3 large eggs","1 tsp ghee","1/4 onion (finely chopped)","1/4 capsicum","1 green chili (optional)","Salt, black pepper, turmeric, cumin"],
+    steps:["Beat 3 eggs with salt, pepper, pinch of turmeric","Heat ghee in non-stick pan on medium","Sauté onion & capsicum for 2 min","Pour egg mix, tilt pan to spread","Cook covered for 1 min, fold and serve","Top with fresh coriander if desired"],
+    tip:"Use cast iron pan for better results. Do not add milk — keeps carbs minimal." },
+
+  { id:1, icon:"🧀", cat:"breakfast", name:"Keto Paneer Bhurji", time:"12 min", cal:430, p:25, f:32, c:6,
+    tags:["thyroid-safe","keto","vegetarian"], ingredients:["120g full-fat paneer (crumbled)","1 tsp ghee","1/4 onion","1/4 capsicum","1/4 tomato (small, optional)","Cumin, turmeric, garam masala, salt"],
+    steps:["Heat ghee, add cumin seeds till they splutter","Add onion, sauté till translucent (3 min)","Add capsicum & tomato, cook 2 min","Add crumbled paneer, stir on high heat 2 min","Add spices, mix well. Cook 1 more min","Finish with fresh coriander"],
+    tip:"Avoid soya paneer — use cow/buffalo milk paneer only. Crumble coarsely for best texture." },
+
+  { id:2, icon:"🌾", cat:"lunch", name:"Cauliflower Rice", time:"8 min", cal:55, p:3, f:2, c:6,
+    tags:["keto","thyroid-COOK-first","low-carb"], ingredients:["300g cauliflower florets","1 tsp ghee or coconut oil","Salt, black pepper","Optional: cumin, curry leaves"],
+    steps:["IMPORTANT: Steam cauliflower for 5 min first (deactivates goitrogens)","Let it cool slightly, then pulse in food processor (or grate)","Heat oil in pan, add cumin/curry leaves","Add grated cauliflower, stir-fry on high 3–4 min","Season with salt & pepper. Keep dry and fluffy"],
+    tip:"Always steam before grating — raw cauliflower is banned for thyroid. Serve immediately after cooking." },
+
+  { id:3, icon:"🍗", cat:"lunch", name:"Chicken Pepper Curry (No Cream)", time:"25 min", cal:460, p:52, f:17, c:8,
+    tags:["thyroid-safe","high-protein","lchf"], ingredients:["200g chicken thigh/breast (boneless)","1 tbsp coconut oil","1 onion (sliced)","1 tsp ginger-garlic paste","1 tsp black pepper (key ingredient)","Turmeric, coriander powder, salt","100ml thin coconut milk (optional)"],
+    steps:["Marinate chicken with turmeric, pepper, ginger-garlic, salt — 30 min","Heat oil, fry onions until golden","Add marinated chicken, sear on high 3 min each side","Add spices, 2 tbsp water, cover & cook 15 min on low","Add coconut milk if using, simmer 3 more min","Garnish with fresh coriander"],
+    tip:"Black pepper is the star here — it aids digestion and liver health. Use bone-in for more flavour." },
+
+  { id:4, icon:"🍜", cat:"dinner", name:"Clear Chicken Pepper Soup", time:"20 min", cal:285, p:38, f:9, c:5,
+    tags:["thyroid-safe","liver-safe","low-carb","dinner"], ingredients:["150g chicken (bone-in preferred)","600ml water","Whole black peppercorns (1 tsp)","2 garlic cloves","1 inch ginger (sliced)","Sea salt","Coriander & curry leaves"],
+    steps:["Bring water to boil with garlic, ginger, peppercorns","Add chicken pieces, skim foam off top","Simmer on low for 15–18 min","Remove chicken, shred it back in","Season with sea salt generously","Finish with coriander & curry leaves"],
+    tip:"This is your best dinner — light, high protein, zero carbs. Drink the broth for collagen and gut health." },
+
+  { id:5, icon:"🔥", cat:"dinner", name:"Tawa Paneer Tikka", time:"20 min", cal:350, p:25, f:27, c:4,
+    tags:["thyroid-safe","vegetarian","keto"], ingredients:["120–150g full-fat paneer (cubed)","2 tbsp full-fat curd (yogurt)","1 tsp ghee","Kashmiri red chili, cumin, coriander powder","Garam masala, turmeric, ginger-garlic paste","Salt, lemon juice"],
+    steps:["Mix all spices with curd to make marinade","Coat paneer cubes, marinate 1 hr minimum","Heat tawa/cast iron on high, add ghee","Sear paneer 2 min each side until charred edges appear","Do NOT overcook — paneer gets rubbery","Squeeze lemon, serve immediately"],
+    tip:"Marinate overnight in fridge for intense flavor. Use iron tawa for best char." },
+
+  { id:6, icon:"🥚", cat:"lunch", name:"No-Tomato Egg Curry (Coconut Base)", time:"18 min", cal:310, p:22, f:22, c:7,
+    tags:["thyroid-safe","keto","high-protein"], ingredients:["3 boiled eggs (halved)","1 tbsp coconut oil","1 onion (finely chopped)","100ml thin coconut milk","Cumin, turmeric, coriander, pepper, salt","Fresh ginger-garlic paste"],
+    steps:["Hard-boil eggs (10 min), halve them, score with fork","Heat oil, fry onions golden (5 min)","Add ginger-garlic, fry 1 min","Add dry spices, 2 tbsp water, cook paste 2 min","Pour coconut milk, stir, bring to simmer","Add eggs gently, simmer 4 min. Do not boil."],
+    tip:"No tomato = lower acidity, better for liver. Coconut milk adds healthy MCTs." },
+
+  { id:7, icon:"🍗", cat:"dinner", name:"Tawa Chicken Tikka (No Oven)", time:"25 min", cal:330, p:48, f:12, c:4,
+    tags:["thyroid-safe","high-protein","lchf"], ingredients:["200g chicken thigh (boneless, cubed)","3 tbsp full-fat curd","Kashmiri chili, cumin, garam masala, turmeric","Ginger-garlic paste","1 tsp ghee, salt, lemon"],
+    steps:["Mix curd + all spices for marinade","Coat chicken thoroughly, rest 1–2 hrs","Heat cast iron tawa on high flame","Add ghee, place chicken pieces (do not crowd)","Cook 4–5 min per side until cooked through","Rest 2 min, squeeze lemon & serve"],
+    tip:"Chicken thighs are more forgiving than breast — better fat profile too. Marinate overnight for best results." },
+
+  { id:8, icon:"🥣", cat:"dinner", name:"Egg Drop Soup (Chinese-Style Keto)", time:"8 min", cal:200, p:14, f:12, c:4,
+    tags:["thyroid-safe","quick","low-carb"], ingredients:["2 eggs (beaten)","500ml chicken broth (homemade preferred)","1/2 tsp sesame oil (small amount ok)","Black pepper, salt","Spring onions (green part only)","Ginger (grated)"],
+    steps:["Bring broth to a gentle boil with ginger","Season with salt and pepper","Reduce to low simmer","Slowly pour beaten eggs in a thin stream while stirring","Eggs cook in seconds — ribbon-like strands form","Drizzle sesame oil, top with spring onions"],
+    tip:"Make broth from leftover chicken bones — free collagen and amino acids." },
+
+  { id:9, icon:"🥚", cat:"breakfast", name:"Paneer & Egg Scramble", time:"10 min", cal:360, p:28, f:26, c:3,
+    tags:["thyroid-safe","keto","high-protein"], ingredients:["2 large eggs","60g paneer (crumbled)","1 tsp ghee","Salt, pepper, pinch of turmeric","Optional: small green chili, coriander"],
+    steps:["Beat eggs with salt and pepper","Heat ghee in non-stick pan","Add crumbled paneer, stir-fry 1 min","Pour beaten eggs over paneer","Stir gently on medium — do not over-scramble","Remove while slightly underdone (residual heat finishes it)"],
+    tip:"Best pre-workout breakfast. Combine ghee fat + egg protein + paneer casein for sustained energy." },
+
+  { id:10, icon:"🍗", cat:"lunch", name:"Chicken Stir-Fry with Bell Peppers", time:"15 min", cal:385, p:46, f:16, c:8,
+    tags:["thyroid-safe","quick","lchf"], ingredients:["200g chicken breast (thin sliced)","1 tbsp coconut oil","1 red + 1 green bell pepper (sliced)","1 onion (sliced)","Ginger, garlic (minced)","Soy sauce SUBSTITUTE: coconut aminos or just salt+pepper","Black pepper, salt"],
+    steps:["Slice chicken thin — 5mm strips. Pat dry.","Heat oil on highest flame (wok-style)","Flash-fry chicken 2–3 min until white","Remove chicken. Fry peppers & onion 2 min (keep crunch)","Add back chicken + ginger-garlic + seasoning","Toss on high 1 min, serve immediately"],
+    tip:"NO SOY SAUCE — use coconut aminos or just salt+pepper+lemon. High flame is key for stir-fry." },
+
+  { id:11, icon:"🌱", cat:"snack", name:"Custom Seed & Nut Mix (30g Daily Cap)", time:"2 min (prep)", cal:175, p:6, f:14, c:6,
+    tags:["thyroid-safe","daily-allotment"], ingredients:["Pumpkin seeds: 8g (highest magnesium)","Sunflower seeds: 5g","Flax seeds: 5g (ground preferred)","White sesame seeds: 4g","Watermelon seeds: 4g","Almonds: 2g","Walnuts: 1g","Unsalted Pistachios: 1g"],
+    steps:["Weigh each component on a kitchen scale","Mix all in a small airtight container","Prepare weekly batch and store in fridge","Consume entire 30g portion with green tea at 4:30 PM","Do NOT exceed 30g combined — strict caloric control"],
+    tip:"STRICT 30g/day cap. Pumpkin seeds are most valuable for thyroid (selenium + zinc + magnesium). Flax seeds: grind for better omega-3 absorption." }
+];
+
+// =====================================================
+// DATA: WORKOUT PLAN
+// =====================================================
+const WORKOUT_PLAN = {
+  Monday: {
+    name:"Upper Push + Core", type:"strength", icon:"💪", duration:"45 min",
+    exercises:[
+      { cat:"core",  name:"Cat-Cow Stretch",         sets:"3", reps:"10",    note:"Spinal mobility warm-up — mandatory start" },
+      { cat:"core",  name:"Bird-Dog",                 sets:"3", reps:"10 ea", note:"Anti-rotation core stability — key for LBP" },
+      { cat:"core",  name:"Dead Bug",                 sets:"3", reps:"10",    note:"Core anti-extension — back stays flat on floor" },
+      { cat:"glute", name:"Glute Bridge",             sets:"3", reps:"15",    note:"Posterior chain activation before pressing" },
+      { cat:"push",  name:"DB Floor Press",           sets:"3", reps:"12",    note:"Floor limits ROM — spine-safe chest press" },
+      { cat:"push",  name:"DB Seated Shoulder Press", sets:"3", reps:"10",    note:"Seated preferred over standing — less spinal load" },
+      { cat:"push",  name:"DB Lateral Raise",         sets:"3", reps:"15",    note:"4–6 kg. Controlled tempo 2:0:2" },
+      { cat:"push",  name:"DB Tricep Extension",      sets:"3", reps:"12",    note:"Overhead if no pain, else lying skull crusher" }
+    ]
+  },
+  Tuesday: {
+    name:"Lower Body Glute Focus + Core", type:"strength", icon:"🍑", duration:"40 min",
+    exercises:[
+      { cat:"core",     name:"Cat-Cow Stretch",          sets:"3", reps:"10",    note:"Mandatory spinal warm-up" },
+      { cat:"core",     name:"Bird-Dog",                  sets:"3", reps:"10 ea", note:"Slow and controlled, 3-sec hold at top" },
+      { cat:"glute",    name:"Glute Bridge with Barbell", sets:"4", reps:"15",    note:"Bar on hips (padded). Hip thrust variation — spine-safe" },
+      { cat:"glute",    name:"DB Romanian Deadlift",      sets:"3", reps:"12",    note:"HINGE not squat. Back straight, hips back. Light to start." },
+      { cat:"compound", name:"Bulgarian Split Squat",     sets:"3", reps:"10 ea", note:"Rear foot elevated. Upright torso. Very spine-friendly" },
+      { cat:"glute",    name:"DB Lateral Lunge",          sets:"3", reps:"10 ea", note:"Slow eccentric (3 sec down). Good for hip abductors" },
+      { cat:"core",     name:"Calf Raise (Standing)",     sets:"3", reps:"20",    note:"Bodyweight or hold dumbbells" }
+    ]
+  },
+  Wednesday: {
+    name:"REST / Active Recovery", type:"rest", icon:"🧘", duration:"20–30 min walk",
+    exercises:[
+      { cat:"cardio", name:"Fasted Morning Walk", sets:"1", reps:"20–30 min", note:"Low intensity. HR 100–120 BPM. Burns fat optimally" },
+      { cat:"core",   name:"Cat-Cow Stretch",     sets:"2", reps:"10",        note:"Morning mobility only" },
+      { cat:"core",   name:"Pigeon Pose Stretch", sets:"2", reps:"30s ea",    note:"Hip flexor relief after motorbike commute" }
+    ]
+  },
+  Thursday: {
+    name:"Upper Pull + Core", type:"strength", icon:"🦵", duration:"45 min",
+    exercises:[
+      { cat:"core",  name:"Cat-Cow Stretch",         sets:"3", reps:"10",    note:"Mandatory spinal warm-up" },
+      { cat:"core",  name:"Dead Bug",                 sets:"3", reps:"10",    note:"Core stability before pulling work" },
+      { cat:"glute", name:"Glute Bridge",             sets:"3", reps:"15",    note:"Activation set" },
+      { cat:"pull",  name:"DB Bent-Over Row",         sets:"3", reps:"12",    note:"Neutral spine. One hand braced on bench for support" },
+      { cat:"pull",  name:"DB Bicep Curl",            sets:"3", reps:"12",    note:"Supinated grip. Full ROM. No swinging." },
+      { cat:"pull",  name:"DB Hammer Curl",           sets:"3", reps:"12",    note:"Neutral grip. Hits brachialis and brachioradialis" },
+      { cat:"pull",  name:"DB Rear Delt Fly",         sets:"3", reps:"15",    note:"Inclined at 45°. 3–4 kg. Fixes posture from desk work" },
+      { cat:"pull",  name:"DB Shrug",                 sets:"3", reps:"15",    note:"Slow eccentric 3 sec. Trapezius activation" }
+    ]
+  },
+  Friday: {
+    name:"Full Body Compound + Core", type:"strength", icon:"🔥", duration:"50 min",
+    exercises:[
+      { cat:"core",     name:"Cat-Cow Stretch",          sets:"3", reps:"10",    note:"Mandatory" },
+      { cat:"core",     name:"Bird-Dog",                  sets:"3", reps:"10 ea", note:"Stability focus" },
+      { cat:"core",     name:"Dead Bug",                  sets:"3", reps:"10",    note:"Mandatory" },
+      { cat:"glute",    name:"Barbell Hip Thrust",        sets:"4", reps:"12",    note:"Primary strength builder. Bar padded on hips." },
+      { cat:"compound", name:"DB Romanian Deadlift",      sets:"4", reps:"10",    note:"Heaviest weights this week. Progressive overload." },
+      { cat:"push",     name:"DB Floor Press",            sets:"3", reps:"12",    note:"Increase weight by 1–2kg vs Monday" },
+      { cat:"pull",     name:"DB Bent-Over Row",          sets:"3", reps:"12",    note:"Heavy row — challenge yourself" },
+      { cat:"push",     name:"DB Shoulder Press",         sets:"3", reps:"10",    note:"Seated. Compound finisher." }
+    ]
+  },
+  Saturday: {
+    name:"Active Recovery (Walk)", type:"cardio", icon:"🚶", duration:"30 min walk",
+    exercises:[
+      { cat:"cardio", name:"Fasted Morning Walk",    sets:"1", reps:"25–35 min", note:"Brisk pace. Arm swing. HR 110–130 BPM." },
+      { cat:"core",   name:"Cat-Cow Stretch",        sets:"2", reps:"10",        note:"Morning routine" },
+      { cat:"core",   name:"Hip Flexor Stretch",     sets:"2", reps:"30s ea",    note:"Counteracts sitting 9+ hrs at desk" }
+    ]
+  },
+  Sunday: {
+    name:"Full REST + Mobility", type:"rest", icon:"🛌", duration:"Mobility only",
+    exercises:[
+      { cat:"core",   name:"Full Body Stretching",    sets:"1", reps:"15 min",  note:"Entire body stretch sequence. No loading." },
+      { cat:"core",   name:"Cat-Cow Stretch",         sets:"2", reps:"10",      note:"Spine health maintenance" },
+      { cat:"core",   name:"Child Pose",              sets:"2", reps:"60s",     note:"Lower back decompression — esp. after weekly rides" },
+      { cat:"core",   name:"Supine Twist",            sets:"2", reps:"30s ea",  note:"Thoracic rotation. Lie on back, knees to one side." }
+    ]
+  }
+};
+
+// =====================================================
+// DATA: CARDIO
+// =====================================================
+const CARDIO_TABLE = [
+  { day:"Monday",    session:"Fasted Walk", duration:"20–25 min", intensity:"Light (HR 95–115)", note:"Pre-workout or standalone" },
+  { day:"Tuesday",   session:"REST",        duration:"—",         intensity:"—",                 note:"Lower body day — skip cardio" },
+  { day:"Wednesday", session:"Fasted Walk", duration:"25–30 min", intensity:"Moderate (HR 110–125)", note:"Active recovery day" },
+  { day:"Thursday",  session:"REST",        duration:"—",         intensity:"—",                 note:"Upper pull day — skip cardio" },
+  { day:"Friday",    session:"Fasted Walk", duration:"20 min",    intensity:"Light (HR 95–110)", note:"Before full body session" },
+  { day:"Saturday",  session:"Brisk Walk",  duration:"30–35 min", intensity:"Moderate (HR 115–130)", note:"Dedicated cardio day" },
+  { day:"Sunday",    session:"Easy Walk",   duration:"20–30 min", intensity:"Very Light (HR 90–105)", note:"Recovery — enjoy outdoors" }
+];
+
+const CARDIO_PHASES = [
+  { phase:"Phase 1 (Wk 1–4)", label:"Foundation Walking", detail:"20–30 min fasted walks. HR 95–130 BPM. 4 days/week. Build aerobic base.", current:true },
+  { phase:"Phase 2 (Wk 5–8)", label:"Extended + Incline",   detail:"30–40 min walks with incline/stairs. Add 1 cycling session if back allows.", current:false },
+  { phase:"Phase 3 (Month 3)", label:"Interval Walking",     detail:"3 min brisk + 1 min fast-paced. 30 min. Introduces anaerobic threshold.", current:false },
+  { phase:"Phase 4 (Month 4+)", label:"LISS + Light Cycling", detail:"45 min LISS cycling or swimming. Zero spinal impact. Fat burning peak.", current:false }
+];
+
+const HR_ZONES = [
+  { zone:"Zone 1 – Recovery", range:"95–110 BPM", purpose:"Active recovery, fat utilization" },
+  { zone:"Zone 2 – Fat Burn",  range:"110–130 BPM", purpose:"Primary fat-burning zone — TARGET" },
+  { zone:"Zone 3 – Aerobic",   range:"130–150 BPM", purpose:"Cardiovascular conditioning (future)" }
+];
+
+// =====================================================
+// DATA: DAILY TIMELINE TASKS
+// =====================================================
+const TASKS = [
+  { time:"06:30 AM", text:"💊 Thyronorm 12.5mg — Empty stomach. Set 45-min food timer.", category:"medication" },
+  { time:"07:00 AM", text:"🚿 Cold-warm shower + 10-min morning mobility (Cat-Cow, hip stretches).", category:"routine" },
+  { time:"07:30 AM", text:"🍵 Metabolic Primer: 1 glass warm water + 1 tsp ACV (with mother).", category:"nutrition" },
+  { time:"08:15 AM", text:"💪 Home Workout: Core stabilization → Strength session per today's plan.", category:"workout" },
+  { time:"09:30 AM", text:"🍳 Breakfast: High-protein LCHF meal (see Diet Plan for today's option).", category:"nutrition" },
+  { time:"11:00 AM", text:"💧 Mid-morning hydration: 500ml water (towards 4L daily target).", category:"hydration" },
+  { time:"01:30 PM", text:"🍗 Lunch: Low-carb high-protein main meal. Max 8g net carbs.", category:"nutrition" },
+  { time:"04:00 PM", text:"💧 Afternoon water: 500ml. Desk job reminder — stay hydrated.", category:"hydration" },
+  { time:"04:30 PM", text:"🌱 Snack: Green Tea + 30g Custom Seed Mix (WEIGH on scale).", category:"nutrition" },
+  { time:"06:00 PM", text:"🚶 Evening Walk: 20 min brisk walk. Disconnect from screens.", category:"cardio" },
+  { time:"07:30 PM", text:"🍜 Dinner: Light high-protein meal. Finish before 8:00 PM.", category:"nutrition" },
+  { time:"08:30 PM", text:"🌙 Wind-down: Chamomile/Oolong tea. No screens 30 min before bed.", category:"routine" }
+];
+
+// =====================================================
+// DATA: SEED ALLOCATION
+// =====================================================
+const SEEDS = [
+  { name:"Pumpkin Seeds",    stock:250, daily:8,  note:"Highest magnesium — thyroid support" },
+  { name:"Sunflower Seeds",  stock:250, daily:5,  note:"Vitamin E + selenium" },
+  { name:"Flax Seeds",       stock:250, daily:5,  note:"Grind before eating for omega-3" },
+  { name:"White Sesame",     stock:250, daily:4,  note:"Calcium + zinc" },
+  { name:"Watermelon Seeds", stock:250, daily:4,  note:"Magnesium + iron" },
+  { name:"Almonds",          stock:250, daily:2,  note:"Vitamin E + healthy fat" },
+  { name:"Walnuts",          stock:250, daily:1,  note:"Best omega-3 nut for brain health" },
+  { name:"Pistachios",       stock:250, daily:1,  note:"L-arginine for circulation" }
+];
+
+// =====================================================
+// DATA: SUPPLEMENT TIMING
+// =====================================================
+const SUPP_TIMING = [
+  { time:"06:30 AM", item:"Thyronorm 12.5mg", note:"Strict empty stomach. 45-min wait before ANY food." },
+  { time:"07:30 AM", item:"ACV (1 tsp in warm water)", note:"Boosts metabolism + liver detox + digestion." },
+  { time:"04:30 PM", item:"Seed Mix + Green Tea", note:"Anti-inflammatory snack window." },
+  { time:"08:30 PM", item:"Chamomile Tea", note:"Cortisol reset. Better sleep = better thyroid function." }
+];
+
+// =====================================================
+// STATE
+// =====================================================
+let currentMoodScore = 3;
+let currentEnergyScore = 3;
+let waterLevel = 0;
+let currentRecipeFilter = "all";
+let currentWorkoutDay = "Monday";
+let weightChartInstance = null;
+
+// =====================================================
+// NAVIGATION
+// =====================================================
+const pageTitles = {
+  dashboard: "🏠 Dashboard",
+  diet: "🥗 Diet Plan",
+  recipes: "📖 Recipes",
+  workout: "💪 Workout",
+  cardio: "🏃 Cardio",
+  progress: "📈 Progress",
+  guidelines: "🛡️ Guidelines"
+};
+
+function showSection(id, el) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("sec-" + id).classList.add("active");
+  if(el) el.classList.add("active");
+  document.getElementById("pageTitle").textContent = pageTitles[id] || id;
+  document.getElementById("sidebar").classList.remove("open");
+  if(id === "progress") loadProgress();
+}
+
+// =====================================================
+// DASHBOARD: TIMELINE
+// =====================================================
+function buildTimeline() {
+  const container = document.getElementById("timelineContainer");
+  container.innerHTML = "";
+  TASKS.forEach((task, i) => {
+    const div = document.createElement("div");
+    div.className = "timeline-item";
+    div.id = "titem-" + i;
+    div.innerHTML = `<span class="t-time">${task.time}</span><span class="t-text">${task.text}</span><input type="checkbox" id="chk-${i}" onchange="onCheckChange(${i})">`;
+    container.appendChild(div);
+  });
+}
+
+function onCheckChange(i) {
+  const chk = document.getElementById("chk-" + i);
+  document.getElementById("titem-" + i).classList.toggle("done", chk.checked);
+  updateCheckStat();
+  syncData();
+}
+
+function updateCheckStat() {
+  const total = TASKS.length;
+  let done = 0;
+  for(let i=0;i<total;i++) {
+    const c = document.getElementById("chk-"+i);
+    if(c && c.checked) done++;
+  }
+  document.getElementById("checkStat").textContent = done + "/" + total;
+}
+
+// =====================================================
+// WATER TRACKER
+// =====================================================
+function toggleWater(l) {
+  waterLevel = (waterLevel === l) ? l - 1 : l;
+  for(let i=1;i<=4;i++) {
+    document.getElementById("w"+i).classList.toggle("filled", i <= waterLevel);
+  }
+  document.getElementById("waterStat").textContent = waterLevel + "/4L";
+  syncData();
+}
+
+// =====================================================
+// MOOD / ENERGY
+// =====================================================
+function setScore(type, val, btn) {
+  if(type === "mood") {
+    currentMoodScore = val;
+    document.querySelectorAll("#moodRow .score-btn").forEach(b => b.classList.remove("sel"));
+  } else {
+    currentEnergyScore = val;
+    document.querySelectorAll("#energyRow .score-btn").forEach(b => b.classList.remove("sel"));
+  }
+  btn.classList.add("sel");
+  syncData();
+}
+
+// =====================================================
+// DIET PLAN RENDERING
+// =====================================================
+function buildDietPlan() {
+  const days = Object.keys(MEAL_PLAN);
+  const tabsEl = document.getElementById("dayTabs");
+  tabsEl.innerHTML = "";
+  const today = new Date().toLocaleDateString("en-US",{weekday:"long"});
+  days.forEach((day, i) => {
+    const btn = document.createElement("button");
+    btn.className = "day-tab" + (day === today ? " active" : "");
+    btn.textContent = day.substring(0,3);
+    btn.onclick = () => { document.querySelectorAll(".day-tab").forEach(t => t.classList.remove("active")); btn.classList.add("active"); renderDietDay(day); };
+    tabsEl.appendChild(btn);
+  });
+  renderDietDay(today in MEAL_PLAN ? today : "Monday");
+}
+
+function renderDietDay(day) {
+  const d = MEAL_PLAN[day];
+  const meals = d.meals;
+  let html = `<div class="day-theme">📅 ${day} — ${d.theme}</div>`;
+  ["breakfast","lunch","snack","dinner"].forEach(key => {
+    const m = meals[key];
+    html += `<div class="meal-card ${m.cls}" onclick="if(window.innerWidth>768){showSection('recipes',document.querySelector('.nav-item:nth-child(3)'))}">
+      <div class="meal-icon">${m.icon}</div>
+      <div class="meal-info"><div class="meal-name">${m.name}</div><div class="meal-time">⏰ ${m.time} · ${m.label}</div></div>
+      <div class="meal-macros">
+        <span class="macro-pill cal">${m.cal} kcal</span><br>
+        <span class="macro-pill p">P ${m.p}g</span>
+        <span class="macro-pill f">F ${m.f}g</span>
+        <span class="macro-pill c">C ${m.c}g</span>
+      </div>
+    </div>`;
+  });
+  html += `<div class="day-total-bar">
+    <span>🍽️ Day Total:</span>
+    <span>🔥 ${d.totals.cal} kcal</span>
+    <span>💪 Protein ${d.totals.p}g</span>
+    <span>🥑 Fat ${d.totals.f}g</span>
+    <span>🌾 Net Carbs ${d.totals.c}g</span>
+  </div>`;
+  document.getElementById("dietDayContent").innerHTML = html;
+}
+
+// =====================================================
+// RECIPES RENDERING
+// =====================================================
+function buildRecipes() {
+  const cats = ["all","breakfast","lunch","dinner","snack"];
+  const filtersEl = document.getElementById("recipeFilters");
+  filtersEl.innerHTML = cats.map(c =>
+    `<button class="filter-pill${c==="all"?" active":""}" onclick="filterRecipes('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`
+  ).join("");
+  renderRecipes("all");
+}
+
+function filterRecipes(cat, btn) {
+  currentRecipeFilter = cat;
+  document.querySelectorAll(".filter-pill").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderRecipes(cat);
+}
+
+function renderRecipes(cat) {
+  const filtered = cat === "all" ? RECIPES : RECIPES.filter(r => r.cat === cat);
+  const grid = document.getElementById("recipeGrid");
+  grid.innerHTML = filtered.map(r => `
+    <div class="recipe-card">
+      <div class="recipe-header">
+        <div class="r-icon">${r.icon}</div>
+        <div class="r-name">${r.name}</div>
+        <div class="r-time">⏱️ ${r.time} · ${r.cal} kcal</div>
+      </div>
+      <div class="recipe-body">
+        <div class="recipe-macros">
+          <span class="macro-pill p">P ${r.p}g</span>
+          <span class="macro-pill f">F ${r.f}g</span>
+          <span class="macro-pill c">C ${r.c}g</span>
+          <span class="macro-pill cal">${r.cal} kcal</span>
+        </div>
+        <div class="recipe-tags">
+          ${r.tags.map(t => `<span class="tag${t.includes("ban")?" red":""}">${t}</span>`).join("")}
+        </div>
+      </div>
+      <div class="recipe-expand" id="rx-${r.id}">
+        <h4>🛒 Ingredients</h4>
+        <ul>${r.ingredients.map(i=>`<li>${i}</li>`).join("")}</ul>
+        <h4>👨‍🍳 Method</h4>
+        <ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+        <div class="recipe-tip">💡 ${r.tip}</div>
+      </div>
+      <div style="padding:10px 16px;border-top:1px solid var(--border)">
+        <button class="btn btn-primary btn-sm" onclick="toggleRecipe(${r.id})">View Recipe ▼</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function toggleRecipe(id) {
+  const el = document.getElementById("rx-"+id);
+  el.classList.toggle("open");
+  const btn = el.nextElementSibling.querySelector("button");
+  btn.textContent = el.classList.contains("open") ? "Hide Recipe ▲" : "View Recipe ▼";
+}
+
+// =====================================================
+// WORKOUT RENDERING
+// =====================================================
+function buildWorkout() {
+  const days = Object.keys(WORKOUT_PLAN);
+  const grid = document.getElementById("workoutDayGrid");
+  grid.innerHTML = "";
+  const today = new Date().toLocaleDateString("en-US",{weekday:"long"});
+  days.forEach(day => {
+    const w = WORKOUT_PLAN[day];
+    const isRest = w.type==="rest"||w.type==="cardio";
+    const div = document.createElement("div");
+    div.className = `wday${isRest?" rest":""}${day===today?" active":""}`;
+    div.id = "wd-"+day;
+    div.innerHTML = `<div class="wd-name">${day.substring(0,3)}</div><div class="wd-icon">${w.icon}</div><div class="wd-type" style="font-size:.62rem">${w.name.split(" ")[0]}</div>`;
+    div.onclick = () => selectWorkoutDay(day);
+    grid.appendChild(div);
+  });
+  selectWorkoutDay(today in WORKOUT_PLAN ? today : "Monday");
+}
+
+function selectWorkoutDay(day) {
+  currentWorkoutDay = day;
+  document.querySelectorAll(".wday").forEach(d => d.classList.remove("active"));
+  const el = document.getElementById("wd-"+day);
+  if(el) el.classList.add("active");
+  renderWorkoutDay(day);
+}
+
+function renderWorkoutDay(day) {
+  const w = WORKOUT_PLAN[day];
+  let html = `<div class="card">
+    <div class="card-title">${w.icon} ${day}: ${w.name}
+      <span style="margin-left:auto;font-size:.72rem;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;padding:3px 8px;border-radius:8px;font-weight:600">⏱️ ${w.duration}</span>
+      <span class="spine-badge" style="margin-left:8px">🦴 Spine-Safe Protocol</span>
+    </div>
+    <div class="exercise-list">`;
+  w.exercises.forEach(ex => {
+    html += `<div class="exercise-item ${ex.cat}">
+      <span class="exercise-cat">${ex.cat}</span>
+      <div>
+        <div class="exercise-name">${ex.name}</div>
+        <div class="exercise-detail">📊 ${ex.sets} sets × ${ex.reps}</div>
+        <div class="exercise-note">${ex.note}</div>
+      </div>
+    </div>`;
+  });
+  html += "</div></div>";
+  document.getElementById("workoutDayContent").innerHTML = html;
+}
+
+// =====================================================
+// CARDIO RENDERING
+// =====================================================
+function buildCardio() {
+  const tbody = document.getElementById("cardioTableBody");
+  tbody.innerHTML = CARDIO_TABLE.map(r =>
+    `<tr><td><strong>${r.day}</strong></td><td>${r.session}</td><td>${r.duration}</td><td>${r.intensity}</td></tr>`
+  ).join("");
+
+  const phasesEl = document.getElementById("cardioPhases");
+  phasesEl.innerHTML = CARDIO_PHASES.map(p =>
+    `<div style="padding:10px 12px;border-radius:8px;margin-bottom:8px;background:${p.current?"#f0fdf4;border:1px solid #bbf7d0":"#f8f9fa"};border:1px solid ${p.current?"#bbf7d0":"var(--border)"}">
+      <div style="font-size:.8rem;font-weight:700;color:${p.current?"#166534":"var(--text-med)"}">
+        ${p.current?"✅ ":"⏳ "}${p.phase}: ${p.label}
+      </div>
+      <div style="font-size:.75rem;color:var(--text-light);margin-top:3px">${p.detail}</div>
+    </div>`
+  ).join("");
+
+  const hrEl = document.getElementById("hrZones");
+  hrEl.innerHTML = HR_ZONES.map(z =>
+    `<div style="display:flex;justify-content:space-between;padding:8px 10px;border-radius:6px;background:#f8fafb;margin-bottom:6px;font-size:.8rem">
+      <span style="font-weight:600;color:var(--primary)">${z.zone}</span>
+      <span style="color:var(--accent-dark);font-weight:700">${z.range}</span>
+    </div>
+    <div style="font-size:.72rem;color:var(--text-light);margin:-2px 0 6px 10px">${z.purpose}</div>`
+  ).join("");
+}
+
+// =====================================================
+// GUIDELINES RENDERING
+// =====================================================
+function buildGuidelines() {
+  const seedEl = document.getElementById("seedTracker");
+  let totalDaily = 0, totalStock = 0;
+  seedEl.innerHTML = SEEDS.map(s => {
+    totalDaily += s.daily;
+    totalStock += s.stock;
+    const days = Math.floor(s.stock / s.daily);
+    return `<div class="seed-bar-wrap">
+      <div class="seed-label"><span>${s.name} (${s.daily}g/day)</span><span style="color:var(--text-light)">~${days}d stock · ${s.note}</span></div>
+      <div class="seed-bar"><div class="seed-fill" style="width:${(s.daily/30)*100}%"></div></div>
+    </div>`;
+  }).join("") + `<div style="margin-top:10px;font-size:.8rem;font-weight:700;color:var(--primary)">Total: ${totalDaily}g/day ✅ (within 30g cap)</div>`;
+
+  const suppEl = document.getElementById("suppTiming");
+  suppEl.innerHTML = SUPP_TIMING.map(s =>
+    `<div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);align-items:flex-start">
+      <span style="min-width:72px;font-size:.78rem;font-weight:700;color:var(--primary)">${s.time}</span>
+      <div><div style="font-size:.85rem;font-weight:600;color:var(--text)">${s.item}</div><div style="font-size:.75rem;color:var(--text-light)">${s.note}</div></div>
+    </div>`
+  ).join("");
+}
+
+// =====================================================
+// API: LOAD DATE
+// =====================================================
+async function loadDateData() {
+  const date = document.getElementById("logDate").value;
+  try {
+    const res = await fetch("/api/logs/" + date);
+    const data = await res.json();
+    // Sync checklist
+    for(let i=0;i<TASKS.length;i++) {
+      const chk = document.getElementById("chk-"+i);
+      if(chk) {
+        chk.checked = data.checklist[i] || false;
+        document.getElementById("titem-"+i).classList.toggle("done", chk.checked);
+      }
+    }
+    // Weight
+    if(data.weight > 0) {
+      document.getElementById("currentWeight").value = data.weight;
+      document.getElementById("weightStat").textContent = data.weight;
+      updateBMI(data.weight);
+    }
+    // Water
+    waterLevel = data.waterIntake || 0;
+    for(let i=1;i<=4;i++) document.getElementById("w"+i).classList.toggle("filled", i <= waterLevel);
+    document.getElementById("waterStat").textContent = waterLevel + "/4L";
+    // Workout
+    document.getElementById("workoutToggle").checked = data.completedWorkout || false;
+    document.getElementById("workoutNotes").value = data.workoutNotes || data.notes || "";
+    // Mood & Energy
+    currentMoodScore = data.moodScore || 3;
+    currentEnergyScore = data.energyScore || 3;
+    document.querySelectorAll("#moodRow .score-btn").forEach((b,i) => b.classList.toggle("sel", i+1===currentMoodScore));
+    document.querySelectorAll("#energyRow .score-btn").forEach((b,i) => b.classList.toggle("sel", i+1===currentEnergyScore));
+    updateCheckStat();
+  } catch(e) {
+    console.warn("API offline — using localStorage");
+    loadFromLocal(date);
+  }
+}
+
+// =====================================================
+// API: SYNC DATA
+// =====================================================
+async function syncData() {
+  const date = document.getElementById("logDate").value;
+  const weight = parseFloat(document.getElementById("currentWeight").value) || 95;
+  const notes = document.getElementById("workoutNotes").value;
+  document.getElementById("weightStat").textContent = weight;
+  updateBMI(weight);
+  const checklist = TASKS.map((_, i) => { const c = document.getElementById("chk-"+i); return c ? c.checked : false; });
+  const payload = { date, checklist, waterIntake: waterLevel, weight, completedWorkout: document.getElementById("workoutToggle").checked, moodScore: currentMoodScore, energyScore: currentEnergyScore, notes };
+  localStorage.setItem("health-" + date, JSON.stringify(payload));
+  try {
+    await fetch("/api/logs", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) });
+  } catch(e) { /* API offline, localStorage used */ }
+}
+
+function loadFromLocal(date) {
+  const saved = localStorage.getItem("health-" + date);
+  if(!saved) return;
+  const data = JSON.parse(saved);
+  for(let i=0;i<TASKS.length;i++) {
+    const chk = document.getElementById("chk-"+i);
+    if(chk) { chk.checked = data.checklist[i]||false; document.getElementById("titem-"+i).classList.toggle("done", chk.checked); }
+  }
+  if(data.weight > 0) { document.getElementById("currentWeight").value = data.weight; document.getElementById("weightStat").textContent = data.weight; updateBMI(data.weight); }
+  waterLevel = data.waterIntake || 0;
+  for(let i=1;i<=4;i++) document.getElementById("w"+i).classList.toggle("filled", i <= waterLevel);
+  document.getElementById("waterStat").textContent = waterLevel + "/4L";
+  updateCheckStat();
+}
+
+// =====================================================
+// PROGRESS
+// =====================================================
+async function loadProgress() {
+  try {
+    const [history, stats] = await Promise.all([fetch("/api/weight-history").then(r=>r.json()), fetch("/api/stats").then(r=>r.json())]);
+    renderWeightChart(history);
+    document.getElementById("workoutStreakVal").textContent = stats.workoutStreak || 0;
+    document.getElementById("waterStreakVal").textContent = stats.waterStreak || 0;
+    document.getElementById("completionVal").textContent = (stats.avgCompletion || 0) + "%";
+    const lost = stats.weightLost || 0;
+    document.getElementById("weightLostVal").textContent = (lost > 0 ? "-" : "") + Math.abs(lost) + "kg";
+    const w = stats.currentWeight || 95;
+    updateBMI(w);
+    renderStats(stats);
+    renderMilestones(w);
+  } catch(e) {
+    console.warn("Progress API offline");
+    renderWeightChart([]);
+    renderMilestones(parseFloat(document.getElementById("currentWeight").value)||95);
+  }
+}
+
+function renderWeightChart(data) {
+  const ctx = document.getElementById("weightChart").getContext("2d");
+  const labels = data.map(d => d.date);
+  const weights = data.map(d => d.weight);
+  const targetLine = data.map(() => 85);
+  if(weightChartInstance) weightChartInstance.destroy();
+  weightChartInstance = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels.length ? labels : ["Start"],
+      datasets: [
+        { label:"Weight (kg)", data: weights.length ? weights : [95], borderColor:"#1b4332", backgroundColor:"rgba(27,67,50,0.1)", borderWidth:2.5, pointBackgroundColor:"#1b4332", pointRadius:4, tension:0.3, fill:true },
+        { label:"Target (85kg)", data: targetLine.length ? targetLine : [85], borderColor:"#52b788", borderDash:[6,3], borderWidth:1.5, pointRadius:0, fill:false }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{ labels:{ font:{ family:"Inter", size:11 } } }, tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.y} kg` } } },
+      scales: {
+        y: { min:80, max:100, grid:{ color:"rgba(0,0,0,0.05)" }, ticks:{ font:{family:"Inter",size:10} } },
+        x: { grid:{ color:"rgba(0,0,0,0.05)" }, ticks:{ font:{family:"Inter",size:10}, maxTicksLimit:10 } }
+      }
+    }
+  });
+}
+
+function renderMilestones(currentW) {
+  const ms = [
+    { weight:94, label:"-1kg First Drop", icon:"🌱" },
+    { weight:92, label:"-3kg Momentum",   icon:"⚡" },
+    { weight:90, label:"-5kg Halfway",    icon:"🏅" },
+    { weight:88, label:"-7kg Liver Wins", icon:"��" },
+    { weight:85, label:"-10kg GOAL!",     icon:"🏆" }
+  ];
+  document.getElementById("milestoneGrid").innerHTML = ms.map(m =>
+    `<div class="milestone${currentW <= m.weight?" unlocked":""}">
+      <div class="m-icon">${m.icon}</div>
+      <div class="m-label">${m.label}</div>
+      <div class="m-weight">${m.weight}kg</div>
+    </div>`
+  ).join("");
+}
+
+function renderStats(stats) {
+  document.getElementById("statDetails").innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      ${[
+        ["📅 Days Logged", stats.totalDaysLogged||0],
+        ["💪 Workouts Done", stats.workoutStreak||0],
+        ["💧 Avg Water", (stats.avgWater||0)+"L/day"],
+        ["📋 Avg Checklist", (stats.avgCompletion||0)+"%"]
+      ].map(([l,v])=>`<div style="background:#f8f9fa;border-radius:8px;padding:10px;text-align:center"><div style="font-size:.72rem;color:var(--text-light)">${l}</div><div style="font-size:1.1rem;font-weight:800;color:var(--primary)">${v}</div></div>`).join("")}
+    </div>`;
+}
+
+function updateBMI(w) {
+  const bmi = (w / (1.78 * 1.78)).toFixed(1);
+  const bmiEl = document.getElementById("bmiVal");
+  const catEl = document.getElementById("bmiCat");
+  const markerEl = document.getElementById("bmiMarker");
+  const displayEl = document.getElementById("bmiWeightDisplay");
+  if(bmiEl) { bmiEl.textContent = bmi; displayEl.textContent = w+"kg"; }
+  let cat = "Normal", color = "#22c55e";
+  if(bmi >= 30) { cat="Obese"; color="#ef4444"; }
+  else if(bmi >= 25) { cat="Overweight"; color="#f59e0b"; }
+  if(catEl) { catEl.textContent = cat; catEl.style.color = color; }
+  const pct = Math.min(100, Math.max(0, ((bmi - 20) / 15) * 100));
+  if(markerEl) markerEl.style.left = pct + "%";
+}
+
+// =====================================================
+// GREETING
+// =====================================================
+function setGreeting() {
+  const h = new Date().getHours();
+  const greet = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+  const day = new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"});
+  document.getElementById("dashGreeting").textContent = `${greet}, Karthik! · ${day}`;
+}
+
+// =====================================================
+// INIT
+// =====================================================
+document.addEventListener("DOMContentLoaded", () => {
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("logDate").value = today;
+  buildTimeline();
+  buildDietPlan();
+  buildRecipes();
+  buildWorkout();
+  buildCardio();
+  buildGuidelines();
+  setGreeting();
+  updateBMI(95);
+  loadDateData();
+});
+</script>
+</body>
+</html>
