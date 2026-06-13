@@ -29,6 +29,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3.0.1
         with:
-          app-name: health-dashboard-g8duaggrcxaeajbb
+          app-name: health-dasboard-g8duaggrcxaeajbb
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
