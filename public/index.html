@@ -161,6 +161,33 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
   .day-total-bar span{font-size:.75rem}
   /* CARDS */
   .card{padding:14px}
+  /* MONTH SELECTOR — horizontal scroll on mobile */
+  .month-selector{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
+  .month-selector::-webkit-scrollbar{display:none}
+  .month-btn{flex-shrink:0;padding:8px 14px;min-height:36px;font-size:.78rem}
+  /* WEEK SELECTOR */
+  .week-btn{min-height:36px;padding:8px 4px;font-size:.76rem}
+  /* PHASE BANNER — stack on mobile */
+  .phase-banner{flex-direction:column;gap:10px;align-items:flex-start}
+  .phase-banner>div:last-child{display:flex;flex-wrap:wrap;gap:6px}
+  .phase-pill{font-size:.68rem;padding:3px 9px;white-space:normal;text-align:left}
+  /* GROCERY TABLE */
+  .grocery-table{font-size:.76rem}
+  .grocery-table td,.grocery-table th{padding:6px 5px}
+  .grocery-table td:nth-child(4),.grocery-table th:nth-child(4){display:none}
+  .grocery-category{border:1px solid var(--border);border-radius:8px;padding:10px;overflow-x:auto}
+  /* DAY THEME */
+  .day-theme{font-size:.82rem;padding:8px 10px}
+  /* MEAL CARD ADJUSTMENTS */
+  .meal-card{padding:10px}
+  .meal-icon{font-size:1.2rem}
+  .meal-name{font-size:.82rem}
+  /* WEEK NOTE */
+  .week-note{font-size:.74rem;padding:7px 10px}
+  /* SECTION PADDING — account for safe-area + bottom nav */
+  .section-header p{font-size:.78rem}
+  /* GROCERY BUDGET BAR */
+  #groceryBudgetBar .phase-banner{padding:12px 14px}
 }
 /* STAT CHIPS */
 .stat-chip{background:var(--card);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px;border-left:4px solid var(--primary)}
@@ -339,7 +366,15 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 .budget-item .b-label{font-size:.7rem;color:var(--text-light);font-weight:500}
 .budget-item .b-val{font-size:1.1rem;font-weight:800;color:var(--primary)}
 .thyroid-note{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;font-size:.78rem;color:#92400e;margin-top:12px;line-height:1.5}
-</style>
+
+@media(max-width:360px){
+  .month-btn{padding:6px 10px;font-size:.72rem}
+  .bn-label{font-size:.52rem}
+  .page-title{font-size:.88rem}
+  .stat-chip .value{font-size:1.1rem}
+  .topbar-right{gap:5px}
+  .date-badge input{max-width:100px;font-size:.7rem}
+}</style>
 </head>
 <body>
 
@@ -735,7 +770,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     </div>
     <div class="month-selector" id="groceryMonthSelector"></div>
     <div id="groceryBudgetBar"></div>
-    <div id="groceryContent"></div>
+    <div class="hscroll"><div id="groceryContent"></div></div>
     <div class="thyroid-note">
       ?? <strong>Thyroid Shopping Rules:</strong> Always buy iodized salt. Choose full-fat paneer. Buy eggs in bulk (min 30/week).
       Soyabean: max 100g cooked 2x/week — do NOT exceed. All cruciferous veg (cauliflower, beans) must be cooked, never raw.
@@ -1441,7 +1476,8 @@ const pageTitles = {
   workout: "?? Workout",
   cardio: "?? Cardio",
   progress: "?? Progress",
-  guidelines: "??? Guidelines"
+  guidelines: "??? Guidelines",
+  grocery: "?? Grocery List"
 };
 
 function showSection(id, el) {
@@ -1452,7 +1488,7 @@ function showSection(id, el) {
   document.getElementById("pageTitle").textContent = pageTitles[id] || id;
   closeSidebar();
   // Sync bottom nav
-  const bnMap = { dashboard:"bn-dashboard", diet:"bn-diet", workout:"bn-workout", progress:"bn-progress" };
+  const bnMap = { dashboard:"bn-dashboard", diet:"bn-diet", workout:"bn-workout", progress:"bn-progress", grocery:"bn-more", recipes:"bn-more", cardio:"bn-more", guidelines:"bn-more" };
   document.querySelectorAll(".bn-item").forEach(b => b.classList.remove("active"));
   if(bnMap[id]) document.getElementById(bnMap[id]).classList.add("active");
   else { const more = document.getElementById("bn-more"); if(more) more.classList.add("active"); }
