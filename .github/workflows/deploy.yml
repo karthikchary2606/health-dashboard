@@ -8,7 +8,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  AZURE_WEBAPP_NAME: health-dasboard-g8duaggrcxaeajbb
+  AZURE_WEBAPP_NAME: health-dasboard
 
 jobs:
   deploy:
