@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  AZURE_WEBAPP_NAME: health-dasboard-g8duaggrcxaeajbb
 
 jobs:
   deploy:
@@ -26,9 +27,30 @@ jobs:
       - name: Install dependencies
         run: npm ci --omit=dev
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3.0.1
-        with:
-          app-name: health-dasboard-g8duaggrcxaeajbb
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+      - name: Create deployment ZIP
+        run: zip -r deploy.zip . --exclude "*.git*" --exclude "*.zip"
+
+      - name: Deploy via Kudu ZIP API
+        run: |
+          # Extract credentials from publish profile
+          PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}"
+          USERNAME=$(echo "$PUBLISH_PROFILE" | grep -oP 'userName="\K[^"]+' | head -1)
+          PASSWORD=$(echo "$PUBLISH_PROFILE" | grep -oP 'userPWD="\K[^"]+' | head -1)
+
+          echo "Deploying to $AZURE_WEBAPP_NAME..."
+
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            --max-time 300 \
+            -X POST \
+            -u "$USERNAME:$PASSWORD" \
+            -H "Content-Type: application/zip" \
+            --data-binary @deploy.zip \
+            "https://$AZURE_WEBAPP_NAME.scm.azurewebsites.net/api/zipdeploy")
+
+          echo "HTTP Response: $RESPONSE"
+          if [ "$RESPONSE" -eq 200 ] || [ "$RESPONSE" -eq 202 ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "❌ Deployment failed with HTTP $RESPONSE"
+            exit 1
+          fi
