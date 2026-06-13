@@ -1282,6 +1282,231 @@ const GROCERY_PLAN = [
   ]}
 ];
 
+const RECIPES = [
+  { id:0, icon:"🍳", cat:"breakfast", name:"Keto Ghee Masala Omelet", time:"10 min", cal:345, p:22, f:28, c:3,
+    tags:["thyroid-safe","keto","high-protein"], ingredients:["3 large eggs","1 tsp ghee","1/4 onion (finely chopped)","1/4 capsicum","1 green chili (optional)","Salt, black pepper, turmeric, cumin"],
+    steps:["Beat 3 eggs with salt, pepper, pinch of turmeric","Heat ghee in non-stick pan on medium","Sauté onion & capsicum for 2 min","Pour egg mix, tilt pan to spread","Cook covered for 1 min, fold and serve","Top with fresh coriander if desired"],
+    tip:"Use cast iron pan for better results. Do not add milk — keeps carbs minimal." },
+
+  { id:1, icon:"🧀", cat:"breakfast", name:"Keto Paneer Bhurji", time:"12 min", cal:430, p:25, f:32, c:6,
+    tags:["thyroid-safe","keto","vegetarian"], ingredients:["120g full-fat paneer (crumbled)","1 tsp ghee","1/4 onion","1/4 capsicum","1/4 tomato (small, optional)","Cumin, turmeric, garam masala, salt"],
+    steps:["Heat ghee, add cumin seeds till they splutter","Add onion, sauté till translucent (3 min)","Add capsicum & tomato, cook 2 min","Add crumbled paneer, stir on high heat 2 min","Add spices, mix well. Cook 1 more min","Finish with fresh coriander"],
+    tip:"Avoid soya paneer — use cow/buffalo milk paneer only. Crumble coarsely for best texture." },
+
+  { id:2, icon:"🌾", cat:"lunch", name:"Cauliflower Rice", time:"8 min", cal:55, p:3, f:2, c:6,
+    tags:["keto","thyroid-COOK-first","low-carb"], ingredients:["300g cauliflower florets","1 tsp ghee or coconut oil","Salt, black pepper","Optional: cumin, curry leaves"],
+    steps:["IMPORTANT: Steam cauliflower for 5 min first (deactivates goitrogens)","Let it cool slightly, then pulse in food processor (or grate)","Heat oil in pan, add cumin/curry leaves","Add grated cauliflower, stir-fry on high 3–4 min","Season with salt & pepper. Keep dry and fluffy"],
+    tip:"Always steam before grating — raw cauliflower is banned for thyroid. Serve immediately after cooking." },
+
+  { id:3, icon:"🍗", cat:"lunch", name:"Chicken Pepper Curry (No Cream)", time:"25 min", cal:460, p:52, f:17, c:8,
+    tags:["thyroid-safe","high-protein","lchf"], ingredients:["200g chicken thigh/breast (boneless)","1 tbsp coconut oil","1 onion (sliced)","1 tsp ginger-garlic paste","1 tsp black pepper (key ingredient)","Turmeric, coriander powder, salt","100ml thin coconut milk (optional)"],
+    steps:["Marinate chicken with turmeric, pepper, ginger-garlic, salt — 30 min","Heat oil, fry onions until golden","Add marinated chicken, sear on high 3 min each side","Add spices, 2 tbsp water, cover & cook 15 min on low","Add coconut milk if using, simmer 3 more min","Garnish with fresh coriander"],
+    tip:"Black pepper is the star here — it aids digestion and liver health. Use bone-in for more flavour." },
+
+  { id:4, icon:"🍜", cat:"dinner", name:"Clear Chicken Pepper Soup", time:"20 min", cal:285, p:38, f:9, c:5,
+    tags:["thyroid-safe","liver-safe","low-carb","dinner"], ingredients:["150g chicken (bone-in preferred)","600ml water","Whole black peppercorns (1 tsp)","2 garlic cloves","1 inch ginger (sliced)","Sea salt","Coriander & curry leaves"],
+    steps:["Bring water to boil with garlic, ginger, peppercorns","Add chicken pieces, skim foam off top","Simmer on low for 15–18 min","Remove chicken, shred it back in","Season with sea salt generously","Finish with coriander & curry leaves"],
+    tip:"This is your best dinner — light, high protein, zero carbs. Drink the broth for collagen and gut health." },
+
+  { id:5, icon:"🔥", cat:"dinner", name:"Tawa Paneer Tikka", time:"20 min", cal:350, p:25, f:27, c:4,
+    tags:["thyroid-safe","vegetarian","keto"], ingredients:["120–150g full-fat paneer (cubed)","2 tbsp full-fat curd (yogurt)","1 tsp ghee","Kashmiri red chili, cumin, coriander powder","Garam masala, turmeric, ginger-garlic paste","Salt, lemon juice"],
+    steps:["Mix all spices with curd to make marinade","Coat paneer cubes, marinate 1 hr minimum","Heat tawa/cast iron on high, add ghee","Sear paneer 2 min each side until charred edges appear","Do NOT overcook — paneer gets rubbery","Squeeze lemon, serve immediately"],
+    tip:"Marinate overnight in fridge for intense flavor. Use iron tawa for best char." },
+
+  { id:6, icon:"🥚", cat:"lunch", name:"No-Tomato Egg Curry (Coconut Base)", time:"18 min", cal:310, p:22, f:22, c:7,
+    tags:["thyroid-safe","keto","high-protein"], ingredients:["3 boiled eggs (halved)","1 tbsp coconut oil","1 onion (finely chopped)","100ml thin coconut milk","Cumin, turmeric, coriander, pepper, salt","Fresh ginger-garlic paste"],
+    steps:["Hard-boil eggs (10 min), halve them, score with fork","Heat oil, fry onions golden (5 min)","Add ginger-garlic, fry 1 min","Add dry spices, 2 tbsp water, cook paste 2 min","Pour coconut milk, stir, bring to simmer","Add eggs gently, simmer 4 min. Do not boil."],
+    tip:"No tomato = lower acidity, better for liver. Coconut milk adds healthy MCTs." },
+
+  { id:7, icon:"🍗", cat:"dinner", name:"Tawa Chicken Tikka (No Oven)", time:"25 min", cal:330, p:48, f:12, c:4,
+    tags:["thyroid-safe","high-protein","lchf"], ingredients:["200g chicken thigh (boneless, cubed)","3 tbsp full-fat curd","Kashmiri chili, cumin, garam masala, turmeric","Ginger-garlic paste","1 tsp ghee, salt, lemon"],
+    steps:["Mix curd + all spices for marinade","Coat chicken thoroughly, rest 1–2 hrs","Heat cast iron tawa on high flame","Add ghee, place chicken pieces (do not crowd)","Cook 4–5 min per side until cooked through","Rest 2 min, squeeze lemon & serve"],
+    tip:"Chicken thighs are more forgiving than breast — better fat profile too. Marinate overnight for best results." },
+
+  { id:8, icon:"🥣", cat:"dinner", name:"Egg Drop Soup (Chinese-Style Keto)", time:"8 min", cal:200, p:14, f:12, c:4,
+    tags:["thyroid-safe","quick","low-carb"], ingredients:["2 eggs (beaten)","500ml chicken broth (homemade preferred)","1/2 tsp sesame oil (small amount ok)","Black pepper, salt","Spring onions (green part only)","Ginger (grated)"],
+    steps:["Bring broth to a gentle boil with ginger","Season with salt and pepper","Reduce to low simmer","Slowly pour beaten eggs in a thin stream while stirring","Eggs cook in seconds — ribbon-like strands form","Drizzle sesame oil, top with spring onions"],
+    tip:"Make broth from leftover chicken bones — free collagen and amino acids." },
+
+  { id:9, icon:"🥚", cat:"breakfast", name:"Paneer & Egg Scramble", time:"10 min", cal:360, p:28, f:26, c:3,
+    tags:["thyroid-safe","keto","high-protein"], ingredients:["2 large eggs","60g paneer (crumbled)","1 tsp ghee","Salt, pepper, pinch of turmeric","Optional: small green chili, coriander"],
+    steps:["Beat eggs with salt and pepper","Heat ghee in non-stick pan","Add crumbled paneer, stir-fry 1 min","Pour beaten eggs over paneer","Stir gently on medium — do not over-scramble","Remove while slightly underdone (residual heat finishes it)"],
+    tip:"Best pre-workout breakfast. Combine ghee fat + egg protein + paneer casein for sustained energy." },
+
+  { id:10, icon:"🍗", cat:"lunch", name:"Chicken Stir-Fry with Bell Peppers", time:"15 min", cal:385, p:46, f:16, c:8,
+    tags:["thyroid-safe","quick","lchf"], ingredients:["200g chicken breast (thin sliced)","1 tbsp coconut oil","1 red + 1 green bell pepper (sliced)","1 onion (sliced)","Ginger, garlic (minced)","Soy sauce SUBSTITUTE: coconut aminos or just salt+pepper","Black pepper, salt"],
+    steps:["Slice chicken thin — 5mm strips. Pat dry.","Heat oil on highest flame (wok-style)","Flash-fry chicken 2–3 min until white","Remove chicken. Fry peppers & onion 2 min (keep crunch)","Add back chicken + ginger-garlic + seasoning","Toss on high 1 min, serve immediately"],
+    tip:"NO SOY SAUCE — use coconut aminos or just salt+pepper+lemon. High flame is key for stir-fry." },
+
+  { id:11, icon:"🌱", cat:"snack", name:"Custom Seed & Nut Mix (30g Daily Cap)", time:"2 min (prep)", cal:175, p:6, f:14, c:6,
+    tags:["thyroid-safe","daily-allotment"], ingredients:["Pumpkin seeds: 8g (highest magnesium)","Sunflower seeds: 5g","Flax seeds: 5g (ground preferred)","White sesame seeds: 4g","Watermelon seeds: 4g","Almonds: 2g","Walnuts: 1g","Unsalted Pistachios: 1g"],
+    steps:["Weigh each component on a kitchen scale","Mix all in a small airtight container","Prepare weekly batch and store in fridge","Consume entire 30g portion with green tea at 4:30 PM","Do NOT exceed 30g combined — strict caloric control"],
+    tip:"STRICT 30g/day cap. Pumpkin seeds are most valuable for thyroid (selenium + zinc + magnesium). Flax seeds: grind for better omega-3 absorption." }
+];
+
+// =====================================================
+// DATA: WORKOUT PLAN
+// =====================================================
+const WORKOUT_PLAN = {
+  Monday: {
+    name:"Upper Push + Core", type:"strength", icon:"💪", duration:"45 min",
+    exercises:[
+      { cat:"core",  name:"Cat-Cow Stretch",         sets:"3", reps:"10",    note:"Spinal mobility warm-up — mandatory start" },
+      { cat:"core",  name:"Bird-Dog",                 sets:"3", reps:"10 ea", note:"Anti-rotation core stability — key for LBP" },
+      { cat:"core",  name:"Dead Bug",                 sets:"3", reps:"10",    note:"Core anti-extension — back stays flat on floor" },
+      { cat:"glute", name:"Glute Bridge",             sets:"3", reps:"15",    note:"Posterior chain activation before pressing" },
+      { cat:"push",  name:"DB Floor Press",           sets:"3", reps:"12",    note:"Floor limits ROM — spine-safe chest press" },
+      { cat:"push",  name:"DB Seated Shoulder Press", sets:"3", reps:"10",    note:"Seated preferred over standing — less spinal load" },
+      { cat:"push",  name:"DB Lateral Raise",         sets:"3", reps:"15",    note:"4–6 kg. Controlled tempo 2:0:2" },
+      { cat:"push",  name:"DB Tricep Extension",      sets:"3", reps:"12",    note:"Overhead if no pain, else lying skull crusher" }
+    ]
+  },
+  Tuesday: {
+    name:"Lower Body Glute Focus + Core", type:"strength", icon:"🍑", duration:"40 min",
+    exercises:[
+      { cat:"core",     name:"Cat-Cow Stretch",          sets:"3", reps:"10",    note:"Mandatory spinal warm-up" },
+      { cat:"core",     name:"Bird-Dog",                  sets:"3", reps:"10 ea", note:"Slow and controlled, 3-sec hold at top" },
+      { cat:"glute",    name:"Glute Bridge with Barbell", sets:"4", reps:"15",    note:"Bar on hips (padded). Hip thrust variation — spine-safe" },
+      { cat:"glute",    name:"DB Romanian Deadlift",      sets:"3", reps:"12",    note:"HINGE not squat. Back straight, hips back. Light to start." },
+      { cat:"compound", name:"Bulgarian Split Squat",     sets:"3", reps:"10 ea", note:"Rear foot elevated. Upright torso. Very spine-friendly" },
+      { cat:"glute",    name:"DB Lateral Lunge",          sets:"3", reps:"10 ea", note:"Slow eccentric (3 sec down). Good for hip abductors" },
+      { cat:"core",     name:"Calf Raise (Standing)",     sets:"3", reps:"20",    note:"Bodyweight or hold dumbbells" }
+    ]
+  },
+  Wednesday: {
+    name:"REST / Active Recovery", type:"rest", icon:"🧘", duration:"20–30 min walk",
+    exercises:[
+      { cat:"cardio", name:"Fasted Morning Walk", sets:"1", reps:"20–30 min", note:"Low intensity. HR 100–120 BPM. Burns fat optimally" },
+      { cat:"core",   name:"Cat-Cow Stretch",     sets:"2", reps:"10",        note:"Morning mobility only" },
+      { cat:"core",   name:"Pigeon Pose Stretch", sets:"2", reps:"30s ea",    note:"Hip flexor relief after motorbike commute" }
+    ]
+  },
+  Thursday: {
+    name:"Upper Pull + Core", type:"strength", icon:"🦵", duration:"45 min",
+    exercises:[
+      { cat:"core",  name:"Cat-Cow Stretch",         sets:"3", reps:"10",    note:"Mandatory spinal warm-up" },
+      { cat:"core",  name:"Dead Bug",                 sets:"3", reps:"10",    note:"Core stability before pulling work" },
+      { cat:"glute", name:"Glute Bridge",             sets:"3", reps:"15",    note:"Activation set" },
+      { cat:"pull",  name:"DB Bent-Over Row",         sets:"3", reps:"12",    note:"Neutral spine. One hand braced on bench for support" },
+      { cat:"pull",  name:"DB Bicep Curl",            sets:"3", reps:"12",    note:"Supinated grip. Full ROM. No swinging." },
+      { cat:"pull",  name:"DB Hammer Curl",           sets:"3", reps:"12",    note:"Neutral grip. Hits brachialis and brachioradialis" },
+      { cat:"pull",  name:"DB Rear Delt Fly",         sets:"3", reps:"15",    note:"Inclined at 45°. 3–4 kg. Fixes posture from desk work" },
+      { cat:"pull",  name:"DB Shrug",                 sets:"3", reps:"15",    note:"Slow eccentric 3 sec. Trapezius activation" }
+    ]
+  },
+  Friday: {
+    name:"Full Body Compound + Core", type:"strength", icon:"🔥", duration:"50 min",
+    exercises:[
+      { cat:"core",     name:"Cat-Cow Stretch",          sets:"3", reps:"10",    note:"Mandatory" },
+      { cat:"core",     name:"Bird-Dog",                  sets:"3", reps:"10 ea", note:"Stability focus" },
+      { cat:"core",     name:"Dead Bug",                  sets:"3", reps:"10",    note:"Mandatory" },
+      { cat:"glute",    name:"Barbell Hip Thrust",        sets:"4", reps:"12",    note:"Primary strength builder. Bar padded on hips." },
+      { cat:"compound", name:"DB Romanian Deadlift",      sets:"4", reps:"10",    note:"Heaviest weights this week. Progressive overload." },
+      { cat:"push",     name:"DB Floor Press",            sets:"3", reps:"12",    note:"Increase weight by 1–2kg vs Monday" },
+      { cat:"pull",     name:"DB Bent-Over Row",          sets:"3", reps:"12",    note:"Heavy row — challenge yourself" },
+      { cat:"push",     name:"DB Shoulder Press",         sets:"3", reps:"10",    note:"Seated. Compound finisher." }
+    ]
+  },
+  Saturday: {
+    name:"Active Recovery (Walk)", type:"cardio", icon:"🚶", duration:"30 min walk",
+    exercises:[
+      { cat:"cardio", name:"Fasted Morning Walk",    sets:"1", reps:"25–35 min", note:"Brisk pace. Arm swing. HR 110–130 BPM." },
+      { cat:"core",   name:"Cat-Cow Stretch",        sets:"2", reps:"10",        note:"Morning routine" },
+      { cat:"core",   name:"Hip Flexor Stretch",     sets:"2", reps:"30s ea",    note:"Counteracts sitting 9+ hrs at desk" }
+    ]
+  },
+  Sunday: {
+    name:"Full REST + Mobility", type:"rest", icon:"🛌", duration:"Mobility only",
+    exercises:[
+      { cat:"core",   name:"Full Body Stretching",    sets:"1", reps:"15 min",  note:"Entire body stretch sequence. No loading." },
+      { cat:"core",   name:"Cat-Cow Stretch",         sets:"2", reps:"10",      note:"Spine health maintenance" },
+      { cat:"core",   name:"Child Pose",              sets:"2", reps:"60s",     note:"Lower back decompression — esp. after weekly rides" },
+      { cat:"core",   name:"Supine Twist",            sets:"2", reps:"30s ea",  note:"Thoracic rotation. Lie on back, knees to one side." }
+    ]
+  }
+};
+
+// =====================================================
+// DATA: CARDIO
+// =====================================================
+const CARDIO_TABLE = [
+  { day:"Monday",    session:"Fasted Walk", duration:"20–25 min", intensity:"Light (HR 95–115)", note:"Pre-workout or standalone" },
+  { day:"Tuesday",   session:"REST",        duration:"—",         intensity:"—",                 note:"Lower body day — skip cardio" },
+  { day:"Wednesday", session:"Fasted Walk", duration:"25–30 min", intensity:"Moderate (HR 110–125)", note:"Active recovery day" },
+  { day:"Thursday",  session:"REST",        duration:"—",         intensity:"—",                 note:"Upper pull day — skip cardio" },
+  { day:"Friday",    session:"Fasted Walk", duration:"20 min",    intensity:"Light (HR 95–110)", note:"Before full body session" },
+  { day:"Saturday",  session:"Brisk Walk",  duration:"30–35 min", intensity:"Moderate (HR 115–130)", note:"Dedicated cardio day" },
+  { day:"Sunday",    session:"Easy Walk",   duration:"20–30 min", intensity:"Very Light (HR 90–105)", note:"Recovery — enjoy outdoors" }
+];
+
+const CARDIO_PHASES = [
+  { phase:"Phase 1 (Wk 1–4)", label:"Foundation Walking", detail:"20–30 min fasted walks. HR 95–130 BPM. 4 days/week. Build aerobic base.", current:true },
+  { phase:"Phase 2 (Wk 5–8)", label:"Extended + Incline",   detail:"30–40 min walks with incline/stairs. Add 1 cycling session if back allows.", current:false },
+  { phase:"Phase 3 (Month 3)", label:"Interval Walking",     detail:"3 min brisk + 1 min fast-paced. 30 min. Introduces anaerobic threshold.", current:false },
+  { phase:"Phase 4 (Month 4+)", label:"LISS + Light Cycling", detail:"45 min LISS cycling or swimming. Zero spinal impact. Fat burning peak.", current:false }
+];
+
+const HR_ZONES = [
+  { zone:"Zone 1 – Recovery", range:"95–110 BPM", purpose:"Active recovery, fat utilization" },
+  { zone:"Zone 2 – Fat Burn",  range:"110–130 BPM", purpose:"Primary fat-burning zone — TARGET" },
+  { zone:"Zone 3 – Aerobic",   range:"130–150 BPM", purpose:"Cardiovascular conditioning (future)" }
+];
+
+// =====================================================
+// DATA: DAILY TIMELINE TASKS
+// =====================================================
+const TASKS = [
+  { time:"06:30 AM", text:"💊 Thyronorm 12.5mg — Empty stomach. Set 45-min food timer.", category:"medication" },
+  { time:"07:00 AM", text:"🚿 Cold-warm shower + 10-min morning mobility (Cat-Cow, hip stretches).", category:"routine" },
+  { time:"07:30 AM", text:"🍵 Metabolic Primer: 1 glass warm water + 1 tsp ACV (with mother).", category:"nutrition" },
+  { time:"08:15 AM", text:"💪 Home Workout: Core stabilization → Strength session per today's plan.", category:"workout" },
+  { time:"09:30 AM", text:"🍳 Breakfast: High-protein LCHF meal (see Diet Plan for today's option).", category:"nutrition" },
+  { time:"11:00 AM", text:"💧 Mid-morning hydration: 500ml water (towards 4L daily target).", category:"hydration" },
+  { time:"01:30 PM", text:"🍗 Lunch: Low-carb high-protein main meal. Max 8g net carbs.", category:"nutrition" },
+  { time:"04:00 PM", text:"💧 Afternoon water: 500ml. Desk job reminder — stay hydrated.", category:"hydration" },
+  { time:"04:30 PM", text:"🌱 Snack: Green Tea + 30g Custom Seed Mix (WEIGH on scale).", category:"nutrition" },
+  { time:"06:00 PM", text:"🚶 Evening Walk: 20 min brisk walk. Disconnect from screens.", category:"cardio" },
+  { time:"07:30 PM", text:"🍜 Dinner: Light high-protein meal. Finish before 8:00 PM.", category:"nutrition" },
+  { time:"08:30 PM", text:"🌙 Wind-down: Chamomile/Oolong tea. No screens 30 min before bed.", category:"routine" }
+];
+
+// =====================================================
+// DATA: SEED ALLOCATION
+// =====================================================
+const SEEDS = [
+  { name:"Pumpkin Seeds",    stock:250, daily:8,  note:"Highest magnesium — thyroid support" },
+  { name:"Sunflower Seeds",  stock:250, daily:5,  note:"Vitamin E + selenium" },
+  { name:"Flax Seeds",       stock:250, daily:5,  note:"Grind before eating for omega-3" },
+  { name:"White Sesame",     stock:250, daily:4,  note:"Calcium + zinc" },
+  { name:"Watermelon Seeds", stock:250, daily:4,  note:"Magnesium + iron" },
+  { name:"Almonds",          stock:250, daily:2,  note:"Vitamin E + healthy fat" },
+  { name:"Walnuts",          stock:250, daily:1,  note:"Best omega-3 nut for brain health" },
+  { name:"Pistachios",       stock:250, daily:1,  note:"L-arginine for circulation" }
+];
+
+// =====================================================
+// DATA: SUPPLEMENT TIMING
+// =====================================================
+const SUPP_TIMING = [
+  { time:"06:30 AM", item:"Thyronorm 12.5mg", note:"Strict empty stomach. 45-min wait before ANY food." },
+  { time:"07:30 AM", item:"ACV (1 tsp in warm water)", note:"Boosts metabolism + liver detox + digestion." },
+  { time:"04:30 PM", item:"Seed Mix + Green Tea", note:"Anti-inflammatory snack window." },
+  { time:"08:30 PM", item:"Chamomile Tea", note:"Cortisol reset. Better sleep = better thyroid function." }
+];
+
+// =====================================================
+// STATE
+// =====================================================
+let currentMoodScore = 3;
+let currentEnergyScore = 3;
+let waterLevel = 0;
+let currentRecipeFilter = "all";
+let currentWorkoutDay = "Monday";
+let weightChartInstance = null;
+
+// =====================================================
+// NAVIGATION
+// =====================================================
 const pageTitles = {
   dashboard: "🏠 Dashboard",
   diet: "🥗 Diet Plan",
@@ -1548,6 +1773,30 @@ function renderWorkoutDayGrid() {
     grid.appendChild(div);
   });
   selectWorkoutDay(today in WORKOUT_PLAN ? today : "Monday");
+}
+
+
+function selectWorkoutDay(day) {
+  currentWorkoutDay = day;
+  document.querySelectorAll(".wday").forEach(d => d.classList.remove("active"));
+  const el = document.getElementById("wd-"+day);
+  if(el) el.classList.add("active");
+  renderWorkoutDay(day);
+}
+
+function renderWorkoutDay(day) {
+  const w = WORKOUT_PLAN[day];
+  let wHtml = '<div class="card"><div class="card-title">' + w.icon + ' ' + day + ': ' + w.name +
+    '<span style="margin-left:auto;font-size:.72rem;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;padding:3px 8px;border-radius:8px;font-weight:600">⏱️ ' + w.duration + '</span>' +
+    '<span class="spine-badge" style="margin-left:8px">🦴 Spine-Safe</span></div><div class="exercise-list">';
+  w.exercises.forEach(ex => {
+    wHtml += '<div class="exercise-item ' + ex.cat + '"><span class="exercise-cat">' + ex.cat + '</span><div>' +
+      '<div class="exercise-name">' + ex.name + '</div>' +
+      '<div class="exercise-detail">📊 ' + ex.sets + ' sets × ' + ex.reps + '</div>' +
+      '<div class="exercise-note">' + ex.note + '</div></div></div>';
+  });
+  wHtml += '</div></div>';
+  document.getElementById("workoutDayContent").innerHTML = wHtml;
 }
 
 // =====================================================
