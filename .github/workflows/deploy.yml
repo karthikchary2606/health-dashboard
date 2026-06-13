@@ -34,20 +34,32 @@ jobs:
         env:
           PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         run: |
+          # Extract credentials and SCM URL directly from publish profile XML
           USERNAME=$(echo "$PUBLISH_PROFILE" | grep -oP 'userName="\K[^"]+' | head -1)
           PASSWORD=$(echo "$PUBLISH_PROFILE" | grep -oP 'userPWD="\K[^"]+' | head -1)
+          SCM_URL=$(echo "$PUBLISH_PROFILE" | grep -oP 'publishUrl="\K[^"]+' | grep scm | head -1)
 
-          echo "Deploying to $AZURE_WEBAPP_NAME..."
+          echo "Username: $USERNAME"
+          echo "SCM URL: $SCM_URL"
 
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+          if [ -z "$SCM_URL" ]; then
+            echo "❌ Could not extract SCM URL from publish profile"
+            exit 1
+          fi
+
+          echo "Deploying to https://$SCM_URL/api/zipdeploy ..."
+
+          RESPONSE=$(curl -v -o /tmp/deploy_response.txt -w "%{http_code}" \
             --max-time 300 \
             -X POST \
             -u "$USERNAME:$PASSWORD" \
             -H "Content-Type: application/zip" \
             --data-binary @deploy.zip \
-            "https://$AZURE_WEBAPP_NAME.scm.azurewebsites.net/api/zipdeploy")
+            "https://$SCM_URL/api/zipdeploy")
 
           echo "HTTP Response: $RESPONSE"
+          cat /tmp/deploy_response.txt || true
+
           if [ "$RESPONSE" -eq 200 ] || [ "$RESPONSE" -eq 202 ]; then
             echo "✅ Deployment successful!"
           else
