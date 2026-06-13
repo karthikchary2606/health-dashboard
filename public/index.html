@@ -356,6 +356,20 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   .week-note{font-size:.74rem;padding:7px 10px}
   .section-header p{font-size:.78rem}
 }
+
+@media(max-width:480px){
+  .grid-2{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .recipe-grid{grid-template-columns:1fr}
+  .meal-card{flex-direction:column;align-items:flex-start;gap:8px}
+  .meal-macros{display:flex;flex-wrap:wrap;gap:4px}
+  .wday{min-width:36px;padding:6px 4px}
+  .stat-chip{padding:12px 14px}
+  .streak-row{grid-template-columns:1fr 1fr}
+  .month-btn{padding:6px 10px;font-size:.72rem}
+  .week-btn{padding:5px 10px;font-size:.72rem}
+  .phase-banner{flex-direction:column;gap:6px}
+}
 @media(max-width:360px){
   .month-btn{padding:6px 10px;font-size:.72rem}
   .bn-label{font-size:.52rem}
@@ -446,7 +460,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <div class="grid-4" style="margin-bottom:20px" id="statsRow">
       <div class="stat-chip" style="border-left-color:#f59e0b"><div class="label">Target Calories</div><div class="value" id="calorieStat">—</div><div class="sub" id="calorieStatSub">kcal/day</div></div>
       <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div></div>
-      <div class="stat-chip" style="border-left-color:#10b981"><div class="label">Checklist</div><div class="value" id="checkStat">0/12</div><div class="sub">Daily tasks done</div></div>
+      <div class="stat-chip" style="border-left-color:#10b981"><div class="label">Checklist</div><div class="value" id="checkStat">0/—</div><div class="sub">Daily tasks done</div></div>
       <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">95</div><div class="sub">kg · Goal: 75kg</div></div>
     </div>
 
@@ -597,7 +611,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== PROGRESS ===== -->
   <div id="sec-progress" class="section">
     <div class="section-header">
-      <div><h2>Progress Tracker</h2><p>Weight loss journey · Target: 75kg (−20kg from 95kg)</p></div>
+      <div><h2>Progress Tracker</h2><p>Weight loss journey · 95kg → 75kg · 6-month program</p></div>
       <button class="btn btn-primary btn-sm" onclick="loadProgress()">🔄 Refresh</button>
     </div>
 
@@ -2103,24 +2117,6 @@ const HR_ZONES = [
 ];
 
 // =====================================================
-// DATA: DAILY TIMELINE TASKS
-// =====================================================
-const TASKS = [
-  { time:"06:30 AM", text:"💊 Thyronorm 12.5mg — Empty stomach. Set 45-min food timer.", category:"medication" },
-  { time:"07:00 AM", text:"🚿 Cold-warm shower + 10-min morning mobility (Cat-Cow, hip stretches).", category:"routine" },
-  { time:"07:30 AM", text:"🍵 Metabolic Primer: 1 glass warm water + 1 tsp ACV (with mother).", category:"nutrition" },
-  { time:"08:15 AM", text:"💪 Home Workout: Core stabilization → Strength session per today's plan.", category:"workout" },
-  { time:"09:30 AM", text:"🍳 Breakfast: High-protein LCHF meal (see Diet Plan for today's option).", category:"nutrition" },
-  { time:"11:00 AM", text:"💧 Mid-morning hydration: 500ml water (towards 4L daily target).", category:"hydration" },
-  { time:"01:30 PM", text:"🍗 Lunch: Low-carb high-protein main meal. Max 8g net carbs.", category:"nutrition" },
-  { time:"04:00 PM", text:"💧 Afternoon water: 500ml. Desk job reminder — stay hydrated.", category:"hydration" },
-  { time:"04:30 PM", text:"🌱 Snack: Green Tea + 30g Custom Seed Mix (WEIGH on scale).", category:"nutrition" },
-  { time:"06:00 PM", text:"🚶 Evening Walk: 20 min brisk walk. Disconnect from screens.", category:"cardio" },
-  { time:"07:30 PM", text:"🍜 Dinner: Light high-protein meal. Finish before 8:00 PM.", category:"nutrition" },
-  { time:"08:30 PM", text:"🌙 Wind-down: Chamomile/Oolong tea. No screens 30 min before bed.", category:"routine" }
-];
-
-// =====================================================
 // DATA: SEED ALLOCATION
 // =====================================================
 const SEEDS = [
@@ -2608,10 +2604,10 @@ async function loadDateData() {
     const res = await fetch("/api/logs/" + date);
     const data = await res.json();
     // Sync checklist
-    for(let i=0;i<TASKS.length;i++) {
+    const phLen = PHASE_TASKS[getPhaseIndex()].length; for(let i=0;i<phLen;i++) {
       const chk = document.getElementById("chk-"+i);
       if(chk) {
-        chk.checked = data.checklist[i] || false;
+        chk.checked = (data.checklist && data.checklist[i]) || false;
         document.getElementById("titem-"+i).classList.toggle("done", chk.checked);
       }
     }
@@ -2649,7 +2645,7 @@ async function syncData() {
   const notes = document.getElementById("workoutNotes").value;
   document.getElementById("weightStat").textContent = weight;
   updateBMI(weight);
-  const checklist = TASKS.map((_, i) => { const c = document.getElementById("chk-"+i); return c ? c.checked : false; });
+  const pTasks = PHASE_TASKS[getPhaseIndex()]; const checklist = pTasks.map((_, i) => { const c = document.getElementById("chk-"+i); return c ? c.checked : false; });
   const payload = { date, checklist, waterIntake: waterLevel, weight, completedWorkout: document.getElementById("workoutToggle").checked, moodScore: currentMoodScore, energyScore: currentEnergyScore, notes };
   localStorage.setItem("health-" + date, JSON.stringify(payload));
   try {
@@ -2661,7 +2657,7 @@ function loadFromLocal(date) {
   const saved = localStorage.getItem("health-" + date);
   if(!saved) return;
   const data = JSON.parse(saved);
-  for(let i=0;i<TASKS.length;i++) {
+  for(let i=0;i<PHASE_TASKS[getPhaseIndex()].length;i++) {
     const chk = document.getElementById("chk-"+i);
     if(chk) { chk.checked = data.checklist[i]||false; document.getElementById("titem-"+i).classList.toggle("done", chk.checked); }
   }
@@ -2723,21 +2719,26 @@ function renderWeightChart(data) {
 
 function renderMilestones(currentW) {
   const ms = [
-    { weight:94, label:"-1kg First Drop", icon:"🌱" },
-    { weight:92, label:"-3kg Momentum",   icon:"⚡" },
-    { weight:90, label:"-5kg Halfway",    icon:"🏅" },
-    { weight:88, label:"-7kg Liver Wins", icon:"��" },
-    { weight:85, label:"-10kg GOAL!",     icon:"🏆" }
+    { weight:94, label:"-1kg First Drop",      icon:"🌱", month:"Week 2" },
+    { weight:92, label:"-3kg Month 1 Done",    icon:"⚡", month:"Month 1" },
+    { weight:89, label:"-6kg Building Steam",  icon:"🔥", month:"Month 2" },
+    { weight:86, label:"-9kg Halfway!",        icon:"🏅", month:"Month 3" },
+    { weight:83, label:"-12kg Strong & Lean",  icon:"💪", month:"Month 4" },
+    { weight:80, label:"-15kg Final Phase",    icon:"🎯", month:"Month 5" },
+    { weight:77, label:"-18kg Almost There!",  icon:"🚀", month:"Month 5+" },
+    { weight:75, label:"-20kg 🎉 GOAL! 75kg", icon:"🏆", month:"Month 6" }
   ];
-  document.getElementById("milestoneGrid").innerHTML = ms.map(m =>
-    `<div class="milestone${currentW <= m.weight?" unlocked":""}">
-      <div class="m-icon">${m.icon}</div>
-      <div class="m-label">${m.label}</div>
-      <div class="m-weight">${m.weight}kg</div>
-    </div>`
-  ).join("");
+  const grid = document.getElementById("milestoneGrid");
+  grid.innerHTML = ms.map(m => {
+    const unlocked = currentW <= m.weight;
+    const current = !unlocked && currentW > m.weight && currentW <= m.weight + 3;
+    return '<div class="milestone' + (unlocked?" unlocked":"") + '">' +
+      '<div class="m-icon">' + m.icon + '</div>' +
+      '<div class="m-label">' + m.label + '</div>' +
+      '<div class="m-weight">' + m.weight + 'kg · ' + m.month + '</div>' +
+      '</div>';
+  }).join("");
 }
-
 function renderStats(stats) {
   document.getElementById("statDetails").innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
@@ -2751,7 +2752,7 @@ function renderStats(stats) {
 }
 
 function updateBMI(w) {
-  const bmi = (w / (1.78 * 1.78)).toFixed(1);
+  const bmi = (w / (1.80 * 1.80)).toFixed(1); // Karthik: 5'11" = 1.80m
   const bmiEl = document.getElementById("bmiVal");
   const catEl = document.getElementById("bmiCat");
   const markerEl = document.getElementById("bmiMarker");
@@ -2854,6 +2855,7 @@ document.addEventListener("DOMContentLoaded", () => {
   buildGrocery();
   buildGuidelines();
   setGreeting();
+  loadProgress();
   updateBMI(95);
   loadDateData();
 });
