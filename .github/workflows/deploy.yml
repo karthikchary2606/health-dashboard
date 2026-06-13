@@ -31,9 +31,9 @@ jobs:
         run: zip -r deploy.zip . --exclude "*.git*" --exclude "*.zip"
 
       - name: Deploy via Kudu ZIP API
+        env:
+          PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         run: |
-          # Extract credentials from publish profile
-          PUBLISH_PROFILE="${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}"
           USERNAME=$(echo "$PUBLISH_PROFILE" | grep -oP 'userName="\K[^"]+' | head -1)
           PASSWORD=$(echo "$PUBLISH_PROFILE" | grep -oP 'userPWD="\K[^"]+' | head -1)
 
