@@ -2360,7 +2360,7 @@ function renderRecipes(cat) {
         <ul>${r.ingredients.map(i=>`<li>${i}</li>`).join("")}</ul>
         <h4>👨‍🍳 Method</h4>
         <ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
-        <div class="recipe-tip">💡 ${r.tip}</div>
+        ${r.tip ? `<div class="recipe-tip">💡 ${r.tip}</div>` : ""}
       </div>
       <div style="padding:10px 16px;border-top:1px solid var(--border)">
         <button class="btn btn-primary btn-sm" onclick="toggleRecipe(${r.id})">View Recipe ▼</button>
