@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -107,7 +107,7 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
   .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
   .section-header{flex-direction:column;align-items:flex-start;gap:8px}
   .section-header h2{font-size:1.05rem}
-  /* STAT CHIPS â€” 2x2 on mobile */
+  /* STAT CHIPS — 2x2 on mobile */
   #statsRow{grid-template-columns:1fr 1fr !important;gap:10px}
   .stat-chip .value{font-size:1.3rem}
   /* TIMELINE */
@@ -312,6 +312,33 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 .wt-slider:before{content:"";position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s}
 input:checked + .wt-slider{background:var(--success)}
 input:checked + .wt-slider:before{transform:translateX(22px)}
+/* MONTH / WEEK SELECTORS */
+.month-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.month-btn{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);font-size:.76rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-med)}
+.month-btn:hover{border-color:var(--primary);color:var(--primary)}
+.month-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.month-btn.current-month{border-color:var(--accent);color:var(--accent-dark)}
+.week-selector{display:flex;gap:6px;margin-bottom:12px}
+.week-btn{flex:1;padding:6px 6px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);font-size:.74rem;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text-med);text-align:center}
+.week-btn:hover{background:#f0fdf4}
+.week-btn.active{background:var(--primary-light);color:#fff;border-color:var(--primary-light)}
+.phase-banner{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:var(--radius);padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.phase-banner h4{font-size:.9rem;font-weight:700;margin-bottom:2px}
+.phase-banner p{font-size:.76rem;opacity:.88}
+.phase-pill{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:700;white-space:nowrap}
+.week-note{font-size:.78rem;color:var(--text-light);background:#f8f9fa;border-radius:8px;padding:8px 12px;margin-bottom:12px;border-left:3px solid var(--accent)}
+/* GROCERY */
+.grocery-category{margin-bottom:18px}
+.grocery-cat-title{font-size:.88rem;font-weight:700;color:var(--primary);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.grocery-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.grocery-table th{text-align:left;padding:7px 8px;background:#f0fdf4;color:var(--primary);font-weight:700;font-size:.76rem;border-bottom:2px solid #bbf7d0}
+.grocery-table td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+.grocery-table tr:hover td{background:#f8f9fa}
+.budget-bar{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:var(--radius);padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-bottom:20px}
+.budget-item{text-align:center}
+.budget-item .b-label{font-size:.7rem;color:var(--text-light);font-weight:500}
+.budget-item .b-val{font-size:1.1rem;font-weight:800;color:var(--primary)}
+.thyroid-note{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;font-size:.78rem;color:#92400e;margin-top:12px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -319,21 +346,22 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <h2>âš¡ HEALTH ENGINE</h2>
-    <p>Karthik Chary Â· 32yr Â· 178cm</p>
+    <h2>? HEALTH ENGINE</h2>
+    <p>Karthik Chary · 32yr · 178cm</p>
   </div>
   <ul class="nav-list">
-    <li class="nav-item active" onclick="showSection('dashboard',this)"><span class="nav-icon">ğŸ </span>Dashboard</li>
-    <li class="nav-item" onclick="showSection('diet',this)"><span class="nav-icon">ğŸ¥—</span>Diet Plan</li>
-    <li class="nav-item" onclick="showSection('recipes',this)"><span class="nav-icon">ğŸ“–</span>Recipes</li>
-    <li class="nav-item" onclick="showSection('workout',this)"><span class="nav-icon">ğŸ’ª</span>Workout</li>
-    <li class="nav-item" onclick="showSection('cardio',this)"><span class="nav-icon">ğŸƒ</span>Cardio</li>
-    <li class="nav-item" onclick="showSection('progress',this)"><span class="nav-icon">ğŸ“ˆ</span>Progress</li>
-    <li class="nav-item" onclick="showSection('guidelines',this)"><span class="nav-icon">ğŸ›¡ï¸</span>Guidelines</li>
+    <li class="nav-item active" onclick="showSection('dashboard',this)"><span class="nav-icon">??</span>Dashboard</li>
+    <li class="nav-item" onclick="showSection('diet',this)"><span class="nav-icon">??</span>Diet Plan</li>
+    <li class="nav-item" onclick="showSection('recipes',this)"><span class="nav-icon">??</span>Recipes</li>
+    <li class="nav-item" onclick="showSection('workout',this)"><span class="nav-icon">??</span>Workout</li>
+    <li class="nav-item" onclick="showSection('cardio',this)"><span class="nav-icon">??</span>Cardio</li>
+    <li class="nav-item" onclick="showSection('grocery',this)"><span class="nav-icon">??</span>Grocery</li>
+    <li class="nav-item" onclick="showSection('progress',this)"><span class="nav-icon">??</span>Progress</li>
+    <li class="nav-item" onclick="showSection('guidelines',this)"><span class="nav-icon">???</span>Guidelines</li>
   </ul>
   <div class="sidebar-footer">
-    Phase 1: Weight Loss Â· Target 85kg<br>
-    Thyronorm 12.5mg Â· LCHF Diet
+    Phase 1: Foundation (Mon 1–2) · Target 92kg<br>
+    Goal: 75kg in 6 months · Thyronorm 12.5mg
   </div>
 </aside>
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
@@ -342,19 +370,19 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 <nav class="bottom-nav" id="bottomNav">
   <div class="bottom-nav-items">
     <button class="bn-item active" id="bn-dashboard" onclick="showSection('dashboard',null)">
-      <span class="bn-icon">ğŸ </span><span class="bn-label">Home</span>
+      <span class="bn-icon">??</span><span class="bn-label">Home</span>
     </button>
     <button class="bn-item" id="bn-diet" onclick="showSection('diet',null)">
-      <span class="bn-icon">ğŸ¥—</span><span class="bn-label">Diet</span>
+      <span class="bn-icon">??</span><span class="bn-label">Diet</span>
     </button>
     <button class="bn-item" id="bn-workout" onclick="showSection('workout',null)">
-      <span class="bn-icon">ğŸ’ª</span><span class="bn-label">Workout</span>
+      <span class="bn-icon">??</span><span class="bn-label">Workout</span>
     </button>
     <button class="bn-item" id="bn-progress" onclick="showSection('progress',null)">
-      <span class="bn-icon">ğŸ“ˆ</span><span class="bn-label">Progress</span>
+      <span class="bn-icon">??</span><span class="bn-label">Progress</span>
     </button>
     <button class="bn-item" id="bn-more" onclick="toggleMoreMenu()">
-      <span class="bn-icon">â‹¯</span><span class="bn-label">More</span>
+      <span class="bn-icon">?</span><span class="bn-label">More</span>
     </button>
   </div>
 </nav>
@@ -363,9 +391,9 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
-      <button class="hamburger" onclick="openSidebar()">â˜°</button>
+      <button class="hamburger" onclick="openSidebar()">?</button>
       <div>
-        <div class="page-title" id="pageTitle">ğŸ  Dashboard</div>
+        <div class="page-title" id="pageTitle">?? Dashboard</div>
       </div>
     </div>
     <div class="topbar-right">
@@ -373,7 +401,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
         <input type="date" id="logDate" style="border:none;background:transparent;font-size:.82rem;font-weight:600;color:#1b4332;outline:none;cursor:pointer" onchange="loadDateData()">
       </div>
       <div class="weight-input-wrap">
-        <label>âš–ï¸</label>
+        <label>??</label>
         <input type="number" id="currentWeight" value="95" step="0.1" min="50" max="200" onchange="syncData()">
         <label style="font-size:.72rem;color:#718096">kg</label>
       </div>
@@ -386,28 +414,28 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <div id="sec-dashboard" class="section active">
     <div class="section-header">
       <div><h2>Daily Overview</h2><p id="dashGreeting">Loading...</p></div>
-      <button class="btn btn-primary btn-sm" onclick="syncData()">ğŸ’¾ Save Log</button>
+      <button class="btn btn-primary btn-sm" onclick="syncData()">?? Save Log</button>
     </div>
 
     <!-- Stats Row -->
     <div class="grid-4" style="margin-bottom:20px" id="statsRow">
-      <div class="stat-chip" style="border-left-color:#f59e0b"><div class="label">Target Calories</div><div class="value">1600</div><div class="sub">kcal/day Â· LCHF</div></div>
+      <div class="stat-chip" style="border-left-color:#f59e0b"><div class="label">Target Calories</div><div class="value">1600</div><div class="sub">kcal/day · LCHF</div></div>
       <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div></div>
       <div class="stat-chip" style="border-left-color:#10b981"><div class="label">Checklist</div><div class="value" id="checkStat">0/12</div><div class="sub">Daily tasks done</div></div>
-      <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">95</div><div class="sub">kg Â· Goal: 85kg</div></div>
+      <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">95</div><div class="sub">kg · Goal: 75kg</div></div>
     </div>
 
     <div class="grid-2">
       <!-- Timeline -->
       <div class="card">
-        <div class="card-title">ğŸ“… Daily Timeline</div>
+        <div class="card-title">?? Daily Timeline</div>
         <div id="timelineContainer"></div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:16px">
         <!-- Water -->
         <div class="card info">
-          <div class="card-title">ğŸ’§ Hydration Tracker</div>
+          <div class="card-title">?? Hydration Tracker</div>
           <p style="font-size:.78rem;color:var(--text-light);margin-bottom:4px">Click to log cumulative water intake</p>
           <div class="water-row">
             <div class="water-btn" id="w1" onclick="toggleWater(1)">1L</div>
@@ -419,7 +447,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 
         <!-- Workout Log -->
         <div class="card success">
-          <div class="card-title">ğŸ’ª Workout Completed Today?</div>
+          <div class="card-title">?? Workout Completed Today?</div>
           <div class="workout-log-row" style="box-shadow:none;background:#f0fdf4;padding:10px 12px">
             <label class="workout-toggle">
               <input type="checkbox" id="workoutToggle" onchange="syncData()">
@@ -435,22 +463,22 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 
         <!-- Mood & Energy -->
         <div class="card warning">
-          <div class="card-title">ğŸ§  Mood & Energy Check-in</div>
+          <div class="card-title">?? Mood & Energy Check-in</div>
           <label style="font-size:.8rem;font-weight:600;color:var(--text-med)">Mood (1=Low, 5=Great)</label>
           <div class="score-row" id="moodRow">
-            <button class="score-btn" onclick="setScore('mood',1,this)">ğŸ˜” 1</button>
-            <button class="score-btn" onclick="setScore('mood',2,this)">ğŸ˜• 2</button>
-            <button class="score-btn sel" onclick="setScore('mood',3,this)">ğŸ˜ 3</button>
-            <button class="score-btn" onclick="setScore('mood',4,this)">ğŸ™‚ 4</button>
-            <button class="score-btn" onclick="setScore('mood',5,this)">ğŸ˜„ 5</button>
+            <button class="score-btn" onclick="setScore('mood',1,this)">?? 1</button>
+            <button class="score-btn" onclick="setScore('mood',2,this)">?? 2</button>
+            <button class="score-btn sel" onclick="setScore('mood',3,this)">?? 3</button>
+            <button class="score-btn" onclick="setScore('mood',4,this)">?? 4</button>
+            <button class="score-btn" onclick="setScore('mood',5,this)">?? 5</button>
           </div>
           <label style="font-size:.8rem;font-weight:600;color:var(--text-med);margin-top:10px;display:block">Energy Level</label>
           <div class="score-row" id="energyRow">
-            <button class="score-btn" onclick="setScore('energy',1,this)">ğŸ”‹ 1</button>
-            <button class="score-btn" onclick="setScore('energy',2,this)">ğŸ”‹ 2</button>
-            <button class="score-btn sel" onclick="setScore('energy',3,this)">âš¡ 3</button>
-            <button class="score-btn" onclick="setScore('energy',4,this)">âš¡ 4</button>
-            <button class="score-btn" onclick="setScore('energy',5,this)">ğŸ”¥ 5</button>
+            <button class="score-btn" onclick="setScore('energy',1,this)">?? 1</button>
+            <button class="score-btn" onclick="setScore('energy',2,this)">?? 2</button>
+            <button class="score-btn sel" onclick="setScore('energy',3,this)">? 3</button>
+            <button class="score-btn" onclick="setScore('energy',4,this)">? 4</button>
+            <button class="score-btn" onclick="setScore('energy',5,this)">?? 5</button>
           </div>
         </div>
       </div>
@@ -460,18 +488,28 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== DIET PLAN ===== -->
   <div id="sec-diet" class="section">
     <div class="section-header">
-      <div><h2>7-Day Meal Plan</h2><p>LCHF/Keto Indian Â· ~1600 kcal/day Â· Vegetarian + Eggs + Chicken</p></div>
-      <div class="spine-badge" style="background:#fff7ed;border-color:#fed7aa;color:#92400e">âš ï¸ Strict Guardrails Active</div>
+      <div><h2>6-Month Telugu Diet Plan</h2><p>Traditional Telugu food · Chicken 2x/week · Thyroid-safe · ?5k-6k/month</p></div>
+      <div class="spine-badge" style="background:#fff7ed;border-color:#fed7aa;color:#92400e">?? Thyroid-Safe Protocol</div>
     </div>
 
     <div class="alert-box yellow">
-      <div class="alert-title">âš¡ Phase 1 Macro Targets (Weight Loss)</div>
+      <div class="alert-title">? Diet Rules — Always Active</div>
       <ul>
-        <li>Calories: 1500â€“1650 kcal/day Â· Protein: 100â€“120g Â· Fat: 90â€“110g Â· Net Carbs: &lt;45g</li>
-        <li>Eating window: 9:30 AM â€“ 8:00 PM (16:8 intermittent fasting)</li>
-        <li>Seed &amp; Nut allotment: MAX 30g combined per day (pumpkin + watermelon + sesame + flax + sunflower + almonds + walnuts + pistachios)</li>
+        <li>?? Chicken only on <strong>Wednesday & Friday</strong> · Eggs daily OK · Paneer Tue & Sat</li>
+        <li>?? Phase 1 (Mo 1–2): 1 cup rice/day · Phase 2 (Mo 3–4): ½ cup · Phase 3 (Mo 5–6): No rice</li>
+        <li>? Eating window: 9:30 AM – 8:00 PM · 16:8 intermittent fasting</li>
+        <li>?? Thyroid: Always COOK cruciferous veg · Iodized salt only · No raw soy in large amounts</li>
       </ul>
     </div>
+
+    <!-- Month Selector -->
+    <div class="month-selector" id="dietMonthSelector"></div>
+    <!-- Week Indicator -->
+    <div class="week-selector" id="dietWeekSelector"></div>
+    <!-- Phase Banner -->
+    <div id="dietPhaseBanner"></div>
+    <!-- Week note -->
+    <div id="dietWeekNote"></div>
 
     <div class="day-tabs" id="dayTabs"></div>
     <div id="dietDayContent"></div>
@@ -489,18 +527,21 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== WORKOUT ===== -->
   <div id="sec-workout" class="section">
     <div class="section-header">
-      <div><h2>Weekly Workout Split</h2><p>Spinal-safe Â· Home dumbbells/barbells Â· No axial compression</p></div>
+      <div><h2>6-Month Workout Plan</h2><p>Home dumbbells/barbells · No bench · 4 days/week · Progressive overload</p></div>
     </div>
 
     <div class="alert-box">
-      <div class="alert-title">âš ï¸ Spinal Safety Protocol â€” Always Active</div>
+      <div class="alert-title">?? Safety Protocol — Always Active</div>
       <ul>
         <li>NO heavy conventional deadlifts or barbell back squats (axial loading banned)</li>
-        <li>Core bracing (Cat-Cow â†’ Bird-Dog â†’ Dead Bug) MANDATORY before every session</li>
-        <li>Stop immediately if sharp lower-back pain occurs. Substitute with floor-based variation</li>
-        <li>All pressing done floor or incline (no overhead axial compression)</li>
+        <li>Core bracing (Cat-Cow ? Bird-Dog ? Dead Bug) MANDATORY before every session</li>
+        <li>Stop immediately if sharp pain. Substitute with floor-based variation</li>
       </ul>
     </div>
+
+    <!-- Month Selector -->
+    <div class="month-selector" id="workoutMonthSelector"></div>
+    <div id="workoutPhaseBanner"></div>
 
     <div class="hscroll"><div class="workout-day-grid" id="workoutDayGrid"></div></div>
     <div id="workoutDayContent"></div>
@@ -509,18 +550,18 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== CARDIO ===== -->
   <div id="sec-cardio" class="section">
     <div class="section-header">
-      <div><h2>Cardio Plan</h2><p>Low-impact progressive Â· Back-safe Â· Fat-burning</p></div>
+      <div><h2>Cardio Plan</h2><p>Low-impact progressive · Back-safe · Fat-burning</p></div>
     </div>
 
     <div class="phase-card">
-      <h3>ğŸš¶ Phase 1 (Weeks 1â€“4): Foundation Walking</h3>
+      <h3>?? Phase 1 (Weeks 1–4): Foundation Walking</h3>
       <p>Fasted morning walks before breakfast. Primary fat-burning tool. Zero spinal compression.</p>
       <span class="phase-badge">CURRENT PHASE</span>
     </div>
 
     <div class="grid-2" style="margin-bottom:20px">
       <div class="card">
-        <div class="card-title">ğŸ“… Weekly Cardio Schedule</div>
+        <div class="card-title">?? Weekly Cardio Schedule</div>
         <table class="cardio-table">
           <thead><tr><th>Day</th><th>Session</th><th>Duration</th><th>Intensity</th></tr></thead>
           <tbody id="cardioTableBody"></tbody>
@@ -528,11 +569,11 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       </div>
       <div>
         <div class="card" style="margin-bottom:14px">
-          <div class="card-title">ğŸ“ˆ Phase Progression</div>
+          <div class="card-title">?? Phase Progression</div>
           <div id="cardioPhases"></div>
         </div>
         <div class="card success">
-          <div class="card-title">ğŸ¯ Heart Rate Zones</div>
+          <div class="card-title">?? Heart Rate Zones</div>
           <div id="hrZones"></div>
         </div>
       </div>
@@ -542,49 +583,49 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== PROGRESS ===== -->
   <div id="sec-progress" class="section">
     <div class="section-header">
-      <div><h2>Progress Tracker</h2><p>Weight loss journey Â· Target: 85kg (âˆ’10kg from 95kg)</p></div>
-      <button class="btn btn-primary btn-sm" onclick="loadProgress()">ğŸ”„ Refresh</button>
+      <div><h2>Progress Tracker</h2><p>Weight loss journey · Target: 85kg (-10kg from 95kg)</p></div>
+      <button class="btn btn-primary btn-sm" onclick="loadProgress()">?? Refresh</button>
     </div>
 
     <div class="streak-row" id="streakRow">
-      <div class="streak-chip"><span class="s-icon">ğŸ”¥</span><div><div class="s-val" id="workoutStreakVal">-</div><div class="s-lbl">Workout Streak</div></div></div>
-      <div class="streak-chip" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><span class="s-icon">ğŸ’§</span><div><div class="s-val" id="waterStreakVal">-</div><div class="s-lbl">Water Streak (3L+)</div></div></div>
-      <div class="streak-chip" style="background:linear-gradient(135deg,#10b981,#065f46)"><span class="s-icon">ğŸ“‹</span><div><div class="s-val" id="completionVal">-%</div><div class="s-lbl">Avg Checklist Done</div></div></div>
-      <div class="streak-chip" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95)"><span class="s-icon">âš–ï¸</span><div><div class="s-val" id="weightLostVal">-kg</div><div class="s-lbl">Weight Lost</div></div></div>
+      <div class="streak-chip"><span class="s-icon">??</span><div><div class="s-val" id="workoutStreakVal">-</div><div class="s-lbl">Workout Streak</div></div></div>
+      <div class="streak-chip" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><span class="s-icon">??</span><div><div class="s-val" id="waterStreakVal">-</div><div class="s-lbl">Water Streak (3L+)</div></div></div>
+      <div class="streak-chip" style="background:linear-gradient(135deg,#10b981,#065f46)"><span class="s-icon">??</span><div><div class="s-val" id="completionVal">-%</div><div class="s-lbl">Avg Checklist Done</div></div></div>
+      <div class="streak-chip" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95)"><span class="s-icon">??</span><div><div class="s-val" id="weightLostVal">-kg</div><div class="s-lbl">Weight Lost</div></div></div>
     </div>
 
     <div class="grid-2">
       <div>
         <div class="chart-wrap">
-          <div class="card-title" style="margin-bottom:14px">ğŸ“‰ Weight Loss Chart</div>
+          <div class="card-title" style="margin-bottom:14px">?? Weight Loss Chart</div>
           <canvas id="weightChart"></canvas>
           <p style="font-size:.72rem;color:var(--text-light);text-align:center;margin-top:8px">Green dashed line = 85kg target</p>
         </div>
         <div class="card">
-          <div class="card-title">ğŸ† Milestones</div>
+          <div class="card-title">?? Milestones</div>
           <div class="milestone-grid" id="milestoneGrid"></div>
         </div>
       </div>
       <div>
         <div class="card" style="margin-bottom:14px">
-          <div class="card-title">âš–ï¸ BMI Tracker</div>
+          <div class="card-title">?? BMI Tracker</div>
           <div class="bmi-display">
             <div class="bmi-value" id="bmiVal">29.9</div>
             <div class="bmi-category" id="bmiCat">Overweight</div>
           </div>
           <div style="font-size:.78rem;color:var(--text-light);text-align:center">
-            Height: 178cm Â· Current: <span id="bmiWeightDisplay">95kg</span><br>
-            Target BMI at 85kg: <strong>26.8</strong> (Normal range &lt;25)
+            Height: 178cm · Current: <span id="bmiWeightDisplay">95kg</span><br>
+            Target BMI at 75kg: <strong>23.7</strong> (Normal range &lt;25)
           </div>
           <div style="margin-top:12px">
-            <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-light);margin-bottom:4px"><span>Obese &gt;30</span><span>Overweight 25â€“30</span><span>Normal &lt;25</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-light);margin-bottom:4px"><span>Obese &gt;30</span><span>Overweight 25–30</span><span>Normal &lt;25</span></div>
             <div style="height:10px;background:linear-gradient(to right,#ef4444 0%,#f59e0b 40%,#22c55e 100%);border-radius:5px;position:relative">
               <div id="bmiMarker" style="position:absolute;top:-4px;width:3px;height:18px;background:#1b4332;border-radius:2px;transition:left .5s"></div>
             </div>
           </div>
         </div>
         <div class="card">
-          <div class="card-title">ğŸ“Š Last 30-Day Stats</div>
+          <div class="card-title">?? Last 30-Day Stats</div>
           <div id="statDetails"></div>
         </div>
       </div>
@@ -594,65 +635,65 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== GUIDELINES ===== -->
   <div id="sec-guidelines" class="section">
     <div class="section-header">
-      <div><h2>Medical Guidelines</h2><p>Clinical guardrails Â· Thyroid, Fatty Liver, Lumbar Spine</p></div>
+      <div><h2>Medical Guidelines</h2><p>Clinical guardrails · Thyroid, Fatty Liver, Lumbar Spine</p></div>
     </div>
     <div class="grid-2">
       <div style="display:flex;flex-direction:column;gap:14px">
         <div class="card danger">
-          <div class="card-title">ğŸ”´ Thyroid (Hypothyroid Â· Thyronorm 12.5mg)</div>
+          <div class="card-title">?? Thyroid (Hypothyroid · Thyronorm 12.5mg)</div>
           <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
-            <li style="margin-bottom:6px">Take Thyronorm at <strong>06:30 AM</strong> on empty stomach Â· Wait 45â€“60 min before eating</li>
-            <li style="margin-bottom:6px"><strong>Zero Soy/Soya</strong> â€” blocks hormone absorption (soy milk, tofu, soya chunks ALL banned)</li>
-            <li style="margin-bottom:6px">Cruciferous vegetables (cauliflower, broccoli, cabbage) â€” <strong>ALWAYS fully steamed/cooked</strong> to deactivate goitrogens</li>
+            <li style="margin-bottom:6px">Take Thyronorm at <strong>06:30 AM</strong> on empty stomach · Wait 45–60 min before eating</li>
+            <li style="margin-bottom:6px"><strong>Zero Soy/Soya</strong> — blocks hormone absorption (soy milk, tofu, soya chunks ALL banned)</li>
+            <li style="margin-bottom:6px">Cruciferous vegetables (cauliflower, broccoli, cabbage) — <strong>ALWAYS fully steamed/cooked</strong> to deactivate goitrogens</li>
             <li style="margin-bottom:6px">Avoid raw cruciferous in any form (salads with raw cabbage, uncooked cauliflower)</li>
-            <li style="margin-bottom:6px">High selenium foods encouraged: eggs, brazil nuts (1â€“2/day max)</li>
+            <li style="margin-bottom:6px">High selenium foods encouraged: eggs, brazil nuts (1–2/day max)</li>
             <li>Recheck thyroid levels every 3 months</li>
           </ul>
         </div>
         <div class="card warning">
-          <div class="card-title">ğŸŸ¡ Fatty Liver (Early Stage)</div>
+          <div class="card-title">?? Fatty Liver (Early Stage)</div>
           <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
             <li style="margin-bottom:6px"><strong>Zero refined sugars, jaggery, glucose, fructose syrups</strong></li>
             <li style="margin-bottom:6px">Zero processed foods, packaged snacks, bread, rice, wheat</li>
             <li style="margin-bottom:6px">Limit alcohol completely</li>
-            <li style="margin-bottom:6px">Apple Cider Vinegar (with mother) 1 tsp in warm water every morning â€” aids liver detox</li>
+            <li style="margin-bottom:6px">Apple Cider Vinegar (with mother) 1 tsp in warm water every morning — aids liver detox</li>
             <li style="margin-bottom:6px">Prioritise natural fats (ghee, eggs, nuts) over refined seed oils</li>
-            <li>Turmeric + black pepper daily â€” potent anti-inflammatory for liver</li>
+            <li>Turmeric + black pepper daily — potent anti-inflammatory for liver</li>
           </ul>
         </div>
         <div class="card" style="border-top-color:#3b82f6">
-          <div class="card-title">ğŸ”µ Lumbar Spine (Mechanical LBP)</div>
+          <div class="card-title">?? Lumbar Spine (Mechanical LBP)</div>
           <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
-            <li style="margin-bottom:6px">No heavy axial loading â€” barbell back squats &amp; conventional deadlifts <strong>BANNED</strong></li>
+            <li style="margin-bottom:6px">No heavy axial loading — barbell back squats &amp; conventional deadlifts <strong>BANNED</strong></li>
             <li style="margin-bottom:6px">Core stability work (Cat-Cow, Bird-Dog, Dead Bug) before every gym session</li>
             <li style="margin-bottom:6px">Motorcycle commuting: use lumbar support cushion, limit rides &gt;30 min</li>
             <li style="margin-bottom:6px">Sleep posture: side-lying with pillow between knees recommended</li>
             <li style="margin-bottom:6px">Desk setup: monitor at eye level, lumbar-supported chair</li>
-            <li>Glute activation (bridges) daily â€” weak glutes = primary cause of mechanical LBP</li>
+            <li>Glute activation (bridges) daily — weak glutes = primary cause of mechanical LBP</li>
           </ul>
         </div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:14px">
         <div class="card success">
-          <div class="card-title">ğŸŒ± Daily Seed &amp; Nut Allocation (30g MAX)</div>
+          <div class="card-title">?? Daily Seed &amp; Nut Allocation (30g MAX)</div>
           <p style="font-size:.78rem;color:var(--text-light);margin-bottom:14px">250g stock each. 30g combined daily cap to prevent caloric surplus.</p>
           <div id="seedTracker"></div>
           <div style="margin-top:14px;padding:10px;background:#f0fdf4;border-radius:8px;font-size:.78rem;color:#166534">
-            <strong>ğŸ’¡ Tip:</strong> Weigh daily on a kitchen scale. Mix all 8 seeds in a jar = custom trail mix. Pumpkin seeds = highest magnesium for thyroid support.
+            <strong>?? Tip:</strong> Weigh daily on a kitchen scale. Mix all 8 seeds in a jar = custom trail mix. Pumpkin seeds = highest magnesium for thyroid support.
           </div>
         </div>
 
         <div class="card accent">
-          <div class="card-title">â° Daily Medication &amp; Supplement Timing</div>
+          <div class="card-title">? Daily Medication &amp; Supplement Timing</div>
           <div id="suppTiming"></div>
         </div>
 
         <div class="card">
-          <div class="card-title">ğŸ½ï¸ Foods Recommended vs Banned</div>
+          <div class="card-title">??? Foods Recommended vs Banned</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div>
-              <div style="font-size:.78rem;font-weight:700;color:#166534;margin-bottom:8px">âœ… EAT FREELY</div>
+              <div style="font-size:.78rem;font-weight:700;color:#166534;margin-bottom:8px">? EAT FREELY</div>
               <ul style="padding-left:14px;font-size:.78rem;color:var(--text-med)">
                 <li>Eggs (all forms)</li>
                 <li>Chicken (all cuts)</li>
@@ -667,7 +708,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
               </ul>
             </div>
             <div>
-              <div style="font-size:.78rem;font-weight:700;color:#991b1b;margin-bottom:8px">âŒ BANNED</div>
+              <div style="font-size:.78rem;font-weight:700;color:#991b1b;margin-bottom:8px">? BANNED</div>
               <ul style="padding-left:14px;font-size:.78rem;color:var(--text-med)">
                 <li>ALL soy products</li>
                 <li>Raw cruciferous veg</li>
@@ -687,140 +728,546 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     </div>
   </div>
 
+  <!-- ===== GROCERY ===== -->
+  <div id="sec-grocery" class="section">
+    <div class="section-header">
+      <div><h2>Monthly Grocery List</h2><p>Telugu kitchen essentials · Budget ?5,000–6,000/month · Thyroid-safe</p></div>
+    </div>
+    <div class="month-selector" id="groceryMonthSelector"></div>
+    <div id="groceryBudgetBar"></div>
+    <div id="groceryContent"></div>
+    <div class="thyroid-note">
+      ?? <strong>Thyroid Shopping Rules:</strong> Always buy iodized salt. Choose full-fat paneer. Buy eggs in bulk (min 30/week).
+      Soyabean: max 100g cooked 2x/week — do NOT exceed. All cruciferous veg (cauliflower, beans) must be cooked, never raw.
+      Ghee preferred over refined oils. Coconut oil for cooking at high heat.
+    </div>
+  </div>
+
   </div><!-- end .content -->
 </div><!-- end .main -->
 <script>
 // =====================================================
-// DATA: 7-DAY MEAL PLAN
+// PROGRAM START DATE — change this when you begin
 // =====================================================
-const MEAL_PLAN = {
-  Monday: {
-    theme: "Upper Push Day Fuel",
-    meals: {
-      breakfast: { icon:"ğŸ³", label:"Breakfast", cls:"b", name:"3-Egg Ghee Masala Omelet + 15g Walnuts", time:"09:30 AM", cal:345, p:22, f:28, c:3, recipe:0 },
-      lunch:     { icon:"ğŸ—", label:"Lunch",     cls:"l", name:"Chicken Pepper Curry + Cauliflower Rice (200g chicken)", time:"01:30 PM", cal:460, p:52, f:17, c:8, recipe:3 },
-      snack:     { icon:"ğŸŒ±", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
-      dinner:    { icon:"ğŸœ", label:"Dinner",    cls:"d", name:"Clear Chicken Pepper Soup (150g chicken)", time:"07:30 PM", cal:285, p:38, f:9, c:5, recipe:4 }
-    }, totals:{ cal:1265, p:118, f:68, c:22 }
+const PROGRAM_START = "2026-06-13";
+function getCurrentMonthIndex() {
+  const start = new Date(PROGRAM_START);
+  const now = new Date();
+  const diffDays = Math.max(0, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
+  return Math.min(5, Math.floor(diffDays / 30));
+}
+let currentDietMonth = getCurrentMonthIndex();
+let currentWorkoutMonth = getCurrentMonthIndex();
+let currentDietWeek = 1;
+// =====================================================
+// DATA: 6-MONTH TELUGU DIET PLAN
+// =====================================================
+const MONTHLY_DIET = [
+  { // Month 1
+    name:"Month 1 — Foundation", phase:"Phase 1", calories:"~1200 kcal/day", target:"95?92kg", weightGoal:92,
+    notes:["Telugu comfort food — build the habit","Chicken only Wed & Fri","1 cup rice/day maximum","Walk 20–30 min daily fasted"],
+    weekNotes:["Week 1: Focus on routine, don't obsess over calories. Just follow the plan.","Week 2: Weigh every Sunday morning. Aim for -0.5 to -1kg this week.","Week 3: Increase water to 4L/day. Add 5 extra minutes to your walk.","Week 4: Review — if -3kg lost ? great! If less, reduce rice by ¼ cup next month."],
+    days:{
+      Monday:{theme:"Upper Push Day — Palakura ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Allam Chutney",time:"09:30 AM",cal:280,p:14,f:4,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Palakura Pappu + 1 Cup Rice + Bendakaya Fry",time:"01:30 PM",cal:460,p:16,f:7,c:80},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds + Nuvvulu Mix (20g)",time:"04:30 PM",cal:120,p:4,f:10,c:5},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"3-Egg Capsicum Omelet in Ghee",time:"07:30 PM",cal:330,p:22,f:25,c:3}
+      },totals:{cal:1190,p:56,f:46,c:130}},
+      Tuesday:{theme:"Lower Body Day — Senagapappu ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Bhurji (onion, tomato, ghee)",time:"09:30 AM",cal:340,p:22,f:26,c:6},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Senagapappu Curry + 1 Phulka + Tomato Chutney",time:"01:30 PM",cal:370,p:14,f:7,c:58},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas (Majjiga) 200ml + Seed Mix 20g",time:"04:30 PM",cal:110,p:4,f:6,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Bhurji (100g) + Cucumber Salad",time:"07:30 PM",cal:300,p:18,f:22,c:6}
+      },totals:{cal:1120,p:58,f:61,c:78}},
+      Wednesday:{theme:"?? CHICKEN DAY — Gongura Kodi ???",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Rava Upma (small) + Coconut Chutney",time:"09:30 AM",cal:255,p:7,f:5,c:44},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Gongura Chicken Curry 150g + 1 Cup Rice",time:"01:30 PM",cal:490,p:36,f:12,c:62},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Sorakaya Pappu (Bottle Gourd Dal) + 1 Phulka",time:"07:30 PM",cal:260,p:10,f:4,c:44}
+      },totals:{cal:1105,p:56,f:30,c:154}},
+      Thursday:{theme:"Upper Pull Day — Kandi Pappu ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Gongura Chutney",time:"09:30 AM",cal:280,p:14,f:4,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Kandi Pappu (Toor Dal) + Steamed Beans + 1 Cup Rice",time:"01:30 PM",cal:420,p:16,f:5,c:74},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix (pumpkin+sunflower+sesame) 20g",time:"04:30 PM",cal:120,p:5,f:9,c:5},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Curry (3 eggs, tomato-onion gravy)",time:"07:30 PM",cal:320,p:22,f:22,c:10}
+      },totals:{cal:1140,p:57,f:40,c:131}},
+      Friday:{theme:"?? CHICKEN DAY — Kodi Vepudu ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Omelet + Nuvvulu (Sesame) Chutney",time:"09:30 AM",cal:340,p:22,f:26,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Kodi Vepudu (Chicken Fry) 150g + 1 Cup Rice + Raita",time:"01:30 PM",cal:490,p:38,f:15,c:50},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 5 Walnuts",time:"04:30 PM",cal:110,p:3,f:10,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Palakura Pappu (Spinach Dal) + 1 Phulka",time:"07:30 PM",cal:260,p:12,f:5,c:42}
+      },totals:{cal:1200,p:75,f:56,c:100}},
+      Saturday:{theme:"Active Recovery — Gutti Vankaya ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Omelet + Curry Leaves Tadka",time:"09:30 AM",cal:335,p:22,f:26,c:3},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Gutti Vankaya Curry + 1 Cup Rice + Senagapappu Salad",time:"01:30 PM",cal:440,p:12,f:14,c:62},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + 10 Walnuts",time:"04:30 PM",cal:155,p:5,f:14,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Tikka (100g) + Mint Chutney",time:"07:30 PM",cal:285,p:18,f:21,c:5}
+      },totals:{cal:1215,p:57,f:75,c:78}},
+      Sunday:{theme:"Full Rest — Sambar Annam ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Rava Upma (small) + Coconut Chutney",time:"09:30 AM",cal:255,p:7,f:5,c:44},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Sambar + 1 Cup Rice + Papad + Beans Curry",time:"01:30 PM",cal:400,p:12,f:5,c:74},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Tomato Pappu + 1 Phulka + Dosakaya Salad",time:"07:30 PM",cal:285,p:11,f:5,c:48}
+      },totals:{cal:1040,p:33,f:24,c:170}}
+    }
   },
-  Tuesday: {
-    theme: "Lower Body Recovery Fuel",
-    meals: {
-      breakfast: { icon:"ğŸ§€", label:"Breakfast", cls:"b", name:"Paneer Bhurji (120g paneer + spices + ghee)", time:"09:30 AM", cal:430, p:25, f:32, c:6, recipe:1 },
-      lunch:     { icon:"ğŸ¥š", label:"Lunch",     cls:"l", name:"3-Egg Curry (No-tomato, coconut gravy) + SautÃ©ed Spinach", time:"01:30 PM", cal:310, p:22, f:22, c:7, recipe:6 },
-      snack:     { icon:"ğŸŒ±", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
-      dinner:    { icon:"ğŸ”¥", label:"Dinner",    cls:"d", name:"Tawa Paneer Tikka (120g)", time:"07:30 PM", cal:345, p:24, f:26, c:4, recipe:5 }
-    }, totals:{ cal:1260, p:77, f:94, c:23 }
+  { // Month 2
+    name:"Month 2 — Momentum", phase:"Phase 1", calories:"~1100 kcal/day", target:"92?89kg", weightGoal:89,
+    notes:["Reduce rice to ½ cup","More phulka, less white rice","Increase protein focus","Walk 25–35 min daily"],
+    weekNotes:["Week 5: Cut rice to half cup. Body is adapted now — push harder.","Week 6: Add 10 extra squats/lunges to workout warm-up.","Week 7: Try 1 day of egg-only eating (no dal/rice) to break plateau if any.","Week 8: Month review. Target -6kg from start. Adjust if needed."],
+    days:{
+      Monday:{theme:"Upper Push — Palakura + Egg ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Bhurji + Pesarattu (1 pc)",time:"09:30 AM",cal:360,p:22,f:24,c:22},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Palakura Pappu + ½ Cup Rice + Beans Curry",time:"01:30 PM",cal:370,p:14,f:6,c:62},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 20g",time:"04:30 PM",cal:120,p:5,f:9,c:5},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Bhurji (100g) + Cucumber Raita",time:"07:30 PM",cal:310,p:18,f:22,c:8}
+      },totals:{cal:1160,p:59,f:61,c:97}},
+      Tuesday:{theme:"Lower Body — Kandi Pappu Day ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Tomato Chutney",time:"09:30 AM",cal:280,p:14,f:4,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Kandi Pappu + Bendakaya Fry + ½ Cup Rice",time:"01:30 PM",cal:360,p:14,f:6,c:60},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + Seed Mix 15g",time:"04:30 PM",cal:100,p:4,f:5,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Curry (3 eggs)",time:"07:30 PM",cal:320,p:22,f:22,c:10}
+      },totals:{cal:1060,p:54,f:37,c:120}},
+      Wednesday:{theme:"?? CHICKEN DAY — Kodi Kura ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet + Gongura Chutney",time:"09:30 AM",cal:240,p:14,f:18,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Kodi Kura (Chicken Curry) 150g + ½ Cup Rice",time:"01:30 PM",cal:440,p:35,f:12,c:42},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Moong Dal Soup + 1 Phulka",time:"07:30 PM",cal:240,p:10,f:3,c:40}
+      },totals:{cal:1020,p:62,f:42,c:90}},
+      Thursday:{theme:"Upper Pull — Chana Palak ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Upma (small) + Coconut Chutney",time:"09:30 AM",cal:250,p:7,f:5,c:44},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Chana Dal + Palakura Stir-fry + ½ Cup Rice",time:"01:30 PM",cal:380,p:16,f:5,c:66},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 20g",time:"04:30 PM",cal:120,p:5,f:9,c:5},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Tikka (100g)",time:"07:30 PM",cal:280,p:18,f:20,c:5}
+      },totals:{cal:1030,p:46,f:39,c:120}},
+      Friday:{theme:"?? CHICKEN DAY — Miryala Vepudu ???",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Allam Chutney",time:"09:30 AM",cal:280,p:14,f:4,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Kodi Miryala Vepudu (Pepper Chicken) 150g + ½ Cup Rice + Raita",time:"01:30 PM",cal:430,p:36,f:14,c:38},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + 5 Walnuts",time:"04:30 PM",cal:120,p:4,f:9,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Palakura Pappu + 1 Phulka",time:"07:30 PM",cal:260,p:12,f:5,c:42}
+      },totals:{cal:1090,p:66,f:32,c:130}},
+      Saturday:{theme:"Active Recovery — Sambar Day ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Omelet + Allam-Nuvvulu Chutney",time:"09:30 AM",cal:340,p:22,f:26,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Sambar + ½ Cup Rice + Bendakaya Fry",time:"01:30 PM",cal:350,p:10,f:6,c:60},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Walnuts",time:"04:30 PM",cal:115,p:3,f:11,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Bhurji (3 eggs) + Cucumber Salad",time:"07:30 PM",cal:330,p:22,f:24,c:6}
+      },totals:{cal:1135,p:57,f:67,c:74}},
+      Sunday:{theme:"Full Rest — Tomato Pappu ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Rava Upma (small) + Coconut Chutney",time:"09:30 AM",cal:250,p:7,f:5,c:44},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Tomato Pappu + 2 Phulkas + Papad",time:"01:30 PM",cal:320,p:12,f:5,c:56},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 15g",time:"04:30 PM",cal:110,p:5,f:8,c:5},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Drop Soup (3 eggs) + 1 Phulka",time:"07:30 PM",cal:290,p:20,f:16,c:22}
+      },totals:{cal:970,p:44,f:34,c:127}}
+    }
   },
-  Wednesday: {
-    theme: "Rest Day â€“ Light Protein",
-    meals: {
-      breakfast: { icon:"ğŸ³", label:"Breakfast", cls:"b", name:"3-Egg Omelet with Capsicum & Ghee", time:"09:30 AM", cal:330, p:22, f:25, c:3, recipe:0 },
-      lunch:     { icon:"ğŸ—", label:"Lunch",     cls:"l", name:"Chicken Tikka (200g) + Cucumber Raita (no sugar)", time:"01:30 PM", cal:385, p:48, f:14, c:6, recipe:7 },
-      snack:     { icon:"ğŸŒ±", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
-      dinner:    { icon:"ğŸ¥š", label:"Dinner",    cls:"d", name:"Egg Drop Soup (2 eggs, clear broth)", time:"07:30 PM", cal:200, p:14, f:12, c:4, recipe:8 }
-    }, totals:{ cal:1090, p:90, f:65, c:19 }
+  { // Month 3
+    name:"Month 3 — Progression", phase:"Phase 2", calories:"~1050 kcal/day", target:"89?86kg", weightGoal:86,
+    notes:["No white rice — replace with 1–2 phulkas","Increase protein to 60–70g/day","Add soyabean 2x/week (cooked only)","Walk 30–40 min, increase pace"],
+    weekNotes:["Week 9: Remove rice completely. Phulka or pesarattu only. Body adapts in 3–4 days.","Week 10: Add 1 extra set to all exercises. Progressive overload starts now.","Week 11: Measure waist inches — more reliable than weight at this stage.","Week 12: Push hardest this week. Mid-point of 6-month journey!"],
+    days:{
+      Monday:{theme:"Upper Push — High Protein Day ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet + 10 Almonds",time:"09:30 AM",cal:280,p:16,f:21,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Palakura Pappu + Beans Stir-fry + 1 Phulka",time:"01:30 PM",cal:330,p:14,f:6,c:52},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 15g",time:"04:30 PM",cal:105,p:4,f:8,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Bhurji (100g)",time:"07:30 PM",cal:290,p:18,f:22,c:6}
+      },totals:{cal:1005,p:52,f:57,c:66}},
+      Tuesday:{theme:"Lower Body — Senagapappu + Soya ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Allam Chutney",time:"09:30 AM",cal:280,p:14,f:4,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Chana Dal + Palakura Stir-fry + 1 Phulka",time:"01:30 PM",cal:320,p:14,f:5,c:54},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + 10 Almonds",time:"04:30 PM",cal:115,p:4,f:10,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Curry (3 eggs, no rice)",time:"07:30 PM",cal:320,p:22,f:22,c:10}
+      },totals:{cal:1035,p:54,f:41,c:114}},
+      Wednesday:{theme:"?? CHICKEN DAY — Gongura Kodi (No Rice) ???",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet",time:"09:30 AM",cal:220,p:14,f:16,c:3},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Gongura Chicken Curry 150g + 1 Phulka",time:"01:30 PM",cal:360,p:36,f:12,c:22},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Moong Dal Soup (clear)",time:"07:30 PM",cal:180,p:10,f:2,c:30}
+      },totals:{cal:860,p:63,f:39,c:59}},
+      Thursday:{theme:"Upper Pull — Soyabean Palak ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Tomato Chutney",time:"09:30 AM",cal:280,p:14,f:4,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Soyabean Curry (100g cooked) + Palakura + 1 Phulka",time:"01:30 PM",cal:330,p:18,f:8,c:44},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 20g",time:"04:30 PM",cal:120,p:5,f:9,c:5},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Bhurji (3 eggs)",time:"07:30 PM",cal:330,p:22,f:24,c:5}
+      },totals:{cal:1060,p:59,f:45,c:96}},
+      Friday:{theme:"?? CHICKEN DAY — Kodi Vepudu (No Rice) ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet + Nuvvulu Chutney",time:"09:30 AM",cal:255,p:14,f:20,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Kodi Vepudu 150g + 1 Phulka + Cucumber Raita",time:"01:30 PM",cal:390,p:37,f:15,c:24},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 5 Walnuts",time:"04:30 PM",cal:110,p:3,f:10,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Palakura Pappu (no rice)",time:"07:30 PM",cal:180,p:10,f:4,c:28}
+      },totals:{cal:935,p:64,f:49,c:60}},
+      Saturday:{theme:"Active Recovery — Gutti Vankaya ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Bhurji + 10 Almonds",time:"09:30 AM",cal:360,p:22,f:28,c:5},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Gutti Vankaya (no rice) + 1 Phulka + Cucumber Raita",time:"01:30 PM",cal:320,p:8,f:14,c:40},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + Seed Mix 15g",time:"04:30 PM",cal:110,p:4,f:5,c:12},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Tikka (100g)",time:"07:30 PM",cal:280,p:18,f:20,c:5}
+      },totals:{cal:1070,p:52,f:67,c:62}},
+      Sunday:{theme:"Full Rest — Dal + Phulka ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Upma (small) + Coconut Chutney",time:"09:30 AM",cal:250,p:7,f:5,c:44},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Sambar + 1 Phulka + Papad",time:"01:30 PM",cal:250,p:8,f:4,c:44},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Tomato Pappu + 1 Phulka + Dosakaya Salad",time:"07:30 PM",cal:270,p:10,f:5,c:46}
+      },totals:{cal:870,p:28,f:23,c:138}}
+    }
   },
-  Thursday: {
-    theme: "Upper Pull Day Fuel",
-    meals: {
-      breakfast: { icon:"ğŸ¥š", label:"Breakfast", cls:"b", name:"Paneer & Egg Scramble (60g paneer + 2 eggs + ghee)", time:"09:30 AM", cal:360, p:28, f:26, c:3, recipe:9 },
-      lunch:     { icon:"ğŸ—", label:"Lunch",     cls:"l", name:"Chicken Curry No-Gravy (200g) + Steamed Cauliflower", time:"01:30 PM", cal:370, p:46, f:14, c:7, recipe:3 },
-      snack:     { icon:"ğŸŒ±", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
-      dinner:    { icon:"ğŸœ", label:"Dinner",    cls:"d", name:"Clear Chicken Broth + 2 Boiled Eggs", time:"07:30 PM", cal:250, p:30, f:11, c:3, recipe:4 }
-    }, totals:{ cal:1155, p:110, f:65, c:19 }
+  { // Month 4
+    name:"Month 4 — Intensification", phase:"Phase 2", calories:"~1020 kcal/day", target:"86?82kg", weightGoal:82,
+    notes:["No white rice at all","Increase chicken to 180g on chicken days","Soyabean 3x/week now","Walk 35–45 min, add incline"],
+    weekNotes:["Week 13: You've lost ~12kg. Metabolism may slow — push workouts harder.","Week 14: Increase dumbbell weight by 1–2kg on all exercises.","Week 15: Add 5 min interval walk (1 min fast + 3 min normal).","Week 16: Final push of Phase 2. Take progress photos this Sunday."],
+    days:{
+      Monday:{theme:"Upper Push — High Protein ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Omelet + 15g Walnuts",time:"09:30 AM",cal:365,p:22,f:30,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Palakura Pappu + Soyabean Curry (100g) + 1 Phulka",time:"01:30 PM",cal:360,p:22,f:8,c:48},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 15g",time:"04:30 PM",cal:105,p:4,f:8,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Bhurji (100g)",time:"07:30 PM",cal:290,p:18,f:22,c:6}
+      },totals:{cal:1120,p:66,f:68,c:62}},
+      Tuesday:{theme:"Lower Body — Chana Dal ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Allam Chutney",time:"09:30 AM",cal:280,p:14,f:4,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Chana Dal + Palakura + 1 Phulka",time:"01:30 PM",cal:310,p:14,f:5,c:52},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + 10 Almonds",time:"04:30 PM",cal:115,p:4,f:10,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Curry (3 eggs)",time:"07:30 PM",cal:320,p:22,f:22,c:10}
+      },totals:{cal:1025,p:54,f:41,c:112}},
+      Wednesday:{theme:"?? CHICKEN DAY — Gongura Kodi 180g ???",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet",time:"09:30 AM",cal:220,p:14,f:16,c:2},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Gongura Chicken Curry 180g + 1 Phulka",time:"01:30 PM",cal:400,p:42,f:13,c:22},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Moong Dal + Spinach Soup",time:"07:30 PM",cal:190,p:11,f:2,c:32}
+      },totals:{cal:910,p:70,f:40,c:60}},
+      Thursday:{theme:"Upper Pull — Soya + Egg Day ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (1) + Egg Bhurji (2 eggs)",time:"09:30 AM",cal:330,p:18,f:16,c:24},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Soyabean Curry + Palakura + 1 Phulka",time:"01:30 PM",cal:330,p:18,f:8,c:44},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 20g",time:"04:30 PM",cal:120,p:5,f:9,c:5},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Tikka (100g) + Mint Chutney",time:"07:30 PM",cal:280,p:18,f:20,c:5}
+      },totals:{cal:1060,p:59,f:53,c:78}},
+      Friday:{theme:"?? CHICKEN DAY — Pepper Chicken 180g ???",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Omelet + Nuvvulu Chutney",time:"09:30 AM",cal:340,p:22,f:26,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Kodi Miryala Vepudu 180g + 1 Phulka + Cucumber",time:"01:30 PM",cal:410,p:44,f:15,c:22},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 5 Walnuts",time:"04:30 PM",cal:110,p:3,f:10,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Palakura Pappu (no rice, no roti)",time:"07:30 PM",cal:175,p:10,f:4,c:26}
+      },totals:{cal:1035,p:79,f:55,c:56}},
+      Saturday:{theme:"Active Recovery — Dal + Salad ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Bhurji + 10 Almonds",time:"09:30 AM",cal:360,p:22,f:28,c:5},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Sambar + 1 Phulka + Dosakaya Salad",time:"01:30 PM",cal:250,p:8,f:4,c:44},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + Seed Mix 15g",time:"04:30 PM",cal:110,p:4,f:5,c:12},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Bhurji (110g)",time:"07:30 PM",cal:310,p:20,f:22,c:6}
+      },totals:{cal:1030,p:54,f:59,c:67}},
+      Sunday:{theme:"Full Rest — Simple Dal ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Upma (very small, 100g cooked) + Chutney",time:"09:30 AM",cal:220,p:6,f:4,c:38},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Dal Fry + 1 Phulka + Beans Curry",time:"01:30 PM",cal:280,p:12,f:5,c:46},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Drop Soup (3 eggs)",time:"07:30 PM",cal:240,p:18,f:14,c:6}
+      },totals:{cal:840,p:39,f:32,c:94}}
+    }
   },
-  Friday: {
-    theme: "Full Body Compound Fuel",
-    meals: {
-      breakfast: { icon:"ğŸ³", label:"Breakfast", cls:"b", name:"3-Egg Ghee Omelet + 15g Walnut Mix", time:"09:30 AM", cal:345, p:22, f:28, c:3, recipe:0 },
-      lunch:     { icon:"ğŸ§€", label:"Lunch",     cls:"l", name:"Paneer Tikka (150g) + Cucumber Salad", time:"01:30 PM", cal:460, p:30, f:34, c:5, recipe:5 },
-      snack:     { icon:"ğŸŒ±", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
-      dinner:    { icon:"ğŸœ", label:"Dinner",    cls:"d", name:"Clear Chicken Pepper Soup (150g)", time:"07:30 PM", cal:285, p:38, f:9, c:5, recipe:4 }
-    }, totals:{ cal:1265, p:96, f:85, c:19 }
+  { // Month 5
+    name:"Month 5 — Final Cut", phase:"Phase 3", calories:"~970 kcal/day", target:"82?79kg", weightGoal:79,
+    notes:["Zero rice, max 1 phulka/meal","Protein 70–80g/day target","Increase chicken to 200g on chicken days","Walk 40–50 min with intervals"],
+    weekNotes:["Week 17: Phase 3 begins. Reduce phulka from 2 to 1. Body is lean-adapted now.","Week 18: Try 1 full day protein-only eating (eggs + chicken broth) on Wednesday.","Week 19: Increase walk to 50 min with 5-min intervals at fast pace.","Week 20: Take measurements — waist, chest, hips. Compare to Week 1."],
+    days:{
+      Monday:{theme:"Upper Push — Protein Max ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet + 10 Almonds",time:"09:30 AM",cal:280,p:16,f:21,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Palakura Pappu + Soyabean (100g) + 1 Phulka",time:"01:30 PM",cal:320,p:20,f:7,c:44},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 15g",time:"04:30 PM",cal:105,p:4,f:8,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Tikka (100g) + Cucumber",time:"07:30 PM",cal:285,p:18,f:21,c:5}
+      },totals:{cal:990,p:58,f:57,c:57}},
+      Tuesday:{theme:"Lower Body — Chana + Egg ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Allam Chutney",time:"09:30 AM",cal:280,p:14,f:4,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Chana Dal + Palakura + 1 Phulka",time:"01:30 PM",cal:300,p:14,f:5,c:50},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + 10 Almonds",time:"04:30 PM",cal:115,p:4,f:10,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Curry (2 eggs, light gravy)",time:"07:30 PM",cal:230,p:15,f:15,c:8}
+      },totals:{cal:925,p:47,f:34,c:108}},
+      Wednesday:{theme:"?? CHICKEN DAY — Dry Fry 200g ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet",time:"09:30 AM",cal:220,p:14,f:16,c:2},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Gongura Chicken Dry 200g + Cucumber Raita",time:"01:30 PM",cal:360,p:46,f:13,c:8},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Moong Dal Soup (clear, light)",time:"07:30 PM",cal:170,p:10,f:2,c:28}
+      },totals:{cal:850,p:73,f:40,c:42}},
+      Thursday:{theme:"Upper Pull — Soya Egg Day ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs)",time:"09:30 AM",cal:265,p:14,f:3,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Soyabean Curry (100g) + Palakura + 1 Phulka",time:"01:30 PM",cal:300,p:18,f:7,c:40},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 15g",time:"04:30 PM",cal:105,p:4,f:8,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Bhurji (3 eggs, light ghee)",time:"07:30 PM",cal:310,p:22,f:22,c:4}
+      },totals:{cal:980,p:58,f:40,c:90}},
+      Friday:{theme:"?? CHICKEN DAY — Tikka Dry 200g ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet + Gongura Chutney",time:"09:30 AM",cal:240,p:14,f:18,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Chicken Tikka Dry 200g (no rice, no roti)",time:"01:30 PM",cal:320,p:48,f:12,c:4},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 5 Walnuts",time:"04:30 PM",cal:110,p:3,f:10,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Palakura Pappu + 1 Phulka",time:"07:30 PM",cal:260,p:12,f:5,c:42}
+      },totals:{cal:930,p:77,f:45,c:54}},
+      Saturday:{theme:"Active Recovery — Dal Light ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Bhurji (light ghee) + 10 Almonds",time:"09:30 AM",cal:360,p:22,f:28,c:5},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Sambar + 1 Phulka + Beans Stir-fry",time:"01:30 PM",cal:260,p:10,f:5,c:44},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml",time:"04:30 PM",cal:80,p:4,f:3,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Bhurji (100g)",time:"07:30 PM",cal:290,p:18,f:22,c:6}
+      },totals:{cal:990,p:54,f:58,c:63}},
+      Sunday:{theme:"Full Rest — Minimal ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet + Allam Chutney",time:"09:30 AM",cal:240,p:14,f:18,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Dal Fry + 1 Phulka + Dosakaya Salad",time:"01:30 PM",cal:255,p:10,f:5,c:42},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Tomato Egg Curry (2 eggs)",time:"07:30 PM",cal:240,p:14,f:16,c:10}
+      },totals:{cal:835,p:41,f:48,c:60}}
+    }
   },
-  Saturday: {
-    theme: "Active Recovery Refuel",
-    meals: {
-      breakfast: { icon:"ğŸ§€", label:"Breakfast", cls:"b", name:"Paneer Bhurji (120g)", time:"09:30 AM", cal:430, p:25, f:32, c:6, recipe:1 },
-      lunch:     { icon:"ğŸ—", label:"Lunch",     cls:"l", name:"Chicken Stir-Fry with Bell Peppers (200g)", time:"01:30 PM", cal:385, p:46, f:16, c:8, recipe:10 },
-      snack:     { icon:"ğŸŒ±", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
-      dinner:    { icon:"ğŸ”¥", label:"Dinner",    cls:"d", name:"Tawa Paneer Tikka (120g)", time:"07:30 PM", cal:345, p:24, f:26, c:4, recipe:5 }
-    }, totals:{ cal:1335, p:101, f:88, c:24 }
-  },
-  Sunday: {
-    theme: "Full Rest â€“ Minimum Cooking",
-    meals: {
-      breakfast: { icon:"ğŸ³", label:"Breakfast", cls:"b", name:"Spanish-Style Egg Omelet (3 eggs, onion, capsicum)", time:"09:30 AM", cal:335, p:22, f:25, c:5, recipe:0 },
-      lunch:     { icon:"ğŸ—", label:"Lunch",     cls:"l", name:"Chicken Bone Broth (200ml) + 3 Boiled Eggs", time:"01:30 PM", cal:365, p:40, f:18, c:3, recipe:4 },
-      snack:     { icon:"ğŸŒ±", label:"Snack",     cls:"s", name:"Green Tea + Custom Seed Mix (30g)", time:"04:30 PM", cal:175, p:6, f:14, c:6, recipe:11 },
-      dinner:    { icon:"ğŸ—", label:"Dinner",    cls:"d", name:"Grilled Chicken (150g) with Herb Rub", time:"07:30 PM", cal:248, p:36, f:9, c:2, recipe:7 }
-    }, totals:{ cal:1123, p:104, f:66, c:16 }
+  { // Month 6
+    name:"Month 6 — Victory Lap", phase:"Phase 3", calories:"~940 kcal/day", target:"79?75kg", weightGoal:75,
+    notes:["Maximum protein, minimum carbs","Chicken 200g on chicken days","No upma — replace with pesarattu or eggs","Walk 50 min daily — this is your finish line!"],
+    weekNotes:["Week 21: Final month! You're 79kg — only 4kg to go. Stay disciplined.","Week 22: No cheat meals this week. Strict protein-first eating.","Week 23: Take progress photos. Compare to Week 1. You've transformed!","Week 24: FINAL WEEK. Walk 60 min. Eat clean. Celebrate at 75kg! ??"],
+    days:{
+      Monday:{theme:"Upper Push — Lean Protein ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Omelet + 15g Walnuts",time:"09:30 AM",cal:365,p:22,f:30,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Palakura Pappu + Soyabean (100g, no roti)",time:"01:30 PM",cal:260,p:18,f:7,c:30},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 15g",time:"04:30 PM",cal:105,p:4,f:8,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Bhurji (100g)",time:"07:30 PM",cal:290,p:18,f:22,c:6}
+      },totals:{cal:1020,p:62,f:67,c:44}},
+      Tuesday:{theme:"Lower Body — Pesarattu + Egg ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs)",time:"09:30 AM",cal:265,p:14,f:3,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Chana Dal + Spinach (no rice) + 1 Phulka",time:"01:30 PM",cal:290,p:14,f:5,c:48},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml + 10 Almonds",time:"04:30 PM",cal:115,p:4,f:10,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Curry (3 eggs)",time:"07:30 PM",cal:320,p:22,f:22,c:10}
+      },totals:{cal:990,p:54,f:40,c:108}},
+      Wednesday:{theme:"?? CHICKEN DAY — Gongura Max 200g ???",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"2-Egg Omelet",time:"09:30 AM",cal:220,p:14,f:16,c:2},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Gongura Chicken Curry 200g (no rice, no roti)",time:"01:30 PM",cal:380,p:48,f:14,c:6},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Moong Dal + Palakura Soup",time:"07:30 PM",cal:175,p:10,f:2,c:30}
+      },totals:{cal:875,p:75,f:41,c:42}},
+      Thursday:{theme:"Upper Pull — Soya + Pesarattu ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + 1 Boiled Egg",time:"09:30 AM",cal:340,p:20,f:8,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Soyabean Curry + Palakura (no roti)",time:"01:30 PM",cal:260,p:18,f:7,c:30},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + Seed Mix 15g",time:"04:30 PM",cal:105,p:4,f:8,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Tikka (100g) + Mint Chutney",time:"07:30 PM",cal:280,p:18,f:20,c:5}
+      },totals:{cal:985,p:60,f:43,c:81}},
+      Friday:{theme:"?? CHICKEN DAY — Tikka 200g Final ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Omelet",time:"09:30 AM",cal:315,p:22,f:24,c:2},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Chicken Tikka Dry 200g (no rice, no roti)",time:"01:30 PM",cal:360,p:50,f:14,c:4},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 5 Walnuts",time:"04:30 PM",cal:110,p:3,f:10,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Palakura Pappu (no rice)",time:"07:30 PM",cal:175,p:10,f:4,c:26}
+      },totals:{cal:960,p:85,f:52,c:36}},
+      Saturday:{theme:"Active Recovery — Egg + Dal ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"3-Egg Bhurji (minimal ghee)",time:"09:30 AM",cal:320,p:22,f:24,c:4},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Dal + Beans Curry + 1 Phulka",time:"01:30 PM",cal:270,p:12,f:5,c:44},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Chaas 200ml",time:"04:30 PM",cal:80,p:4,f:3,c:8},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Paneer Bhurji (100g)",time:"07:30 PM",cal:290,p:18,f:22,c:6}
+      },totals:{cal:960,p:56,f:54,c:62}},
+      Sunday:{theme:"Final Rest — Keep it Simple ??",meals:{
+        breakfast:{icon:"??",label:"Breakfast",cls:"b",name:"Pesarattu (2 pcs) + Allam Chutney",time:"09:30 AM",cal:265,p:14,f:3,c:42},
+        lunch:{icon:"??",label:"Lunch",cls:"l",name:"Sambar + 1 Phulka + Dosakaya Salad",time:"01:30 PM",cal:220,p:7,f:4,c:38},
+        snack:{icon:"??",label:"Snack",cls:"s",name:"Green Tea + 10 Almonds",time:"04:30 PM",cal:100,p:3,f:9,c:4},
+        dinner:{icon:"??",label:"Dinner",cls:"d",name:"Egg Drop Soup (2 eggs, clear broth)",time:"07:30 PM",cal:195,p:13,f:11,c:6}
+      },totals:{cal:780,p:37,f:27,c:90}}
+    }
   }
-};
+];
+
+// =====================================================
+// DATA: GROCERY PLAN (6 months, INR budget)
+// =====================================================
+const GROCERY_PLAN = [
+  { month:"Month 1", budget:5200, categories:[
+    { name:"?? Protein Sources", items:[
+      {item:"Eggs (30/week × 4 weeks)",qty:"120 eggs",price:720,note:"?6/egg. Buy weekly 30 pack"},
+      {item:"Boneless Chicken (150g × 2 days × 4 weeks)",qty:"1.2 kg",price:650,note:"?540/kg. Buy fresh weekly"},
+      {item:"Paneer (100g × 2 days × 4 weeks)",qty:"800g",price:500,note:"?60/100g. Full-fat only"},
+      {item:"Soyabean (dry, for cooking)",qty:"500g",price:70,note:"Soak overnight, cook well. Max 100g cooked/day"}
+    ],total:1940},
+    { name:"?? Vegetables (Telugu Kitchen)", items:[
+      {item:"Palakura (Spinach)",qty:"2 kg",price:120,note:"?30/250g bunch. Buy 2x/week"},
+      {item:"Gongura (Sorrel Leaves)",qty:"500g",price:40,note:"For Gongura Chicken — classic Telugu"},
+      {item:"Vankaya (Brinjal)",qty:"500g",price:30,note:"For Gutti Vankaya"},
+      {item:"Bendakaya (Okra/Bhindi)",qty:"500g",price:40,note:"Fry with seasoning"},
+      {item:"Sorakaya (Bottle Gourd)",qty:"500g",price:25,note:"For Sorakaya Pappu"},
+      {item:"Chikkudu Kaya (Beans)",qty:"500g",price:50,note:"Steam or stir-fry"},
+      {item:"Tomatoes",qty:"2 kg",price:80,note:"For chutneys, curries"},
+      {item:"Onions",qty:"2 kg",price:80,note:"Daily use"},
+      {item:"Dosakaya (Yellow Cucumber)",qty:"2 pieces",price:40,note:"For raita/salad"},
+      {item:"Green Chillies, Curry Leaves, Coriander",qty:"weekly",price:80,note:"Tamil/Telugu seasoning base"}
+    ],total:585},
+    { name:"?? Grains & Dal", items:[
+      {item:"Green Moong Dal (Pesarattu)",qty:"500g",price:80,note:"Soak overnight for pesarattu"},
+      {item:"Toor Dal (Kandi Pappu)",qty:"500g",price:90,note:"For sambar & pappu"},
+      {item:"Chana Dal (Senagapappu)",qty:"500g",price:80,note:"Protein-rich dal"},
+      {item:"Moong Dal (yellow, for soup)",qty:"250g",price:50,note:"Light dinner soups"},
+      {item:"Semolina/Rava (Upma)",qty:"500g",price:40,note:"Limit to 1 small upma/week"},
+      {item:"Wheat Flour (Atta, for phulka)",qty:"2 kg",price:120,note:"Aashirvaad or Pillsbury"},
+      {item:"Rice (Sona Masuri)",qty:"2 kg",price:120,note:"Month 1: 1 cup/day. Reduce from Month 2"}
+    ],total:580},
+    { name:"?? Nuts, Seeds & Healthy Fats", items:[
+      {item:"Almonds",qty:"200g",price:280,note:"10/day — selenium, vitamin E"},
+      {item:"Walnuts",qty:"150g",price:250,note:"5-10/day — omega-3, thyroid support"},
+      {item:"Pumpkin Seeds",qty:"200g",price:120,note:"8g/day — magnesium for thyroid"},
+      {item:"Sunflower Seeds",qty:"200g",price:80,note:"5g/day — vitamin E"},
+      {item:"Sesame Seeds/Nuvvulu",qty:"250g",price:60,note:"For chutney — calcium + zinc"},
+      {item:"Flax Seeds (ground)",qty:"150g",price:60,note:"Grind before eating — omega-3"},
+      {item:"Ghee (pure desi)",qty:"200g",price:220,note:"Cooking fat. Avoid refined oils"},
+      {item:"Coconut Oil",qty:"500ml",price:120,note:"High-heat cooking"}
+    ],total:1190},
+    { name:"?? Condiments & Beverages", items:[
+      {item:"Green Tea (25 bags)",qty:"1 pack",price:100,note:"2 cups/day — metabolism boost"},
+      {item:"Apple Cider Vinegar (with mother)",qty:"500ml",price:180,note:"1 tsp in warm water every morning"},
+      {item:"Iodized Salt",qty:"1 kg",price:30,note:"MUST be iodized for thyroid"},
+      {item:"Curd/Yogurt (for chaas/raita)",qty:"1 L/week",price:200,note:"Full-fat. Make at home if possible"},
+      {item:"Coconut (for chutney)",qty:"4 pieces",price:80,note:"Fresh coconut chutney — daily use"},
+      {item:"Spices (turmeric, pepper, cumin, mustard)",qty:"monthly",price:200,note:"Buy in bulk. Turmeric anti-inflammatory"}
+    ],total:790}
+  ]},
+  { month:"Month 2", budget:5100, categories:[
+    { name:"?? Protein Sources", items:[
+      {item:"Eggs",qty:"120 eggs",price:720,note:"Same as Month 1"},
+      {item:"Boneless Chicken",qty:"1.2 kg",price:650,note:"Same as Month 1"},
+      {item:"Paneer",qty:"800g",price:500,note:"Same as Month 1"},
+      {item:"Soyabean",qty:"500g",price:70,note:"Introduce 2x/week"}
+    ],total:1940},
+    { name:"?? Vegetables", items:[
+      {item:"Palakura (Spinach)",qty:"2 kg",price:120,note:"Increase to 2x/week use"},
+      {item:"Gongura",qty:"500g",price:40,note:"For chicken dish"},
+      {item:"Bendakaya, Sorakaya, Vankaya",qty:"500g each",price:95,note:"Rotate weekly"},
+      {item:"Tomatoes, Onions",qty:"4 kg total",price:160,note:"Daily use"},
+      {item:"Fresh Coriander, Curry Leaves",qty:"weekly",price:60,note:"Seasoning"}
+    ],total:475},
+    { name:"?? Grains & Dal", items:[
+      {item:"Green Moong (Pesarattu)",qty:"500g",price:80,note:"Increase pesarattu frequency"},
+      {item:"Toor Dal, Chana Dal, Moong Dal",qty:"500g each",price:220,note:"Rotate dal daily"},
+      {item:"Wheat Atta",qty:"2 kg",price:120,note:"More phulkas, less rice"},
+      {item:"Rice",qty:"1 kg",price:60,note:"Month 2: Reduce to ½ cup/day"}
+    ],total:480},
+    { name:"?? Nuts, Seeds & Fats", items:[
+      {item:"Almonds + Walnuts",qty:"200g + 150g",price:530,note:"Same as Month 1"},
+      {item:"Mixed Seeds (pumpkin, sunflower, sesame, flax)",qty:"200g each",price:320,note:"Mix in jar"},
+      {item:"Ghee",qty:"200g",price:220,note:"Pure desi ghee only"},
+      {item:"Coconut Oil",qty:"500ml",price:120,note:"Cooking oil"}
+    ],total:1190},
+    { name:"?? Condiments & Beverages", items:[
+      {item:"Green Tea",qty:"25 bags",price:100,note:""},
+      {item:"ACV",qty:"500ml",price:180,note:""},
+      {item:"Curd",qty:"4 L",price:200,note:""},
+      {item:"Coconut, Spices, Salt",qty:"monthly",price:310,note:""}
+    ],total:790}
+  ]},
+  { month:"Months 3–4", budget:5000, categories:[
+    { name:"?? Protein Sources", items:[
+      {item:"Eggs",qty:"120 eggs",price:720,note:"Same as before"},
+      {item:"Boneless Chicken",qty:"1.5 kg",price:810,note:"Increase to 180g on chicken days"},
+      {item:"Paneer",qty:"800g",price:500,note:"Tue + Sat only"},
+      {item:"Soyabean (dry)",qty:"500g",price:70,note:"Increase to 3x/week now"}
+    ],total:2100},
+    { name:"?? Vegetables", items:[
+      {item:"Palakura (Spinach)",qty:"2.5 kg",price:150,note:"Increase — great for thyroid"},
+      {item:"Gongura + Vankaya + Bendakaya",qty:"500g each",price:110,note:"Rotate"},
+      {item:"Tomatoes + Onions",qty:"4 kg total",price:160,note:""},
+      {item:"Dosakaya, Sorakaya",qty:"500g each",price:65,note:""}
+    ],total:485},
+    { name:"?? Grains & Dal (reduced)", items:[
+      {item:"Green Moong (Pesarattu)",qty:"750g",price:120,note:"Main breakfast now"},
+      {item:"Toor Dal + Chana Dal + Moong Dal",qty:"500g each",price:220,note:""},
+      {item:"Wheat Atta (phulka only)",qty:"1.5 kg",price:90,note:"Only 1 phulka/meal max"},
+      {item:"Rice",qty:"ZERO",price:0,note:"No rice from Month 3 onwards"}
+    ],total:430},
+    { name:"?? Nuts, Seeds & Fats", items:[
+      {item:"Almonds + Walnuts",qty:"200g + 150g",price:530,note:""},
+      {item:"Mixed Seeds",qty:"200g each × 4 types",price:320,note:""},
+      {item:"Ghee",qty:"150g",price:165,note:"Slightly less fat now"},
+      {item:"Coconut Oil",qty:"500ml",price:120,note:""}
+    ],total:1135},
+    { name:"?? Condiments & Beverages", items:[
+      {item:"Green Tea + ACV + Curd",qty:"monthly",price:480,note:""},
+      {item:"Coconut + Spices + Salt",qty:"monthly",price:310,note:""}
+    ],total:790}
+  ]},
+  { month:"Months 5–6", budget:4900, categories:[
+    { name:"?? Protein Sources", items:[
+      {item:"Eggs",qty:"120 eggs",price:720,note:"Same"},
+      {item:"Boneless Chicken",qty:"1.6 kg",price:864,note:"200g on chicken days (×2/week × 4 weeks)"},
+      {item:"Paneer",qty:"800g",price:500,note:"Sat only (reduce from Month 5)"},
+      {item:"Soyabean",qty:"500g",price:70,note:"3x/week, cooked only"}
+    ],total:2154},
+    { name:"?? Vegetables", items:[
+      {item:"Palakura",qty:"3 kg",price:180,note:"Main vegetable — iron + thyroid support"},
+      {item:"All other Telugu veggies",qty:"500g × 4 types",price:160,note:"Vankaya, Bendakaya, Sorakaya, Gongura"},
+      {item:"Tomatoes + Onions",qty:"3 kg total",price:120,note:""}
+    ],total:460},
+    { name:"?? Grains (minimal)", items:[
+      {item:"Green Moong (Pesarattu)",qty:"750g",price:120,note:"Pesarattu = main carb source"},
+      {item:"All Dal types",qty:"500g × 3 types",price:220,note:"Toor + Chana + Moong"},
+      {item:"Wheat Atta",qty:"1 kg",price:60,note:"1 phulka/day max in Month 5, zero Month 6"},
+      {item:"Rice",qty:"ZERO",price:0,note:"Eliminated"}
+    ],total:400},
+    { name:"?? Nuts, Seeds & Fats", items:[
+      {item:"Almonds + Walnuts",qty:"200g + 150g",price:530,note:"Don't skip — essential for thyroid"},
+      {item:"Mixed Seeds",qty:"200g × 4 types",price:320,note:""},
+      {item:"Ghee",qty:"100g",price:110,note:"Minimal fat phase"},
+      {item:"Coconut Oil",qty:"500ml",price:120,note:""}
+    ],total:1080},
+    { name:"?? Condiments & Beverages", items:[
+      {item:"Green Tea + ACV + Curd",qty:"monthly",price:480,note:""},
+      {item:"Spices + Salt + Coconut",qty:"monthly",price:310,note:""}
+    ],total:790}
+  ]}
+];
+
+
 
 // =====================================================
 // DATA: RECIPES
 // =====================================================
 const RECIPES = [
-  { id:0, icon:"ğŸ³", cat:"breakfast", name:"Keto Ghee Masala Omelet", time:"10 min", cal:345, p:22, f:28, c:3,
+  { id:0, icon:"??", cat:"breakfast", name:"Keto Ghee Masala Omelet", time:"10 min", cal:345, p:22, f:28, c:3,
     tags:["thyroid-safe","keto","high-protein"], ingredients:["3 large eggs","1 tsp ghee","1/4 onion (finely chopped)","1/4 capsicum","1 green chili (optional)","Salt, black pepper, turmeric, cumin"],
-    steps:["Beat 3 eggs with salt, pepper, pinch of turmeric","Heat ghee in non-stick pan on medium","SautÃ© onion & capsicum for 2 min","Pour egg mix, tilt pan to spread","Cook covered for 1 min, fold and serve","Top with fresh coriander if desired"],
-    tip:"Use cast iron pan for better results. Do not add milk â€” keeps carbs minimal." },
+    steps:["Beat 3 eggs with salt, pepper, pinch of turmeric","Heat ghee in non-stick pan on medium","Sauté onion & capsicum for 2 min","Pour egg mix, tilt pan to spread","Cook covered for 1 min, fold and serve","Top with fresh coriander if desired"],
+    tip:"Use cast iron pan for better results. Do not add milk — keeps carbs minimal." },
 
-  { id:1, icon:"ğŸ§€", cat:"breakfast", name:"Keto Paneer Bhurji", time:"12 min", cal:430, p:25, f:32, c:6,
+  { id:1, icon:"??", cat:"breakfast", name:"Keto Paneer Bhurji", time:"12 min", cal:430, p:25, f:32, c:6,
     tags:["thyroid-safe","keto","vegetarian"], ingredients:["120g full-fat paneer (crumbled)","1 tsp ghee","1/4 onion","1/4 capsicum","1/4 tomato (small, optional)","Cumin, turmeric, garam masala, salt"],
-    steps:["Heat ghee, add cumin seeds till they splutter","Add onion, sautÃ© till translucent (3 min)","Add capsicum & tomato, cook 2 min","Add crumbled paneer, stir on high heat 2 min","Add spices, mix well. Cook 1 more min","Finish with fresh coriander"],
-    tip:"Avoid soya paneer â€” use cow/buffalo milk paneer only. Crumble coarsely for best texture." },
+    steps:["Heat ghee, add cumin seeds till they splutter","Add onion, sauté till translucent (3 min)","Add capsicum & tomato, cook 2 min","Add crumbled paneer, stir on high heat 2 min","Add spices, mix well. Cook 1 more min","Finish with fresh coriander"],
+    tip:"Avoid soya paneer — use cow/buffalo milk paneer only. Crumble coarsely for best texture." },
 
-  { id:2, icon:"ğŸŒ¾", cat:"lunch", name:"Cauliflower Rice", time:"8 min", cal:55, p:3, f:2, c:6,
+  { id:2, icon:"??", cat:"lunch", name:"Cauliflower Rice", time:"8 min", cal:55, p:3, f:2, c:6,
     tags:["keto","thyroid-COOK-first","low-carb"], ingredients:["300g cauliflower florets","1 tsp ghee or coconut oil","Salt, black pepper","Optional: cumin, curry leaves"],
-    steps:["IMPORTANT: Steam cauliflower for 5 min first (deactivates goitrogens)","Let it cool slightly, then pulse in food processor (or grate)","Heat oil in pan, add cumin/curry leaves","Add grated cauliflower, stir-fry on high 3â€“4 min","Season with salt & pepper. Keep dry and fluffy"],
-    tip:"Always steam before grating â€” raw cauliflower is banned for thyroid. Serve immediately after cooking." },
+    steps:["IMPORTANT: Steam cauliflower for 5 min first (deactivates goitrogens)","Let it cool slightly, then pulse in food processor (or grate)","Heat oil in pan, add cumin/curry leaves","Add grated cauliflower, stir-fry on high 3–4 min","Season with salt & pepper. Keep dry and fluffy"],
+    tip:"Always steam before grating — raw cauliflower is banned for thyroid. Serve immediately after cooking." },
 
-  { id:3, icon:"ğŸ—", cat:"lunch", name:"Chicken Pepper Curry (No Cream)", time:"25 min", cal:460, p:52, f:17, c:8,
+  { id:3, icon:"??", cat:"lunch", name:"Chicken Pepper Curry (No Cream)", time:"25 min", cal:460, p:52, f:17, c:8,
     tags:["thyroid-safe","high-protein","lchf"], ingredients:["200g chicken thigh/breast (boneless)","1 tbsp coconut oil","1 onion (sliced)","1 tsp ginger-garlic paste","1 tsp black pepper (key ingredient)","Turmeric, coriander powder, salt","100ml thin coconut milk (optional)"],
-    steps:["Marinate chicken with turmeric, pepper, ginger-garlic, salt â€” 30 min","Heat oil, fry onions until golden","Add marinated chicken, sear on high 3 min each side","Add spices, 2 tbsp water, cover & cook 15 min on low","Add coconut milk if using, simmer 3 more min","Garnish with fresh coriander"],
-    tip:"Black pepper is the star here â€” it aids digestion and liver health. Use bone-in for more flavour." },
+    steps:["Marinate chicken with turmeric, pepper, ginger-garlic, salt — 30 min","Heat oil, fry onions until golden","Add marinated chicken, sear on high 3 min each side","Add spices, 2 tbsp water, cover & cook 15 min on low","Add coconut milk if using, simmer 3 more min","Garnish with fresh coriander"],
+    tip:"Black pepper is the star here — it aids digestion and liver health. Use bone-in for more flavour." },
 
-  { id:4, icon:"ğŸœ", cat:"dinner", name:"Clear Chicken Pepper Soup", time:"20 min", cal:285, p:38, f:9, c:5,
+  { id:4, icon:"??", cat:"dinner", name:"Clear Chicken Pepper Soup", time:"20 min", cal:285, p:38, f:9, c:5,
     tags:["thyroid-safe","liver-safe","low-carb","dinner"], ingredients:["150g chicken (bone-in preferred)","600ml water","Whole black peppercorns (1 tsp)","2 garlic cloves","1 inch ginger (sliced)","Sea salt","Coriander & curry leaves"],
-    steps:["Bring water to boil with garlic, ginger, peppercorns","Add chicken pieces, skim foam off top","Simmer on low for 15â€“18 min","Remove chicken, shred it back in","Season with sea salt generously","Finish with coriander & curry leaves"],
-    tip:"This is your best dinner â€” light, high protein, zero carbs. Drink the broth for collagen and gut health." },
+    steps:["Bring water to boil with garlic, ginger, peppercorns","Add chicken pieces, skim foam off top","Simmer on low for 15–18 min","Remove chicken, shred it back in","Season with sea salt generously","Finish with coriander & curry leaves"],
+    tip:"This is your best dinner — light, high protein, zero carbs. Drink the broth for collagen and gut health." },
 
-  { id:5, icon:"ğŸ”¥", cat:"dinner", name:"Tawa Paneer Tikka", time:"20 min", cal:350, p:25, f:27, c:4,
-    tags:["thyroid-safe","vegetarian","keto"], ingredients:["120â€“150g full-fat paneer (cubed)","2 tbsp full-fat curd (yogurt)","1 tsp ghee","Kashmiri red chili, cumin, coriander powder","Garam masala, turmeric, ginger-garlic paste","Salt, lemon juice"],
-    steps:["Mix all spices with curd to make marinade","Coat paneer cubes, marinate 1 hr minimum","Heat tawa/cast iron on high, add ghee","Sear paneer 2 min each side until charred edges appear","Do NOT overcook â€” paneer gets rubbery","Squeeze lemon, serve immediately"],
+  { id:5, icon:"??", cat:"dinner", name:"Tawa Paneer Tikka", time:"20 min", cal:350, p:25, f:27, c:4,
+    tags:["thyroid-safe","vegetarian","keto"], ingredients:["120–150g full-fat paneer (cubed)","2 tbsp full-fat curd (yogurt)","1 tsp ghee","Kashmiri red chili, cumin, coriander powder","Garam masala, turmeric, ginger-garlic paste","Salt, lemon juice"],
+    steps:["Mix all spices with curd to make marinade","Coat paneer cubes, marinate 1 hr minimum","Heat tawa/cast iron on high, add ghee","Sear paneer 2 min each side until charred edges appear","Do NOT overcook — paneer gets rubbery","Squeeze lemon, serve immediately"],
     tip:"Marinate overnight in fridge for intense flavor. Use iron tawa for best char." },
 
-  { id:6, icon:"ğŸ¥š", cat:"lunch", name:"No-Tomato Egg Curry (Coconut Base)", time:"18 min", cal:310, p:22, f:22, c:7,
+  { id:6, icon:"??", cat:"lunch", name:"No-Tomato Egg Curry (Coconut Base)", time:"18 min", cal:310, p:22, f:22, c:7,
     tags:["thyroid-safe","keto","high-protein"], ingredients:["3 boiled eggs (halved)","1 tbsp coconut oil","1 onion (finely chopped)","100ml thin coconut milk","Cumin, turmeric, coriander, pepper, salt","Fresh ginger-garlic paste"],
     steps:["Hard-boil eggs (10 min), halve them, score with fork","Heat oil, fry onions golden (5 min)","Add ginger-garlic, fry 1 min","Add dry spices, 2 tbsp water, cook paste 2 min","Pour coconut milk, stir, bring to simmer","Add eggs gently, simmer 4 min. Do not boil."],
     tip:"No tomato = lower acidity, better for liver. Coconut milk adds healthy MCTs." },
 
-  { id:7, icon:"ğŸ—", cat:"dinner", name:"Tawa Chicken Tikka (No Oven)", time:"25 min", cal:330, p:48, f:12, c:4,
+  { id:7, icon:"??", cat:"dinner", name:"Tawa Chicken Tikka (No Oven)", time:"25 min", cal:330, p:48, f:12, c:4,
     tags:["thyroid-safe","high-protein","lchf"], ingredients:["200g chicken thigh (boneless, cubed)","3 tbsp full-fat curd","Kashmiri chili, cumin, garam masala, turmeric","Ginger-garlic paste","1 tsp ghee, salt, lemon"],
-    steps:["Mix curd + all spices for marinade","Coat chicken thoroughly, rest 1â€“2 hrs","Heat cast iron tawa on high flame","Add ghee, place chicken pieces (do not crowd)","Cook 4â€“5 min per side until cooked through","Rest 2 min, squeeze lemon & serve"],
-    tip:"Chicken thighs are more forgiving than breast â€” better fat profile too. Marinate overnight for best results." },
+    steps:["Mix curd + all spices for marinade","Coat chicken thoroughly, rest 1–2 hrs","Heat cast iron tawa on high flame","Add ghee, place chicken pieces (do not crowd)","Cook 4–5 min per side until cooked through","Rest 2 min, squeeze lemon & serve"],
+    tip:"Chicken thighs are more forgiving than breast — better fat profile too. Marinate overnight for best results." },
 
-  { id:8, icon:"ğŸ¥£", cat:"dinner", name:"Egg Drop Soup (Chinese-Style Keto)", time:"8 min", cal:200, p:14, f:12, c:4,
+  { id:8, icon:"??", cat:"dinner", name:"Egg Drop Soup (Chinese-Style Keto)", time:"8 min", cal:200, p:14, f:12, c:4,
     tags:["thyroid-safe","quick","low-carb"], ingredients:["2 eggs (beaten)","500ml chicken broth (homemade preferred)","1/2 tsp sesame oil (small amount ok)","Black pepper, salt","Spring onions (green part only)","Ginger (grated)"],
-    steps:["Bring broth to a gentle boil with ginger","Season with salt and pepper","Reduce to low simmer","Slowly pour beaten eggs in a thin stream while stirring","Eggs cook in seconds â€” ribbon-like strands form","Drizzle sesame oil, top with spring onions"],
-    tip:"Make broth from leftover chicken bones â€” free collagen and amino acids." },
+    steps:["Bring broth to a gentle boil with ginger","Season with salt and pepper","Reduce to low simmer","Slowly pour beaten eggs in a thin stream while stirring","Eggs cook in seconds — ribbon-like strands form","Drizzle sesame oil, top with spring onions"],
+    tip:"Make broth from leftover chicken bones — free collagen and amino acids." },
 
-  { id:9, icon:"ğŸ¥š", cat:"breakfast", name:"Paneer & Egg Scramble", time:"10 min", cal:360, p:28, f:26, c:3,
+  { id:9, icon:"??", cat:"breakfast", name:"Paneer & Egg Scramble", time:"10 min", cal:360, p:28, f:26, c:3,
     tags:["thyroid-safe","keto","high-protein"], ingredients:["2 large eggs","60g paneer (crumbled)","1 tsp ghee","Salt, pepper, pinch of turmeric","Optional: small green chili, coriander"],
-    steps:["Beat eggs with salt and pepper","Heat ghee in non-stick pan","Add crumbled paneer, stir-fry 1 min","Pour beaten eggs over paneer","Stir gently on medium â€” do not over-scramble","Remove while slightly underdone (residual heat finishes it)"],
+    steps:["Beat eggs with salt and pepper","Heat ghee in non-stick pan","Add crumbled paneer, stir-fry 1 min","Pour beaten eggs over paneer","Stir gently on medium — do not over-scramble","Remove while slightly underdone (residual heat finishes it)"],
     tip:"Best pre-workout breakfast. Combine ghee fat + egg protein + paneer casein for sustained energy." },
 
-  { id:10, icon:"ğŸ—", cat:"lunch", name:"Chicken Stir-Fry with Bell Peppers", time:"15 min", cal:385, p:46, f:16, c:8,
+  { id:10, icon:"??", cat:"lunch", name:"Chicken Stir-Fry with Bell Peppers", time:"15 min", cal:385, p:46, f:16, c:8,
     tags:["thyroid-safe","quick","lchf"], ingredients:["200g chicken breast (thin sliced)","1 tbsp coconut oil","1 red + 1 green bell pepper (sliced)","1 onion (sliced)","Ginger, garlic (minced)","Soy sauce SUBSTITUTE: coconut aminos or just salt+pepper","Black pepper, salt"],
-    steps:["Slice chicken thin â€” 5mm strips. Pat dry.","Heat oil on highest flame (wok-style)","Flash-fry chicken 2â€“3 min until white","Remove chicken. Fry peppers & onion 2 min (keep crunch)","Add back chicken + ginger-garlic + seasoning","Toss on high 1 min, serve immediately"],
-    tip:"NO SOY SAUCE â€” use coconut aminos or just salt+pepper+lemon. High flame is key for stir-fry." },
+    steps:["Slice chicken thin — 5mm strips. Pat dry.","Heat oil on highest flame (wok-style)","Flash-fry chicken 2–3 min until white","Remove chicken. Fry peppers & onion 2 min (keep crunch)","Add back chicken + ginger-garlic + seasoning","Toss on high 1 min, serve immediately"],
+    tip:"NO SOY SAUCE — use coconut aminos or just salt+pepper+lemon. High flame is key for stir-fry." },
 
-  { id:11, icon:"ğŸŒ±", cat:"snack", name:"Custom Seed & Nut Mix (30g Daily Cap)", time:"2 min (prep)", cal:175, p:6, f:14, c:6,
+  { id:11, icon:"??", cat:"snack", name:"Custom Seed & Nut Mix (30g Daily Cap)", time:"2 min (prep)", cal:175, p:6, f:14, c:6,
     tags:["thyroid-safe","daily-allotment"], ingredients:["Pumpkin seeds: 8g (highest magnesium)","Sunflower seeds: 5g","Flax seeds: 5g (ground preferred)","White sesame seeds: 4g","Watermelon seeds: 4g","Almonds: 2g","Walnuts: 1g","Unsalted Pistachios: 1g"],
-    steps:["Weigh each component on a kitchen scale","Mix all in a small airtight container","Prepare weekly batch and store in fridge","Consume entire 30g portion with green tea at 4:30 PM","Do NOT exceed 30g combined â€” strict caloric control"],
+    steps:["Weigh each component on a kitchen scale","Mix all in a small airtight container","Prepare weekly batch and store in fridge","Consume entire 30g portion with green tea at 4:30 PM","Do NOT exceed 30g combined — strict caloric control"],
     tip:"STRICT 30g/day cap. Pumpkin seeds are most valuable for thyroid (selenium + zinc + magnesium). Flax seeds: grind for better omega-3 absorption." }
 ];
 
@@ -829,24 +1276,24 @@ const RECIPES = [
 // =====================================================
 const WORKOUT_PLAN = {
   Monday: {
-    name:"Upper Push + Core", type:"strength", icon:"ğŸ’ª", duration:"45 min",
+    name:"Upper Push + Core", type:"strength", icon:"??", duration:"45 min",
     exercises:[
-      { cat:"core",  name:"Cat-Cow Stretch",         sets:"3", reps:"10",    note:"Spinal mobility warm-up â€” mandatory start" },
-      { cat:"core",  name:"Bird-Dog",                 sets:"3", reps:"10 ea", note:"Anti-rotation core stability â€” key for LBP" },
-      { cat:"core",  name:"Dead Bug",                 sets:"3", reps:"10",    note:"Core anti-extension â€” back stays flat on floor" },
+      { cat:"core",  name:"Cat-Cow Stretch",         sets:"3", reps:"10",    note:"Spinal mobility warm-up — mandatory start" },
+      { cat:"core",  name:"Bird-Dog",                 sets:"3", reps:"10 ea", note:"Anti-rotation core stability — key for LBP" },
+      { cat:"core",  name:"Dead Bug",                 sets:"3", reps:"10",    note:"Core anti-extension — back stays flat on floor" },
       { cat:"glute", name:"Glute Bridge",             sets:"3", reps:"15",    note:"Posterior chain activation before pressing" },
-      { cat:"push",  name:"DB Floor Press",           sets:"3", reps:"12",    note:"Floor limits ROM â€” spine-safe chest press" },
-      { cat:"push",  name:"DB Seated Shoulder Press", sets:"3", reps:"10",    note:"Seated preferred over standing â€” less spinal load" },
-      { cat:"push",  name:"DB Lateral Raise",         sets:"3", reps:"15",    note:"4â€“6 kg. Controlled tempo 2:0:2" },
+      { cat:"push",  name:"DB Floor Press",           sets:"3", reps:"12",    note:"Floor limits ROM — spine-safe chest press" },
+      { cat:"push",  name:"DB Seated Shoulder Press", sets:"3", reps:"10",    note:"Seated preferred over standing — less spinal load" },
+      { cat:"push",  name:"DB Lateral Raise",         sets:"3", reps:"15",    note:"4–6 kg. Controlled tempo 2:0:2" },
       { cat:"push",  name:"DB Tricep Extension",      sets:"3", reps:"12",    note:"Overhead if no pain, else lying skull crusher" }
     ]
   },
   Tuesday: {
-    name:"Lower Body Glute Focus + Core", type:"strength", icon:"ğŸ‘", duration:"40 min",
+    name:"Lower Body Glute Focus + Core", type:"strength", icon:"??", duration:"40 min",
     exercises:[
       { cat:"core",     name:"Cat-Cow Stretch",          sets:"3", reps:"10",    note:"Mandatory spinal warm-up" },
       { cat:"core",     name:"Bird-Dog",                  sets:"3", reps:"10 ea", note:"Slow and controlled, 3-sec hold at top" },
-      { cat:"glute",    name:"Glute Bridge with Barbell", sets:"4", reps:"15",    note:"Bar on hips (padded). Hip thrust variation â€” spine-safe" },
+      { cat:"glute",    name:"Glute Bridge with Barbell", sets:"4", reps:"15",    note:"Bar on hips (padded). Hip thrust variation — spine-safe" },
       { cat:"glute",    name:"DB Romanian Deadlift",      sets:"3", reps:"12",    note:"HINGE not squat. Back straight, hips back. Light to start." },
       { cat:"compound", name:"Bulgarian Split Squat",     sets:"3", reps:"10 ea", note:"Rear foot elevated. Upright torso. Very spine-friendly" },
       { cat:"glute",    name:"DB Lateral Lunge",          sets:"3", reps:"10 ea", note:"Slow eccentric (3 sec down). Good for hip abductors" },
@@ -854,15 +1301,15 @@ const WORKOUT_PLAN = {
     ]
   },
   Wednesday: {
-    name:"REST / Active Recovery", type:"rest", icon:"ğŸ§˜", duration:"20â€“30 min walk",
+    name:"REST / Active Recovery", type:"rest", icon:"??", duration:"20–30 min walk",
     exercises:[
-      { cat:"cardio", name:"Fasted Morning Walk", sets:"1", reps:"20â€“30 min", note:"Low intensity. HR 100â€“120 BPM. Burns fat optimally" },
+      { cat:"cardio", name:"Fasted Morning Walk", sets:"1", reps:"20–30 min", note:"Low intensity. HR 100–120 BPM. Burns fat optimally" },
       { cat:"core",   name:"Cat-Cow Stretch",     sets:"2", reps:"10",        note:"Morning mobility only" },
       { cat:"core",   name:"Pigeon Pose Stretch", sets:"2", reps:"30s ea",    note:"Hip flexor relief after motorbike commute" }
     ]
   },
   Thursday: {
-    name:"Upper Pull + Core", type:"strength", icon:"ğŸ¦µ", duration:"45 min",
+    name:"Upper Pull + Core", type:"strength", icon:"??", duration:"45 min",
     exercises:[
       { cat:"core",  name:"Cat-Cow Stretch",         sets:"3", reps:"10",    note:"Mandatory spinal warm-up" },
       { cat:"core",  name:"Dead Bug",                 sets:"3", reps:"10",    note:"Core stability before pulling work" },
@@ -870,37 +1317,37 @@ const WORKOUT_PLAN = {
       { cat:"pull",  name:"DB Bent-Over Row",         sets:"3", reps:"12",    note:"Neutral spine. One hand braced on bench for support" },
       { cat:"pull",  name:"DB Bicep Curl",            sets:"3", reps:"12",    note:"Supinated grip. Full ROM. No swinging." },
       { cat:"pull",  name:"DB Hammer Curl",           sets:"3", reps:"12",    note:"Neutral grip. Hits brachialis and brachioradialis" },
-      { cat:"pull",  name:"DB Rear Delt Fly",         sets:"3", reps:"15",    note:"Inclined at 45Â°. 3â€“4 kg. Fixes posture from desk work" },
+      { cat:"pull",  name:"DB Rear Delt Fly",         sets:"3", reps:"15",    note:"Inclined at 45°. 3–4 kg. Fixes posture from desk work" },
       { cat:"pull",  name:"DB Shrug",                 sets:"3", reps:"15",    note:"Slow eccentric 3 sec. Trapezius activation" }
     ]
   },
   Friday: {
-    name:"Full Body Compound + Core", type:"strength", icon:"ğŸ”¥", duration:"50 min",
+    name:"Full Body Compound + Core", type:"strength", icon:"??", duration:"50 min",
     exercises:[
       { cat:"core",     name:"Cat-Cow Stretch",          sets:"3", reps:"10",    note:"Mandatory" },
       { cat:"core",     name:"Bird-Dog",                  sets:"3", reps:"10 ea", note:"Stability focus" },
       { cat:"core",     name:"Dead Bug",                  sets:"3", reps:"10",    note:"Mandatory" },
       { cat:"glute",    name:"Barbell Hip Thrust",        sets:"4", reps:"12",    note:"Primary strength builder. Bar padded on hips." },
       { cat:"compound", name:"DB Romanian Deadlift",      sets:"4", reps:"10",    note:"Heaviest weights this week. Progressive overload." },
-      { cat:"push",     name:"DB Floor Press",            sets:"3", reps:"12",    note:"Increase weight by 1â€“2kg vs Monday" },
-      { cat:"pull",     name:"DB Bent-Over Row",          sets:"3", reps:"12",    note:"Heavy row â€” challenge yourself" },
+      { cat:"push",     name:"DB Floor Press",            sets:"3", reps:"12",    note:"Increase weight by 1–2kg vs Monday" },
+      { cat:"pull",     name:"DB Bent-Over Row",          sets:"3", reps:"12",    note:"Heavy row — challenge yourself" },
       { cat:"push",     name:"DB Shoulder Press",         sets:"3", reps:"10",    note:"Seated. Compound finisher." }
     ]
   },
   Saturday: {
-    name:"Active Recovery (Walk)", type:"cardio", icon:"ğŸš¶", duration:"30 min walk",
+    name:"Active Recovery (Walk)", type:"cardio", icon:"??", duration:"30 min walk",
     exercises:[
-      { cat:"cardio", name:"Fasted Morning Walk",    sets:"1", reps:"25â€“35 min", note:"Brisk pace. Arm swing. HR 110â€“130 BPM." },
+      { cat:"cardio", name:"Fasted Morning Walk",    sets:"1", reps:"25–35 min", note:"Brisk pace. Arm swing. HR 110–130 BPM." },
       { cat:"core",   name:"Cat-Cow Stretch",        sets:"2", reps:"10",        note:"Morning routine" },
       { cat:"core",   name:"Hip Flexor Stretch",     sets:"2", reps:"30s ea",    note:"Counteracts sitting 9+ hrs at desk" }
     ]
   },
   Sunday: {
-    name:"Full REST + Mobility", type:"rest", icon:"ğŸ›Œ", duration:"Mobility only",
+    name:"Full REST + Mobility", type:"rest", icon:"??", duration:"Mobility only",
     exercises:[
       { cat:"core",   name:"Full Body Stretching",    sets:"1", reps:"15 min",  note:"Entire body stretch sequence. No loading." },
       { cat:"core",   name:"Cat-Cow Stretch",         sets:"2", reps:"10",      note:"Spine health maintenance" },
-      { cat:"core",   name:"Child Pose",              sets:"2", reps:"60s",     note:"Lower back decompression â€” esp. after weekly rides" },
+      { cat:"core",   name:"Child Pose",              sets:"2", reps:"60s",     note:"Lower back decompression — esp. after weekly rides" },
       { cat:"core",   name:"Supine Twist",            sets:"2", reps:"30s ea",  note:"Thoracic rotation. Lie on back, knees to one side." }
     ]
   }
@@ -910,51 +1357,51 @@ const WORKOUT_PLAN = {
 // DATA: CARDIO
 // =====================================================
 const CARDIO_TABLE = [
-  { day:"Monday",    session:"Fasted Walk", duration:"20â€“25 min", intensity:"Light (HR 95â€“115)", note:"Pre-workout or standalone" },
-  { day:"Tuesday",   session:"REST",        duration:"â€”",         intensity:"â€”",                 note:"Lower body day â€” skip cardio" },
-  { day:"Wednesday", session:"Fasted Walk", duration:"25â€“30 min", intensity:"Moderate (HR 110â€“125)", note:"Active recovery day" },
-  { day:"Thursday",  session:"REST",        duration:"â€”",         intensity:"â€”",                 note:"Upper pull day â€” skip cardio" },
-  { day:"Friday",    session:"Fasted Walk", duration:"20 min",    intensity:"Light (HR 95â€“110)", note:"Before full body session" },
-  { day:"Saturday",  session:"Brisk Walk",  duration:"30â€“35 min", intensity:"Moderate (HR 115â€“130)", note:"Dedicated cardio day" },
-  { day:"Sunday",    session:"Easy Walk",   duration:"20â€“30 min", intensity:"Very Light (HR 90â€“105)", note:"Recovery â€” enjoy outdoors" }
+  { day:"Monday",    session:"Fasted Walk", duration:"20–25 min", intensity:"Light (HR 95–115)", note:"Pre-workout or standalone" },
+  { day:"Tuesday",   session:"REST",        duration:"—",         intensity:"—",                 note:"Lower body day — skip cardio" },
+  { day:"Wednesday", session:"Fasted Walk", duration:"25–30 min", intensity:"Moderate (HR 110–125)", note:"Active recovery day" },
+  { day:"Thursday",  session:"REST",        duration:"—",         intensity:"—",                 note:"Upper pull day — skip cardio" },
+  { day:"Friday",    session:"Fasted Walk", duration:"20 min",    intensity:"Light (HR 95–110)", note:"Before full body session" },
+  { day:"Saturday",  session:"Brisk Walk",  duration:"30–35 min", intensity:"Moderate (HR 115–130)", note:"Dedicated cardio day" },
+  { day:"Sunday",    session:"Easy Walk",   duration:"20–30 min", intensity:"Very Light (HR 90–105)", note:"Recovery — enjoy outdoors" }
 ];
 
 const CARDIO_PHASES = [
-  { phase:"Phase 1 (Wk 1â€“4)", label:"Foundation Walking", detail:"20â€“30 min fasted walks. HR 95â€“130 BPM. 4 days/week. Build aerobic base.", current:true },
-  { phase:"Phase 2 (Wk 5â€“8)", label:"Extended + Incline",   detail:"30â€“40 min walks with incline/stairs. Add 1 cycling session if back allows.", current:false },
+  { phase:"Phase 1 (Wk 1–4)", label:"Foundation Walking", detail:"20–30 min fasted walks. HR 95–130 BPM. 4 days/week. Build aerobic base.", current:true },
+  { phase:"Phase 2 (Wk 5–8)", label:"Extended + Incline",   detail:"30–40 min walks with incline/stairs. Add 1 cycling session if back allows.", current:false },
   { phase:"Phase 3 (Month 3)", label:"Interval Walking",     detail:"3 min brisk + 1 min fast-paced. 30 min. Introduces anaerobic threshold.", current:false },
   { phase:"Phase 4 (Month 4+)", label:"LISS + Light Cycling", detail:"45 min LISS cycling or swimming. Zero spinal impact. Fat burning peak.", current:false }
 ];
 
 const HR_ZONES = [
-  { zone:"Zone 1 â€“ Recovery", range:"95â€“110 BPM", purpose:"Active recovery, fat utilization" },
-  { zone:"Zone 2 â€“ Fat Burn",  range:"110â€“130 BPM", purpose:"Primary fat-burning zone â€” TARGET" },
-  { zone:"Zone 3 â€“ Aerobic",   range:"130â€“150 BPM", purpose:"Cardiovascular conditioning (future)" }
+  { zone:"Zone 1 – Recovery", range:"95–110 BPM", purpose:"Active recovery, fat utilization" },
+  { zone:"Zone 2 – Fat Burn",  range:"110–130 BPM", purpose:"Primary fat-burning zone — TARGET" },
+  { zone:"Zone 3 – Aerobic",   range:"130–150 BPM", purpose:"Cardiovascular conditioning (future)" }
 ];
 
 // =====================================================
 // DATA: DAILY TIMELINE TASKS
 // =====================================================
 const TASKS = [
-  { time:"06:30 AM", text:"ğŸ’Š Thyronorm 12.5mg â€” Empty stomach. Set 45-min food timer.", category:"medication" },
-  { time:"07:00 AM", text:"ğŸš¿ Cold-warm shower + 10-min morning mobility (Cat-Cow, hip stretches).", category:"routine" },
-  { time:"07:30 AM", text:"ğŸµ Metabolic Primer: 1 glass warm water + 1 tsp ACV (with mother).", category:"nutrition" },
-  { time:"08:15 AM", text:"ğŸ’ª Home Workout: Core stabilization â†’ Strength session per today's plan.", category:"workout" },
-  { time:"09:30 AM", text:"ğŸ³ Breakfast: High-protein LCHF meal (see Diet Plan for today's option).", category:"nutrition" },
-  { time:"11:00 AM", text:"ğŸ’§ Mid-morning hydration: 500ml water (towards 4L daily target).", category:"hydration" },
-  { time:"01:30 PM", text:"ğŸ— Lunch: Low-carb high-protein main meal. Max 8g net carbs.", category:"nutrition" },
-  { time:"04:00 PM", text:"ğŸ’§ Afternoon water: 500ml. Desk job reminder â€” stay hydrated.", category:"hydration" },
-  { time:"04:30 PM", text:"ğŸŒ± Snack: Green Tea + 30g Custom Seed Mix (WEIGH on scale).", category:"nutrition" },
-  { time:"06:00 PM", text:"ğŸš¶ Evening Walk: 20 min brisk walk. Disconnect from screens.", category:"cardio" },
-  { time:"07:30 PM", text:"ğŸœ Dinner: Light high-protein meal. Finish before 8:00 PM.", category:"nutrition" },
-  { time:"08:30 PM", text:"ğŸŒ™ Wind-down: Chamomile/Oolong tea. No screens 30 min before bed.", category:"routine" }
+  { time:"06:30 AM", text:"?? Thyronorm 12.5mg — Empty stomach. Set 45-min food timer.", category:"medication" },
+  { time:"07:00 AM", text:"?? Cold-warm shower + 10-min morning mobility (Cat-Cow, hip stretches).", category:"routine" },
+  { time:"07:30 AM", text:"?? Metabolic Primer: 1 glass warm water + 1 tsp ACV (with mother).", category:"nutrition" },
+  { time:"08:15 AM", text:"?? Home Workout: Core stabilization ? Strength session per today's plan.", category:"workout" },
+  { time:"09:30 AM", text:"?? Breakfast: High-protein LCHF meal (see Diet Plan for today's option).", category:"nutrition" },
+  { time:"11:00 AM", text:"?? Mid-morning hydration: 500ml water (towards 4L daily target).", category:"hydration" },
+  { time:"01:30 PM", text:"?? Lunch: Low-carb high-protein main meal. Max 8g net carbs.", category:"nutrition" },
+  { time:"04:00 PM", text:"?? Afternoon water: 500ml. Desk job reminder — stay hydrated.", category:"hydration" },
+  { time:"04:30 PM", text:"?? Snack: Green Tea + 30g Custom Seed Mix (WEIGH on scale).", category:"nutrition" },
+  { time:"06:00 PM", text:"?? Evening Walk: 20 min brisk walk. Disconnect from screens.", category:"cardio" },
+  { time:"07:30 PM", text:"?? Dinner: Light high-protein meal. Finish before 8:00 PM.", category:"nutrition" },
+  { time:"08:30 PM", text:"?? Wind-down: Chamomile/Oolong tea. No screens 30 min before bed.", category:"routine" }
 ];
 
 // =====================================================
 // DATA: SEED ALLOCATION
 // =====================================================
 const SEEDS = [
-  { name:"Pumpkin Seeds",    stock:250, daily:8,  note:"Highest magnesium â€” thyroid support" },
+  { name:"Pumpkin Seeds",    stock:250, daily:8,  note:"Highest magnesium — thyroid support" },
   { name:"Sunflower Seeds",  stock:250, daily:5,  note:"Vitamin E + selenium" },
   { name:"Flax Seeds",       stock:250, daily:5,  note:"Grind before eating for omega-3" },
   { name:"White Sesame",     stock:250, daily:4,  note:"Calcium + zinc" },
@@ -988,13 +1435,13 @@ let weightChartInstance = null;
 // NAVIGATION
 // =====================================================
 const pageTitles = {
-  dashboard: "ğŸ  Dashboard",
-  diet: "ğŸ¥— Diet Plan",
-  recipes: "ğŸ“– Recipes",
-  workout: "ğŸ’ª Workout",
-  cardio: "ğŸƒ Cardio",
-  progress: "ğŸ“ˆ Progress",
-  guidelines: "ğŸ›¡ï¸ Guidelines"
+  dashboard: "?? Dashboard",
+  diet: "?? Diet Plan",
+  recipes: "?? Recipes",
+  workout: "?? Workout",
+  cardio: "?? Cardio",
+  progress: "?? Progress",
+  guidelines: "??? Guidelines"
 };
 
 function showSection(id, el) {
@@ -1089,44 +1536,61 @@ function setScore(type, val, btn) {
 // DIET PLAN RENDERING
 // =====================================================
 function buildDietPlan() {
-  const days = Object.keys(MEAL_PLAN);
+  const curM = getCurrentMonthIndex();
+  const mSel = document.getElementById("dietMonthSelector");
+  mSel.innerHTML = ["Month 1","Month 2","Month 3","Month 4","Month 5","Month 6"].map((lbl,i) => {
+    const isCur = i === curM;
+    return `<button class="month-btn${currentDietMonth===i?" active":""}${isCur?" current-month":""}" onclick="selectDietMonth(${i})">${lbl}${isCur?" ?":""}</button>`;
+  }).join("");
+  renderDietWeekSelector();
+  renderDietMonthView();
+}
+function selectDietMonth(m) {
+  currentDietMonth = m;
+  currentDietWeek = 1;
+  document.querySelectorAll("#dietMonthSelector .month-btn").forEach((b,i) => b.classList.toggle("active", i===m));
+  renderDietWeekSelector();
+  renderDietMonthView();
+}
+function renderDietWeekSelector() {
+  const wSel = document.getElementById("dietWeekSelector");
+  wSel.innerHTML = [1,2,3,4].map(w =>
+    `<button class="week-btn${currentDietWeek===w?" active":""}" onclick="selectDietWeek(${w})">Week ${w}</button>`
+  ).join("");
+}
+function selectDietWeek(w) {
+  currentDietWeek = w;
+  document.querySelectorAll("#dietWeekSelector .week-btn").forEach((b,i) => b.classList.toggle("active", i+1===w));
+  renderDietMonthView();
+}
+function renderDietMonthView() {
+  const md = MONTHLY_DIET[currentDietMonth];
+  document.getElementById("dietPhaseBanner").innerHTML = `<div class="phase-banner"><div><h4>?? ${md.name}</h4><p>${md.notes.join(" · ")}</p></div><div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="phase-pill">?? ${md.target}</span><span class="phase-pill">?? ${md.calories}</span></div></div>`;
+  const wNote = md.weekNotes[currentDietWeek-1] || "";
+  document.getElementById("dietWeekNote").innerHTML = `<div class="week-note">?? <strong>Week ${currentDietWeek} tip:</strong> ${wNote}</div>`;
+  const days = Object.keys(md.days);
   const tabsEl = document.getElementById("dayTabs");
   tabsEl.innerHTML = "";
   const today = new Date().toLocaleDateString("en-US",{weekday:"long"});
-  days.forEach((day, i) => {
+  days.forEach(day => {
     const btn = document.createElement("button");
     btn.className = "day-tab" + (day === today ? " active" : "");
     btn.textContent = day.substring(0,3);
     btn.onclick = () => { document.querySelectorAll(".day-tab").forEach(t => t.classList.remove("active")); btn.classList.add("active"); renderDietDay(day); };
     tabsEl.appendChild(btn);
   });
-  renderDietDay(today in MEAL_PLAN ? today : "Monday");
+  renderDietDay(today in md.days ? today : "Monday");
 }
-
 function renderDietDay(day) {
-  const d = MEAL_PLAN[day];
-  const meals = d.meals;
-  let html = `<div class="day-theme">ğŸ“… ${day} â€” ${d.theme}</div>`;
+  const md = MONTHLY_DIET[currentDietMonth];
+  const d = md.days[day];
+  if (!d) return;
+  let html = `<div class="day-theme">?? ${day} — ${d.theme}</div>`;
   ["breakfast","lunch","snack","dinner"].forEach(key => {
-    const m = meals[key];
-    html += `<div class="meal-card ${m.cls}" onclick="if(window.innerWidth>768){showSection('recipes',document.querySelector('.nav-item:nth-child(3)'))}">
-      <div class="meal-icon">${m.icon}</div>
-      <div class="meal-info"><div class="meal-name">${m.name}</div><div class="meal-time">â° ${m.time} Â· ${m.label}</div></div>
-      <div class="meal-macros">
-        <span class="macro-pill cal">${m.cal} kcal</span><br>
-        <span class="macro-pill p">P ${m.p}g</span>
-        <span class="macro-pill f">F ${m.f}g</span>
-        <span class="macro-pill c">C ${m.c}g</span>
-      </div>
-    </div>`;
+    const m = d.meals[key];
+    html += `<div class="meal-card ${m.cls}"><div class="meal-icon">${m.icon}</div><div class="meal-info"><div class="meal-name">${m.name}</div><div class="meal-time">? ${m.time} · ${m.label}</div></div><div class="meal-macros"><span class="macro-pill cal">${m.cal} kcal</span><br><span class="macro-pill p">P ${m.p}g</span><span class="macro-pill f">F ${m.f}g</span><span class="macro-pill c">C ${m.c}g</span></div></div>`;
   });
-  html += `<div class="day-total-bar">
-    <span>ğŸ½ï¸ Day Total:</span>
-    <span>ğŸ”¥ ${d.totals.cal} kcal</span>
-    <span>ğŸ’ª Protein ${d.totals.p}g</span>
-    <span>ğŸ¥‘ Fat ${d.totals.f}g</span>
-    <span>ğŸŒ¾ Net Carbs ${d.totals.c}g</span>
-  </div>`;
+  html += `<div class="day-total-bar"><span>??? Day Total:</span><span>?? ${d.totals.cal} kcal</span><span>?? Protein ${d.totals.p}g</span><span>?? Fat ${d.totals.f}g</span><span>?? Net Carbs ${d.totals.c}g</span></div>`;
   document.getElementById("dietDayContent").innerHTML = html;
 }
 
@@ -1157,7 +1621,7 @@ function renderRecipes(cat) {
       <div class="recipe-header">
         <div class="r-icon">${r.icon}</div>
         <div class="r-name">${r.name}</div>
-        <div class="r-time">â±ï¸ ${r.time} Â· ${r.cal} kcal</div>
+        <div class="r-time">?? ${r.time} · ${r.cal} kcal</div>
       </div>
       <div class="recipe-body">
         <div class="recipe-macros">
@@ -1171,14 +1635,14 @@ function renderRecipes(cat) {
         </div>
       </div>
       <div class="recipe-expand" id="rx-${r.id}">
-        <h4>ğŸ›’ Ingredients</h4>
+        <h4>?? Ingredients</h4>
         <ul>${r.ingredients.map(i=>`<li>${i}</li>`).join("")}</ul>
-        <h4>ğŸ‘¨â€ğŸ³ Method</h4>
+        <h4>????? Method</h4>
         <ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
-        <div class="recipe-tip">ğŸ’¡ ${r.tip}</div>
+        <div class="recipe-tip">?? ${r.tip}</div>
       </div>
       <div style="padding:10px 16px;border-top:1px solid var(--border)">
-        <button class="btn btn-primary btn-sm" onclick="toggleRecipe(${r.id})">View Recipe â–¼</button>
+        <button class="btn btn-primary btn-sm" onclick="toggleRecipe(${r.id})">View Recipe ?</button>
       </div>
     </div>
   `).join("");
@@ -1188,13 +1652,40 @@ function toggleRecipe(id) {
   const el = document.getElementById("rx-"+id);
   el.classList.toggle("open");
   const btn = el.nextElementSibling.querySelector("button");
-  btn.textContent = el.classList.contains("open") ? "Hide Recipe â–²" : "View Recipe â–¼";
+  btn.textContent = el.classList.contains("open") ? "Hide Recipe ?" : "View Recipe ?";
 }
 
 // =====================================================
 // WORKOUT RENDERING
 // =====================================================
+const WORKOUT_PHASES = [
+  { month:"Month 1", phase:"Phase 1 – Foundation", focus:"Light weights · Form mastery · 3 sets", note:"Focus on correct form. 2 min rest between sets. Walk 20 min daily." },
+  { month:"Month 2", phase:"Phase 1 – Foundation+", focus:"Add 1 set · Increase reps", note:"Increase reps by 2 each week. Add 5 min brisk walk to routine." },
+  { month:"Month 3", phase:"Phase 2 – Strength", focus:"Progressive overload · 4 sets", note:"Add 1–2 kg weight each week where possible. Protein target: 100g/day." },
+  { month:"Month 4", phase:"Phase 2 – Strength+", focus:"Compound lifts priority · Supersets", note:"Pair upper/lower supersets to increase intensity. 90 sec rest max." },
+  { month:"Month 5", phase:"Phase 3 – Cut", focus:"High reps · Low rest · Circuit training", note:"30–45 sec rest between sets. Add 10 min HIIT twice a week." },
+  { month:"Month 6", phase:"Phase 3 – Peak", focus:"Max intensity · Final cut", note:"Target 100g+ protein. Consider 5-day split. Track all lifts to hit PRs." }
+];
 function buildWorkout() {
+  const curM = getCurrentMonthIndex();
+  const mSel = document.getElementById("workoutMonthSelector");
+  mSel.innerHTML = WORKOUT_PHASES.map((p,i) =>
+    `<button class="month-btn${currentWorkoutMonth===i?" active":""}${i===curM?" current-month":""}" onclick="selectWorkoutMonth(${i})">${p.month}${i===curM?" ?":""}</button>`
+  ).join("");
+  renderWorkoutMonthBanner();
+  renderWorkoutDayGrid();
+}
+function selectWorkoutMonth(m) {
+  currentWorkoutMonth = m;
+  document.querySelectorAll("#workoutMonthSelector .month-btn").forEach((b,i) => b.classList.toggle("active", i===m));
+  renderWorkoutMonthBanner();
+  renderWorkoutDayGrid();
+}
+function renderWorkoutMonthBanner() {
+  const p = WORKOUT_PHASES[currentWorkoutMonth];
+  document.getElementById("workoutPhaseBanner").innerHTML = `<div class="phase-banner"><div><h4>?? ${p.phase}</h4><p>${p.focus}</p></div><div><span class="phase-pill">?? ${p.note}</span></div></div>`;
+}
+function renderWorkoutDayGrid() {
   const days = Object.keys(WORKOUT_PLAN);
   const grid = document.getElementById("workoutDayGrid");
   grid.innerHTML = "";
@@ -1224,8 +1715,8 @@ function renderWorkoutDay(day) {
   const w = WORKOUT_PLAN[day];
   let html = `<div class="card">
     <div class="card-title">${w.icon} ${day}: ${w.name}
-      <span style="margin-left:auto;font-size:.72rem;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;padding:3px 8px;border-radius:8px;font-weight:600">â±ï¸ ${w.duration}</span>
-      <span class="spine-badge" style="margin-left:8px">ğŸ¦´ Spine-Safe Protocol</span>
+      <span style="margin-left:auto;font-size:.72rem;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;padding:3px 8px;border-radius:8px;font-weight:600">?? ${w.duration}</span>
+      <span class="spine-badge" style="margin-left:8px">?? Spine-Safe Protocol</span>
     </div>
     <div class="exercise-list">`;
   w.exercises.forEach(ex => {
@@ -1233,7 +1724,7 @@ function renderWorkoutDay(day) {
       <span class="exercise-cat">${ex.cat}</span>
       <div>
         <div class="exercise-name">${ex.name}</div>
-        <div class="exercise-detail">ğŸ“Š ${ex.sets} sets Ã— ${ex.reps}</div>
+        <div class="exercise-detail">?? ${ex.sets} sets × ${ex.reps}</div>
         <div class="exercise-note">${ex.note}</div>
       </div>
     </div>`;
@@ -1255,7 +1746,7 @@ function buildCardio() {
   phasesEl.innerHTML = CARDIO_PHASES.map(p =>
     `<div style="padding:10px 12px;border-radius:8px;margin-bottom:8px;background:${p.current?"#f0fdf4;border:1px solid #bbf7d0":"#f8f9fa"};border:1px solid ${p.current?"#bbf7d0":"var(--border)"}">
       <div style="font-size:.8rem;font-weight:700;color:${p.current?"#166534":"var(--text-med)"}">
-        ${p.current?"âœ… ":"â³ "}${p.phase}: ${p.label}
+        ${p.current?"? ":"? "}${p.phase}: ${p.label}
       </div>
       <div style="font-size:.75rem;color:var(--text-light);margin-top:3px">${p.detail}</div>
     </div>`
@@ -1282,10 +1773,10 @@ function buildGuidelines() {
     totalStock += s.stock;
     const days = Math.floor(s.stock / s.daily);
     return `<div class="seed-bar-wrap">
-      <div class="seed-label"><span>${s.name} (${s.daily}g/day)</span><span style="color:var(--text-light)">~${days}d stock Â· ${s.note}</span></div>
+      <div class="seed-label"><span>${s.name} (${s.daily}g/day)</span><span style="color:var(--text-light)">~${days}d stock · ${s.note}</span></div>
       <div class="seed-bar"><div class="seed-fill" style="width:${(s.daily/30)*100}%"></div></div>
     </div>`;
-  }).join("") + `<div style="margin-top:10px;font-size:.8rem;font-weight:700;color:var(--primary)">Total: ${totalDaily}g/day âœ… (within 30g cap)</div>`;
+  }).join("") + `<div style="margin-top:10px;font-size:.8rem;font-weight:700;color:var(--primary)">Total: ${totalDaily}g/day ? (within 30g cap)</div>`;
 
   const suppEl = document.getElementById("suppTiming");
   suppEl.innerHTML = SUPP_TIMING.map(s =>
@@ -1332,7 +1823,7 @@ async function loadDateData() {
     document.querySelectorAll("#energyRow .score-btn").forEach((b,i) => b.classList.toggle("sel", i+1===currentEnergyScore));
     updateCheckStat();
   } catch(e) {
-    console.warn("API offline â€” using localStorage");
+    console.warn("API offline — using localStorage");
     loadFromLocal(date);
   }
 }
@@ -1420,11 +1911,11 @@ function renderWeightChart(data) {
 
 function renderMilestones(currentW) {
   const ms = [
-    { weight:94, label:"-1kg First Drop", icon:"ğŸŒ±" },
-    { weight:92, label:"-3kg Momentum",   icon:"âš¡" },
-    { weight:90, label:"-5kg Halfway",    icon:"ğŸ…" },
-    { weight:88, label:"-7kg Liver Wins", icon:"ï¿½ï¿½" },
-    { weight:85, label:"-10kg GOAL!",     icon:"ğŸ†" }
+    { weight:94, label:"-1kg First Drop", icon:"??" },
+    { weight:92, label:"-3kg Momentum",   icon:"?" },
+    { weight:90, label:"-5kg Halfway",    icon:"??" },
+    { weight:88, label:"-7kg Liver Wins", icon:"??" },
+    { weight:85, label:"-10kg GOAL!",     icon:"??" }
   ];
   document.getElementById("milestoneGrid").innerHTML = ms.map(m =>
     `<div class="milestone${currentW <= m.weight?" unlocked":""}">
@@ -1439,10 +1930,10 @@ function renderStats(stats) {
   document.getElementById("statDetails").innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       ${[
-        ["ğŸ“… Days Logged", stats.totalDaysLogged||0],
-        ["ğŸ’ª Workouts Done", stats.workoutStreak||0],
-        ["ğŸ’§ Avg Water", (stats.avgWater||0)+"L/day"],
-        ["ğŸ“‹ Avg Checklist", (stats.avgCompletion||0)+"%"]
+        ["?? Days Logged", stats.totalDaysLogged||0],
+        ["?? Workouts Done", stats.workoutStreak||0],
+        ["?? Avg Water", (stats.avgWater||0)+"L/day"],
+        ["?? Avg Checklist", (stats.avgCompletion||0)+"%"]
       ].map(([l,v])=>`<div style="background:#f8f9fa;border-radius:8px;padding:10px;text-align:center"><div style="font-size:.72rem;color:var(--text-light)">${l}</div><div style="font-size:1.1rem;font-weight:800;color:var(--primary)">${v}</div></div>`).join("")}
     </div>`;
 }
@@ -1469,7 +1960,7 @@ function setGreeting() {
   const h = new Date().getHours();
   const greet = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   const day = new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"});
-  document.getElementById("dashGreeting").textContent = `${greet}, Karthik! Â· ${day}`;
+  document.getElementById("dashGreeting").textContent = `${greet}, Karthik! · ${day}`;
 }
 
 // =====================================================
@@ -1491,6 +1982,45 @@ function setGreeting() {
   }, { passive: true });
 })();
 
+
+// =====================================================
+// GROCERY RENDERING
+// =====================================================
+function buildGrocery() {
+  const sel = document.getElementById("groceryMonthSelector");
+  sel.innerHTML = ["Month 1","Month 2","Month 3","Month 4","Month 5","Month 6"].map((lbl,i) => {
+    const gIdx = i < 2 ? i : (i < 4 ? 2 : 3);
+    const isActive = currentDietMonth === i;
+    return `<button class="month-btn${isActive?" active":""}" onclick="selectGroceryMonth(${i})">${lbl}</button>`;
+  }).join("");
+  renderGrocery(currentDietMonth);
+}
+function selectGroceryMonth(m) {
+  document.querySelectorAll("#groceryMonthSelector .month-btn").forEach((b,i) => b.classList.toggle("active", i===m));
+  renderGrocery(m);
+}
+function renderGrocery(month) {
+  const gIdx = month < 2 ? month : (month < 4 ? 2 : 3);
+  const g = GROCERY_PLAN[gIdx];
+  const budgetEl = document.getElementById("groceryBudgetBar");
+  const totalSpend = g.categories.reduce((s,c) => s + c.total, 0);
+  budgetEl.innerHTML = `<div class="phase-banner" style="margin-bottom:14px">
+    <div><h4>?? ${g.month} Shopping List</h4><p>Estimated monthly spend · Prices as per local Telugu market rates</p></div>
+    <div style="text-align:right"><span class="phase-pill" style="font-size:.95rem">?? ?${totalSpend.toLocaleString('en-IN')} / ?${g.budget.toLocaleString('en-IN')} budget</span></div>
+  </div>`;
+  let html = "";
+  g.categories.forEach(cat => {
+    html += `<div class="grocery-category">
+      <div class="grocery-cat-title">??? ${cat.name} <span style="margin-left:auto;font-weight:400;font-size:.78rem;color:#555">?${cat.total.toLocaleString('en-IN')}</span></div>
+      <table class="grocery-table"><thead><tr><th>Item</th><th>Quantity</th><th>Est. Price</th><th>Note</th></tr></thead><tbody>`;
+    cat.items.forEach(item => {
+      html += `<tr><td>${item.item}</td><td>${item.qty}</td><td>?${item.price}</td><td style="color:#666;font-size:.78rem">${item.note||""}</td></tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+  html += `<div class="week-note" style="margin-top:16px">?? <strong>Shopping tip:</strong> Buy dal, rice, and dry spices in bulk (monthly). Buy vegetables twice a week — Tuesdays & Saturdays from local sabzi mandi for freshness and best prices.</div>`;
+  document.getElementById("groceryContent").innerHTML = html;
+}
 // =====================================================
 // INIT
 // =====================================================
@@ -1502,6 +2032,7 @@ document.addEventListener("DOMContentLoaded", () => {
   buildRecipes();
   buildWorkout();
   buildCardio();
+  buildGrocery();
   buildGuidelines();
   setGreeting();
   updateBMI(95);
