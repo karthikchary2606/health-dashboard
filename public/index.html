@@ -742,11 +742,26 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     </div>
   </div>
 
+
+  <!-- ===== GROCERY ===== -->
+  <div id="sec-grocery" class="section">
+    <div class="section-header">
+      <div><h2>Monthly Grocery List</h2><p>Telugu kitchen essentials · Budget ₹5,000–6,000/month · Thyroid-safe</p></div>
+    </div>
+    <div class="month-selector" id="groceryMonthSelector"></div>
+    <div id="groceryBudgetBar"></div>
+    <div class="hscroll"><div id="groceryContent"></div></div>
+    <div class="thyroid-note">
+      🔬 <strong>Thyroid Shopping Rules:</strong> Always buy iodized salt. Choose full-fat paneer. Buy eggs in bulk (min 30/week).
+      Soyabean: max 100g cooked 2x/week. All cruciferous veg must be cooked, never raw.
+      Ghee preferred over refined oils.
+    </div>
+  </div>
   </div><!-- end .content -->
 </div><!-- end .main -->
 <script>
 // =====================================================
-// DATA: 7-DAY MEAL PLAN
+// DATA: 6-MONTH TELUGU DIET PLAN
 // =====================================================
 const PROGRAM_START = new Date("2026-06-14");
 function getCurrentMonthIndex() {
