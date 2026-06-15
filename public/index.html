@@ -769,6 +769,75 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       Ghee preferred over refined oils.
     </div>
   </div>
+
+  <!-- ===== BREATHING ===== -->
+  <div id="sec-breathing" class="section">
+    <div class="section-header">
+      <div><h2>Breathing Exercises</h2><p>Guided sessions · Timer · Session history</p></div>
+    </div>
+
+    <!-- Technique selection -->
+    <div id="breathing-select">
+      <div class="grid-2" style="margin-bottom:20px" id="technique-cards"></div>
+      <div class="card" id="breathing-config" style="display:none">
+        <div class="card-title" id="config-title">🌬️ Configure Session</div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:.82rem;font-weight:600;color:var(--text-med)">Cycles</label>
+          <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+            <button onclick="adjustCycles(-1)" class="btn btn-primary btn-sm">−</button>
+            <span id="cycle-count" style="font-size:1.2rem;font-weight:800;min-width:32px;text-align:center">5</span>
+            <button onclick="adjustCycles(1)" class="btn btn-primary btn-sm">+</button>
+          </div>
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:.82rem;font-weight:600;color:var(--text-med)">How do you feel right now?</label>
+          <div class="score-row" id="mood-before-row" style="margin-top:8px">
+            <button class="score-btn" onclick="setMoodBefore(1,this)">😔 1</button>
+            <button class="score-btn" onclick="setMoodBefore(2,this)">😕 2</button>
+            <button class="score-btn sel" onclick="setMoodBefore(3,this)">😐 3</button>
+            <button class="score-btn" onclick="setMoodBefore(4,this)">🙂 4</button>
+            <button class="score-btn" onclick="setMoodBefore(5,this)">😄 5</button>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="startBreathingSession()">▶ Start Session</button>
+        <button class="btn btn-sm" onclick="cancelBreathingConfig()" style="margin-left:10px;background:#f8f9fa;border:1px solid var(--border)">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Active session view -->
+    <div id="breathing-session" style="display:none;text-align:center;padding:40px 20px">
+      <div id="breath-circle" style="width:200px;height:200px;border-radius:50%;background:var(--primary);margin:0 auto 24px;display:flex;align-items:center;justify-content:center;transition:transform 0.5s ease;transform:scale(1)">
+        <span id="breath-phase" style="color:#fff;font-size:1.1rem;font-weight:700">Ready</span>
+      </div>
+      <div id="breath-countdown" style="font-size:3rem;font-weight:800;color:var(--primary);margin-bottom:8px">—</div>
+      <div id="breath-cycle-info" style="font-size:.9rem;color:var(--text-med);margin-bottom:24px">Round — of —</div>
+      <button class="btn btn-sm" onclick="stopBreathingSession()" style="background:#fff5f5;border:1px solid #fecaca;color:#991b1b">Stop Session</button>
+    </div>
+
+    <!-- Completion view -->
+    <div id="breathing-complete" style="display:none;text-align:center;padding:40px 20px">
+      <div style="font-size:3rem;margin-bottom:16px">✅</div>
+      <h3 style="color:var(--primary);margin-bottom:8px">Session Complete!</h3>
+      <p id="complete-summary" style="color:var(--text-med);font-size:.88rem;margin-bottom:20px"></p>
+      <label style="font-size:.82rem;font-weight:600;color:var(--text-med)">How do you feel now?</label>
+      <div class="score-row" id="mood-after-row" style="justify-content:center;margin:10px 0 20px">
+        <button class="score-btn" onclick="setMoodAfter(1,this)">😔 1</button>
+        <button class="score-btn" onclick="setMoodAfter(2,this)">😕 2</button>
+        <button class="score-btn sel" onclick="setMoodAfter(3,this)">😐 3</button>
+        <button class="score-btn" onclick="setMoodAfter(4,this)">🙂 4</button>
+        <button class="score-btn" onclick="setMoodAfter(5,this)">😄 5</button>
+      </div>
+      <button class="btn btn-primary" onclick="saveBreathingSession()">💾 Save Session</button>
+      <button class="btn btn-sm" onclick="resetBreathing()" style="margin-left:10px;background:#f8f9fa;border:1px solid var(--border)">New Session</button>
+    </div>
+
+    <!-- Session history -->
+    <div class="card" style="margin-top:24px">
+      <div class="card-title">📜 Recent Sessions</div>
+      <div id="breathing-history"><p style="color:var(--text-light);font-size:.85rem">Loading...</p></div>
+    </div>
+  </div>
+
   </div><!-- end .content -->
 </div><!-- end .main -->
 <script src="/js/api.js"></script>
@@ -778,6 +847,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 <script src="/js/workout.js"></script>
 <script src="/js/cardio.js"></script>
 <script src="/js/guidelines.js"></script>
+<script src="/js/breathing.js"></script>
 <script src="/js/grocery.js"></script>
 <script src="/js/progress.js"></script>
 <script src="/js/dashboard.js"></script>
@@ -830,6 +900,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   buildCardio();
   buildGrocery();
   buildGuidelines();
+  buildBreathingSection();
   setGreeting();
   loadProgress();
   updateBMI(currentUser && currentUser.profile && currentUser.profile.startWeightKg || 95);
