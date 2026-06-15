@@ -33,6 +33,7 @@ jobs:
       - name: Deploy via Kudu ZIP API
         env:
           PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           # Extract credentials and SCM URL directly from publish profile XML
           USERNAME=$(echo "$PUBLISH_PROFILE" | grep -oP 'userName="\K[^"]+' | head -1)
@@ -46,6 +47,15 @@ jobs:
             echo "❌ Could not extract SCM URL from publish profile"
             exit 1
           fi
+
+          echo "Setting JWT_SECRET app setting via Kudu API..."
+          SETTINGS_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X PUT \
+            -u "$USERNAME:$PASSWORD" \
+            -H "Content-Type: application/json" \
+            -d "{\"JWT_SECRET\": \"$JWT_SECRET\"}" \
+            "https://$SCM_URL/api/settings")
+          echo "Settings response: $SETTINGS_RESPONSE"
 
           echo "Deploying to https://$SCM_URL/api/zipdeploy ..."
 
