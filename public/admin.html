@@ -39,6 +39,32 @@ tr:hover td{background:#f8fafb}
 .msg{padding:10px 14px;border-radius:6px;font-size:.82rem;margin-bottom:12px;display:none}
 .msg.success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
 .msg.error{background:#fff5f5;border:1px solid #fecaca;color:#991b1b}
+@media(max-width:900px){
+  .stat-row{grid-template-columns:1fr 1fr}
+  .form-row{flex-direction:column}
+  .form-group{min-width:unset;width:100%}
+}
+@media(max-width:600px){
+  .topbar{padding:10px 14px;flex-wrap:wrap;gap:8px}
+  .topbar h1{font-size:.85rem}
+  .content{padding:14px}
+  .stat-row{grid-template-columns:1fr 1fr;gap:10px}
+  .stat-card{padding:12px 14px}
+  .stat-card .s-val{font-size:1.2rem}
+  .card{padding:14px}
+  table{font-size:.76rem}
+  th,td{padding:8px 8px}
+  td[style*="display:flex"]{flex-wrap:wrap;gap:4px}
+  .btn{padding:4px 8px;font-size:.72rem}
+  .btn-primary{padding:7px 12px;font-size:.8rem}
+  .form-group input,.form-group select{font-size:.82rem;padding:7px 10px}
+}
+@media(max-width:480px){
+  .stat-row{grid-template-columns:1fr}
+  .topbar-right{width:100%}
+  table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  thead,tbody,th,td,tr{display:revert}
+}
 </style>
 </head>
 <body>

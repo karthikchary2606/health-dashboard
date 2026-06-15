@@ -37,7 +37,7 @@
   --radius-sm: 8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden}
+body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden;visibility:hidden}
 /* SIDEBAR */
 .sidebar{width:var(--sidebar-w);background:var(--sidebar);color:#fff;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:transform .3s;overflow-y:auto}
 .sidebar-logo{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,.1)}
@@ -81,10 +81,10 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 /* BOTTOM NAV */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--sidebar);z-index:200;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.1);box-shadow:0 -4px 20px rgba(0,0,0,.2)}
 .bottom-nav-items{display:flex;justify-content:space-around;align-items:center}
-.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px;cursor:pointer;border-radius:10px;transition:all .2s;min-width:44px;color:rgba(255,255,255,.55);border:none;background:none;flex:1}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;cursor:pointer;border-radius:10px;transition:all .2s;min-width:0;color:rgba(255,255,255,.55);border:none;background:none;flex:1}
 .bn-item.active{color:#fff;background:rgba(255,255,255,.12)}
 .bn-item .bn-icon{font-size:1.2rem;line-height:1}
-.bn-item .bn-label{font-size:.58rem;font-weight:600;letter-spacing:.3px;white-space:nowrap}
+.bn-item .bn-label{font-size:.55rem;font-weight:600;letter-spacing:.2px;white-space:nowrap}
 /* SCROLL WRAPPERS */
 .hscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px}
 .hscroll::-webkit-scrollbar{display:none}
@@ -415,6 +415,9 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <button class="bn-item" id="bn-workout" onclick="showSection('workout',null)">
       <span class="bn-icon">💪</span><span class="bn-label">Workout</span>
     </button>
+    <button class="bn-item" id="bn-breathing" onclick="showSection('breathing',null)">
+      <span class="bn-icon">🌬️</span><span class="bn-label">Breathe</span>
+    </button>
     <button class="bn-item" id="bn-progress" onclick="showSection('progress',null)">
       <span class="bn-icon">📈</span><span class="bn-label">Progress</span>
     </button>
@@ -434,6 +437,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       </div>
     </div>
     <div class="topbar-right">
+      <a id="admin-link" href="/admin.html" style="display:none;font-size:.75rem;font-weight:600;color:var(--primary);text-decoration:none;background:#f0fdf4;border:1px solid #bbf7d0;padding:5px 10px;border-radius:20px">⚙️</a>
       <div class="date-badge">
         <input type="date" id="logDate" style="border:none;background:transparent;font-size:.82rem;font-weight:600;color:#1b4332;outline:none;cursor:pointer" onchange="loadDateData()">
       </div>
@@ -525,7 +529,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== DIET PLAN ===== -->
   <div id="sec-diet" class="section">
     <div class="section-header">
-      <div><h2>6-Month Diet Plan</h2><p>Telugu traditional · Thyroid-safe · 95 → 75 kg journey</p></div>
+      <div><h2>6-Month Diet Plan</h2><p>Telugu traditional · Phase-based · Your health journey</p></div>
       <div class="spine-badge" style="background:#fff7ed;border-color:#fed7aa;color:#92400e">⚠️ Chicken Only Wed &amp; Fri</div>
     </div>
     <div class="alert-box yellow">

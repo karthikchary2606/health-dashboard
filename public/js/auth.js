@@ -6,6 +6,8 @@ async function initAuth() {
   if (!res) return; // apiFetch handles redirect on 401
   if (!res.ok) { window.location.href = '/login.html'; return; }
   currentUser = await res.json();
+  const adminLink = document.getElementById('admin-link');
+  if (adminLink && currentUser.role === 'admin') adminLink.style.display = 'inline-block';
   // Personalise sidebar
   const logoP = document.querySelector('.sidebar-logo p');
   if (logoP) {
@@ -25,6 +27,18 @@ async function initAuth() {
       </button>
     `;
   }
+  // Add admin link if admin
+  if (currentUser.role === 'admin') {
+    const footer = document.querySelector('.sidebar-footer');
+    if (footer) {
+      const adminLink = document.createElement('a');
+      adminLink.href = '/admin.html';
+      adminLink.textContent = '⚙️ Admin Panel';
+      adminLink.style.cssText = 'display:block;margin-top:8px;color:rgba(255,255,255,.6);font-size:.75rem;text-decoration:none;text-align:center;padding:4px;border-radius:4px;border:1px solid rgba(255,255,255,.15)';
+      footer.appendChild(adminLink);
+    }
+  }
+  document.body.style.visibility = 'visible';
   return currentUser;
 }
 
