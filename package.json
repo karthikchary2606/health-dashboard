@@ -4,7 +4,9 @@
   "description": "Dynamic Health Tracking Application",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed:admin": "node scripts/seed-admin.js",
+    "migrate:logs": "node scripts/migrate-logs.js"
   },
   "engines": {
     "node": ">=18.0.0"
