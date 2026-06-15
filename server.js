@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ override: true });
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -18,6 +18,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/healthDB';
+console.log('🔗 MongoDB URI:', mongoURI.replace(/:([^@]+)@/, ':***@'));
 let dbConnected = false;
 
 mongoose.connect(mongoURI, {
