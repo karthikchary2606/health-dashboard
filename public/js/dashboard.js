@@ -102,7 +102,7 @@ async function loadDateData() {
     const phLen = PHASE_TASKS[getUserPhaseIndex()].length; for(let i=0;i<phLen;i++) {
       const chk = document.getElementById("chk-"+i);
       if(chk) {
-        chk.checked = (data.checklist && data.checklist[i]) || false;
+      chk.checked = (data.checklist && data.checklist[i] && data.checklist[i].done) || false;
         document.getElementById("titem-"+i).classList.toggle("done", chk.checked);
       }
     }
@@ -136,26 +136,11 @@ async function syncData() {
   const notes = document.getElementById("workoutNotes").value;
   document.getElementById("weightStat").textContent = weight;
   updateBMI(weight);
-  const pTasks = PHASE_TASKS[getUserPhaseIndex()]; const checklist = pTasks.map((_, i) => { const c = document.getElementById("chk-"+i); return c ? c.checked : false; });
+  const pTasks = PHASE_TASKS[getUserPhaseIndex()]; const checklist = pTasks.map((_, i) => { const c = document.getElementById("chk-"+i); return { done: c ? c.checked : false }; });
   const payload = { date, checklist, waterIntake: waterLevel, weight, completedWorkout: document.getElementById("workoutToggle").checked, moodScore: currentMoodScore, energyScore: currentEnergyScore, notes };
   try {
     await apiFetch("/api/logs", { method:"POST", body: payload });
   } catch(e) { console.warn("syncData: API offline"); }
-}
-
-function loadFromLocal(date) {
-  const saved = localStorage.getItem("health-" + date);
-  if(!saved) return;
-  const data = JSON.parse(saved);
-  for(let i=0;i<PHASE_TASKS[getUserPhaseIndex()].length;i++) {
-    const chk = document.getElementById("chk-"+i);
-    if(chk) { chk.checked = data.checklist[i]||false; document.getElementById("titem-"+i).classList.toggle("done", chk.checked); }
-  }
-  if(data.weight > 0) { document.getElementById("currentWeight").value = data.weight; document.getElementById("weightStat").textContent = data.weight; updateBMI(data.weight); }
-  waterLevel = data.waterIntake || 0;
-  for(let i=1;i<=4;i++) document.getElementById("w"+i).classList.toggle("filled", i <= waterLevel);
-  document.getElementById("waterStat").textContent = waterLevel + "/4L";
-  updateCheckStat();
 }
 
 function updateCalorieStat() {

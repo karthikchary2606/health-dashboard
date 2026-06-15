@@ -1,6 +1,11 @@
 async function loadProgress() {
   try {
-    const [history, stats] = await Promise.all([apiFetch('/api/logs/data/weight-history').then(r=>r.json()), apiFetch('/api/logs/data/stats').then(r=>r.json())]);
+    const [histRes, statsRes] = await Promise.all([
+      apiFetch('/api/logs/data/weight-history'),
+      apiFetch('/api/logs/data/stats')
+    ]);
+    if (!histRes || !statsRes) return; // redirected to login
+    const [history, stats] = await Promise.all([histRes.json(), statsRes.json()]);
     renderWeightChart(history);
     document.getElementById("workoutStreakVal").textContent = stats.workoutStreak || 0;
     document.getElementById("waterStreakVal").textContent = stats.waterStreak || 0;
