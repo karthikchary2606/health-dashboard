@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "karthik-health-dashboard",
   "version": "1.0.0",
   "description": "Dynamic Health Tracking Application",
@@ -10,7 +10,11 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.5.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.3.1"
   }
 }

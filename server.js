@@ -1,6 +1,12 @@
 ﻿const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const path = require('path');
+
+if (!process.env.JWT_SECRET) {
+  console.error('❌ JWT_SECRET not set — refusing to start');
+  process.exit(1);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
