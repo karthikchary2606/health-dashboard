@@ -28,24 +28,26 @@ health-dashboard/
 │   ├── auth.js                (POST /api/auth/register, /login, /logout, /me)
 │   ├── logs.js                (GET/POST /api/logs/:date, /weight-history, /stats)
 │   ├── admin.js               (user management — admin role required)
-│   └── breathing.js           (GET/POST /api/breathing/sessions)
+│   ├── breathing.js           (GET/POST /api/breathing/sessions)
+│   └── checklist.js           (GET/POST/PATCH/DELETE /api/checklist/items)
 ├── models/
 │   ├── User.js
-│   ├── HealthLog.js           (existing + userId field)
-│   └── BreathingSession.js    (new)
+│   ├── HealthLog.js           (existing schema + userId field; checklist items referenced by id)
+│   ├── BreathingSession.js    (new)
+│   └── ChecklistItem.js       (new — per-user customisable checklist items)
 ├── middleware/
-│   ├── auth.js                (verifyToken — attaches req.user)
+│   ├── auth.js                (verifyToken from httpOnly cookie — attaches req.user)
 │   └── requireAdmin.js        (role: 'admin' check)
 ├── scripts/
 │   ├── seed-admin.js          (create first admin account)
-│   └── migrate-logs.js        (attribute existing logs to admin user)
+│   └── migrate-logs.js        (attribute existing logs to admin user; run locally with MONGODB_URI=<prod>)
 └── public/
-    ├── index.html             (app shell — redirects to /login.html if unauthenticated)
+    ├── index.html             (app shell — JS checks cookie via /api/auth/me; redirects to /login.html if 401)
     ├── login.html             (login + register forms)
     ├── admin.html             (admin panel — redirects if not admin)
     └── js/
-        ├── api.js             (fetch wrapper with Authorization header)
-        ├── auth.js            (token storage, login/logout, redirect logic)
+        ├── api.js             (fetch wrapper — credentials:'include' for cookie; handles 401 redirect)
+        ├── auth.js            (login/logout, page-load auth check, sidebar personalisation)
         ├── dashboard.js
         ├── diet.js
         ├── recipes.js
@@ -54,19 +56,35 @@ health-dashboard/
         ├── progress.js
         ├── guidelines.js
         ├── grocery.js
-        └── breathing.js
+        ├── breathing.js
+        └── checklist-settings.js  (checklist item CRUD UI — in Settings section)
 ```
 
 ### 2.2 Auth Flow
 
-- JWT stored in `localStorage` (key: `health_token`)
-- `auth.js` checks token on every page load; missing or expired → redirect to `/login.html`
-- `api.js` wraps all `fetch` calls, injects `Authorization: Bearer <token>`, handles 401 responses with auto-redirect to login
-- Token payload: `{ userId, email, role, iat, exp }` — 7-day expiry
+- JWT issued as `httpOnly`, `SameSite=Strict`, `Secure` cookie (key: `health_token`)
+- Token payload: `{ userId, email, role, iat, exp }` — 7-day expiry; no refresh token
+- On page load: `api.js` calls `GET /api/auth/me` with `credentials: 'include'`. If cookie missing or expired (401), redirect to `/login.html`. JWT is trusted fully — no additional DB check per request (de-approval takes effect at next token expiry, max 7 days)
+- `api.js` wraps all `fetch` calls with `credentials: 'include'`, handles 401 with auto-redirect to login
+- On page load, `auth.js` injects `{ name, profile }` from `/me` response into the sidebar (name, age, height) replacing any hardcoded personal data
+- The sidebar footer (previously "Thyronorm 12.5mg · LCHF Diet") is **removed** from the template entirely
 
 ### 2.3 Frontend Modularisation
 
-`index.html` becomes a thin shell: loads `auth.js` first (auth check), then loads section JS files on demand as the user navigates. Each JS file is responsible for fetching data and rendering its section. Inline JS in `index.html` is removed except for navigation/layout helpers.
+**JS extraction only** — the HTML section markup remains in `index.html`. `index.html` becomes the app shell with HTML structure intact; all business logic, data fetching, and DOM manipulation moves to the separate JS files in `public/js/`. Inline `<script>` blocks in `index.html` are removed (except minimal nav/layout helpers).
+
+### 2.4 New Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| `bcryptjs` | Password hashing (pure JS, no native build deps — safe for Azure App Service) |
+| `jsonwebtoken` | JWT signing/verification |
+| `cookie-parser` | Parse `httpOnly` cookie on incoming requests |
+| `express-rate-limit` | Brute-force protection on `/api/auth/login` and `/api/auth/register` |
+
+### 2.5 localStorage Fallback — Removed
+
+The existing localStorage fallback (used when MongoDB is offline) is **removed**. A multi-user app with shared browser storage is a data privacy risk. On DB unavailability, the API returns 503 and the frontend displays a clear "Service temporarily unavailable" banner. No writes are accepted during outages.
 
 ---
 
@@ -77,7 +95,7 @@ health-dashboard/
 ```js
 {
   email:        String (unique, required, lowercase),
-  passwordHash: String (bcrypt, 12 rounds),
+  passwordHash: String (bcryptjs, 12 rounds),
   name:         String (required),
   role:         enum ['user', 'admin'] (default: 'user'),
   isApproved:   Boolean (default: false),
@@ -86,6 +104,7 @@ health-dashboard/
     heightCm:           Number,
     startWeightKg:      Number,
     goalWeightKg:       Number,
+    startDate:          Date,               // drives phase auto-calculation
     dietaryPreferences: [String]
   },
   lastActiveAt: Date,
@@ -95,13 +114,15 @@ health-dashboard/
 
 **Registration flow:** User submits registration → account created with `isApproved: false` → admin sees pending user in admin panel → approves → user can now log in. Login attempt with `isApproved: false` returns HTTP 403 with message "Your account is awaiting admin approval."
 
+**Rate limiting:** `express-rate-limit` applied to `POST /api/auth/login` (10 attempts per 15 min per IP) and `POST /api/auth/register` (5 attempts per 15 min per IP).
+
 ### 3.2 HealthLog (updated)
 
 ```js
 {
   userId:           ObjectId (ref: User, required),   // ← new field
   date:             String (YYYY-MM-DD),
-  checklist:        [Boolean],
+  checklist:        [{ itemId: ObjectId, done: Boolean }],  // ← updated: references ChecklistItem
   waterIntake:      Number,
   weight:           Number,
   completedWorkout: Boolean,
@@ -112,7 +133,21 @@ health-dashboard/
 // Indexes: compound unique { userId, date }
 ```
 
-### 3.3 BreathingSession (new)
+### 3.3 ChecklistItem (new)
+
+```js
+{
+  userId:    ObjectId (ref: User, required),
+  label:     String (required),
+  order:     Number (for sorting),
+  isActive:  Boolean (default: true),
+  createdAt: Date (auto)
+}
+// Default items seeded on first login: 8 generic health habits
+// (e.g. "8 hours sleep", "30 min walk", "2L water minimum", etc.)
+```
+
+### 3.4 BreathingSession (new)
 
 ```js
 {
@@ -203,7 +238,7 @@ idle → configuring → inhale → hold1 → exhale → hold2 → idle (loop pe
 
 ## 6. Admin Panel (`admin.html`)
 
-**Access:** Checks JWT on load; if `role !== 'admin'` → redirect to `/index.html`.
+**Access:** Checks JWT cookie on load; if `role !== 'admin'` → redirect to `/index.html`.
 
 **Sections:**
 - **Stats strip** — total users, active this week, pending count
@@ -211,11 +246,30 @@ idle → configuring → inhale → hold1 → exhale → hold2 → idle (loop pe
 - **All users** — name, email, role, last active, log count; deactivate/delete/reset-password actions
 - **Add user** — manual account creation form (name, email, temp password)
 
+**API endpoints (admin-only):**
+- `GET /api/admin/users` — all users
+- `PATCH /api/admin/users/:id/approve` — flip isApproved
+- `POST /api/admin/users` — create user
+- `DELETE /api/admin/users/:id` — remove user + their data
+- `PATCH /api/admin/users/:id/password` — reset user password
+
 ---
 
-## 7. Deployment & Migration
+## 7. Phase Progression (Diet & Workout)
 
-### 7.1 New Environment Variables (Azure App Service Config)
+The phase (1 = Foundation, 2 = Strength, 3 = Cut) auto-calculates from `profile.startDate`:
+
+- Weeks 1–8 → Phase 1
+- Weeks 9–16 → Phase 2
+- Weeks 17–24 → Phase 3
+
+New users who haven't set `profile.startDate` default to Phase 1, Week 1. A "Set start date" prompt appears on first login. Users can manually override their current phase/week in Settings.
+
+---
+
+## 8. Deployment & Migration
+
+### 8.1 New Environment Variables (Azure App Service Config)
 
 | Variable | Description |
 |----------|-------------|
@@ -230,47 +284,50 @@ if (!process.env.JWT_SECRET) {
 }
 ```
 
-### 7.2 One-Time Setup After Deployment
+### 8.2 One-Time Setup After Deployment
+
+Migration scripts run locally pointing at production MongoDB:
 
 ```bash
 # 1. Create admin account
-npm run seed:admin
+MONGODB_URI=<prod-uri> npm run seed:admin
 # prompts: email, name, password → creates user with role:'admin', isApproved:true
 
 # 2. Attribute existing HealthLog documents to admin account
-npm run migrate:logs
+MONGODB_URI=<prod-uri> npm run migrate:logs
 # finds admin user by email, sets userId on all HealthLog docs where userId is null
+# Script is idempotent — safe to re-run
 ```
 
-### 7.3 CI/CD
+### 8.3 CI/CD
 
 No pipeline changes. Existing GitHub Actions workflow (push to `main` → ZIP deploy to Azure App Service) remains unchanged. New static JS files in `public/js/` are included in the ZIP automatically.
 
-### 7.4 Rollout Order
+### 8.4 Rollout Order
 
 1. Add `JWT_SECRET` to Azure App Service configuration
 2. Push code to `main` → auto-deploy triggers
-3. Run `seed:admin` → creates admin account
-4. Run `migrate:logs` → attributes existing data
-5. Auth middleware is live — all API routes now require valid JWT
+3. Run `seed:admin` locally → creates admin account
+4. Run `migrate:logs` locally → attributes existing data to admin
+5. Auth middleware is live — all API routes now require valid JWT cookie
 
 ---
 
-## 8. Shared Content vs Per-User Plans
+## 9. Shared Content vs Per-User Plans
 
 The current diet, workout, and recipe data is baked into `index.html` as JavaScript arrays. Post-migration:
 
 - **Shared/static content** — Telugu recipes, general workout templates, cardio plans — remain as JavaScript data in their respective `public/js/*.js` files, available to all users
-- **Per-user customisation** — user profile (height, weight, goal, dietary preferences) drives display customisation (calorie targets, phase progression)
+- **Per-user customisation** — user profile (`startDate`, height, weight, goal) drives phase calculation and calorie targets
 - **Daily logs** — fully per-user via `userId` in `HealthLog`
 - **Future enhancement** (out of scope for this spec): custom plan editor per user
 
 ---
 
-## 9. Out of Scope
+## 10. Out of Scope
 
 - Password reset via email (no email service configured)
 - OAuth / social login
 - Per-user custom meal/workout plan editor
 - Mobile app / PWA push notifications
-- Rate limiting / brute-force protection (deferred)
+- HTML template extraction (section markup stays in `index.html`)
