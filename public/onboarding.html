@@ -320,6 +320,7 @@ function loadDraft() {
     const raw = localStorage.getItem(DRAFT_KEY);
     if (!raw) return;
     const d = JSON.parse(raw);
+    const savedStep = d.step || 1;
     setVal('f-weight', d.weight);
     setVal('f-height', d.height);
     setVal('f-age', d.age);
@@ -333,6 +334,7 @@ function loadDraft() {
       d.medications.forEach(m => addMed(m));
     }
     setVal('f-startdate', d.startDate);
+    if (savedStep > 1) goTo(savedStep);
   } catch (e) { /* ignore corrupt draft */ }
 }
 
@@ -481,6 +483,21 @@ function validateStep(n) {
       alert('Please fill in weight, height, and age before continuing.');
       return false;
     }
+    const weight = parseFloat(val('f-weight'));
+    const height = parseFloat(val('f-height'));
+    const age = parseInt(val('f-age'), 10);
+    if (!isFinite(weight) || weight <= 0) {
+      alert('Enter a valid weight');
+      return false;
+    }
+    if (!isFinite(height) || height <= 0) {
+      alert('Enter a valid height');
+      return false;
+    }
+    if (!isFinite(age) || age <= 0) {
+      alert('Enter a valid age');
+      return false;
+    }
   }
   if (n === 2) {
     if (!checkedRadio('goal')) { alert('Please select a primary goal.'); return false; }
@@ -551,11 +568,11 @@ async function submitProfile() {
   const meds = getMedications();
 
   const payload = {
-    currentWeightKg: parseFloat(val('f-weight')) || undefined,
-    heightCm:        parseFloat(val('f-height')) || undefined,
-    age:             parseInt(val('f-age'), 10) || undefined,
+    currentWeightKg: val('f-weight') !== '' ? parseFloat(val('f-weight')) : undefined,
+    heightCm:        val('f-height') !== '' ? parseFloat(val('f-height')) : undefined,
+    age:             val('f-age') !== '' ? parseInt(val('f-age'), 10) : undefined,
     primaryGoal:     checkedRadio('goal') || undefined,
-    goalWeightKg:    parseFloat(val('f-goalweight')) || undefined,
+    goalWeightKg:    val('f-goalweight') !== '' ? parseFloat(val('f-goalweight')) : undefined,
     fitnessLevel:    checkedRadio('fitness') || undefined,
     healthConditions: conds,
     dietType:        checkedRadio('diet') || undefined,
