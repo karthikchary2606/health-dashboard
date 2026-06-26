@@ -14,13 +14,14 @@ window.planCache = (() => {
 
   function getPlan() {
     if (!_promise) {
-      _promise = apiFetch('/api/profile/plan').then(({ ok, data }) => {
+      const p = apiFetch('/api/profile/plan').then(({ ok, data }) => {
         if (!ok) {
-          _promise = null;
+          if (_promise === p) _promise = null;
           return null;
         }
         return data;
       });
+      _promise = p;
     }
     return _promise;
   }
