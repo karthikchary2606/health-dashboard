@@ -24,6 +24,7 @@ function buildDietPlan() {
   if (!_dietPlan) return;
   const mSel = document.getElementById("dietMonthSelector");
   mSel.innerHTML = _dietPlan.map((m, i) => {
+    if (!m) return ''; // skip stub months
     const isCur = i === currentDietMonth;
     const label = (m.monthLabel || `Month ${i + 1}`).replace(/\s—.*/, '');
     return `<button class="month-btn${currentDietMonth === i ? " active" : ""}${isCur ? " current-month" : ""}" onclick="selectDietMonth(${i})">${label}${isCur ? " ←" : ""}</button>`;
@@ -32,6 +33,8 @@ function buildDietPlan() {
   renderDietMonthView();
 }
 function selectDietMonth(m) {
+  const md = _dietPlan[m];
+  if (!md) return; // stub month — nothing to show
   currentDietMonth = m;
   currentDietWeek = 1;
   document.querySelectorAll("#dietMonthSelector .month-btn").forEach((b,i) => b.classList.toggle("active", i===m));
