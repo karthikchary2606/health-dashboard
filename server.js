@@ -1,4 +1,6 @@
-require('dotenv').config();
+// override:true forces .env to win over Azure App Settings
+// (safe for tests — mongoose.connect is guarded by require.main === module)
+require('dotenv').config({ override: true });
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
