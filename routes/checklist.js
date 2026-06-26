@@ -28,7 +28,17 @@ router.get('/items', async (req, res) => {
   try {
     let items = await ChecklistItem.find({ userId: req.user._id, isActive: true }).sort({ order: 1 });
     if (items.length === 0) {
-      items = await ChecklistItem.insertMany(templateDefaults(req.user));
+      const count = await ChecklistItem.countDocuments({ userId: req.user._id });
+      if (count === 0) {
+        const defaults = templateDefaults(req.user);
+        try {
+          await ChecklistItem.insertMany(defaults, { ordered: false });
+        } catch (e) {
+          // duplicate key — another request already seeded, safe to ignore
+          if (e.code !== 11000) throw e;
+        }
+      }
+      items = await ChecklistItem.find({ userId: req.user._id, isActive: true }).sort({ order: 1 });
     }
     res.json(items);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -45,10 +55,17 @@ router.post('/items', async (req, res) => {
 
 router.patch('/items/:id', async (req, res) => {
   try {
+    const { label, completed, order, isActive } = req.body;
+    const update = {};
+    if (label !== undefined) update.label = label;
+    if (completed !== undefined) update.completed = completed;
+    if (order !== undefined) update.order = order;
+    if (isActive !== undefined) update.isActive = isActive;
+    
     const item = await ChecklistItem.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
-      req.body,
-      { new: true }
+      { $set: update },
+      { new: true, runValidators: true }
     );
     if (!item) return res.status(404).json({ error: 'Item not found' });
     res.json(item);
