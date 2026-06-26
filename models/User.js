@@ -1,23 +1,58 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
-  email: {
-    type: String, required: true, unique: true,
-    lowercase: true, trim: true
+const medicationSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  dosage: String,
+  timing: String
+}, { _id: false });
+
+const profileSchema = new mongoose.Schema({
+  // Existing fields (keep as-is)
+  age: Number,
+  heightCm: Number,
+  startWeightKg: Number,
+  goalWeightKg: Number,
+  startDate: Date,
+  dietaryPreferences: [String],
+  // New fields
+  primaryGoal: {
+    type: String,
+    enum: ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness']
   },
-  passwordHash: { type: String, required: true },
-  name: { type: String, required: true, trim: true },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  secondaryGoals: [String],
+  currentWeightKg: Number,
+  dietType: {
+    type: String,
+    enum: ['vegetarian', 'non-vegetarian', 'vegan', 'eggetarian']
+  },
+  cuisinePreference: {
+    type: String,
+    enum: ['south-indian', 'north-indian', 'continental', 'mixed'],
+    default: 'mixed'
+  },
+  foodAllergies: [String],
+  fitnessLevel: {
+    type: String,
+    enum: ['sedentary', 'lightly-active', 'moderately-active', 'very-active']
+  },
+  equipmentAvailable: [String],
+  healthConditions: [String],
+  medications: [medicationSchema],
+  planTemplate: {
+    type: String,
+    enum: ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness']
+  },
+  waterGoalL: { type: Number, default: 2.5 }
+}, { _id: false });
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   isApproved: { type: Boolean, default: false },
-  profile: {
-    age: Number,
-    heightCm: Number,
-    startWeightKg: Number,
-    goalWeightKg: Number,
-    startDate: Date,
-    dietaryPreferences: [String]
-  },
-  lastActiveAt: Date
+  isAdmin: { type: Boolean, default: false },
+  profileComplete: { type: Boolean, default: false },
+  profile: { type: profileSchema, default: () => ({}) }
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);
