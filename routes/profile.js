@@ -1,4 +1,92 @@
 const express = require('express');
 const router = express.Router();
-// Full implementation in Task 12
+const authenticate = require('../middleware/authenticate');
+const requireProfile = require('../middleware/requireProfile');
+const User = require('../models/User');
+
+const TEMPLATES = {
+  'weight-loss':     require('../server/templates/weight-loss'),
+  'muscle-gain':     require('../server/templates/muscle-gain'),
+  'maintenance':     require('../server/templates/maintenance'),
+  'general-fitness': require('../server/templates/general-fitness')
+};
+
+// Onboarding: authenticate only — user doesn't have a profile yet
+router.post('/onboarding', authenticate, async (req, res) => {
+  try {
+    const {
+      primaryGoal, currentWeightKg, goalWeightKg, heightCm, age,
+      dietType, cuisinePreference, foodAllergies, fitnessLevel,
+      equipmentAvailable, healthConditions, medications,
+      secondaryGoals, waterGoalL
+    } = req.body;
+
+    await User.findByIdAndUpdate(req.user._id, {
+      profileComplete: true,
+      'profile.primaryGoal':       primaryGoal,
+      'profile.planTemplate':      primaryGoal,
+      'profile.currentWeightKg':   currentWeightKg,
+      'profile.goalWeightKg':      goalWeightKg,
+      'profile.heightCm':          heightCm,
+      'profile.age':               age,
+      'profile.dietType':          dietType,
+      'profile.cuisinePreference': cuisinePreference || 'mixed',
+      'profile.foodAllergies':     foodAllergies || [],
+      'profile.fitnessLevel':      fitnessLevel,
+      'profile.equipmentAvailable': equipmentAvailable || [],
+      'profile.healthConditions':  healthConditions || [],
+      'profile.medications':       medications || [],
+      'profile.secondaryGoals':    secondaryGoals || [],
+      'profile.waterGoalL':        waterGoalL || 2.5,
+      'profile.startDate':         new Date()
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/plan', authenticate, requireProfile, async (req, res) => {
+  try {
+    const profile = req.user.profile;
+    const templateKey = profile.planTemplate || profile.primaryGoal || 'weight-loss';
+    const template = TEMPLATES[templateKey];
+    if (!template) return res.status(400).json({ error: `Unknown template: ${templateKey}` });
+
+    res.json({
+      meta:      template.getPlanMeta(profile),
+      diet:      template.getDietPlan(profile),
+      workout:   template.getWorkoutPlan(profile),
+      cardio:    template.getCardioPlan(profile),
+      grocery:   template.getGroceryList(profile),
+      checklist: template.getDefaultChecklist(profile)
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/', authenticate, requireProfile, async (req, res) => {
+  res.json(req.user.profile);
+});
+
+router.patch('/', authenticate, requireProfile, async (req, res) => {
+  try {
+    const allowed = [
+      'currentWeightKg', 'goalWeightKg', 'heightCm', 'age', 'dietType',
+      'cuisinePreference', 'foodAllergies', 'fitnessLevel', 'equipmentAvailable',
+      'healthConditions', 'medications', 'secondaryGoals', 'waterGoalL', 'planTemplate'
+    ];
+    const updates = {};
+    allowed.forEach(field => {
+      if (req.body[field] !== undefined) updates[`profile.${field}`] = req.body[field];
+    });
+    await User.findByIdAndUpdate(req.user._id, updates);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

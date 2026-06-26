@@ -18,24 +18,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/healthDB';
-console.log('🔗 MongoDB URI:', mongoURI.replace(/:([^@]+)@/, ':***@'));
-let dbConnected = false;
 
-mongoose.connect(mongoURI, {
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 10000,
-  bufferCommands: false
-})
-  .then(() => { console.log('✅ MongoDB Connected'); dbConnected = true; })
-  .catch(err => console.warn('⚠️  MongoDB offline:', err.message));
+if (require.main === module) {
+  console.log('🔗 MongoDB URI:', mongoURI.replace(/:([^@]+)@/, ':***@'));
+  mongoose.connect(mongoURI, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 10000
+  })
+    .then(() => console.log('✅ MongoDB Connected'))
+    .catch(err => console.warn('⚠️  MongoDB offline:', err.message));
+}
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', db: dbConnected ? 'connected' : 'offline', port: PORT });
+  const connected = mongoose.connection.readyState === 1;
+  res.json({ status: 'ok', db: connected ? 'connected' : 'offline', port: PORT });
 });
 
 // Reject API requests if DB is not connected
 app.use('/api', (req, res, next) => {
-  if (!dbConnected) return res.status(503).json({ error: 'Database not connected. Please try again in a moment.' });
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ error: 'Database not connected. Please try again in a moment.' });
+  }
   next();
 });
 
@@ -50,6 +53,10 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 Health Engine → http://${HOST}:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, HOST, () => {
+    console.log(`🚀 Health Engine → http://${HOST}:${PORT}`);
+  });
+}
+
+module.exports = app;
