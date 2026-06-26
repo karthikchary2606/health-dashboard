@@ -16,7 +16,10 @@ afterAll(async () => {
 });
 
 function makeReqRes(token) {
-  const req = { headers: { authorization: token ? `Bearer ${token}` : undefined } };
+  const req = {
+    headers: { authorization: token ? `Bearer ${token}` : undefined },
+    cookies: {}
+  };
   const res = {
     _status: null,
     _json: null,
