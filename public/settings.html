@@ -378,7 +378,7 @@ async function resetChecklist() {
   btn.disabled = false;
 
   if (ok) {
-    showMsg('msg-reset', 'success', `✓ Checklist reset — ${(data.items || []).length} items restored.`);
+    showMsg('msg-reset', 'success', `✓ Checklist reset — ${((data && data.items) || []).length} items restored.`);
   } else {
     showMsg('msg-reset', 'error', (data && data.error) || 'Failed to reset checklist.');
   }
