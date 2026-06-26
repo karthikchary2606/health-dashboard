@@ -21,6 +21,11 @@ router.post('/onboarding', authenticate, async (req, res) => {
       secondaryGoals, waterGoalL
     } = req.body;
 
+    const VALID_TEMPLATES = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
+    if (primaryGoal && !VALID_TEMPLATES.includes(primaryGoal)) {
+      return res.status(400).json({ error: `Invalid primaryGoal: ${primaryGoal}` });
+    }
+
     await User.findByIdAndUpdate(req.user._id, {
       profileComplete: true,
       'profile.primaryGoal':       primaryGoal,
@@ -39,7 +44,7 @@ router.post('/onboarding', authenticate, async (req, res) => {
       'profile.secondaryGoals':    secondaryGoals || [],
       'profile.waterGoalL':        waterGoalL || 2.5,
       'profile.startDate':         new Date()
-    });
+    }, { runValidators: true, new: true });
 
     res.json({ success: true });
   } catch (err) {
@@ -73,6 +78,11 @@ router.get('/', authenticate, requireProfile, async (req, res) => {
 
 router.patch('/', authenticate, requireProfile, async (req, res) => {
   try {
+    const VALID_TEMPLATES = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
+    if (req.body.planTemplate && !VALID_TEMPLATES.includes(req.body.planTemplate)) {
+      return res.status(400).json({ error: `Invalid planTemplate: ${req.body.planTemplate}` });
+    }
+
     const allowed = [
       'currentWeightKg', 'goalWeightKg', 'heightCm', 'age', 'dietType',
       'cuisinePreference', 'foodAllergies', 'fitnessLevel', 'equipmentAvailable',
@@ -82,7 +92,7 @@ router.patch('/', authenticate, requireProfile, async (req, res) => {
     allowed.forEach(field => {
       if (req.body[field] !== undefined) updates[`profile.${field}`] = req.body[field];
     });
-    await User.findByIdAndUpdate(req.user._id, updates);
+    await User.findByIdAndUpdate(req.user._id, updates, { runValidators: true, new: true });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
