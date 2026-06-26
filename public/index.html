@@ -896,7 +896,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await initAuth(); // auth check + sidebar personalisation
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("logDate").value = today;
-  buildTimeline();
+  await buildTimeline(); // sets _phaseTasks from planCache
   updateCalorieStat();
   buildDietPlan();
   buildRecipes();
@@ -908,7 +908,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setGreeting();
   loadProgress();
   updateBMI(currentUser && currentUser.profile && currentUser.profile.startWeightKg || 95);
-  loadDateData();
+  loadDateData(); // now safe to read _phaseTasks
 });
 </script>
 </body>

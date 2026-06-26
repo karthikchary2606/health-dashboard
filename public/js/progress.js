@@ -5,7 +5,11 @@ async function loadProgress() {
       apiFetch('/api/logs/data/stats'),
       apiFetch('/api/profile')
     ]);
-    if (!histRes.ok || !statsRes.ok) return; // redirected to login
+    if (!histRes.ok || !statsRes.ok) {
+      renderWeightChart([], null);
+      renderMilestones(0, null, null);
+      return;
+    }
     const history = histRes.data;
     const stats = statsRes.data;
     const profile = (profileRes.ok && profileRes.data) || {};
