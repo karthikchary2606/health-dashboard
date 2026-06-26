@@ -164,7 +164,7 @@ function showCompletion() {
 }
 
 async function saveBreathingSession() {
-  const res = await apiFetch('/api/breathing/sessions', {
+  const { ok, data } = await apiFetch('/api/breathing/sessions', {
     method: 'POST',
     body: {
       technique: breathState.technique,
@@ -174,7 +174,7 @@ async function saveBreathingSession() {
       moodAfter: breathState.moodAfter
     }
   });
-  if (res && res.ok) {
+  if (ok) {
     resetBreathing();
     loadBreathingHistory();
   }
@@ -190,9 +190,8 @@ function resetBreathing() {
 }
 
 async function loadBreathingHistory() {
-  const res = await apiFetch('/api/breathing/sessions');
-  if (!res || !res.ok) return;
-  const sessions = await res.json();
+  const { ok, data: sessions } = await apiFetch('/api/breathing/sessions');
+  if (!ok || !sessions) return;
   const el = document.getElementById('breathing-history');
   if (sessions.length === 0) {
     el.innerHTML = '<p style="color:var(--text-light);font-size:.85rem">No sessions yet. Start your first one above.</p>';

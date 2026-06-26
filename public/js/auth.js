@@ -2,10 +2,9 @@
 let currentUser = null;
 
 async function initAuth() {
-  const res = await apiFetch('/api/auth/me');
-  if (!res) return; // apiFetch handles redirect on 401
-  if (!res.ok) { window.location.href = '/login.html'; return; }
-  currentUser = await res.json();
+  const { ok, data } = await apiFetch('/api/auth/me');
+  if (!ok) return; // apiFetch handles redirect on 401
+  currentUser = data;
   const adminLink = document.getElementById('admin-link');
   if (adminLink && currentUser.role === 'admin') adminLink.style.display = 'inline-block';
   // Personalise sidebar

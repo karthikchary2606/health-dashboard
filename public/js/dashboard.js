@@ -96,8 +96,8 @@ function setScore(type, val, btn) {
 async function loadDateData() {
   const date = document.getElementById("logDate").value;
   try {
-    const res = await apiFetch("/api/logs/" + date);
-    const data = await res.json();
+    const { ok, data } = await apiFetch("/api/logs/" + date);
+    if (!ok) return;
     // Sync checklist
     const phLen = PHASE_TASKS[getUserPhaseIndex()].length; for(let i=0;i<phLen;i++) {
       const chk = document.getElementById("chk-"+i);
@@ -139,7 +139,8 @@ async function syncData() {
   const pTasks = PHASE_TASKS[getUserPhaseIndex()]; const checklist = pTasks.map((_, i) => { const c = document.getElementById("chk-"+i); return { done: c ? c.checked : false }; });
   const payload = { date, checklist, waterIntake: waterLevel, weight, completedWorkout: document.getElementById("workoutToggle").checked, moodScore: currentMoodScore, energyScore: currentEnergyScore, notes };
   try {
-    await apiFetch("/api/logs", { method:"POST", body: payload });
+    const { ok } = await apiFetch("/api/logs", { method:"POST", body: payload });
+    if (!ok) return;
   } catch(e) { console.warn("syncData: API offline"); }
 }
 
