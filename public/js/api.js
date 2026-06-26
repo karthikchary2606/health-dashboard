@@ -14,10 +14,16 @@ async function apiFetch(url, options = {}) {
     ...(options.headers || {})
   };
 
+  // Auto-stringify plain object bodies
+  const body = options.body && typeof options.body === 'object'
+    ? JSON.stringify(options.body)
+    : options.body;
+
   let response;
   try {
     response = await fetch(url, {
       ...options,
+      body,
       headers,
       credentials: 'include'  // send cookies (health_token)
     });
@@ -49,6 +55,6 @@ function showToast(message) {
   toast.id = 'api-toast';
   toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:6px;z-index:9999;font-size:14px;';
   toast.textContent = message;
-  document.body.appendChild(toast);
+  (document.body || document.documentElement).appendChild(toast);
   setTimeout(() => toast.remove(), 4000);
 }
