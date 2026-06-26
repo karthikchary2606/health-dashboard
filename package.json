@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "test": "jest --runInBand --forceExit",
     "seed:admin": "node scripts/seed-admin.js",
     "migrate:logs": "node scripts/migrate-logs.js"
   },
@@ -19,5 +20,16 @@
     "express-rate-limit": "^8.5.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.3.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "globalSetup": "./tests/setup.js",
+    "globalTeardown": "./tests/teardown.js",
+    "testTimeout": 30000
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.4.3",
+    "supertest": "^7.2.2"
   }
 }
