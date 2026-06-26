@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Engine — Setup Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px 16px 40px}
+.wizard-card{background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.12);padding:32px 28px;width:100%;max-width:520px}
+.wizard-logo{text-align:center;margin-bottom:24px}
+.wizard-logo h1{font-size:1.4rem;font-weight:800;color:#1b4332}
+.wizard-logo p{font-size:.82rem;color:#718096;margin-top:4px}
+
+/* Progress bar */
+.progress-wrap{margin-bottom:28px}
+.progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.progress-label span{font-size:.78rem;font-weight:600;color:#4a5568}
+.progress-label .step-count{color:#1b4332;font-weight:700}
+.progress-bar{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#1b4332,#40916c);border-radius:3px;transition:width .35s ease}
+
+/* Step titles */
+.step-title{font-size:1.1rem;font-weight:700;color:#1b4332;margin-bottom:4px}
+.step-subtitle{font-size:.82rem;color:#718096;margin-bottom:24px}
+
+/* Form elements */
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:.82rem;font-weight:600;color:#4a5568;margin-bottom:6px}
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select{
+  width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;
+  font-family:inherit;font-size:.9rem;outline:none;transition:.2s;background:#fff;color:#1a1a2e
+}
+.form-group input:focus,.form-group select:focus{border-color:#1b4332}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* Radio / checkbox groups */
+.radio-group,.check-group{display:flex;flex-direction:column;gap:8px}
+.radio-option,.check-option{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border:1.5px solid #e2e8f0;border-radius:8px;cursor:pointer;
+  transition:.15s;font-size:.88rem;font-weight:500;color:#4a5568;user-select:none
+}
+.radio-option:hover,.check-option:hover{border-color:#1b4332;background:#f0fdf4}
+.radio-option input,.check-option input{accent-color:#1b4332;width:16px;height:16px;cursor:pointer;flex-shrink:0}
+.radio-option.selected,.check-option.selected{border-color:#1b4332;background:#f0fdf4;color:#1b4332;font-weight:600}
+.radio-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* Medications */
+.med-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.med-item{display:grid;grid-template-columns:1fr 100px 110px auto;gap:8px;align-items:center}
+.med-item input{padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-family:inherit;font-size:.83rem;outline:none;transition:.2s}
+.med-item input:focus{border-color:#1b4332}
+.med-item .btn-remove{background:none;border:1.5px solid #fecaca;color:#991b1b;border-radius:7px;padding:6px 10px;cursor:pointer;font-size:.82rem;font-weight:600;transition:.15s}
+.med-item .btn-remove:hover{background:#fff5f5}
+.btn-add-med{background:#f0fdf4;border:1.5px dashed #40916c;color:#1b4332;border-radius:8px;padding:9px 16px;cursor:pointer;font-family:inherit;font-size:.85rem;font-weight:600;transition:.15s;width:100%}
+.btn-add-med:hover{background:#dcfce7}
+.skip-link{display:block;text-align:center;font-size:.82rem;color:#718096;margin-top:10px;cursor:pointer;text-decoration:underline}
+.skip-link:hover{color:#1b4332}
+.med-headers{display:grid;grid-template-columns:1fr 100px 110px auto;gap:8px;margin-bottom:4px}
+.med-headers span{font-size:.75rem;font-weight:600;color:#718096;padding:0 2px}
+
+/* Summary */
+.summary-grid{display:flex;flex-direction:column;gap:8px}
+.summary-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 12px;background:#f8fafc;border-radius:8px;font-size:.85rem}
+.summary-row .s-label{color:#718096;font-weight:500}
+.summary-row .s-value{color:#1b4332;font-weight:700;text-align:right;max-width:60%}
+
+/* Navigation buttons */
+.btn-row{display:flex;gap:12px;margin-top:28px}
+.btn-back{flex:1;padding:11px;background:#f8fafc;color:#4a5568;border:1.5px solid #e2e8f0;border-radius:8px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s}
+.btn-back:hover{background:#f0f4f0;border-color:#cbd5e0}
+.btn-next,.btn-submit{flex:2;padding:11px;background:#1b4332;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s}
+.btn-next:hover,.btn-submit:hover{background:#2d6a4f}
+.btn-submit:disabled{background:#9ca3af;cursor:not-allowed}
+.btn-only{flex:1}
+
+/* Messages */
+.error-msg{background:#fff5f5;border:1px solid #fecaca;color:#991b1b;padding:10px 14px;border-radius:8px;font-size:.82rem;margin-top:14px;display:none}
+.success-msg{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;padding:10px 14px;border-radius:8px;font-size:.82rem;margin-top:14px;display:none}
+
+/* Done step */
+.done-icon{font-size:3rem;text-align:center;margin-bottom:12px}
+.done-title{font-size:1.2rem;font-weight:800;color:#1b4332;text-align:center;margin-bottom:8px}
+.done-sub{font-size:.88rem;color:#718096;text-align:center;margin-bottom:28px}
+
+@media(max-width:500px){
+  .wizard-card{padding:22px 16px}
+  .form-row,.form-row-3{grid-template-columns:1fr}
+  .radio-grid{grid-template-columns:1fr}
+  .med-item{grid-template-columns:1fr auto;grid-template-rows:auto auto auto}
+  .med-headers{display:none}
+  .med-item input{grid-column:1}
+  .med-item .btn-remove{grid-column:2;grid-row:1 / span 3;align-self:center}
+}
+</style>
+</head>
+<body>
+<div class="wizard-card">
+  <div class="wizard-logo">
+    <h1>⚡ Health Engine</h1>
+    <p>Let's build your personalised plan</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progress-text">Step 1 of 6</span>
+      <span class="step-count" id="progress-pct">17%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:17%"></div></div>
+  </div>
+
+  <!-- ── STEP 1: Basic Stats ── -->
+  <div class="step" id="step-1">
+    <div class="step-title">Basic Stats</div>
+    <div class="step-subtitle">We use these to calculate your calorie targets and progress benchmarks.</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Current Weight (kg)</label>
+        <input type="number" id="f-weight" min="20" max="300" step="0.1" placeholder="e.g. 80">
+      </div>
+      <div class="form-group">
+        <label>Height (cm)</label>
+        <input type="number" id="f-height" min="100" max="250" step="1" placeholder="e.g. 175">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Age</label>
+        <input type="number" id="f-age" min="10" max="100" step="1" placeholder="e.g. 30">
+      </div>
+      <div class="form-group">
+        <label>Biological Sex</label>
+        <select id="f-sex">
+          <option value="">Select…</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other / Prefer not to say</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-next btn-only" onclick="goTo(2)">Next →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: Health Goal ── -->
+  <div class="step" id="step-2" style="display:none">
+    <div class="step-title">Your Goal</div>
+    <div class="step-subtitle">Choose your primary focus — your plan will be tailored around this.</div>
+    <div class="form-group">
+      <label>Primary Goal</label>
+      <div class="radio-group radio-grid" id="rg-goal">
+        <label class="radio-option" onclick="selectRadio('rg-goal','weight-loss',this)">
+          <input type="radio" name="goal" value="weight-loss"> 🔥 Weight Loss
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-goal','muscle-gain',this)">
+          <input type="radio" name="goal" value="muscle-gain"> 💪 Muscle Gain
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-goal','maintenance',this)">
+          <input type="radio" name="goal" value="maintenance"> ⚖️ Maintenance
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-goal','general-fitness',this)">
+          <input type="radio" name="goal" value="general-fitness"> 🏃 General Fitness
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Target Weight (kg)</label>
+      <input type="number" id="f-goalweight" min="30" max="300" step="0.1" placeholder="e.g. 72">
+    </div>
+    <div class="form-group">
+      <label>Activity Level</label>
+      <div class="radio-group" id="rg-fitness">
+        <label class="radio-option" onclick="selectRadio('rg-fitness','sedentary',this)">
+          <input type="radio" name="fitness" value="sedentary"> 🪑 Sedentary — little or no exercise
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-fitness','lightly-active',this)">
+          <input type="radio" name="fitness" value="lightly-active"> 🚶 Lightly Active — 1–3 days/week
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-fitness','moderately-active',this)">
+          <input type="radio" name="fitness" value="moderately-active"> 🏋️ Moderately Active — 3–5 days/week
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-fitness','very-active',this)">
+          <input type="radio" name="fitness" value="very-active"> ⚡ Very Active — 6–7 days/week
+        </label>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(1)">← Back</button>
+      <button class="btn-next" onclick="goTo(3)">Next →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: Health Conditions & Diet ── -->
+  <div class="step" id="step-3" style="display:none">
+    <div class="step-title">Health &amp; Diet</div>
+    <div class="step-subtitle">Helps us avoid unsafe recommendations.</div>
+    <div class="form-group">
+      <label>Health Conditions (select all that apply)</label>
+      <div class="check-group" id="cg-conditions">
+        <label class="check-option" onclick="toggleCheck(this)">
+          <input type="checkbox" value="thyroid"> Thyroid disorder
+        </label>
+        <label class="check-option" onclick="toggleCheck(this)">
+          <input type="checkbox" value="diabetes"> Diabetes
+        </label>
+        <label class="check-option" onclick="toggleCheck(this)">
+          <input type="checkbox" value="hypertension"> Hypertension
+        </label>
+        <label class="check-option" onclick="toggleCheck(this)">
+          <input type="checkbox" value="lower-back-pain"> Lower back pain
+        </label>
+        <label class="check-option" id="cond-none" onclick="toggleNone(this)">
+          <input type="checkbox" value="none"> None of the above
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dietary Preference</label>
+      <div class="radio-group radio-grid" id="rg-diet">
+        <label class="radio-option" onclick="selectRadio('rg-diet','non-vegetarian',this)">
+          <input type="radio" name="diet" value="non-vegetarian"> 🍗 Non-Vegetarian
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-diet','vegetarian',this)">
+          <input type="radio" name="diet" value="vegetarian"> 🥗 Vegetarian
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-diet','vegan',this)">
+          <input type="radio" name="diet" value="vegan"> 🌱 Vegan
+        </label>
+        <label class="radio-option" onclick="selectRadio('rg-diet','eggetarian',this)">
+          <input type="radio" name="diet" value="eggetarian"> 🥚 Eggetarian
+        </label>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(2)">← Back</button>
+      <button class="btn-next" onclick="goTo(4)">Next →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: Medications ── -->
+  <div class="step" id="step-4" style="display:none">
+    <div class="step-title">Medications</div>
+    <div class="step-subtitle">Optional — helps us flag any diet or workout conflicts.</div>
+    <div class="med-headers">
+      <span>Medication name</span><span>Dosage</span><span>Timing</span><span></span>
+    </div>
+    <div class="med-list" id="med-list"></div>
+    <button class="btn-add-med" onclick="addMed()">+ Add Medication</button>
+    <span class="skip-link" onclick="skipMeds()">Skip — no medications</span>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(3)">← Back</button>
+      <button class="btn-next" onclick="goTo(5)">Next →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 5: Review ── -->
+  <div class="step" id="step-5" style="display:none">
+    <div class="step-title">Review Your Profile</div>
+    <div class="step-subtitle">Confirm everything looks right before we build your plan.</div>
+    <div class="form-group">
+      <label>Program Start Date</label>
+      <input type="date" id="f-startdate">
+    </div>
+    <div class="summary-grid" id="summary-grid"></div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(4)">← Back</button>
+      <button class="btn-next" onclick="goTo(6)">Looks Good →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 6: Submit ── -->
+  <div class="step" id="step-6" style="display:none">
+    <div class="done-icon">🚀</div>
+    <div class="done-title">You're all set!</div>
+    <div class="done-sub">Click below to generate your personalised health plan.</div>
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn-back" onclick="goTo(5)">← Back</button>
+      <button class="btn-submit" id="btn-submit" onclick="submitProfile()">Build My Plan</button>
+    </div>
+    <div class="error-msg" id="submit-error"></div>
+    <div class="success-msg" id="submit-success"></div>
+  </div>
+</div>
+
+<script>
+const DRAFT_KEY = 'onboarding_draft';
+const TOTAL_STEPS = 6;
+let currentStep = 1;
+
+// ── Persistence ─────────────────────────────────────────────────────────────
+
+function saveDraft() {
+  const draft = {
+    weight: val('f-weight'),
+    height: val('f-height'),
+    age: val('f-age'),
+    sex: val('f-sex'),
+    primaryGoal: checkedRadio('goal'),
+    goalWeight: val('f-goalweight'),
+    fitnessLevel: checkedRadio('fitness'),
+    healthConditions: checkedBoxes('cg-conditions'),
+    dietType: checkedRadio('diet'),
+    medications: getMedications(),
+    startDate: val('f-startdate'),
+    step: currentStep
+  };
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    setVal('f-weight', d.weight);
+    setVal('f-height', d.height);
+    setVal('f-age', d.age);
+    setVal('f-sex', d.sex);
+    if (d.primaryGoal) setRadio('rg-goal', d.primaryGoal);
+    setVal('f-goalweight', d.goalWeight);
+    if (d.fitnessLevel) setRadio('rg-fitness', d.fitnessLevel);
+    if (d.healthConditions && d.healthConditions.length) setCheckboxes('cg-conditions', d.healthConditions);
+    if (d.dietType) setRadio('rg-diet', d.dietType);
+    if (d.medications && d.medications.length) {
+      d.medications.forEach(m => addMed(m));
+    }
+    setVal('f-startdate', d.startDate);
+  } catch (e) { /* ignore corrupt draft */ }
+}
+
+// ── DOM helpers ──────────────────────────────────────────────────────────────
+
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+function setVal(id, v) {
+  const el = document.getElementById(id);
+  if (el && v !== undefined && v !== null) el.value = v;
+}
+function checkedRadio(name) {
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+function setRadio(groupId, value) {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  group.querySelectorAll('.radio-option').forEach(opt => {
+    const inp = opt.querySelector('input');
+    if (inp && inp.value === value) {
+      inp.checked = true;
+      opt.classList.add('selected');
+    }
+  });
+}
+function checkedBoxes(groupId) {
+  const group = document.getElementById(groupId);
+  if (!group) return [];
+  return Array.from(group.querySelectorAll('input:checked')).map(i => i.value).filter(v => v !== 'none');
+}
+function setCheckboxes(groupId, values) {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  group.querySelectorAll('.check-option').forEach(opt => {
+    const inp = opt.querySelector('input');
+    if (inp && values.includes(inp.value)) {
+      inp.checked = true;
+      opt.classList.add('selected');
+    }
+  });
+}
+
+// ── Interaction helpers ──────────────────────────────────────────────────────
+
+function selectRadio(groupId, value, el) {
+  document.getElementById(groupId).querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  saveDraft();
+}
+
+function toggleCheck(el) {
+  // defer to browser default, then sync style
+  setTimeout(() => {
+    const inp = el.querySelector('input');
+    el.classList.toggle('selected', inp.checked);
+    saveDraft();
+  }, 0);
+}
+
+function toggleNone(el) {
+  setTimeout(() => {
+    const inp = el.querySelector('input');
+    if (inp.checked) {
+      // uncheck all others
+      document.querySelectorAll('#cg-conditions .check-option').forEach(o => {
+        if (o !== el) {
+          o.querySelector('input').checked = false;
+          o.classList.remove('selected');
+        }
+      });
+      el.classList.add('selected');
+    } else {
+      el.classList.remove('selected');
+    }
+    saveDraft();
+  }, 0);
+}
+
+// ── Medications ──────────────────────────────────────────────────────────────
+
+function addMed(data) {
+  const list = document.getElementById('med-list');
+  const idx = Date.now();
+  const div = document.createElement('div');
+  div.className = 'med-item';
+  div.innerHTML = `
+    <input type="text" placeholder="Medication name" class="med-name" value="${esc(data && data.name || '')}" oninput="saveDraft()">
+    <input type="text" placeholder="Dosage" class="med-dosage" value="${esc(data && data.dosage || '')}" oninput="saveDraft()">
+    <input type="text" placeholder="Timing" class="med-timing" value="${esc(data && data.timing || '')}" oninput="saveDraft()">
+    <button class="btn-remove" onclick="removeMed(this)">✕</button>
+  `;
+  list.appendChild(div);
+  saveDraft();
+}
+
+function removeMed(btn) {
+  btn.closest('.med-item').remove();
+  saveDraft();
+}
+
+function skipMeds() {
+  document.getElementById('med-list').innerHTML = '';
+  saveDraft();
+  goTo(5);
+}
+
+function getMedications() {
+  return Array.from(document.querySelectorAll('.med-item')).map(item => ({
+    name: item.querySelector('.med-name').value.trim(),
+    dosage: item.querySelector('.med-dosage').value.trim(),
+    timing: item.querySelector('.med-timing').value.trim()
+  })).filter(m => m.name);
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+
+// ── Navigation ───────────────────────────────────────────────────────────────
+
+function goTo(n) {
+  if (n > currentStep && !validateStep(currentStep)) return;
+
+  document.getElementById(`step-${currentStep}`).style.display = 'none';
+  currentStep = n;
+  const stepEl = document.getElementById(`step-${n}`);
+  stepEl.style.display = 'block';
+  stepEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const pct = Math.round((n / TOTAL_STEPS) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Step ${n} of ${TOTAL_STEPS}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  if (n === 5) buildSummary();
+  if (n === 6) ensureStartDate();
+  saveDraft();
+}
+
+function validateStep(n) {
+  if (n === 1) {
+    if (!val('f-weight') || !val('f-height') || !val('f-age')) {
+      alert('Please fill in weight, height, and age before continuing.');
+      return false;
+    }
+  }
+  if (n === 2) {
+    if (!checkedRadio('goal')) { alert('Please select a primary goal.'); return false; }
+    if (!checkedRadio('fitness')) { alert('Please select an activity level.'); return false; }
+  }
+  if (n === 3) {
+    if (!checkedRadio('diet')) { alert('Please select a dietary preference.'); return false; }
+  }
+  return true;
+}
+
+// ── Summary ──────────────────────────────────────────────────────────────────
+
+function ensureStartDate() {
+  if (!val('f-startdate')) {
+    const today = new Date().toISOString().slice(0, 10);
+    setVal('f-startdate', today);
+  }
+}
+
+const GOAL_LABELS = {
+  'weight-loss': 'Weight Loss', 'muscle-gain': 'Muscle Gain',
+  'maintenance': 'Maintenance', 'general-fitness': 'General Fitness'
+};
+const FITNESS_LABELS = {
+  'sedentary': 'Sedentary', 'lightly-active': 'Lightly Active',
+  'moderately-active': 'Moderately Active', 'very-active': 'Very Active'
+};
+const DIET_LABELS = {
+  'non-vegetarian': 'Non-Vegetarian', 'vegetarian': 'Vegetarian',
+  'vegan': 'Vegan', 'eggetarian': 'Eggetarian'
+};
+
+function buildSummary() {
+  ensureStartDate();
+  const conds = checkedBoxes('cg-conditions');
+  const meds = getMedications();
+  const rows = [
+    ['Weight', val('f-weight') ? val('f-weight') + ' kg' : '—'],
+    ['Height', val('f-height') ? val('f-height') + ' cm' : '—'],
+    ['Age', val('f-age') || '—'],
+    ['Primary Goal', GOAL_LABELS[checkedRadio('goal')] || '—'],
+    ['Target Weight', val('f-goalweight') ? val('f-goalweight') + ' kg' : '—'],
+    ['Activity Level', FITNESS_LABELS[checkedRadio('fitness')] || '—'],
+    ['Health Conditions', conds.length ? conds.join(', ') : 'None'],
+    ['Diet Type', DIET_LABELS[checkedRadio('diet')] || '—'],
+    ['Medications', meds.length ? meds.map(m => m.name).join(', ') : 'None'],
+    ['Start Date', val('f-startdate') || '—']
+  ];
+  const grid = document.getElementById('summary-grid');
+  grid.innerHTML = rows.map(([l, v]) => `
+    <div class="summary-row">
+      <span class="s-label">${l}</span>
+      <span class="s-value">${v}</span>
+    </div>`).join('');
+}
+
+// ── Submit ───────────────────────────────────────────────────────────────────
+
+async function submitProfile() {
+  const btn = document.getElementById('btn-submit');
+  const errEl = document.getElementById('submit-error');
+  const sucEl = document.getElementById('submit-success');
+  errEl.style.display = 'none';
+  sucEl.style.display = 'none';
+
+  const conds = checkedBoxes('cg-conditions');
+  const meds = getMedications();
+
+  const payload = {
+    currentWeightKg: parseFloat(val('f-weight')) || undefined,
+    heightCm:        parseFloat(val('f-height')) || undefined,
+    age:             parseInt(val('f-age'), 10) || undefined,
+    primaryGoal:     checkedRadio('goal') || undefined,
+    goalWeightKg:    parseFloat(val('f-goalweight')) || undefined,
+    fitnessLevel:    checkedRadio('fitness') || undefined,
+    healthConditions: conds,
+    dietType:        checkedRadio('diet') || undefined,
+    medications:     meds
+  };
+
+  // Remove undefined keys
+  Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch('/api/profile/onboarding', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      errEl.textContent = data.error || 'Something went wrong. Please try again.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Build My Plan';
+      return;
+    }
+    localStorage.removeItem(DRAFT_KEY);
+    sucEl.textContent = 'Profile saved! Redirecting…';
+    sucEl.style.display = 'block';
+    btn.textContent = '✓ Done';
+    setTimeout(() => { window.location.href = '/index.html'; }, 1200);
+  } catch (e) {
+    errEl.textContent = 'Connection error. Please check your network and try again.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Build My Plan';
+  }
+}
+
+// ── Auto-save on input fields ────────────────────────────────────────────────
+
+document.querySelectorAll('input[type="number"], input[type="text"], input[type="date"], select').forEach(el => {
+  el.addEventListener('input', saveDraft);
+  el.addEventListener('change', saveDraft);
+});
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+
+loadDraft();
+</script>
+</body>
+</html>
