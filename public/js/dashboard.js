@@ -8,6 +8,7 @@ let weightChartInstance = null;
 let _phaseTasks = [];  // checklist items from plan.checklist
 let _phaseIdx   = 0;   // 0-based phase index (meta.currentPhase - 1)
 let _monthIdx   = 0;   // 0-based month index (meta.currentMonth - 1)
+let _weekIdx    = 0;   // 0-based week index within month (meta.currentWeek - 1)
 let _workoutPlan = []; // plan.workout array
 let _dietPlan    = []; // plan.diet array
 
@@ -18,6 +19,7 @@ async function buildTimeline() {
   const { meta } = plan;
   _phaseIdx   = Math.max(0, (meta.currentPhase || 1) - 1);
   _monthIdx   = Math.max(0, (meta.currentMonth || 1) - 1);
+  _weekIdx    = Math.max(0, (meta.currentWeek  || 1) - 1);
   _phaseTasks = plan.checklist || [];
   _workoutPlan = plan.workout || [];
   _dietPlan    = plan.diet || [];
@@ -37,7 +39,16 @@ async function buildTimeline() {
   // ── Today's meals preview ──
   const todayName = new Date().toLocaleDateString("en-US",{weekday:"long"});
   const md = _dietPlan[_monthIdx];
-  const todayDay = md && md.weekdays && md.weekdays.find(function(d) { return d.day === todayName; });
+  let weekdays = [];
+  if (md) {
+    if (md.weeks && Array.isArray(md.weeks)) {
+      const weekData = md.weeks[_weekIdx] || md.weeks[0];
+      weekdays = (weekData && weekData.weekdays) || [];
+    } else if (md.weekdays) {
+      weekdays = md.weekdays;
+    }
+  }
+  const todayDay = weekdays.find(function(d) { return d.day === todayName; });
   if (todayDay) {
     const mealsDiv = document.createElement("div");
     mealsDiv.style.cssText = "background:#fafafa;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px";

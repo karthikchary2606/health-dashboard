@@ -894,6 +894,7 @@ function toggleMoreMenu() { openSidebar(); }
 })();
 
 document.addEventListener("DOMContentLoaded", async () => {
+  try {
   await initAuth(); // auth check + sidebar personalisation
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("logDate").value = today;
@@ -910,6 +911,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   loadProgress();
   updateBMI(currentUser && currentUser.profile && currentUser.profile.startWeightKg || 95);
   loadDateData(); // now safe to read _phaseTasks
+  } catch(e) {
+    console.error('Dashboard init error:', e);
+  }
 });
 </script>
 </body>
