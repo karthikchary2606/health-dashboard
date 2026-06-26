@@ -1,3 +1,61 @@
+// Hardcoded phase/checklist data — shared with dashboard rendering
+// (workout.js was the original home; moved here as dashboard.js is the sole consumer)
+const PHASE_TASKS = [
+  // ── Phase 1: Month 1–2 | Foundation | ~1200 kcal | Walk 20 min ──
+  [
+    { time:"06:30 AM", text:"💊 Thyronorm 12.5mg — Empty stomach. Set timer for 45 min before eating.", category:"medication" },
+    { time:"07:00 AM", text:"🚿 Cold-warm shower + 10-min morning mobility (Cat-Cow, hip circles, neck rolls).", category:"routine" },
+    { time:"07:30 AM", text:"🍵 Metabolic Primer: 1 glass warm water + 1 tsp ACV. Kickstarts digestion.", category:"nutrition" },
+    { time:"08:15 AM", text:"💪 Foundation Workout (3 sets) — FORM first, weight second. 2-min rest between sets.", category:"workout" },
+    { time:"09:30 AM", text:"🌅 Breakfast: High-protein start (~300 kcal). See Today's Meals above for exact dish.", category:"nutrition" },
+    { time:"11:00 AM", text:"💧 Mid-morning: 500ml water. Drink before you feel thirsty — thyroid loves hydration.", category:"hydration" },
+    { time:"01:30 PM", text:"☀️ Lunch: Dal + Rice or Phulka as per today's plan. Eat slowly, stop at 80% full.", category:"nutrition" },
+    { time:"04:00 PM", text:"💧 Afternoon: 500ml water. Desk job — stand up, roll shoulders, take a 2-min walk.", category:"hydration" },
+    { time:"04:30 PM", text:"🍎 Snack: Green Tea + Seed Mix (30g) or Chaas. Don't skip — keeps metabolism active.", category:"nutrition" },
+    { time:"06:00 PM", text:"🚶 Evening Walk: 20 min brisk. No phone — deep breathing, light pace. Builds the base.", category:"cardio" },
+    { time:"07:30 PM", text:"🌙 Dinner: Light meal (~300 kcal). Finish eating by 8:00 PM sharp.", category:"nutrition" },
+    { time:"08:30 PM", text:"🌙 Wind-down: Chamomile tea. Dim lights. No screens 30 min before bed. Sleep by 10:30 PM.", category:"routine" }
+  ],
+  // ── Phase 2: Month 3–4 | Strength | ~1100 kcal | Walk 25–30 min | Protein 90g+ ──
+  [
+    { time:"06:30 AM", text:"💊 Thyronorm 12.5mg — Empty stomach. 45-min wait. Consistency is thyroid health.", category:"medication" },
+    { time:"07:00 AM", text:"🚿 Shower + 15-min mobility — add hip flexor holds & spinal rotation. Prep body for load.", category:"routine" },
+    { time:"07:30 AM", text:"🍵 Metabolic Primer: Warm water + 1 tsp ACV + pinch of cinnamon. Pre-workout fuel.", category:"nutrition" },
+    { time:"08:00 AM", text:"💪 Strength Session (4 sets) — Progressive overload. Add 1–2 kg vs last week. 90-sec rest.", category:"workout" },
+    { time:"09:30 AM", text:"🌅 Post-Workout Breakfast: Prioritize 25g+ protein. Check Today's Meals. Recovery window!", category:"nutrition" },
+    { time:"11:00 AM", text:"💧 Mid-morning: 500ml water. Are you hitting 90g+ protein today? Track it mentally.", category:"hydration" },
+    { time:"01:00 PM", text:"☀️ Lunch: Protein-forward — Dal + Egg or Paneer + Phulka. Avoid second helping of rice.", category:"nutrition" },
+    { time:"04:00 PM", text:"💧 Afternoon: 500ml water. 5-min desk stretch — shoulder rolls, neck turns, wrist circles.", category:"hydration" },
+    { time:"04:30 PM", text:"🍎 Snack: Chaas 200ml + Seed Mix 20g. High protein, low calorie — best afternoon combo.", category:"nutrition" },
+    { time:"06:00 PM", text:"🚶 Evening Walk: 25–30 min brisk at 100+ steps/min. Meaningful weekly calorie burn.", category:"cardio" },
+    { time:"07:30 PM", text:"🌙 Dinner: Light — dal + 1 Phulka or Egg Curry only. No carbs after 7:30 PM.", category:"nutrition" },
+    { time:"08:30 PM", text:"🌙 Sleep by 10:30 PM. Muscle is built DURING sleep — 7–8 hrs is non-negotiable.", category:"routine" }
+  ],
+  // ── Phase 3: Month 5–6 | Cut Phase | ~1050 kcal | Fasted Walk 30–45 min | HIIT ──
+  [
+    { time:"06:00 AM", text:"💊 Thyronorm 12.5mg — Earlier wake-up for cut phase. Empty stomach. 45-min wait.", category:"medication" },
+    { time:"06:30 AM", text:"🔥 FASTED WALK: 30–45 min before any food. Peak fat-burning window. Water only.", category:"cardio" },
+    { time:"07:30 AM", text:"🍵 Break fast: Warm water + 1 tsp ACV + squeeze of lemon. Rehydrate after walk.", category:"nutrition" },
+    { time:"08:30 AM", text:"💪 High-Intensity Session — High reps (15–20), 30–45 sec rest. HIIT on Mon & Thu.", category:"workout" },
+    { time:"09:45 AM", text:"🌅 Post-Workout Breakfast: 30g+ protein focus (~300 kcal max). Check Today's Meals.", category:"nutrition" },
+    { time:"11:30 AM", text:"💧 Mid-morning: 500ml water. TRACK every calorie this phase — deficit is everything.", category:"hydration" },
+    { time:"01:00 PM", text:"☀️ Lunch: Controlled portion (~400 kcal). Less rice, more protein and vegetables.", category:"nutrition" },
+    { time:"04:00 PM", text:"💧 Afternoon: 500ml water. You're in the final phase — visualize 75 kg. Stay focused!", category:"hydration" },
+    { time:"04:30 PM", text:"🍎 Snack: ONLY Green Tea + 15g Seed Mix. Strict calorie budget — every gram counts.", category:"nutrition" },
+    { time:"07:00 PM", text:"🌙 Early Dinner: Very light (~300 kcal). Done by 7:30 PM. Extended overnight fast = fat burn.", category:"nutrition" },
+    { time:"08:00 PM", text:"🌙 Early wind-down: Chamomile tea. 10 PM sleep + 6 AM wake = optimal cut protocol.", category:"routine" }
+  ]
+];
+
+const WORKOUT_PHASES = [
+  { month:"Month 1", phase:"Phase 1 – Foundation",  focus:"Light weights · Form mastery · 3 sets",          note:"Focus on correct form. 2 min rest between sets. Walk 20 min daily." },
+  { month:"Month 2", phase:"Phase 1 – Foundation+", focus:"Add 1 set · Increase reps by 2",                 note:"Increase reps by 2 each week. Add 5 min brisk walk." },
+  { month:"Month 3", phase:"Phase 2 – Strength",    focus:"Progressive overload · 4 sets",                  note:"Add 1–2 kg weight each week. Protein target: 90g+/day." },
+  { month:"Month 4", phase:"Phase 2 – Strength+",   focus:"Compound lifts · Supersets",                     note:"Pair upper/lower supersets. 90 sec rest max. Hit PRs." },
+  { month:"Month 5", phase:"Phase 3 – Cut",          focus:"High reps · Low rest · HIIT 2x/week",            note:"30–45 sec rest between sets. Add 10 min HIIT Mon+Thu." },
+  { month:"Month 6", phase:"Phase 3 – Peak Cut",     focus:"Max intensity · HIIT 3x/week",                   note:"Target 100g+ protein. Stay in calorie deficit. Final push!" }
+];
+
 // Dashboard state
 let currentMoodScore = 3;
 let currentEnergyScore = 3;
