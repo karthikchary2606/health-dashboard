@@ -48,9 +48,9 @@ const profileSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  passwordHash: { type: String, required: true },
   isApproved: { type: Boolean, default: false },
-  isAdmin: { type: Boolean, default: false },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
   profileComplete: { type: Boolean, default: false },
   profile: { type: profileSchema, default: () => ({}) }
 }, { timestamps: true });
