@@ -13,11 +13,15 @@ async function authenticate(req, res, next) {
   } catch {
     return res.status(401).json({ error: 'Invalid token' });
   }
-  const user = await User.findById(payload.id).lean();
-  if (!user) return res.status(401).json({ error: 'User not found' });
-  if (!user.isApproved) return res.status(403).json({ error: 'Account pending approval' });
-  req.user = user;
-  next();
+  try {
+    const user = await User.findById(payload.userId).select('-passwordHash').lean();
+    if (!user) return res.status(401).json({ error: 'User not found' });
+    if (!user.isApproved) return res.status(403).json({ error: 'Account pending approval' });
+    req.user = user;
+    next();
+  } catch (err) {
+    next(err);
+  }
 }
 
 module.exports = authenticate;

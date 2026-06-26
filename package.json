@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "jest --runInBand --forceExit",
+    "test": "NODE_ENV=test jest --runInBand --forceExit",
     "seed:admin": "node scripts/seed-admin.js",
     "migrate:logs": "node scripts/migrate-logs.js"
   },

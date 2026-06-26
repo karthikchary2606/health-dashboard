@@ -4,6 +4,9 @@ const authenticate = require('../../middleware/authenticate');
 const User = require('../../models/User');
 
 beforeAll(async () => {
+  if (process.env.NODE_ENV !== 'test') {
+    throw new Error('Tests must run with NODE_ENV=test');
+  }
   await mongoose.connect(process.env.MONGODB_URI);
 });
 
@@ -43,7 +46,7 @@ test('rejects unapproved user', async () => {
     name: 'Test', email: 'unapp@test.com',
     passwordHash: 'x', isApproved: false
   });
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
   const { req, res } = makeReqRes(token);
   const next = jest.fn();
   await authenticate(req, res, next);
@@ -56,7 +59,7 @@ test('attaches full user doc and calls next for approved user', async () => {
     name: 'Approved', email: 'app@test.com',
     passwordHash: 'x', isApproved: true
   });
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
   const { req, res } = makeReqRes(token);
   const next = jest.fn();
   await authenticate(req, res, next);
