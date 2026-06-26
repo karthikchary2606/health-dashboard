@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Engine — Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px 16px 48px}
+.page-wrap{width:100%;max-width:560px;display:flex;flex-direction:column;gap:24px}
+.page-header{text-align:center;padding:8px 0}
+.page-header h1{font-size:1.5rem;font-weight:800;color:#1b4332}
+.page-header p{font-size:.83rem;color:#718096;margin-top:4px}
+
+.card{background:#fff;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08);padding:28px 24px;border-top:3px solid #1b4332}
+.card.accent{border-top-color:#f4a261}
+.card.danger{border-top-color:#e63946}
+.card-title{font-size:1rem;font-weight:700;color:#1b4332;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.card-subtitle{font-size:.8rem;color:#718096;margin-bottom:20px}
+
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.82rem;font-weight:600;color:#4a5568;margin-bottom:6px}
+.form-group input[type="number"],
+.form-group select{
+  width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:8px;
+  font-family:inherit;font-size:.9rem;outline:none;transition:.2s;background:#fff;color:#1a1a2e
+}
+.form-group input:focus,.form-group select:focus{border-color:#1b4332}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.check-group{display:flex;flex-direction:column;gap:8px}
+.check-option{
+  display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border:1.5px solid #e2e8f0;border-radius:8px;cursor:pointer;
+  transition:.15s;font-size:.88rem;font-weight:500;color:#4a5568;user-select:none
+}
+.check-option:hover{border-color:#1b4332;background:#f0fdf4}
+.check-option input{accent-color:#1b4332;width:16px;height:16px;cursor:pointer;flex-shrink:0}
+.check-option.selected{border-color:#1b4332;background:#f0fdf4;color:#1b4332;font-weight:600}
+
+.radio-group{display:flex;flex-direction:column;gap:8px}
+.radio-option{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border:1.5px solid #e2e8f0;border-radius:8px;cursor:pointer;
+  transition:.15s;font-size:.88rem;font-weight:500;color:#4a5568;user-select:none
+}
+.radio-option:hover{border-color:#1b4332;background:#f0fdf4}
+.radio-option input{accent-color:#1b4332;width:16px;height:16px;cursor:pointer;flex-shrink:0}
+.radio-option.selected{border-color:#1b4332;background:#f0fdf4;color:#1b4332;font-weight:600}
+.radio-option.current-plan{border-color:#40916c;background:#f0fdf4}
+.radio-option.current-plan .plan-badge{font-size:.72rem;font-weight:700;color:#fff;background:#40916c;padding:2px 7px;border-radius:10px;margin-left:auto}
+
+.btn{display:block;width:100%;padding:11px;background:#1b4332;color:#fff;border:none;border-radius:8px;font-family:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s;margin-top:20px}
+.btn:hover{background:#2d6a4f}
+.btn:disabled{background:#9ca3af;cursor:not-allowed}
+.btn-danger{background:#fff;color:#e63946;border:1.5px solid #fecaca}
+.btn-danger:hover{background:#fff5f5;border-color:#e63946}
+
+.msg{padding:10px 14px;border-radius:8px;font-size:.82rem;margin-top:12px;display:none}
+.msg.success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.msg.error{background:#fff5f5;border:1px solid #fecaca;color:#991b1b}
+
+.back-link{text-align:center;font-size:.83rem;color:#718096}
+.back-link a{color:#1b4332;font-weight:600;text-decoration:none}
+.back-link a:hover{text-decoration:underline}
+
+@media(max-width:480px){
+  .form-row{grid-template-columns:1fr}
+  .card{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="page-header">
+    <h1>⚙️ Settings</h1>
+    <p>Manage your profile, plan, and checklist</p>
+  </div>
+
+  <!-- ── Section 1: Edit Profile ── -->
+  <div class="card" id="card-profile">
+    <div class="card-title">✏️ Edit Profile</div>
+    <div class="card-subtitle">Update your stats and preferences. Only changed fields are saved.</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Current Weight (kg)</label>
+        <input type="number" id="f-current-weight" min="20" max="300" step="0.1" placeholder="e.g. 80">
+      </div>
+      <div class="form-group">
+        <label>Goal Weight (kg)</label>
+        <input type="number" id="f-goal-weight" min="20" max="300" step="0.1" placeholder="e.g. 72">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Age</label>
+      <input type="number" id="f-age" min="10" max="100" step="1" placeholder="e.g. 30" style="max-width:160px">
+    </div>
+
+    <div class="form-group">
+      <label>Fitness Level</label>
+      <select id="f-fitness">
+        <option value="">Select…</option>
+        <option value="sedentary">🪑 Sedentary</option>
+        <option value="lightly-active">🚶 Lightly Active</option>
+        <option value="moderately-active">🏋️ Moderately Active</option>
+        <option value="very-active">⚡ Very Active</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Diet Type</label>
+      <select id="f-diet">
+        <option value="">Select…</option>
+        <option value="standard">Standard</option>
+        <option value="vegetarian">Vegetarian</option>
+        <option value="vegan">Vegan</option>
+        <option value="eggetarian">Eggetarian</option>
+        <option value="gluten-free">Gluten-Free</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Health Conditions</label>
+      <div class="check-group" id="cg-conditions">
+        <label class="check-option" onclick="toggleCheck(this)">
+          <input type="checkbox" value="thyroid"> Thyroid disorder
+        </label>
+        <label class="check-option" onclick="toggleCheck(this)">
+          <input type="checkbox" value="diabetes"> Diabetes
+        </label>
+        <label class="check-option" onclick="toggleCheck(this)">
+          <input type="checkbox" value="hypertension"> Hypertension
+        </label>
+        <label class="check-option" onclick="toggleCheck(this)">
+          <input type="checkbox" value="lower-back-pain"> Lower back pain
+        </label>
+        <label class="check-option" id="cond-none" onclick="toggleNone(this)">
+          <input type="checkbox" value="none"> None of the above
+        </label>
+      </div>
+    </div>
+
+    <button class="btn" id="btn-save-profile" onclick="saveProfile()">Save Changes</button>
+    <div class="msg" id="msg-profile"></div>
+  </div>
+
+  <!-- ── Section 2: Switch Plan ── -->
+  <div class="card accent" id="card-plan">
+    <div class="card-title">🔄 Switch Plan</div>
+    <div class="card-subtitle">Switching your plan will change your diet, workout, and checklist defaults.</div>
+
+    <div class="radio-group" id="rg-plan">
+      <label class="radio-option" onclick="selectPlan('weight-loss', this)">
+        <input type="radio" name="plan" value="weight-loss"> 🔥 Weight Loss
+        <span class="plan-badge" style="display:none">Current</span>
+      </label>
+      <label class="radio-option" onclick="selectPlan('muscle-gain', this)">
+        <input type="radio" name="plan" value="muscle-gain"> 💪 Muscle Gain
+        <span class="plan-badge" style="display:none">Current</span>
+      </label>
+      <label class="radio-option" onclick="selectPlan('maintenance', this)">
+        <input type="radio" name="plan" value="maintenance"> ⚖️ Maintenance
+        <span class="plan-badge" style="display:none">Current</span>
+      </label>
+      <label class="radio-option" onclick="selectPlan('general-fitness', this)">
+        <input type="radio" name="plan" value="general-fitness"> 🏃 General Fitness
+        <span class="plan-badge" style="display:none">Current</span>
+      </label>
+    </div>
+
+    <button class="btn" id="btn-switch-plan" onclick="switchPlan()">Switch Plan</button>
+    <div class="msg" id="msg-plan"></div>
+  </div>
+
+  <!-- ── Section 3: Reset Checklist ── -->
+  <div class="card danger" id="card-reset">
+    <div class="card-title">🗑️ Reset Checklist</div>
+    <div class="card-subtitle">Restores your daily checklist to the defaults for your current plan. This cannot be undone.</div>
+
+    <button class="btn btn-danger" id="btn-reset-checklist" onclick="resetChecklist()">Reset Checklist to Defaults</button>
+    <div class="msg" id="msg-reset"></div>
+  </div>
+
+  <div class="back-link">
+    <a href="/index.html">← Back to Dashboard</a>
+  </div>
+
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/planCache.js"></script>
+<script>
+let _loadedProfile = {};
+let _selectedPlan = null;
+
+// ── Helpers ──────────────────────────────────────────────
+
+function toggleCheck(el) {
+  el.classList.toggle('selected', el.querySelector('input').checked);
+}
+
+function toggleNone(el) {
+  const checked = el.querySelector('input').checked;
+  if (checked) {
+    document.querySelectorAll('#cg-conditions .check-option:not(#cond-none)').forEach(o => {
+      o.querySelector('input').checked = false;
+      o.classList.remove('selected');
+    });
+  }
+  el.classList.toggle('selected', checked);
+}
+
+function checkedBoxes(groupId) {
+  return [...document.querySelectorAll(`#${groupId} input[type="checkbox"]:checked`)]
+    .map(i => i.value);
+}
+
+function setCheckboxes(groupId, values) {
+  const arr = values || [];
+  document.querySelectorAll(`#${groupId} .check-option`).forEach(opt => {
+    const v = opt.querySelector('input').value;
+    const checked = arr.includes(v);
+    opt.querySelector('input').checked = checked;
+    opt.classList.toggle('selected', checked);
+  });
+}
+
+function showMsg(id, type, text) {
+  const el = document.getElementById(id);
+  el.className = `msg ${type}`;
+  el.textContent = text;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+function selectPlan(value, el) {
+  document.querySelectorAll('#rg-plan .radio-option').forEach(o => {
+    o.classList.remove('selected');
+    o.querySelector('input').checked = false;
+  });
+  el.classList.add('selected');
+  el.querySelector('input').checked = true;
+  _selectedPlan = value;
+}
+
+function markCurrentPlan(planTemplate) {
+  document.querySelectorAll('#rg-plan .plan-badge').forEach(b => b.style.display = 'none');
+  document.querySelectorAll('#rg-plan .radio-option').forEach(o => {
+    o.classList.remove('current-plan');
+  });
+  const match = document.querySelector(`#rg-plan input[value="${planTemplate}"]`);
+  if (match) {
+    const opt = match.closest('.radio-option');
+    opt.classList.add('current-plan');
+    opt.querySelector('.plan-badge').style.display = 'inline';
+  }
+}
+
+// ── Load profile on mount ────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const { ok, data } = await apiFetch('/api/profile');
+  if (!ok) return;
+
+  const p = data;
+  _loadedProfile = { ...p };
+
+  if (p.currentWeightKg != null) document.getElementById('f-current-weight').value = p.currentWeightKg;
+  if (p.goalWeightKg   != null) document.getElementById('f-goal-weight').value   = p.goalWeightKg;
+  if (p.age            != null) document.getElementById('f-age').value            = p.age;
+  if (p.fitnessLevel)           document.getElementById('f-fitness').value        = p.fitnessLevel;
+  if (p.dietType)               document.getElementById('f-diet').value           = p.dietType;
+
+  setCheckboxes('cg-conditions', p.healthConditions);
+
+  const currentPlan = p.planTemplate || p.primaryGoal;
+  if (currentPlan) {
+    markCurrentPlan(currentPlan);
+    _selectedPlan = currentPlan;
+    const radioEl = document.querySelector(`#rg-plan input[value="${currentPlan}"]`);
+    if (radioEl) {
+      radioEl.checked = true;
+      radioEl.closest('.radio-option').classList.add('selected');
+    }
+  }
+});
+
+// ── Save Profile (diff only) ─────────────────────────────
+
+async function saveProfile() {
+  const btn = document.getElementById('btn-save-profile');
+  const currentWeight = parseFloat(document.getElementById('f-current-weight').value);
+  const goalWeight    = parseFloat(document.getElementById('f-goal-weight').value);
+  const age           = parseInt(document.getElementById('f-age').value, 10);
+  const fitnessLevel  = document.getElementById('f-fitness').value;
+  const dietType      = document.getElementById('f-diet').value;
+  const conditions    = checkedBoxes('cg-conditions');
+
+  const diff = {};
+
+  if (!isNaN(currentWeight) && currentWeight !== _loadedProfile.currentWeightKg)
+    diff.currentWeightKg = currentWeight;
+  if (!isNaN(goalWeight) && goalWeight !== _loadedProfile.goalWeightKg)
+    diff.goalWeightKg = goalWeight;
+  if (!isNaN(age) && age !== _loadedProfile.age)
+    diff.age = age;
+  if (fitnessLevel && fitnessLevel !== _loadedProfile.fitnessLevel)
+    diff.fitnessLevel = fitnessLevel;
+  if (dietType && dietType !== _loadedProfile.dietType)
+    diff.dietType = dietType;
+
+  const prevConds = JSON.stringify([...(_loadedProfile.healthConditions || [])].sort());
+  const nextConds = JSON.stringify([...conditions].sort());
+  if (prevConds !== nextConds) diff.healthConditions = conditions;
+
+  if (Object.keys(diff).length === 0) {
+    showMsg('msg-profile', 'success', 'No changes to save.');
+    return;
+  }
+
+  btn.disabled = true;
+  const { ok, data } = await apiFetch('/api/profile', { method: 'PATCH', body: diff });
+  btn.disabled = false;
+
+  if (ok) {
+    // Merge changes into loaded snapshot
+    Object.assign(_loadedProfile, diff);
+    showMsg('msg-profile', 'success', '✓ Profile updated successfully.');
+  } else {
+    showMsg('msg-profile', 'error', (data && data.error) || 'Failed to save profile.');
+  }
+}
+
+// ── Switch Plan ──────────────────────────────────────────
+
+async function switchPlan() {
+  if (!_selectedPlan) {
+    showMsg('msg-plan', 'error', 'Please select a plan.');
+    return;
+  }
+  if (_selectedPlan === (_loadedProfile.planTemplate || _loadedProfile.primaryGoal)) {
+    showMsg('msg-plan', 'success', 'That is already your active plan.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-switch-plan');
+  btn.disabled = true;
+
+  const { ok, data } = await apiFetch('/api/profile', {
+    method: 'PATCH',
+    body: { planTemplate: _selectedPlan }
+  });
+
+  btn.disabled = false;
+
+  if (ok) {
+    _loadedProfile.planTemplate = _selectedPlan;
+    markCurrentPlan(_selectedPlan);
+    window.planCache.invalidate();
+    showMsg('msg-plan', 'success', '✓ Plan switched successfully.');
+  } else {
+    showMsg('msg-plan', 'error', (data && data.error) || 'Failed to switch plan.');
+  }
+}
+
+// ── Reset Checklist ──────────────────────────────────────
+
+async function resetChecklist() {
+  const btn = document.getElementById('btn-reset-checklist');
+  btn.disabled = true;
+
+  const { ok, data } = await apiFetch('/api/checklist/reset-to-defaults', { method: 'POST' });
+
+  btn.disabled = false;
+
+  if (ok) {
+    showMsg('msg-reset', 'success', `✓ Checklist reset — ${(data.items || []).length} items restored.`);
+  } else {
+    showMsg('msg-reset', 'error', (data && data.error) || 'Failed to reset checklist.');
+  }
+}
+</script>
+</body>
+</html>
