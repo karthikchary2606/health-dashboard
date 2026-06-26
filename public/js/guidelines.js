@@ -1,3 +1,7 @@
+// Guidelines rendering — seed/supplement data sourced from window.planCache.getPlan()
+// Note: seeds and supplement timing are profile-level health constants served via
+// plan.guidelines (not yet in weight-loss template; kept as fallback statics below).
+
 const SEEDS = [
   { name:"Pumpkin Seeds",    stock:250, daily:8,  note:"Highest magnesium — thyroid support" },
   { name:"Sunflower Seeds",  stock:250, daily:5,  note:"Vitamin E + selenium" },
@@ -9,15 +13,18 @@ const SEEDS = [
   { name:"Pistachios",       stock:250, daily:1,  note:"L-arginine for circulation" }
 ];
 
-// =====================================================
-// DATA: SUPPLEMENT TIMING
-// =====================================================
 const SUPP_TIMING = [
   { time:"06:30 AM", item:"Thyronorm 12.5mg", note:"Strict empty stomach. 45-min wait before ANY food." },
   { time:"07:30 AM", item:"ACV (1 tsp in warm water)", note:"Boosts metabolism + liver detox + digestion." },
   { time:"04:30 PM", item:"Seed Mix + Green Tea", note:"Anti-inflammatory snack window." },
   { time:"08:30 PM", item:"Chamomile Tea", note:"Cortisol reset. Better sleep = better thyroid function." }
 ];
+
+async function initGuidelines() {
+  const plan = await window.planCache.getPlan();
+  if (!plan) return;
+  buildGuidelines();
+}
 
 function buildGuidelines() {
   const seedEl = document.getElementById("seedTracker");
@@ -40,3 +47,5 @@ function buildGuidelines() {
     </div>`
   ).join("");
 }
+
+document.addEventListener('DOMContentLoaded', initGuidelines);
