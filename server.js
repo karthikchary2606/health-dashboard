@@ -55,6 +55,13 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Global error handler — must have 4 params for Express to treat it as error middleware
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error(err.stack || err.message);
+  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
+});
+
 if (require.main === module) {
   app.listen(PORT, HOST, () => {
     console.log(`🚀 Health Engine → http://${HOST}:${PORT}`);

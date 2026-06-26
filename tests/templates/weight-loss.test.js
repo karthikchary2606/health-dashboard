@@ -20,9 +20,29 @@ test('getDietPlan month 1 has required shape', () => {
   const [month1] = template.getDietPlan(baseProfile);
   expect(month1).not.toBeNull();
   expect(month1.monthLabel).toBeDefined();
-  expect(Array.isArray(month1.weekdays)).toBe(true);
-  expect(month1.weekdays.length).toBe(7);
-  expect(month1.weekdays[0].breakfast).toBeDefined();
+  expect(Array.isArray(month1.weeks)).toBe(true);
+  expect(month1.weeks.length).toBe(4);
+  expect(month1.weeks[0].weekdays.length).toBe(7);
+  expect(month1.weeks[0].weekdays[0].breakfast).toBeDefined();
+});
+
+test('getDietPlan all months have 4 weeks of 7 days', () => {
+  const plan = template.getDietPlan(baseProfile);
+  plan.forEach((month, i) => {
+    expect(month.weeks).toBeDefined();
+    expect(month.weeks.length).toBe(4);
+    month.weeks.forEach(week => {
+      expect(Array.isArray(week.weekdays)).toBe(true);
+      expect(week.weekdays.length).toBe(7);
+      expect(week.weekLabel).toBeDefined();
+    });
+  });
+});
+
+test('getPlanMeta includes currentWeek 1-4', () => {
+  const meta = template.getPlanMeta({ ...baseProfile, startDate: new Date() });
+  expect(meta.currentWeek).toBeGreaterThanOrEqual(1);
+  expect(meta.currentWeek).toBeLessThanOrEqual(4);
 });
 
 test('getWorkoutPlan returns 6 months, month 1 has exercises', () => {

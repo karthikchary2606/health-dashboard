@@ -327,8 +327,7 @@ async function saveProfile() {
   btn.disabled = false;
 
   if (ok) {
-    // Merge changes into loaded snapshot
-    Object.assign(_loadedProfile, diff);
+    _loadedProfile = { ...data }; // sync with authoritative server response
     showMsg('msg-profile', 'success', '✓ Profile updated successfully.');
   } else {
     showMsg('msg-profile', 'error', (data && data.error) || 'Failed to save profile.');

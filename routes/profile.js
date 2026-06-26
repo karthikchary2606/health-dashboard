@@ -73,6 +73,7 @@ router.get('/plan', authenticate, requireProfile, async (req, res) => {
 });
 
 router.get('/', authenticate, requireProfile, async (req, res) => {
+  // req.user is a lean plain object (from authenticate middleware)
   res.json(req.user.profile);
 });
 
@@ -92,8 +93,8 @@ router.patch('/', authenticate, requireProfile, async (req, res) => {
     allowed.forEach(field => {
       if (req.body[field] !== undefined) updates[`profile.${field}`] = req.body[field];
     });
-    await User.findByIdAndUpdate(req.user._id, updates, { runValidators: true, new: true });
-    res.json({ success: true });
+    const updated = await User.findByIdAndUpdate(req.user._id, updates, { runValidators: true, new: true, lean: true });
+    res.json(updated.profile);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

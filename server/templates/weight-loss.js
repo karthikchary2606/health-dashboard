@@ -12,14 +12,55 @@ const MONTHLY_DIET = [
       '1 cup rice/day maximum',
       'Walk 20–30 min daily fasted'
     ],
-    weekdays: [
-      { day: 'Monday',    breakfast: 'Pesarattu (2 pcs) + Allam Chutney',           lunch: 'Palakura Pappu + 1 Cup Rice + Bendakaya Fry',           snack: 'Green Tea + 10 Almonds + Nuvvulu Mix (20g)',        dinner: '3-Egg Capsicum Omelet in Ghee' },
-      { day: 'Tuesday',   breakfast: '3-Egg Bhurji (onion, tomato, ghee)',           lunch: 'Rajma Curry + 1 Cup Rice + Palakura Stir-fry',          snack: 'Chaas (200ml) + Roasted Chana (30g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
-      { day: 'Wednesday', breakfast: 'Rava Upma (small) + Coconut Chutney',          lunch: 'Chicken Curry (150g) + 1 Cup Rice + Raita',             snack: 'Green Tea + Pumpkin Seeds Mix (20g)',               dinner: 'Palakura Pappu + 1 Phulka' },
-      { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Gongura Chutney',          lunch: 'Kandi Pappu + 1 Cup Rice + Vankaya Fry',                snack: 'Chaas (200ml) + 10 Almonds',                        dinner: '2-Egg Omelet + Mixed Veggie Stir-fry' },
-      { day: 'Friday',    breakfast: '3-Egg Omelet + Nuvvulu (Sesame) Chutney',      lunch: 'Chicken Curry (150g) + 1 Cup Rice + Bendakaya Fry',     snack: 'Green Tea + Seed Mix (20g)',                        dinner: 'Palakura Pappu + 1 Phulka' },
-      { day: 'Saturday',  breakfast: '3-Egg Omelet + Curry Leaves Tadka',            lunch: 'Rajma Curry + 1 Cup Rice + Cucumber Raita',             snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer Curry + 1 Phulka' },
-      { day: 'Sunday',    breakfast: 'Idli (3 pcs) + Sambar + Coconut Chutney',      lunch: 'Kandi Pappu + 1 Cup Rice + Sorakaya Curry',             snack: 'Green Tea + Roasted Chana (30g)',                   dinner: '2-Egg Bhurji + Phulka' }
+    weeks: [
+      {
+        weekLabel: 'Week 1 — Foundation',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Pesarattu (2 pcs) + Allam Chutney',           lunch: 'Palakura Pappu + 1 Cup Rice + Bendakaya Fry',           snack: 'Green Tea + 10 Almonds + Nuvvulu Mix (20g)',        dinner: '3-Egg Capsicum Omelet in Ghee' },
+          { day: 'Tuesday',   breakfast: '3-Egg Bhurji (onion, tomato, ghee)',           lunch: 'Rajma Curry + 1 Cup Rice + Palakura Stir-fry',          snack: 'Chaas (200ml) + Roasted Chana (30g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Wednesday', breakfast: 'Rava Upma (small) + Coconut Chutney',          lunch: 'Chicken Curry (150g) + 1 Cup Rice + Raita',             snack: 'Green Tea + Pumpkin Seeds Mix (20g)',               dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Gongura Chutney',          lunch: 'Kandi Pappu + 1 Cup Rice + Vankaya Fry',                snack: 'Chaas (200ml) + 10 Almonds',                        dinner: '2-Egg Omelet + Mixed Veggie Stir-fry' },
+          { day: 'Friday',    breakfast: '3-Egg Omelet + Nuvvulu (Sesame) Chutney',      lunch: 'Chicken Curry (150g) + 1 Cup Rice + Bendakaya Fry',     snack: 'Green Tea + Seed Mix (20g)',                        dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: '3-Egg Omelet + Curry Leaves Tadka',            lunch: 'Rajma Curry + 1 Cup Rice + Cucumber Raita',             snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer Curry + 1 Phulka' },
+          { day: 'Sunday',    breakfast: 'Idli (3 pcs) + Sambar + Coconut Chutney',      lunch: 'Kandi Pappu + 1 Cup Rice + Sorakaya Curry',             snack: 'Green Tea + Roasted Chana (30g)',                   dinner: '2-Egg Bhurji + Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 2 — Variety',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Oats Upma (40g) + Coconut Chutney',            lunch: 'Palakura Pappu + 1 Cup Rice + Sorakaya Curry',          snack: 'Chaas (200ml) + Roasted Chana (30g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Rajma + 1 Cup Rice + Bendakaya Fry',                    snack: 'Green Tea + 10 Almonds + Seed Mix (20g)',           dinner: '3-Egg Bhurji' },
+          { day: 'Wednesday', breakfast: '2-Egg Bhurji + 1 Pesarattu',                   lunch: 'Chicken Curry (150g) + 1 Cup Rice + Palakura Stir-fry', snack: 'Green Tea + Pumpkin Seeds (20g)',                   dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Idli (2 pcs) + Sambar + Chutney',              lunch: 'Kandi Pappu + 1 Cup Rice + Capsicum Fry',               snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Friday',    breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Chicken Curry (150g) + 1 Cup Rice + Raita',             snack: 'Green Tea + Seed Mix (20g)',                        dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: 'Pesarattu (2 pcs) + Gongura Chutney',          lunch: 'Rajma + 1 Cup Rice + Vankaya Fry',                      snack: 'Chaas (200ml) + 10 Almonds',                        dinner: '2-Egg Bhurji + 1 Phulka' },
+          { day: 'Sunday',    breakfast: 'Rava Upma + Tomato Chutney',                   lunch: 'Kandi Pappu + 1 Cup Rice + Bendakaya Fry',              snack: 'Green Tea + Roasted Chana (30g)',                   dinner: 'Paneer Curry + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 3 — Intensity',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Bhurji + Allam Chutney',                 lunch: 'Palakura Pappu + 1 Cup Rice + Vankaya Fry',             snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: 'Pesarattu (2 pcs) + Coconut Chutney',          lunch: 'Rajma + 1 Cup Rice + Sorakaya Curry',                   snack: 'Green Tea + Seed Mix (20g)',                        dinner: '3-Egg Omelet + Salad' },
+          { day: 'Wednesday', breakfast: 'Oats Upma (40g) + Boiled Egg (1)',             lunch: 'Chicken Curry (150g) + 1 Cup Rice + Bendakaya',         snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '2-Egg Bhurji + 1 Pesarattu',                   lunch: 'Kandi Pappu + 1 Cup Rice + Palakura Stir-fry',          snack: 'Green Tea + Pumpkin Seeds (20g)',                   dinner: '2-Egg Omelet + Veggie Stir-fry' },
+          { day: 'Friday',    breakfast: '3-Egg Omelet + Gongura Chutney',               lunch: 'Chicken Curry (150g) + 1 Cup Rice + Raita',             snack: 'Green Tea + Roasted Chana (30g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: 'Idli (3 pcs) + Sambar + Chutney',              lunch: 'Rajma + 1 Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer Curry + 1 Phulka' },
+          { day: 'Sunday',    breakfast: 'Pesarattu (2 pcs) + Nuvvulu Chutney',          lunch: 'Kandi Pappu + 1 Cup Rice + Vankaya Fry',                snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Bhurji + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 4 — Consolidate',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Palakura Pappu + 1 Cup Rice + Bendakaya Fry',           snack: 'Chaas (200ml) + Seed Mix (20g)',                    dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: '3-Egg Bhurji + Tomato Chutney',                lunch: 'Rajma + 1 Cup Rice + Palakura Stir-fry',                snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Wednesday', breakfast: 'Idli (2 pcs) + Sambar + Coconut Chutney',      lunch: 'Chicken Curry (150g) + 1 Cup Rice + Raita',             snack: 'Chaas (200ml) + Pumpkin Seeds (20g)',               dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Gongura Chutney',          lunch: 'Kandi Pappu + 1 Cup Rice + Sorakaya Curry',             snack: 'Green Tea + Walnuts (5 pcs)',                        dinner: '2-Egg Bhurji + 1 Phulka' },
+          { day: 'Friday',    breakfast: '2-Egg Omelet + Nuvvulu Chutney',               lunch: 'Chicken Curry (150g) + 1 Cup Rice + Bendakaya',         snack: 'Green Tea + Seed Mix (20g)',                        dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: '3-Egg Bhurji + Curry Leaves Tadka',            lunch: 'Rajma + 1 Cup Rice + Vankaya Fry',                      snack: 'Chaas (200ml) + Roasted Chana (30g)',               dinner: 'Paneer Curry + 1 Phulka' },
+          { day: 'Sunday',    breakfast: 'Rava Upma (small) + Coconut Chutney',          lunch: 'Kandi Pappu + 1 Cup Rice + Cucumber Raita',             snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+        ]
+      }
     ]
   },
   {
@@ -30,14 +71,55 @@ const MONTHLY_DIET = [
       'Add 30-min brisk walk daily',
       'Soyabean 2x/week cooked'
     ],
-    weekdays: [
-      { day: 'Monday',    breakfast: '2-Egg Bhurji + 1 Pesarattu',                   lunch: 'Palakura Pappu + ¾ Cup Rice + Bendakaya Fry',           snack: 'Green Tea + 10 Almonds + Nuvvulu Mix (20g)',        dinner: '3-Egg Capsicum Omelet' },
-      { day: 'Tuesday',   breakfast: 'Oats Upma (40g dry) + Coconut Chutney',        lunch: 'Rajma + ¾ Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Roasted Chana (30g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
-      { day: 'Wednesday', breakfast: '3-Egg Omelet + Green Chutney',                 lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Salad',             snack: 'Green Tea + Pumpkin Seeds Mix (20g)',               dinner: 'Palakura Pappu + 1 Phulka' },
-      { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Kandi Pappu + ¾ Cup Rice + Vankaya Fry',                snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Soyabean Curry + 1 Phulka' },
-      { day: 'Friday',    breakfast: '2 Idli + Sambar + Chutney',                    lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Bendakaya',         snack: 'Green Tea + Seed Mix (20g)',                        dinner: '3-Egg Omelet + Salad' },
-      { day: 'Saturday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Rajma + ¾ Cup Rice + Palakura Stir-fry',                snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer Bhurji + 1 Phulka' },
-      { day: 'Sunday',    breakfast: 'Upma (small) + Tomato Chutney',                lunch: 'Kandi Pappu + ¾ Cup Rice + Mixed Veggie Curry',         snack: 'Green Tea + Roasted Chana (30g)',                   dinner: '2-Egg Bhurji + 1 Phulka' }
+    weeks: [
+      {
+        weekLabel: 'Week 1 — Foundation',
+        weekdays: [
+          { day: 'Monday',    breakfast: '2-Egg Bhurji + 1 Pesarattu',                   lunch: 'Palakura Pappu + ¾ Cup Rice + Bendakaya Fry',           snack: 'Green Tea + 10 Almonds + Nuvvulu Mix (20g)',        dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Tuesday',   breakfast: 'Oats Upma (40g dry) + Coconut Chutney',        lunch: 'Rajma + ¾ Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Roasted Chana (30g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Wednesday', breakfast: '3-Egg Omelet + Green Chutney',                 lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Salad',             snack: 'Green Tea + Pumpkin Seeds Mix (20g)',               dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Kandi Pappu + ¾ Cup Rice + Vankaya Fry',                snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: '2 Idli + Sambar + Chutney',                    lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Bendakaya',         snack: 'Green Tea + Seed Mix (20g)',                        dinner: '3-Egg Omelet + Salad' },
+          { day: 'Saturday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Rajma + ¾ Cup Rice + Palakura Stir-fry',                snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Sunday',    breakfast: 'Upma (small) + Tomato Chutney',                lunch: 'Kandi Pappu + ¾ Cup Rice + Mixed Veggie Curry',         snack: 'Green Tea + Roasted Chana (30g)',                   dinner: '2-Egg Bhurji + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 2 — Variety',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Pesarattu (2 pcs) + Coconut Chutney',          lunch: 'Palakura Pappu + ¾ Cup Rice + Sorakaya Curry',          snack: 'Chaas (200ml) + Seed Mix (20g)',                    dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: '3-Egg Bhurji + Allam Chutney',                 lunch: 'Rajma + ¾ Cup Rice + Bendakaya Fry',                    snack: 'Green Tea + 10 Almonds',                            dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Wednesday', breakfast: 'Oats Upma (40g) + Boiled Egg (1)',             lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Raita',             snack: 'Green Tea + Pumpkin Seeds (20g)',                   dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Idli (2 pcs) + Sambar + Chutney',              lunch: 'Kandi Pappu + ¾ Cup Rice + Capsicum Fry',               snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Friday',    breakfast: '2-Egg Bhurji + 1 Pesarattu',                   lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Palakura Stir-fry', snack: 'Green Tea + Roasted Chana (30g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: 'Pesarattu (2 pcs) + Gongura Chutney',          lunch: 'Rajma + ¾ Cup Rice + Vankaya Fry',                      snack: 'Chaas (200ml) + 10 Almonds',                        dinner: '2-Egg Omelet + Salad' },
+          { day: 'Sunday',    breakfast: '3-Egg Omelet + Nuvvulu Chutney',               lunch: 'Kandi Pappu + ¾ Cup Rice + Cucumber Raita',             snack: 'Green Tea + Seed Mix (20g)',                        dinner: 'Paneer Curry + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 3 — Intensity',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Bhurji + Tomato Chutney',                lunch: 'Palakura Pappu + ¾ Cup Rice + Vankaya Fry',             snack: 'Green Tea + Walnuts (5 pcs)',                       dinner: '3-Egg Omelet + Salad' },
+          { day: 'Tuesday',   breakfast: 'Oats Upma (40g) + Coconut Chutney',            lunch: 'Rajma + ¾ Cup Rice + Sorakaya Curry',                   snack: 'Chaas (200ml) + Roasted Chana (30g)',               dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Bendakaya',         snack: 'Green Tea + Pumpkin Seeds (20g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '2-Egg Bhurji + 1 Pesarattu',                   lunch: 'Kandi Pappu + ¾ Cup Rice + Palakura Stir-fry',          snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Friday',    breakfast: 'Idli (3 pcs) + Sambar + Chutney',              lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Raita',             snack: 'Green Tea + Seed Mix (20g)',                        dinner: '2-Egg Bhurji + 1 Phulka' },
+          { day: 'Saturday',  breakfast: '3-Egg Omelet + Gongura Chutney',               lunch: 'Rajma + ¾ Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer Curry + 1 Phulka' },
+          { day: 'Sunday',    breakfast: 'Pesarattu (2 pcs) + Nuvvulu Chutney',          lunch: 'Kandi Pappu + ¾ Cup Rice + Mixed Veggie Curry',         snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Capsicum Omelet' }
+        ]
+      },
+      {
+        weekLabel: 'Week 4 — Consolidate',
+        weekdays: [
+          { day: 'Monday',    breakfast: '2-Egg Bhurji + Coconut Chutney',               lunch: 'Palakura Pappu + ¾ Cup Rice + Bendakaya Fry',           snack: 'Green Tea + Seed Mix (20g)',                        dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: 'Oats Upma (40g) + Tomato Chutney',             lunch: 'Rajma + ¾ Cup Rice + Palakura Stir-fry',                snack: 'Chaas (200ml) + 10 Almonds',                        dinner: '3-Egg Bhurji + Salad' },
+          { day: 'Wednesday', breakfast: '3-Egg Omelet + Allam Chutney',                 lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Raita',             snack: 'Green Tea + Pumpkin Seeds (20g)',                   dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Gongura Chutney',          lunch: 'Kandi Pappu + ¾ Cup Rice + Vankaya Fry',                snack: 'Chaas (200ml) + Roasted Chana (30g)',               dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: 'Idli (2 pcs) + Sambar + Chutney',              lunch: 'Chicken Curry (150g) + ¾ Cup Rice + Bendakaya',         snack: 'Green Tea + Walnuts (5 pcs)',                       dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Rajma + ¾ Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Seed Mix (20g)',                    dinner: '2-Egg Omelet + Salad' },
+          { day: 'Sunday',    breakfast: 'Rava Upma (small) + Coconut Chutney',          lunch: 'Kandi Pappu + ¾ Cup Rice + Sorakaya Curry',             snack: 'Green Tea + Roasted Chana (30g)',                   dinner: 'Paneer Curry + 1 Phulka' }
+        ]
+      }
     ]
   },
   {
@@ -48,14 +130,55 @@ const MONTHLY_DIET = [
       'Increase protein to 90g+/day',
       '4-day workout with progressive overload'
     ],
-    weekdays: [
-      { day: 'Monday',    breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Palakura Pappu + ½ Cup Rice + Bendakaya Fry',           snack: 'Green Tea + 10 Almonds + Seed Mix (20g)',           dinner: '3-Egg Capsicum Omelet' },
-      { day: 'Tuesday',   breakfast: '3-Egg Bhurji + 1 Pesarattu',                   lunch: 'Rajma + ½ Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Roasted Chana (25g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
-      { day: 'Wednesday', breakfast: '2-Egg Bhurji + Upma (small)',                  lunch: 'Chicken Curry (180g) + ½ Cup Rice + Salad',             snack: 'Green Tea + Pumpkin Seeds Mix (20g)',               dinner: 'Palakura Pappu + 1 Phulka' },
-      { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Coconut Chutney',          lunch: 'Kandi Pappu + ½ Cup Rice + Vankaya Fry',                snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Soyabean Curry + 1 Phulka' },
-      { day: 'Friday',    breakfast: '3-Egg Omelet + Nuvvulu Chutney',               lunch: 'Chicken Curry (180g) + ½ Cup Rice + Bendakaya',         snack: 'Green Tea + Seed Mix (20g)',                        dinner: '3-Egg Omelet + Salad' },
-      { day: 'Saturday',  breakfast: 'Oats (40g) + Boiled Egg (1)',                  lunch: 'Rajma + ½ Cup Rice + Palakura Stir-fry',                snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer + 1 Phulka' },
-      { day: 'Sunday',    breakfast: 'Idli (2 pcs) + Sambar + Chutney',              lunch: 'Kandi Pappu + ½ Cup Rice + Mixed Veggie Curry',         snack: 'Green Tea + Roasted Chana (25g)',                   dinner: '2-Egg Bhurji + 1 Phulka' }
+    weeks: [
+      {
+        weekLabel: 'Week 1 — Foundation',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Palakura Pappu + ½ Cup Rice + Bendakaya Fry',           snack: 'Green Tea + 10 Almonds + Seed Mix (20g)',           dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Tuesday',   breakfast: '3-Egg Bhurji + 1 Pesarattu',                   lunch: 'Rajma + ½ Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Roasted Chana (25g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Wednesday', breakfast: '2-Egg Bhurji + Upma (small)',                  lunch: 'Chicken Curry (180g) + ½ Cup Rice + Salad',             snack: 'Green Tea + Pumpkin Seeds Mix (20g)',               dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Coconut Chutney',          lunch: 'Kandi Pappu + ½ Cup Rice + Vankaya Fry',                snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: '3-Egg Omelet + Nuvvulu Chutney',               lunch: 'Chicken Curry (180g) + ½ Cup Rice + Bendakaya',         snack: 'Green Tea + Seed Mix (20g)',                        dinner: '3-Egg Omelet + Salad' },
+          { day: 'Saturday',  breakfast: 'Oats (40g) + Boiled Egg (1)',                  lunch: 'Rajma + ½ Cup Rice + Palakura Stir-fry',                snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer + 1 Phulka' },
+          { day: 'Sunday',    breakfast: 'Idli (2 pcs) + Sambar + Chutney',              lunch: 'Kandi Pappu + ½ Cup Rice + Mixed Veggie Curry',         snack: 'Green Tea + Roasted Chana (25g)',                   dinner: '2-Egg Bhurji + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 2 — Variety',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Omelet + Gongura Chutney',               lunch: 'Palakura Pappu + ½ Cup Rice + Sorakaya Curry',          snack: 'Chaas (200ml) + Seed Mix (20g)',                    dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: 'Oats Upma (40g) + Coconut Chutney',            lunch: 'Rajma + ½ Cup Rice + Vankaya Fry',                      snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Chicken Curry (180g) + ½ Cup Rice + Raita',             snack: 'Green Tea + Pumpkin Seeds (20g)',                   dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '2-Egg Bhurji + 1 Pesarattu',                   lunch: 'Kandi Pappu + ½ Cup Rice + Palakura Stir-fry',          snack: 'Chaas (200ml) + Roasted Chana (25g)',               dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: 'Idli (3 pcs) + Sambar + Chutney',              lunch: 'Chicken Curry (180g) + ½ Cup Rice + Bendakaya',         snack: 'Green Tea + Walnuts (5 pcs)',                       dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Rajma + ½ Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Seed Mix (20g)',                    dinner: '2-Egg Omelet + Salad' },
+          { day: 'Sunday',    breakfast: 'Pesarattu (2 pcs) + Coconut Chutney',          lunch: 'Kandi Pappu + ½ Cup Rice + Capsicum Fry',               snack: 'Green Tea + Roasted Chana (25g)',                   dinner: 'Paneer Curry + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 3 — Intensity',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Oats (40g) + 2 Boiled Eggs',                   lunch: 'Palakura Pappu + ½ Cup Rice + Vankaya Fry',             snack: 'Green Tea + Walnuts (5 pcs)',                       dinner: '3-Egg Bhurji + Salad' },
+          { day: 'Tuesday',   breakfast: '3-Egg Bhurji + Allam Chutney',                 lunch: 'Rajma + ½ Cup Rice + Sorakaya Curry',                   snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (2 pcs) + Gongura Chutney',          lunch: 'Chicken Curry (180g) + ½ Cup Rice + Salad',             snack: 'Green Tea + Pumpkin Seeds (20g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Idli (2 pcs) + Sambar + Chutney',              lunch: 'Kandi Pappu + ½ Cup Rice + Bendakaya Fry',              snack: 'Chaas (200ml) + Roasted Chana (25g)',               dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: '2-Egg Omelet + Nuvvulu Chutney',               lunch: 'Chicken Curry (180g) + ½ Cup Rice + Raita',             snack: 'Green Tea + Seed Mix (20g)',                        dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: 'Oats Upma (40g) + Tomato Chutney',             lunch: 'Rajma + ½ Cup Rice + Palakura Stir-fry',                snack: 'Chaas (200ml) + Walnuts (5 pcs)',                   dinner: 'Paneer + 1 Phulka' },
+          { day: 'Sunday',    breakfast: '3-Egg Omelet + Coconut Chutney',               lunch: 'Kandi Pappu + ½ Cup Rice + Mixed Veggie Curry',         snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Bhurji + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 4 — Consolidate',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Palakura Pappu + ½ Cup Rice + Bendakaya Fry',           snack: 'Chaas (200ml) + Seed Mix (20g)',                    dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: '2-Egg Bhurji + Coconut Chutney',               lunch: 'Rajma + ½ Cup Rice + Vankaya Fry',                      snack: 'Green Tea + Roasted Chana (25g)',                   dinner: '3-Egg Omelet + Salad' },
+          { day: 'Wednesday', breakfast: '3-Egg Omelet + Gongura Chutney',               lunch: 'Chicken Curry (180g) + ½ Cup Rice + Raita',             snack: 'Green Tea + Pumpkin Seeds (20g)',                   dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Oats (40g) + Boiled Egg (1)',                  lunch: 'Kandi Pappu + ½ Cup Rice + Palakura Stir-fry',          snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: 'Idli (2 pcs) + Sambar + Chutney',              lunch: 'Chicken Curry (180g) + ½ Cup Rice + Bendakaya',         snack: 'Green Tea + Walnuts (5 pcs)',                       dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Rajma + ½ Cup Rice + Cucumber Raita',                   snack: 'Chaas (200ml) + Seed Mix (20g)',                    dinner: '2-Egg Omelet + Salad' },
+          { day: 'Sunday',    breakfast: 'Pesarattu (2 pcs) + Tomato Chutney',           lunch: 'Kandi Pappu + ½ Cup Rice + Sorakaya Curry',             snack: 'Green Tea + Roasted Chana (25g)',                   dinner: 'Paneer Curry + 1 Phulka' }
+        ]
+      }
     ]
   },
   {
@@ -66,14 +189,55 @@ const MONTHLY_DIET = [
       'Supersets in workout',
       'Reduce snack calories'
     ],
-    weekdays: [
-      { day: 'Monday',    breakfast: '3-Egg Bhurji + Pesarattu (1 pc)',              lunch: 'Palakura Pappu + 2 Phulka + Bendakaya Fry',             snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Omelet + Salad' },
-      { day: 'Tuesday',   breakfast: 'Oats (40g) + 2 Boiled Eggs',                  lunch: 'Rajma + 2 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml) + Roasted Chana (20g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
-      { day: 'Wednesday', breakfast: '2 Idli + Sambar (light)',                      lunch: 'Chicken Curry (180g) + 2 Phulka + Salad',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
-      { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Kandi Pappu + 2 Phulka + Vankaya Fry',                  snack: 'Chaas (200ml) + Walnuts (3 pcs)',                   dinner: 'Soyabean Curry + 1 Phulka' },
-      { day: 'Friday',    breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Chicken Curry (180g) + 2 Phulka + Bendakaya',           snack: 'Green Tea + Seed Mix (15g)',                        dinner: '3-Egg Capsicum Omelet' },
-      { day: 'Saturday',  breakfast: 'Upma (small) + Boiled Egg (1)',                lunch: 'Rajma + 2 Phulka + Palakura Stir-fry',                  snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Paneer + 1 Phulka' },
-      { day: 'Sunday',    breakfast: '1 Banana + Boiled Egg (2)',                    lunch: 'Kandi Pappu + 2 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + Roasted Chana (20g)',                   dinner: '2-Egg Bhurji + 1 Phulka' }
+    weeks: [
+      {
+        weekLabel: 'Week 1 — Foundation',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Bhurji + Pesarattu (1 pc)',              lunch: 'Palakura Pappu + 2 Phulka + Bendakaya Fry',             snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Omelet + Salad' },
+          { day: 'Tuesday',   breakfast: 'Oats (40g) + 2 Boiled Eggs',                  lunch: 'Rajma + 2 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml) + Roasted Chana (20g)',               dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Wednesday', breakfast: '2 Idli + Sambar (light)',                      lunch: 'Chicken Curry (180g) + 2 Phulka + Salad',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Kandi Pappu + 2 Phulka + Vankaya Fry',                  snack: 'Chaas (200ml) + Walnuts (3 pcs)',                   dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Chicken Curry (180g) + 2 Phulka + Bendakaya',           snack: 'Green Tea + Seed Mix (15g)',                        dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: 'Upma (small) + Boiled Egg (1)',                lunch: 'Rajma + 2 Phulka + Palakura Stir-fry',                  snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Paneer + 1 Phulka' },
+          { day: 'Sunday',    breakfast: '1 Banana + Boiled Egg (2)',                    lunch: 'Kandi Pappu + 2 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + Roasted Chana (20g)',                   dinner: '2-Egg Bhurji + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 2 — Variety',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Oats (40g) + Boiled Egg (2)',                  lunch: 'Palakura Pappu + 2 Phulka + Sorakaya Curry',            snack: 'Chaas (200ml) + Seed Mix (15g)',                    dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: 'Pesarattu (2 pcs) + Gongura Chutney',          lunch: 'Rajma + 2 Phulka + Vankaya Fry',                        snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Wednesday', breakfast: '3-Egg Bhurji + Allam Chutney',                 lunch: 'Chicken Curry (180g) + 2 Phulka + Raita',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Idli (2 pcs) + Sambar (light)',                lunch: 'Kandi Pappu + 2 Phulka + Palakura Stir-fry',            snack: 'Chaas (200ml) + Walnuts (3 pcs)',                   dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: '2-Egg Omelet + Nuvvulu Chutney',               lunch: 'Chicken Curry (180g) + 2 Phulka + Bendakaya',           snack: 'Green Tea + Roasted Chana (20g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: '3-Egg Bhurji + Coconut Chutney',               lunch: 'Rajma + 2 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml) + Seed Mix (15g)',                    dinner: '2-Egg Omelet + Salad' },
+          { day: 'Sunday',    breakfast: 'Pesarattu (1 pc) + Boiled Egg (2)',            lunch: 'Kandi Pappu + 2 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + 10 Almonds',                            dinner: 'Paneer Curry + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 3 — Intensity',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Omelet + Allam Chutney',                 lunch: 'Palakura Pappu + 2 Phulka + Vankaya Fry',               snack: 'Green Tea + Walnuts (3 pcs)',                       dinner: '3-Egg Bhurji + Salad' },
+          { day: 'Tuesday',   breakfast: 'Oats (40g) + Boiled Egg (2)',                  lunch: 'Rajma + 2 Phulka + Sorakaya Curry',                     snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (2 pcs) + Coconut Chutney',          lunch: 'Chicken Curry (180g) + 2 Phulka + Salad',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '2-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Kandi Pappu + 2 Phulka + Bendakaya Fry',                snack: 'Chaas (200ml) + Roasted Chana (20g)',               dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: 'Idli (2 pcs) + Sambar (light)',                lunch: 'Chicken Curry (180g) + 2 Phulka + Raita',               snack: 'Green Tea + Seed Mix (15g)',                        dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: '3-Egg Bhurji + Gongura Chutney',               lunch: 'Rajma + 2 Phulka + Palakura Stir-fry',                  snack: 'Chaas (200ml) + Walnuts (3 pcs)',                   dinner: 'Paneer + 1 Phulka' },
+          { day: 'Sunday',    breakfast: 'Pesarattu (2 pcs) + Tomato Chutney',           lunch: 'Kandi Pappu + 2 Phulka + Cucumber Raita',               snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Bhurji + 1 Phulka' }
+        ]
+      },
+      {
+        weekLabel: 'Week 4 — Consolidate',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Bhurji + Pesarattu (1 pc)',              lunch: 'Palakura Pappu + 2 Phulka + Bendakaya Fry',             snack: 'Chaas (200ml) + Seed Mix (15g)',                    dinner: 'Paneer Bhurji + 1 Phulka' },
+          { day: 'Tuesday',   breakfast: 'Oats (40g) + Boiled Egg (2)',                  lunch: 'Rajma + 2 Phulka + Vankaya Fry',                        snack: 'Green Tea + Roasted Chana (20g)',                   dinner: '3-Egg Omelet + Salad' },
+          { day: 'Wednesday', breakfast: '2 Idli + Sambar (light)',                      lunch: 'Chicken Curry (180g) + 2 Phulka + Raita',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Kandi Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (2 pcs) + Allam Chutney',            lunch: 'Kandi Pappu + 2 Phulka + Sorakaya Curry',               snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Soyabean Curry + 1 Phulka' },
+          { day: 'Friday',    breakfast: '3-Egg Omelet + Nuvvulu Chutney',               lunch: 'Chicken Curry (180g) + 2 Phulka + Bendakaya',           snack: 'Green Tea + Walnuts (3 pcs)',                       dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Saturday',  breakfast: 'Upma (small) + Coconut Chutney',               lunch: 'Rajma + 2 Phulka + Palakura Stir-fry',                  snack: 'Chaas (200ml) + Seed Mix (15g)',                    dinner: '2-Egg Omelet + Salad' },
+          { day: 'Sunday',    breakfast: '1 Banana + Boiled Egg (2)',                    lunch: 'Kandi Pappu + 2 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Capsicum Omelet' }
+        ]
+      }
     ]
   },
   {
@@ -84,14 +248,55 @@ const MONTHLY_DIET = [
       'Add 10-min HIIT twice a week',
       'High protein, low carb'
     ],
-    weekdays: [
-      { day: 'Monday',    breakfast: '3-Egg Bhurji + Pesarattu (1 pc)',              lunch: 'Palakura Pappu + 1 Phulka + Bendakaya Fry',             snack: 'Green Tea + 15g Seed Mix',                          dinner: '3-Egg Omelet + Salad' },
-      { day: 'Tuesday',   breakfast: 'Oats (30g) + 2 Boiled Eggs',                  lunch: 'Rajma + 1 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Paneer Bhurji (light)' },
-      { day: 'Wednesday', breakfast: 'Pesarattu (1 pc) + Boiled Egg (1)',            lunch: 'Chicken Curry (200g) + 1 Phulka + Salad',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
-      { day: 'Thursday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Kandi Pappu + 1 Phulka + Vankaya Fry',                  snack: 'Chaas (200ml)',                                     dinner: 'Soyabean Curry (light)' },
-      { day: 'Friday',    breakfast: '2-Egg Omelet + 1 Pesarattu',                   lunch: 'Chicken Curry (200g) + 1 Phulka + Bendakaya',           snack: 'Green Tea + 15g Seed Mix',                          dinner: '3-Egg Capsicum Omelet' },
-      { day: 'Saturday',  breakfast: '1 Pesarattu + Boiled Egg (2)',                 lunch: 'Rajma + 1 Phulka + Palakura Stir-fry',                  snack: 'Chaas (200ml) + Walnuts (3 pcs)',                   dinner: 'Palakura Pappu (light)' },
-      { day: 'Sunday',    breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Kandi Pappu + 1 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+    weeks: [
+      {
+        weekLabel: 'Week 1 — Foundation',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Bhurji + Pesarattu (1 pc)',              lunch: 'Palakura Pappu + 1 Phulka + Bendakaya Fry',             snack: 'Green Tea + 15g Seed Mix',                          dinner: '3-Egg Omelet + Salad' },
+          { day: 'Tuesday',   breakfast: 'Oats (30g) + 2 Boiled Eggs',                  lunch: 'Rajma + 1 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Paneer Bhurji (light)' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (1 pc) + Boiled Egg (1)',            lunch: 'Chicken Curry (200g) + 1 Phulka + Salad',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Kandi Pappu + 1 Phulka + Vankaya Fry',                  snack: 'Chaas (200ml)',                                     dinner: 'Soyabean Curry (light)' },
+          { day: 'Friday',    breakfast: '2-Egg Omelet + 1 Pesarattu',                   lunch: 'Chicken Curry (200g) + 1 Phulka + Bendakaya',           snack: 'Green Tea + 15g Seed Mix',                          dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: '1 Pesarattu + Boiled Egg (2)',                 lunch: 'Rajma + 1 Phulka + Palakura Stir-fry',                  snack: 'Chaas (200ml) + Walnuts (3 pcs)',                   dinner: 'Palakura Pappu (light)' },
+          { day: 'Sunday',    breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Kandi Pappu + 1 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+        ]
+      },
+      {
+        weekLabel: 'Week 2 — Variety',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Omelet + Allam Chutney',                 lunch: 'Palakura Pappu + 1 Phulka + Sorakaya Curry',            snack: 'Chaas (200ml) + Seed Mix (15g)',                    dinner: 'Paneer Bhurji (light)' },
+          { day: 'Tuesday',   breakfast: 'Oats (30g) + Boiled Egg (2)',                  lunch: 'Rajma + 1 Phulka + Vankaya Fry',                        snack: 'Green Tea + 10 Almonds',                            dinner: '3-Egg Bhurji + Salad' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (1 pc) + Gongura Chutney',           lunch: 'Chicken Curry (200g) + 1 Phulka + Raita',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '2-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Kandi Pappu + 1 Phulka + Bendakaya Fry',                snack: 'Chaas (200ml)',                                     dinner: 'Soyabean Curry (light)' },
+          { day: 'Friday',    breakfast: '3-Egg Bhurji + Coconut Chutney',               lunch: 'Chicken Curry (200g) + 1 Phulka + Salad',               snack: 'Green Tea + Seed Mix (15g)',                        dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: 'Boiled Eggs (2) + Pesarattu (1 pc)',           lunch: 'Rajma + 1 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml) + Walnuts (3 pcs)',                   dinner: 'Kandi Pappu (light)' },
+          { day: 'Sunday',    breakfast: 'Oats (30g) + Boiled Egg (1)',                  lunch: 'Kandi Pappu + 1 Phulka + Palakura Stir-fry',            snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+        ]
+      },
+      {
+        weekLabel: 'Week 3 — Intensity',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Boiled Eggs (3) + Green Tea',                  lunch: 'Palakura Pappu + 1 Phulka + Vankaya Fry',               snack: 'Green Tea + Walnuts (3 pcs)',                       dinner: '3-Egg Omelet + Salad' },
+          { day: 'Tuesday',   breakfast: '2-Egg Omelet + Allam Chutney',                 lunch: 'Rajma + 1 Phulka + Sorakaya Curry',                     snack: 'Chaas (200ml) + Seed Mix (15g)',                    dinner: 'Paneer Bhurji (light)' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (1 pc) + Boiled Egg (2)',            lunch: 'Chicken Curry (200g) + 1 Phulka + Bendakaya',           snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '3-Egg Bhurji + Gongura Chutney',               lunch: 'Kandi Pappu + 1 Phulka + Palakura Stir-fry',            snack: 'Chaas (200ml)',                                     dinner: 'Soyabean Curry (light)' },
+          { day: 'Friday',    breakfast: 'Boiled Eggs (2) + Pesarattu (1 pc)',           lunch: 'Chicken Curry (200g) + 1 Phulka + Raita',               snack: 'Green Tea + Seed Mix (15g)',                        dinner: '3-Egg Bhurji + Salad' },
+          { day: 'Saturday',  breakfast: 'Oats (30g) + Boiled Egg (1)',                  lunch: 'Rajma + 1 Phulka + Vankaya Fry',                        snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Kandi Pappu (light)' },
+          { day: 'Sunday',    breakfast: '3-Egg Omelet + Nuvvulu Chutney',               lunch: 'Kandi Pappu + 1 Phulka + Cucumber Raita',               snack: 'Green Tea + Walnuts (3 pcs)',                       dinner: '2-Egg Bhurji + Salad' }
+        ]
+      },
+      {
+        weekLabel: 'Week 4 — Consolidate',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Bhurji + Pesarattu (1 pc)',              lunch: 'Palakura Pappu + 1 Phulka + Bendakaya Fry',             snack: 'Green Tea + Seed Mix (15g)',                        dinner: '3-Egg Omelet + Salad' },
+          { day: 'Tuesday',   breakfast: 'Oats (30g) + Boiled Egg (2)',                  lunch: 'Rajma + 1 Phulka + Palakura Stir-fry',                  snack: 'Chaas (200ml) + 10 Almonds',                        dinner: 'Paneer Bhurji (light)' },
+          { day: 'Wednesday', breakfast: '2-Egg Omelet + Allam Chutney',                 lunch: 'Chicken Curry (200g) + 1 Phulka + Salad',               snack: 'Green Tea + Pumpkin Seeds (15g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (1 pc) + Boiled Egg (1)',            lunch: 'Kandi Pappu + 1 Phulka + Vankaya Fry',                  snack: 'Chaas (200ml)',                                     dinner: 'Soyabean Curry (light)' },
+          { day: 'Friday',    breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Chicken Curry (200g) + 1 Phulka + Bendakaya',           snack: 'Green Tea + Seed Mix (15g)',                        dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Rajma + 1 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml) + Walnuts (3 pcs)',                   dinner: 'Kandi Pappu (light)' },
+          { day: 'Sunday',    breakfast: 'Oats (30g) + Boiled Egg (2)',                  lunch: 'Kandi Pappu + 1 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+        ]
+      }
     ]
   },
   {
@@ -102,14 +307,55 @@ const MONTHLY_DIET = [
       'HIIT 3x/week',
       'Final push — stay committed!'
     ],
-    weekdays: [
-      { day: 'Monday',    breakfast: '3-Egg Bhurji + Allam Chutney',                 lunch: 'Palakura Pappu + 1 Phulka + Bendakaya Fry',             snack: 'Green Tea + 10g Seed Mix',                          dinner: '3-Egg Omelet + Salad' },
-      { day: 'Tuesday',   breakfast: '2 Boiled Eggs + Pesarattu (1 pc)',             lunch: 'Rajma + 1 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml)',                                     dinner: 'Paneer Bhurji (light)' },
-      { day: 'Wednesday', breakfast: 'Pesarattu (1 pc) + Allam Chutney',             lunch: 'Chicken Curry (200g) + 1 Phulka + Salad',               snack: 'Green Tea + Pumpkin Seeds (10g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
-      { day: 'Thursday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Kandi Pappu + 1 Phulka + Vankaya Fry',                  snack: 'Chaas (150ml)',                                     dinner: 'Soyabean Curry (light)' },
-      { day: 'Friday',    breakfast: '2-Egg Omelet + Green Chutney',                 lunch: 'Chicken Curry (200g) + 1 Phulka + Bendakaya',           snack: 'Green Tea + 10g Seed Mix',                          dinner: '3-Egg Capsicum Omelet' },
-      { day: 'Saturday',  breakfast: '2 Boiled Eggs + Green Tea',                    lunch: 'Rajma + 1 Phulka + Palakura Stir-fry',                  snack: 'Green Tea only',                                    dinner: 'Palakura Pappu (minimal)' },
-      { day: 'Sunday',    breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Kandi Pappu + 1 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+    weeks: [
+      {
+        weekLabel: 'Week 1 — Foundation',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Bhurji + Allam Chutney',                 lunch: 'Palakura Pappu + 1 Phulka + Bendakaya Fry',             snack: 'Green Tea + 10g Seed Mix',                          dinner: '3-Egg Omelet + Salad' },
+          { day: 'Tuesday',   breakfast: '2 Boiled Eggs + Pesarattu (1 pc)',             lunch: 'Rajma + 1 Phulka + Cucumber Raita',                     snack: 'Chaas (200ml)',                                     dinner: 'Paneer Bhurji (light)' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (1 pc) + Allam Chutney',             lunch: 'Chicken Curry (200g) + 1 Phulka + Salad',               snack: 'Green Tea + Pumpkin Seeds (10g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '3-Egg Bhurji + Nuvvulu Chutney',               lunch: 'Kandi Pappu + 1 Phulka + Vankaya Fry',                  snack: 'Chaas (150ml)',                                     dinner: 'Soyabean Curry (light)' },
+          { day: 'Friday',    breakfast: '2-Egg Omelet + Green Chutney',                 lunch: 'Chicken Curry (200g) + 1 Phulka + Bendakaya',           snack: 'Green Tea + 10g Seed Mix',                          dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: '2 Boiled Eggs + Green Tea',                    lunch: 'Rajma + 1 Phulka + Palakura Stir-fry',                  snack: 'Green Tea only',                                    dinner: 'Palakura Pappu (minimal)' },
+          { day: 'Sunday',    breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Kandi Pappu + 1 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+        ]
+      },
+      {
+        weekLabel: 'Week 2 — Variety',
+        weekdays: [
+          { day: 'Monday',    breakfast: 'Boiled Eggs (3) + Green Tea',                  lunch: 'Palakura Pappu + 1 Phulka + Sorakaya Curry',            snack: 'Green Tea only',                                    dinner: '3-Egg Bhurji + Salad' },
+          { day: 'Tuesday',   breakfast: '2-Egg Omelet + Gongura Chutney',               lunch: 'Rajma + 1 Phulka + Vankaya Fry',                        snack: 'Chaas (150ml)',                                     dinner: 'Paneer Bhurji (minimal)' },
+          { day: 'Wednesday', breakfast: 'Pesarattu (1 pc) + Boiled Egg (1)',            lunch: 'Chicken Curry (200g) + 1 Phulka + Raita',               snack: 'Green Tea + Pumpkin Seeds (10g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '3-Egg Bhurji + Allam Chutney',                 lunch: 'Kandi Pappu + 1 Phulka + Bendakaya Fry',                snack: 'Green Tea only',                                    dinner: 'Soyabean Curry (light)' },
+          { day: 'Friday',    breakfast: 'Boiled Eggs (2) + Pesarattu (1 pc)',           lunch: 'Chicken Curry (200g) + 1 Phulka + Salad',               snack: 'Green Tea + Seed Mix (10g)',                        dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: '2-Egg Omelet + Nuvvulu Chutney',               lunch: 'Rajma + 1 Phulka + Cucumber Raita',                     snack: 'Chaas (150ml)',                                     dinner: 'Kandi Pappu (minimal)' },
+          { day: 'Sunday',    breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Kandi Pappu + 1 Phulka + Palakura Stir-fry',            snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Bhurji + Salad' }
+        ]
+      },
+      {
+        weekLabel: 'Week 3 — Intensity',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Omelet + Allam Chutney',                 lunch: 'Palakura Pappu + 1 Phulka + Vankaya Fry',               snack: 'Green Tea + Seed Mix (10g)',                        dinner: '3-Egg Bhurji + Salad' },
+          { day: 'Tuesday',   breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Rajma + 1 Phulka + Sorakaya Curry',                     snack: 'Chaas (150ml)',                                     dinner: 'Paneer (minimal) + Salad' },
+          { day: 'Wednesday', breakfast: '3-Egg Bhurji + Gongura Chutney',               lunch: 'Chicken Curry (200g) + 1 Phulka + Bendakaya',           snack: 'Green Tea + Pumpkin Seeds (10g)',                   dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: '2-Egg Omelet + Nuvvulu Chutney',               lunch: 'Kandi Pappu + 1 Phulka + Palakura Stir-fry',            snack: 'Green Tea only',                                    dinner: 'Soyabean Curry (light)' },
+          { day: 'Friday',    breakfast: 'Pesarattu (1 pc) + Boiled Egg (2)',            lunch: 'Chicken Curry (200g) + 1 Phulka + Raita',               snack: 'Green Tea + Seed Mix (10g)',                        dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: '3-Egg Bhurji + Green Tea',                     lunch: 'Rajma + 1 Phulka + Vankaya Fry',                        snack: 'Chaas (150ml)',                                     dinner: 'Palakura Pappu (minimal)' },
+          { day: 'Sunday',    breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Kandi Pappu + 1 Phulka + Cucumber Raita',               snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+        ]
+      },
+      {
+        weekLabel: 'Week 4 — Consolidate',
+        weekdays: [
+          { day: 'Monday',    breakfast: '3-Egg Bhurji + Allam Chutney',                 lunch: 'Palakura Pappu + 1 Phulka + Bendakaya Fry',             snack: 'Green Tea + Pumpkin Seeds (10g)',                   dinner: '3-Egg Omelet + Salad' },
+          { day: 'Tuesday',   breakfast: 'Boiled Eggs (2) + Pesarattu (1 pc)',           lunch: 'Rajma + 1 Phulka + Palakura Stir-fry',                  snack: 'Chaas (200ml)',                                     dinner: 'Paneer Bhurji (light)' },
+          { day: 'Wednesday', breakfast: '2-Egg Omelet + Nuvvulu Chutney',               lunch: 'Chicken Curry (200g) + 1 Phulka + Salad',               snack: 'Green Tea + Seed Mix (10g)',                        dinner: 'Palakura Pappu + 1 Phulka' },
+          { day: 'Thursday',  breakfast: 'Pesarattu (1 pc) + Allam Chutney',             lunch: 'Kandi Pappu + 1 Phulka + Vankaya Fry',                  snack: 'Green Tea only',                                    dinner: 'Soyabean Curry (light)' },
+          { day: 'Friday',    breakfast: '3-Egg Bhurji + Gongura Chutney',               lunch: 'Chicken Curry (200g) + 1 Phulka + Bendakaya',           snack: 'Green Tea + 10g Seed Mix',                          dinner: '3-Egg Capsicum Omelet' },
+          { day: 'Saturday',  breakfast: '2 Boiled Eggs + Green Tea',                    lunch: 'Rajma + 1 Phulka + Cucumber Raita',                     snack: 'Chaas (150ml)',                                     dinner: 'Palakura Pappu (minimal)' },
+          { day: 'Sunday',    breakfast: 'Boiled Eggs (2) + Green Tea',                  lunch: 'Kandi Pappu + 1 Phulka + Mixed Veggie Curry',           snack: 'Green Tea + 10 Almonds',                            dinner: '2-Egg Omelet + Salad' }
+        ]
+      }
     ]
   }
 ];
@@ -322,7 +568,7 @@ const WEIGHT_LOSS_PHASES = [
 function getDietPlan(profile) {
   return MONTHLY_DIET.map(month => ({
     monthLabel: month.name,
-    weekdays: month.weekdays,
+    weeks: month.weeks,
     guidelines: month.guidelines
   }));
 }
@@ -394,13 +640,17 @@ function getDefaultChecklist(profile) {
 
 function getPlanMeta(profile) {
   const startDate = profile.startDate ? new Date(profile.startDate) : new Date();
-  const monthsElapsed = Math.floor((Date.now() - startDate) / (1000 * 60 * 60 * 24 * 30));
-  const currentMonth = Math.min(6, Math.max(1, monthsElapsed + 1));
+  const msElapsed = Date.now() - startDate.getTime();
+  const monthsElapsed = Math.floor(msElapsed / (1000 * 60 * 60 * 24 * 30));
+  const weeksElapsed  = Math.floor(msElapsed / (1000 * 60 * 60 * 24 * 7));
+  const currentMonth  = Math.min(6, Math.max(1, monthsElapsed + 1));
+  const currentWeek   = (weeksElapsed % 4) + 1; // 1–4, cycles every 4 weeks
   const phase = WEIGHT_LOSS_PHASES.find(p => p.months.includes(currentMonth)) || WEIGHT_LOSS_PHASES[0];
   return {
     templateName: 'weight-loss',
     totalMonths: 6,
     currentMonth,
+    currentWeek,
     currentPhase: WEIGHT_LOSS_PHASES.indexOf(phase) + 1,
     currentPhaseLabel: phase.label,
     phases: WEIGHT_LOSS_PHASES

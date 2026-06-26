@@ -6,7 +6,7 @@ const requireProfile = require('../middleware/requireProfile');
 const router = express.Router();
 router.use(authenticate, requireProfile);
 
-router.post('/sessions', async (req, res) => {
+router.post('/sessions', async (req, res, next) => {
   const { technique, durationSeconds, cyclesCompleted, moodBefore, moodAfter } = req.body;
   if (!technique) return res.status(400).json({ error: 'technique is required' });
   try {
@@ -15,15 +15,15 @@ router.post('/sessions', async (req, res) => {
       technique, durationSeconds, cyclesCompleted, moodBefore, moodAfter
     });
     res.status(201).json(session);
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) { next(err); }
 });
 
-router.get('/sessions', async (req, res) => {
+router.get('/sessions', async (req, res, next) => {
   try {
     const sessions = await BreathingSession.find({ userId: req.user._id })
       .sort({ completedAt: -1 }).limit(30);
     res.json(sessions);
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) { next(err); }
 });
 
 module.exports = router;

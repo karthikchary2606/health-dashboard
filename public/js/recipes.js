@@ -717,6 +717,21 @@ const RECIPES = [
 ];
 
 function buildRecipes() {
+  // Update subtitle based on user diet profile
+  const subtitle = document.getElementById('recipeSectionSubtitle');
+  if (subtitle) {
+    const dietLabel = {
+      standard:      'All recipes',
+      vegetarian:    'Vegetarian recipes',
+      vegan:         'Vegan recipes',
+      eggetarian:    'Egg-friendly recipes',
+      'gluten-free': 'Gluten-free recipes',
+      'non-vegetarian': 'All recipes'
+    };
+    const diet = currentUser && currentUser.profile && currentUser.profile.dietType;
+    subtitle.textContent = (dietLabel[diet] || 'All recipes') + ' · Filtered for your health profile';
+  }
+
   const cats = ["all","breakfast","lunch","dinner","snack","chutney"];
   const filtersEl = document.getElementById("recipeFilters");
   filtersEl.innerHTML = cats.map(c =>
@@ -733,9 +748,27 @@ function filterRecipes(cat, btn) {
 }
 
 function renderRecipes(cat) {
-  const filtered = cat === "all" ? RECIPES : RECIPES.filter(r => r.cat === cat);
+  let recs = cat === "all" ? RECIPES : RECIPES.filter(r => r.cat === cat);
+
+  // Filter by dietary preference when user profile is available
+  if (currentUser && currentUser.profile) {
+    const diet = currentUser.profile.dietType;
+    if (diet === 'vegetarian' || diet === 'vegan') {
+      recs = recs.filter(r =>
+        !r.tags.some(t => ['chicken', 'meat', 'fish', 'non-veg'].includes(t)) &&
+        !r.name.toLowerCase().includes('chicken')
+      );
+    }
+    if (diet === 'vegan') {
+      recs = recs.filter(r =>
+        !r.tags.some(t => t.includes('egg')) &&
+        !r.name.toLowerCase().match(/\b(egg|omelet|omelette|paneer|ghee)\b/)
+      );
+    }
+  }
+
   const grid = document.getElementById("recipeGrid");
-  grid.innerHTML = filtered.map(r => `
+  grid.innerHTML = recs.map(r => `
     <div class="recipe-card">
       <div class="recipe-header">
         <div class="r-icon">${r.icon}</div>

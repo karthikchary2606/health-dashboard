@@ -17,6 +17,7 @@ async function initDiet() {
   if (!plan) return;
   _dietPlan = plan.diet;
   currentDietMonth = plan.meta.currentMonth - 1; // server is 1-based, convert to 0-based
+  currentDietWeek  = plan.meta.currentWeek || 1; // 1-4 from server, default week 1
   buildDietPlan();
 }
 
@@ -56,26 +57,31 @@ function renderDietMonthView() {
   if (!_dietPlan) return;
   const md = _dietPlan[currentDietMonth];
   if (!md) return;
+  const weekData = md.weeks ? md.weeks[currentDietWeek - 1] : null;
+  const weekdays = weekData ? weekData.weekdays : (md.weekdays || []);
+  const weekNote = weekData ? weekData.weekLabel : '';
   document.getElementById("dietPhaseBanner").innerHTML = `<div class="phase-banner"><div><h4>📅 ${md.monthLabel}</h4><p>${(md.guidelines || []).join(" · ")}</p></div></div>`;
-  document.getElementById("dietWeekNote").innerHTML = "";
+  document.getElementById("dietWeekNote").innerHTML = weekNote ? `<div class="week-note">📋 ${weekNote}</div>` : '';
   const today = new Date().toLocaleDateString("en-US",{weekday:"long"});
-  const dayMap = Object.fromEntries((md.weekdays || []).map(d => [d.day, d]));
+  const dayMap = Object.fromEntries(weekdays.map(d => [d.day, d]));
   const tabsEl = document.getElementById("dayTabs");
   tabsEl.innerHTML = "";
-  (md.weekdays || []).forEach(d => {
+  weekdays.forEach(d => {
     const btn = document.createElement("button");
     btn.className = "day-tab" + (d.day === today ? " active" : "");
     btn.textContent = d.day.substring(0,3);
     btn.onclick = () => { document.querySelectorAll(".day-tab").forEach(t => t.classList.remove("active")); btn.classList.add("active"); renderDietDay(d.day); };
     tabsEl.appendChild(btn);
   });
-  renderDietDay(today in dayMap ? today : (md.weekdays?.[0]?.day ?? "Monday"));
+  renderDietDay(today in dayMap ? today : (weekdays[0]?.day ?? "Monday"));
 }
 function renderDietDay(day) {
   if (!_dietPlan) return;
   const md = _dietPlan[currentDietMonth];
   if (!md) return;
-  const d = (md.weekdays || []).find(w => w.day === day);
+  const weekData = md.weeks ? md.weeks[currentDietWeek - 1] : null;
+  const weekdays = weekData ? weekData.weekdays : (md.weekdays || []);
+  const d = weekdays.find(w => w.day === day);
   if (!d) return;
   let html = `<div class="day-theme">📅 ${day}</div>`;
   ["breakfast","lunch","snack","dinner"].forEach(key => {
