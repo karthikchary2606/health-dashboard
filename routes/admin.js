@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const HealthLog = require('../models/HealthLog');
+const ChecklistItem = require('../models/ChecklistItem');
+const BreathingSession = require('../models/BreathingSession');
 const authenticate = require('../middleware/authenticate');
 const { requireAdmin } = require('../middleware/requireAdmin');
 
@@ -47,7 +49,7 @@ router.post('/users', async (req, res) => {
     if (existing) return res.status(409).json({ error: 'Email already registered' });
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await User.create({
-      email, passwordHash, name,
+      email: email.toLowerCase(), passwordHash, name,
       role: role === 'admin' ? 'admin' : 'user',
       isApproved: true
     });
@@ -62,6 +64,8 @@ router.delete('/users/:id', async (req, res) => {
     }
     await User.findByIdAndDelete(req.params.id);
     await HealthLog.deleteMany({ userId: req.params.id });
+    await ChecklistItem.deleteMany({ userId: req.params.id });
+    await BreathingSession.deleteMany({ userId: req.params.id });
     res.json({ message: 'User and their data deleted' });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });

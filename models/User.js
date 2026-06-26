@@ -52,6 +52,7 @@ const userSchema = new mongoose.Schema({
   isApproved: { type: Boolean, default: false },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   profileComplete: { type: Boolean, default: false },
+  lastActiveAt: { type: Date },
   profile: { type: profileSchema, default: () => ({}) }
 }, { timestamps: true });
 

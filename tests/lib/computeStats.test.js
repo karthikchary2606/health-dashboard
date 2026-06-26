@@ -10,8 +10,7 @@ function makeLog(overrides) {
     carbs: 0,
     fat: 0,
     waterIntake: 0,
-    workoutCompleted: false,
-    cardioCompleted: false,
+    completedWorkout: false,
     mood: null,
     weight: null,
     ...overrides
@@ -39,9 +38,9 @@ test('uses profile.waterGoalL as threshold (not hardcoded 3)', () => {
 
 test('calculates workoutCompletionRate as percentage', () => {
   const logs = [
-    makeLog({ workoutCompleted: true }),
-    makeLog({ workoutCompleted: true }),
-    makeLog({ workoutCompleted: false })
+    makeLog({ completedWorkout: true }),
+    makeLog({ completedWorkout: true }),
+    makeLog({ completedWorkout: false })
   ];
   const stats = computeStats(logs, baseProfile);
   expect(stats.workoutCompletionRate).toBeCloseTo(66.67, 1);

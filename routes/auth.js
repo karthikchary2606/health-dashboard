@@ -38,7 +38,7 @@ router.post('/register', registerLimiter, async (req, res) => {
     const existing = await User.findOne({ email: email.toLowerCase() });
     if (existing) return res.status(409).json({ error: 'Email already registered' });
     const passwordHash = await bcrypt.hash(password, 12);
-    const user = await User.create({ email, passwordHash, name, isApproved: false });
+    const user = await User.create({ email: email.toLowerCase(), passwordHash, name, isApproved: false });
     res.status(201).json({ message: 'Registration successful. Your account is awaiting admin approval.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
