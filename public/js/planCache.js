@@ -12,7 +12,7 @@
 window.planCache = (() => {
   let _promise = null;
 
-  async function getPlan() {
+  function getPlan() {
     if (!_promise) {
       _promise = apiFetch('/api/profile/plan').then(({ ok, data }) => {
         if (!ok) {
