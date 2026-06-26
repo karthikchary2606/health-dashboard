@@ -103,7 +103,10 @@ function renderStats(stats) {
 }
 
 function updateBMI(w) {
-  const bmi = (w / (1.80 * 1.80)).toFixed(1); // Karthik: 5'11" = 1.80m
+  const heightM = (currentUser && currentUser.profile && currentUser.profile.heightCm)
+    ? currentUser.profile.heightCm / 100
+    : 1.75;
+  const bmi = (w / (heightM * heightM)).toFixed(1);
   const bmiEl = document.getElementById("bmiVal");
   const catEl = document.getElementById("bmiCat");
   const markerEl = document.getElementById("bmiMarker");

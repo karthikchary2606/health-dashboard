@@ -172,5 +172,6 @@ function setGreeting() {
   const h = new Date().getHours();
   const greet = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   const day = new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"});
-  document.getElementById("dashGreeting").textContent = `${greet}, Karthik! · ${day}`;
+  const name = (currentUser && currentUser.name) ? currentUser.name.split(" ")[0] : "there";
+  document.getElementById("dashGreeting").textContent = `${greet}, ${name}! · ${day}`;
 }
