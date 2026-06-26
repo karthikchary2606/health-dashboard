@@ -84,7 +84,7 @@ exports.getDefaultChecklist = (profile) => {
     { category: 'recovery', text: 'Sleep 7-8 hours' }
   ];
   (profile.medications || []).forEach(med => {
-    items.push({ category: 'medication', text: `💊 Take ${med.name} ${med.dosage} — ${med.timing}` });
+    items.push({ category: 'medication', text: `💊 Take ${med.name}${med.dosage ? ` ${med.dosage}` : ''} — ${med.timing || 'as directed'}` });
   });
   return items;
 };

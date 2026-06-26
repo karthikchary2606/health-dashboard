@@ -333,7 +333,7 @@ function getWorkoutPlan(profile) {
 
   return WORKOUT_PHASES.map((phase, i) => {
     const schedule = WORKOUT_DAYS.map(dayData => {
-      let exercises = dayData.exercises;
+      let exercises = [...dayData.exercises];
       // Month 1: filter deadlifts for LBP patients
       if (hasLBP && i === 0) {
         exercises = exercises.filter(e => !e.name.toLowerCase().includes('deadlift'));
@@ -360,8 +360,8 @@ function getCardioPlan(profile) {
   return CARDIO_PHASE_LABELS.map((label, i) => ({
     monthLabel: `Month ${i + 1}`,
     phaseLabel: label,
-    sessions: CARDIO_SESSIONS,
-    hrZones: CARDIO_HR_ZONES
+    sessions: [...CARDIO_SESSIONS],
+    hrZones: { ...CARDIO_HR_ZONES }
   }));
 }
 
@@ -369,7 +369,7 @@ function getGroceryList(profile) {
   return GROCERY_PLAN_RAW.map(g => ({
     monthLabel: g.month,
     budget: g.budget,
-    categories: g.categories
+    categories: g.categories.map(cat => ({ ...cat, items: [...cat.items] }))
   }));
 }
 
@@ -385,7 +385,7 @@ function getDefaultChecklist(profile) {
   (profile.medications || []).forEach(med => {
     items.unshift({
       category: 'medication',
-      text: `💊 Take ${med.name} ${med.dosage} — ${med.timing}`
+      text: `💊 Take ${med.name}${med.dosage ? ` ${med.dosage}` : ''} — ${med.timing || 'as directed'}`
     });
   });
 
