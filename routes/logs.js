@@ -2,6 +2,7 @@ const express = require('express');
 const HealthLog = require('../models/HealthLog');
 const authenticate = require('../middleware/authenticate');
 const requireProfile = require('../middleware/requireProfile');
+const computeStats = require('../lib/computeStats');
 
 const router = express.Router();
 router.use(authenticate, requireProfile);
@@ -37,29 +38,29 @@ router.get('/data/weight-history', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-router.get('/data/stats', async (req, res) => {
+router.get('/data/stats', authenticate, requireProfile, async (req, res) => {
   try {
-    const last30 = await HealthLog.find({ userId: req.user._id })
-      .sort({ date: -1 }).limit(30).select('date weight waterIntake completedWorkout checklist');
-    const allWeights = last30.filter(l => l.weight > 0).map(l => l.weight);
-    const currentWeight = allWeights[0] || 0;
-    const startWeight = allWeights[allWeights.length - 1] || 0;
-    let workoutStreak = 0, waterStreak = 0;
-    for (const log of last30) { if (log.completedWorkout) workoutStreak++; else break; }
-    for (const log of last30) { if (log.waterIntake >= 3) waterStreak++; else break; }
-    const completionRates = last30.map(l =>
-      l.checklist.length ? (l.checklist.filter(c => c.done).length / l.checklist.length) * 100 : 0
-    );
-    const avgCompletion = completionRates.length
-      ? completionRates.reduce((s, v) => s + v, 0) / completionRates.length : 0;
-    res.json({
-      currentWeight, startWeight,
-      weightLost: parseFloat((startWeight - currentWeight).toFixed(1)),
-      workoutStreak, waterStreak,
-      avgCompletion: parseFloat(avgCompletion.toFixed(0)),
-      totalDaysLogged: last30.length
-    });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+    const logs = await HealthLog.find({ userId: req.user._id }).lean();
+    const stats = computeStats(logs, req.user.profile);
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/data/weekly-summary', authenticate, requireProfile, async (req, res) => {
+  try {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const logs = await HealthLog.find({
+      userId: req.user._id,
+      date: { $gte: sevenDaysAgo }
+    }).lean();
+    const stats = computeStats(logs, req.user.profile);
+    res.json({ period: 'last-7-days', ...stats });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;
