@@ -2,11 +2,11 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const HealthLog = require('../models/HealthLog');
-const { verifyToken } = require('../middleware/auth');
+const authenticate = require('../middleware/authenticate');
 const { requireAdmin } = require('../middleware/requireAdmin');
 
 const router = express.Router();
-router.use(verifyToken, requireAdmin);
+router.use(authenticate, requireAdmin);
 
 router.get('/users', async (req, res) => {
   try {
@@ -57,7 +57,7 @@ router.post('/users', async (req, res) => {
 
 router.delete('/users/:id', async (req, res) => {
   try {
-    if (req.params.id === req.user.userId) {
+    if (req.params.id === req.user._id.toString()) {
       return res.status(400).json({ error: 'Cannot delete your own account' });
     }
     await User.findByIdAndDelete(req.params.id);

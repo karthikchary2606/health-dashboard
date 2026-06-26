@@ -1,15 +1,16 @@
 const express = require('express');
 const HealthLog = require('../models/HealthLog');
-const { verifyToken } = require('../middleware/auth');
+const authenticate = require('../middleware/authenticate');
+const requireProfile = require('../middleware/requireProfile');
 
 const router = express.Router();
-router.use(verifyToken);
+router.use(authenticate, requireProfile);
 
 router.get('/:date', async (req, res) => {
   try {
-    let log = await HealthLog.findOne({ userId: req.user.userId, date: req.params.date });
+    let log = await HealthLog.findOne({ userId: req.user._id, date: req.params.date });
     if (!log) {
-      log = new HealthLog({ userId: req.user.userId, date: req.params.date });
+      log = new HealthLog({ userId: req.user._id, date: req.params.date });
       await log.save();
     }
     res.json(log);
@@ -20,7 +21,7 @@ router.post('/', async (req, res) => {
   const { date, checklist, waterIntake, weight, completedWorkout, moodScore, energyScore, notes } = req.body;
   try {
     const log = await HealthLog.findOneAndUpdate(
-      { userId: req.user.userId, date },
+      { userId: req.user._id, date },
       { checklist, waterIntake, weight, completedWorkout, moodScore, energyScore, notes },
       { new: true, upsert: true, runValidators: true }
     );
@@ -30,7 +31,7 @@ router.post('/', async (req, res) => {
 
 router.get('/data/weight-history', async (req, res) => {
   try {
-    const logs = await HealthLog.find({ userId: req.user.userId, weight: { $gt: 0 } })
+    const logs = await HealthLog.find({ userId: req.user._id, weight: { $gt: 0 } })
       .sort({ date: 1 }).select('date weight -_id');
     res.json(logs);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -38,7 +39,7 @@ router.get('/data/weight-history', async (req, res) => {
 
 router.get('/data/stats', async (req, res) => {
   try {
-    const last30 = await HealthLog.find({ userId: req.user.userId })
+    const last30 = await HealthLog.find({ userId: req.user._id })
       .sort({ date: -1 }).limit(30).select('date weight waterIntake completedWorkout checklist');
     const allWeights = last30.filter(l => l.weight > 0).map(l => l.weight);
     const currentWeight = allWeights[0] || 0;

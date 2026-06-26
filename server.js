@@ -44,6 +44,7 @@ app.use('/api/logs',      require('./routes/logs'));
 app.use('/api/admin',     require('./routes/admin'));
 app.use('/api/breathing', require('./routes/breathing'));
 app.use('/api/checklist', require('./routes/checklist'));
+app.use('/api/profile',   require('./routes/profile'));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

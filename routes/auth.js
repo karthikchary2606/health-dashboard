@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
-const { verifyToken } = require('../middleware/auth');
+const authenticate = require('../middleware/authenticate');
 
 const router = express.Router();
 
@@ -72,9 +72,9 @@ router.post('/logout', (req, res) => {
   res.json({ message: 'Logged out' });
 });
 
-router.get('/me', verifyToken, async (req, res) => {
+router.get('/me', authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId).select('-passwordHash');
+    const user = await User.findById(req.user._id).select('-passwordHash');
     if (!user || !user.isApproved) return res.status(401).json({ error: 'Not authenticated' });
     res.json(user);
   } catch (err) {
