@@ -46,22 +46,3 @@ async function logout() {
   window.location.href = '/login.html';
 }
 
-// Get phase from profile startDate (falls back to Phase 1, Week 1)
-function getUserPhaseIndex() {
-  if (!currentUser || !currentUser.profile || !currentUser.profile.startDate) return 0;
-  const start = new Date(currentUser.profile.startDate);
-  const now = new Date();
-  const diffDays = Math.max(0, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
-  const weekNum = Math.floor(diffDays / 7);
-  if (weekNum < 8) return 0;
-  if (weekNum < 16) return 1;
-  return 2;
-}
-
-function getUserMonthIndex() {
-  if (!currentUser || !currentUser.profile || !currentUser.profile.startDate) return 0;
-  const start = new Date(currentUser.profile.startDate);
-  const now = new Date();
-  const diffDays = Math.max(0, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
-  return Math.min(5, Math.floor(diffDays / 30));
-}
