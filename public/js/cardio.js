@@ -25,6 +25,7 @@ function buildCardio() {
 
   const phasesEl = document.getElementById("cardioPhases");
   phasesEl.innerHTML = _cardioPlan.map(function(m, i) {
+    if (!m) return ''; // skip stub months
     const isCurrent = i === _currentCardioMonth;
     const isPast = i < _currentCardioMonth;
     return '<div style="padding:10px 12px;border-radius:8px;margin-bottom:8px;background:' + (isCurrent?'#f0fdf4':isPast?'#fafafa':'#f8f9fa') + ';border:1px solid ' + (isCurrent?'#bbf7d0':isPast?'#d1fae5':'var(--border)') + '">' +
@@ -45,3 +46,10 @@ function buildCardio() {
 }
 
 document.addEventListener('DOMContentLoaded', initCardio);
+
+function selectCardioMonth(idx) {
+  const m = _cardioPlan[idx];
+  if (!m) return; // stub month
+  _currentCardioMonth = idx;
+  buildCardio();
+}

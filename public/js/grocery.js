@@ -17,6 +17,7 @@ function buildGrocery() {
 
   const sel = document.getElementById("groceryMonthSelector");
   sel.innerHTML = _groceryPlan.map((g, i) => {
+    if (!g) return ''; // skip stub months
     const label = g.monthLabel || `Month ${i + 1}`;
     return `<button class="month-btn${_currentGroceryMonth===i?" active":""}" onclick="selectGroceryMonth(${i})">${label}</button>`;
   }).join("");
@@ -24,6 +25,8 @@ function buildGrocery() {
 }
 
 function selectGroceryMonth(m) {
+  const g = _groceryPlan[m];
+  if (!g) return; // stub month
   _currentGroceryMonth = m;
   document.querySelectorAll("#groceryMonthSelector .month-btn").forEach((b,i) => b.classList.toggle("active", i===m));
   renderGrocery(m);
