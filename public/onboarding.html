@@ -246,7 +246,43 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
   </div>
 
   <!-- ── STEP 4: Medications ── -->
-  <div class="step" id="step-4" style="display:none">
+  <!-- ── STEP 4: Food & Equipment Preferences ── -->
+  <div class="step" id="step-4" style="display:none;">
+    <h2>Food &amp; Equipment Preferences</h2>
+    <p class="step-description">We'll use these to personalise your meal plans and workouts.</p>
+
+    <div class="form-group">
+      <label>Cuisine Preference</label>
+      <div class="radio-group">
+        <label><input type="radio" name="cuisinePreference" value="south-indian"> South Indian</label>
+        <label><input type="radio" name="cuisinePreference" value="north-indian"> North Indian</label>
+        <label><input type="radio" name="cuisinePreference" value="continental"> Continental</label>
+        <label><input type="radio" name="cuisinePreference" value="mixed" checked> Mixed (Rotates weekly)</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Equipment Available <span class="hint">(select all that apply)</span></label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="equipment" value="dumbbells"> Dumbbells</label>
+        <label><input type="checkbox" name="equipment" value="barbell"> Barbell</label>
+        <label><input type="checkbox" name="equipment" value="pull-up-bar"> Pull-Up Bar</label>
+        <label><input type="checkbox" name="equipment" value="resistance-bands"> Resistance Bands</label>
+        <label><input type="checkbox" name="equipment" value="kettlebell"> Kettlebell</label>
+        <label><input type="checkbox" name="equipment" value="treadmill"> Treadmill</label>
+        <label><input type="checkbox" name="equipment" value="gym-access"> Full Gym Access</label>
+      </div>
+      <p class="hint">No equipment selected = bodyweight workouts only</p>
+    </div>
+
+    <div class="step-actions">
+      <button type="button" onclick="goTo(3)">← Back</button>
+      <button type="button" onclick="goTo(5)" class="btn-primary">Next →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 5: Medications ── -->
+  <div class="step" id="step-5" style="display:none">
     <div class="step-title">Medications</div>
     <div class="step-subtitle">Optional — helps us flag any diet or workout conflicts.</div>
     <div class="med-headers">
@@ -256,13 +292,13 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     <button class="btn-add-med" onclick="addMed()">+ Add Medication</button>
     <span class="skip-link" onclick="skipMeds()">Skip — no medications</span>
     <div class="btn-row">
-      <button class="btn-back" onclick="goTo(3)">← Back</button>
-      <button class="btn-next" onclick="goTo(5)">Next →</button>
+      <button class="btn-back" onclick="goTo(4)">← Back</button>
+      <button class="btn-next" onclick="goTo(6)">Next →</button>
     </div>
   </div>
 
-  <!-- ── STEP 5: Review ── -->
-  <div class="step" id="step-5" style="display:none">
+  <!-- ── STEP 6: Review ── -->
+  <div class="step" id="step-6" style="display:none">
     <div class="step-title">Review Your Profile</div>
     <div class="step-subtitle">Confirm everything looks right before we build your plan.</div>
     <div class="form-group">
@@ -271,18 +307,18 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     </div>
     <div class="summary-grid" id="summary-grid"></div>
     <div class="btn-row">
-      <button class="btn-back" onclick="goTo(4)">← Back</button>
-      <button class="btn-next" onclick="goTo(6)">Looks Good →</button>
+      <button class="btn-back" onclick="goTo(5)">← Back</button>
+      <button class="btn-next" onclick="goTo(7)">Looks Good →</button>
     </div>
   </div>
 
-  <!-- ── STEP 6: Submit ── -->
-  <div class="step" id="step-6" style="display:none">
+  <!-- ── STEP 7: Submit ── -->
+  <div class="step" id="step-7" style="display:none">
     <div class="done-icon">🚀</div>
     <div class="done-title">You're all set!</div>
     <div class="done-sub">Click below to generate your personalised health plan.</div>
     <div class="btn-row" style="margin-top:0">
-      <button class="btn-back" onclick="goTo(5)">← Back</button>
+      <button class="btn-back" onclick="goTo(6)">← Back</button>
       <button class="btn-submit" id="btn-submit" onclick="submitProfile()">Build My Plan</button>
     </div>
     <div class="error-msg" id="submit-error"></div>
@@ -292,7 +328,7 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
 
 <script>
 const DRAFT_KEY = 'onboarding_draft';
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 7;
 let currentStep = 1;
 
 // ── Persistence ─────────────────────────────────────────────────────────────
@@ -309,6 +345,8 @@ function saveDraft() {
     healthConditions: checkedBoxes('cg-conditions'),
     dietType: checkedRadio('diet'),
     medications: getMedications(),
+    cuisinePreference: document.querySelector('input[name="cuisinePreference"]:checked')?.value || 'mixed',
+    equipmentAvailable: Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value),
     startDate: val('f-startdate'),
     step: currentStep
   };
@@ -441,7 +479,7 @@ function removeMed(btn) {
 function skipMeds() {
   document.getElementById('med-list').innerHTML = '';
   saveDraft();
-  goTo(5);
+  goTo(6);
 }
 
 function getMedications() {
@@ -472,8 +510,8 @@ function goTo(n) {
   document.getElementById('progress-text').textContent = `Step ${n} of ${TOTAL_STEPS}`;
   document.getElementById('progress-pct').textContent = pct + '%';
 
-  if (n === 5) buildSummary();
-  if (n === 6) ensureStartDate();
+  if (n === 6) buildSummary();
+  if (n === 7) ensureStartDate();
   saveDraft();
 }
 
@@ -544,6 +582,8 @@ function buildSummary() {
     ['Activity Level', FITNESS_LABELS[checkedRadio('fitness')] || '—'],
     ['Health Conditions', conds.length ? conds.join(', ') : 'None'],
     ['Diet Type', DIET_LABELS[checkedRadio('diet')] || '—'],
+    ['Cuisine Preference', checkedRadio('cuisinePreference') || 'mixed'],
+    ['Equipment', (() => { const eq = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value); return eq.length > 0 ? eq.join(', ') : 'None (Bodyweight)'; })()],
     ['Medications', meds.length ? meds.map(m => m.name).join(', ') : 'None'],
     ['Start Date', val('f-startdate') || '—']
   ];
@@ -576,6 +616,8 @@ async function submitProfile() {
     fitnessLevel:    checkedRadio('fitness') || undefined,
     healthConditions: conds,
     dietType:        checkedRadio('diet') || undefined,
+    cuisinePreference: document.querySelector('input[name="cuisinePreference"]:checked')?.value || 'mixed',
+    equipmentAvailable: Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value),
     medications:     meds
   };
 
