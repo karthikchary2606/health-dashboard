@@ -1950,14 +1950,18 @@ function getFilteredRecipes(profile, options) {
 
   // 5. Goal-based sort boost
   if (goal === 'weight-loss') {
-    results.sort(function(a,b){ return ((b.tags||[]).includes('low-calorie')?1:0) - ((a.tags||[]).includes('low-calorie')?1:0); });
+    results.sort(function(a, b) {
+      return ((a.nutrition && a.nutrition.caloriesPer100g) || 9999) - ((b.nutrition && b.nutrition.caloriesPer100g) || 9999);
+    });
   } else if (goal === 'muscle-gain') {
-    results.sort(function(a,b){ return ((b.tags||[]).includes('high-protein')?1:0) - ((a.tags||[]).includes('high-protein')?1:0); });
+    results.sort(function(a, b) {
+      return ((b.nutrition && b.nutrition.proteinG) || 0) - ((a.nutrition && a.nutrition.proteinG) || 0);
+    });
   }
 
   return results.slice(0, limit);
 }
-window.getFilteredRecipes = getFilteredRecipes;
+if (typeof window !== 'undefined') window.getFilteredRecipes = getFilteredRecipes;
 
 function buildRecipes() {
   // Update subtitle based on user diet profile
