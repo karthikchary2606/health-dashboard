@@ -198,7 +198,7 @@ router.patch('/', authenticate, async (req, res) => {
       'currentWeightKg', 'goalWeightKg', 'heightCm', 'age', 'dietType',
       'cuisinePreference', 'foodAllergies', 'fitnessLevel', 'equipmentAvailable',
       'healthConditions', 'medications', 'secondaryGoals', 'waterGoalL', 'planTemplate',
-      'religion', 'languageCommunity', 'culturalFoodAvoidances', 'foodList',
+      'primaryGoal', 'religion', 'languageCommunity', 'culturalFoodAvoidances', 'foodList',
       'workoutPreferences', 'workoutDaysPerWeek', 'workoutTime', 'yogaStyle',
       'reviewReminderDays'
     ];
