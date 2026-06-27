@@ -312,13 +312,65 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     </div>
   </div>
 
-  <!-- ── STEP 7: Submit ── -->
-  <div class="step" id="step-7" style="display:none">
+  <!-- ── STEP 7: Culture & Food Avoidances ── -->
+  <div class="step" id="step-7" style="display:none;">
+    <h2>Culture &amp; Food Avoidances</h2>
+    <p class="step-description">We use this to personalise your meal plan and avoid foods that don't suit you.</p>
+
+    <div class="form-group">
+      <label>Religion</label>
+      <div class="radio-group" id="rg-religion">
+        <label class="radio-option" onclick="selectRadio('rg-religion','Hindu',this)"><input type="radio" name="religion" value="Hindu"> Hindu</label>
+        <label class="radio-option" onclick="selectRadio('rg-religion','Muslim',this)"><input type="radio" name="religion" value="Muslim"> Muslim</label>
+        <label class="radio-option" onclick="selectRadio('rg-religion','Christian',this)"><input type="radio" name="religion" value="Christian"> Christian</label>
+        <label class="radio-option" onclick="selectRadio('rg-religion','Jain',this)"><input type="radio" name="religion" value="Jain"> Jain</label>
+        <label class="radio-option" onclick="selectRadio('rg-religion','Sikh',this)"><input type="radio" name="religion" value="Sikh"> Sikh</label>
+        <label class="radio-option" onclick="selectRadio('rg-religion','Other',this)"><input type="radio" name="religion" value="Other"> Other / Prefer not to say</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Language Community</label>
+      <div class="radio-group" id="rg-languageCommunity">
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Telugu',this)"><input type="radio" name="languageCommunity" value="Telugu"> Telugu</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Tamil',this)"><input type="radio" name="languageCommunity" value="Tamil"> Tamil</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Kannada',this)"><input type="radio" name="languageCommunity" value="Kannada"> Kannada</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Malayalam',this)"><input type="radio" name="languageCommunity" value="Malayalam"> Malayalam</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Hindi',this)"><input type="radio" name="languageCommunity" value="Hindi"> Hindi</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Other',this)"><input type="radio" name="languageCommunity" value="Other"> Other</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Foods I never eat <span class="hint">(for religious or cultural reasons)</span></label>
+      <div class="checkbox-group" id="cg-avoidances">
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="avoidance" value="beef"> Beef</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="avoidance" value="pork"> Pork</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="avoidance" value="onion"> Onion</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="avoidance" value="garlic"> Garlic</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="avoidance" value="alcohol"> Alcohol</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="avoidance" value="non-veg"> All non-vegetarian</label>
+      </div>
+      <div style="margin-top:8px">
+        <input type="text" id="customAvoidance" class="mock-input" placeholder="Add custom avoidance…" style="width:70%">
+        <button type="button" onclick="addCustomAvoidance()" class="btn-small">Add</button>
+      </div>
+      <div id="customAvoidanceList" style="margin-top:6px;font-size:.8rem;color:var(--text-light)"></div>
+    </div>
+
+    <div class="step-actions">
+      <button type="button" onclick="goTo(6)">← Back</button>
+      <button type="button" onclick="goTo(8)" class="btn-primary">Next →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 8: Submit ── -->
+  <div class="step" id="step-8" style="display:none">
     <div class="done-icon">🚀</div>
     <div class="done-title">You're all set!</div>
     <div class="done-sub">Click below to generate your personalised health plan.</div>
     <div class="btn-row" style="margin-top:0">
-      <button class="btn-back" onclick="goTo(6)">← Back</button>
+      <button class="btn-back" onclick="goTo(7)">← Back</button>
       <button class="btn-submit" id="btn-submit" onclick="submitProfile()">Build My Plan</button>
     </div>
     <div class="error-msg" id="submit-error"></div>
@@ -328,8 +380,31 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
 
 <script>
 const DRAFT_KEY = 'onboarding_draft';
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 8;
 let currentStep = 1;
+let _customAvoidances = [];
+
+function addCustomAvoidance() {
+  const input = document.getElementById('customAvoidance');
+  const val = input.value.trim().toLowerCase();
+  if (!val || _customAvoidances.includes(val)) { input.value = ''; return; }
+  _customAvoidances.push(val);
+  input.value = '';
+  renderCustomAvoidances();
+}
+
+function renderCustomAvoidances() {
+  const container = document.getElementById('customAvoidanceList');
+  if (!container) return;
+  container.innerHTML = _customAvoidances.map(a =>
+    `<span style="display:inline-block;background:#f3f4f6;border-radius:4px;padding:2px 8px;margin:2px;cursor:pointer" onclick="removeAvoidance('${a}')">${a} ×</span>`
+  ).join('');
+}
+
+function removeAvoidance(val) {
+  _customAvoidances = _customAvoidances.filter(a => a !== val);
+  renderCustomAvoidances();
+}
 
 // ── Persistence ─────────────────────────────────────────────────────────────
 
@@ -348,6 +423,12 @@ function saveDraft() {
     cuisinePreference: document.querySelector('input[name="cuisinePreference"]:checked')?.value || 'mixed',
     equipmentAvailable: Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value),
     startDate: val('f-startdate'),
+    religion:               checkedRadio('religion'),
+    languageCommunity:      checkedRadio('languageCommunity'),
+    culturalFoodAvoidances: [
+      ...Array.from(document.querySelectorAll('#cg-avoidances .check-option.selected input')).map(i => i.value),
+      ..._customAvoidances
+    ],
     step: currentStep
   };
   localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -374,6 +455,20 @@ function loadDraft() {
       d.medications.forEach(m => addMed(m));
     }
     setVal('f-startdate', d.startDate);
+    if (d.religion)          setRadio('rg-religion', d.religion);
+    if (d.languageCommunity) setRadio('rg-languageCommunity', d.languageCommunity);
+    if (d.culturalFoodAvoidances && d.culturalFoodAvoidances.length) {
+      const standard = ['beef','pork','onion','garlic','alcohol','non-veg'];
+      d.culturalFoodAvoidances.forEach(val => {
+        if (standard.includes(val)) {
+          const cb = document.querySelector(`#cg-avoidances input[value="${val}"]`);
+          if (cb) cb.closest('.check-option').classList.add('selected');
+        } else {
+          if (!_customAvoidances.includes(val)) _customAvoidances.push(val);
+        }
+      });
+      renderCustomAvoidances();
+    }
     if (savedStep > 1) goTo(savedStep);
   } catch (e) { /* ignore corrupt draft */ }
 }
@@ -575,6 +670,12 @@ function buildSummary() {
   ensureStartDate();
   const conds = checkedBoxes('cg-conditions');
   const meds = getMedications();
+  const religion   = checkedRadio('religion') || '—';
+  const community  = checkedRadio('languageCommunity') || '—';
+  const avoidances = [
+    ...Array.from(document.querySelectorAll('#cg-avoidances .check-option.selected input')).map(i => i.value),
+    ..._customAvoidances
+  ].join(', ') || 'None';
   const rows = [
     ['Weight', val('f-weight') ? val('f-weight') + ' kg' : '—'],
     ['Height', val('f-height') ? val('f-height') + ' cm' : '—'],
@@ -587,7 +688,10 @@ function buildSummary() {
     ['Cuisine Preference', checkedRadio('cuisinePreference') || 'mixed'],
     ['Equipment', (() => { const eq = Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value); return eq.length > 0 ? eq.join(', ') : 'None (Bodyweight)'; })()],
     ['Medications', meds.length ? meds.map(m => m.name).join(', ') : 'None'],
-    ['Start Date', val('f-startdate') || '—']
+    ['Start Date', val('f-startdate') || '—'],
+    ['Religion', religion],
+    ['Language Community', community],
+    ['Food Avoidances', avoidances]
   ];
   const grid = document.getElementById('summary-grid');
   grid.innerHTML = rows.map(([l, v]) => `
@@ -620,7 +724,13 @@ async function submitProfile() {
     dietType:        checkedRadio('diet') || undefined,
     cuisinePreference: document.querySelector('input[name="cuisinePreference"]:checked')?.value || 'mixed',
     equipmentAvailable: Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value),
-    medications:     meds
+    medications:     meds,
+    religion:               checkedRadio('religion') || undefined,
+    languageCommunity:      checkedRadio('languageCommunity') || undefined,
+    culturalFoodAvoidances: [
+      ...Array.from(document.querySelectorAll('#cg-avoidances .check-option.selected input')).map(i => i.value),
+      ..._customAvoidances
+    ]
   };
 
   // Remove undefined keys
