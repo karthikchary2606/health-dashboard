@@ -1,3 +1,8 @@
+let weightChartInstance = null;
+let macroChartInstance  = null;
+let sleepChartInstance  = null;
+let moodChartInstance   = null;
+
 async function loadProgress() {
   try {
     const [histRes, statsRes, profileRes] = await Promise.all([
@@ -57,7 +62,9 @@ async function loadProgress() {
 }
 
 function renderWeightChart(data, targetWeight) {
-  const ctx = document.getElementById("weightChart").getContext("2d");
+  const el = document.getElementById("weightChart");
+  if (!el) return;
+  const ctx = el.getContext("2d");
   const labels = data.map(d => d.date);
   const weights = data.map(d => d.weight);
   const targetLine = targetWeight != null ? data.map(() => targetWeight) : [];
@@ -158,8 +165,11 @@ function renderMacroChart(stats, targets) {
   if (!stats.avgCalories && !stats.avgProtein) return;
   section.style.display = 'block';
 
-  var ctx = document.getElementById('macroChart').getContext('2d');
-  new Chart(ctx, {
+  var el = document.getElementById('macroChart');
+  if (!el) return;
+  if (macroChartInstance) macroChartInstance.destroy();
+  var ctx = el.getContext('2d');
+  macroChartInstance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: ['Calories', 'Protein (g)', 'Carbs (g)', 'Fat (g)'],
@@ -205,8 +215,11 @@ async function renderSleepChart() {
   if (!res.ok || !res.data || !res.data.length) return;
   section.style.display = 'block';
 
-  var ctx = document.getElementById('sleepChart').getContext('2d');
-  new Chart(ctx, {
+  var el = document.getElementById('sleepChart');
+  if (!el) return;
+  if (sleepChartInstance) sleepChartInstance.destroy();
+  var ctx = el.getContext('2d');
+  sleepChartInstance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: res.data.map(function(d){ return d.date.slice(5); }),
@@ -245,8 +258,11 @@ async function renderMoodChart() {
   if (!res.ok || !res.data || !res.data.length) return;
   section.style.display = 'block';
 
-  var ctx = document.getElementById('moodChart').getContext('2d');
-  new Chart(ctx, {
+  var el = document.getElementById('moodChart');
+  if (!el) return;
+  if (moodChartInstance) moodChartInstance.destroy();
+  var ctx = el.getContext('2d');
+  moodChartInstance = new Chart(ctx, {
     type: 'line',
     data: {
       labels: res.data.map(function(d){ return d.date.slice(5); }),

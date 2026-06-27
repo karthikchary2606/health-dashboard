@@ -916,6 +916,7 @@ function showSection(id, el) {
   document.querySelectorAll(".bn-item").forEach(b => b.classList.remove("active"));
   if (bnItem) bnItem.classList.add("active");
   if (id === "progress") loadProgress();
+  if (id === "breathing") buildBreathingSection();
 }
 
 function openSidebar() { document.getElementById("sidebar").classList.add("open"); document.getElementById("sidebarOverlay").classList.add("show"); }
@@ -941,12 +942,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("logDate").value = today;
   await buildTimeline(); // sets _phaseTasks from planCache
   updateCalorieStat();
-  buildDietPlan();
   buildRecipes();
-  buildWorkout();
-  buildCardio();
-  buildGrocery();
-  buildGuidelines();
   buildBreathingSection();
   setGreeting();
   loadProgress();
