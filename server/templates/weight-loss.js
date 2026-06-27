@@ -566,10 +566,19 @@ const WEIGHT_LOSS_PHASES = [
 // ─── Exported functions ───────────────────────────────────────────────────────
 
 function getDietPlan(profile) {
+  const hasThyroid = Array.isArray(profile.healthConditions) &&
+    profile.healthConditions.includes('thyroid');
+
   return MONTHLY_DIET.map(month => ({
     monthLabel: month.name,
     weeks: month.weeks,
-    guidelines: month.guidelines
+    guidelines: month.guidelines.map(g => {
+      // Replace thyroid-specific chicken restriction for users without thyroid condition
+      if (!hasThyroid && g.includes('Chicken only Wed & Fri')) {
+        return 'Chicken, fish or eggs freely — vary protein sources daily';
+      }
+      return g;
+    })
   }));
 }
 

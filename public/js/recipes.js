@@ -295,7 +295,7 @@ const RECIPES = [
       "Fresh coriander"
     ],
     steps:[
-      "THYROID SAFETY: Always cook soyabeans thoroughly. Never use raw or minimally cooked soy.",
+      "Always cook soyabeans thoroughly — soak overnight, pressure cook fully. Never use raw or minimally cooked soy.",
       "Soak soyabeans overnight. Drain and pressure cook with fresh water for 4–5 whistles until completely tender.",
       "Heat oil in a pan. Add onion and fry until deep golden (8 min).",
       "Add ginger-garlic paste, fry 1 minute. Add tomatoes and all dry spices.",
@@ -432,7 +432,7 @@ const RECIPES = [
   },
   // ── CHICKEN ──────────────────────────────────────────────────────────────────
   { id:18, icon:"🍗", cat:"dinner", name:"Kodi Vepudu (Andhra Chicken Fry)", time:"35 min", cal:285, p:33, f:15, c:5,
-    tags:["thyroid-safe","high-protein","Telugu-traditional","Wed-Fri-only"],
+    tags:["thyroid-safe","high-protein","Telugu-traditional"],
     ingredients:[
       "150g chicken (bone-in thigh/drumstick recommended)",
       "1 large onion, sliced",
@@ -456,11 +456,11 @@ const RECIPES = [
       "Cook covered for 10 minutes, stirring occasionally.",
       "Uncover. Increase heat and fry, stirring, until chicken is deeply colored and nearly dry (5–8 minutes).",
       "Squeeze lemon, garnish with coriander. Serve with rice or Phulka.",
-      "⚠️ Chicken only on Wed & Fri (thyroid protocol). Always cook thoroughly to 75°C."
+      "Always cook chicken thoroughly to 75°C internal temperature. Rest 2–3 minutes before serving."
     ]
   },
   { id:19, icon:"🍗", cat:"lunch", name:"Kodi Pulusu (Andhra Chicken Curry)", time:"45 min", cal:265, p:28, f:12, c:10,
-    tags:["thyroid-safe","high-protein","Telugu-traditional","Wed-Fri-only"],
+    tags:["thyroid-safe","high-protein","Telugu-traditional"],
     ingredients:[
       "150g chicken, bone-in",
       "2 large onions, finely chopped",
@@ -489,7 +489,7 @@ const RECIPES = [
     ]
   },
   { id:20, icon:"🍗", cat:"lunch", name:"Gongura Chicken Curry", time:"40 min", cal:255, p:30, f:12, c:6,
-    tags:["thyroid-safe","high-protein","Telugu-traditional","unique","Wed-Fri-only"],
+    tags:["thyroid-safe","high-protein","Telugu-traditional","unique"],
     ingredients:[
       "150g chicken",
       "1 large bunch gongura (sorrel/roselle leaves) — about 2 cups packed",
