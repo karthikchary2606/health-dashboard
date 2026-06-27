@@ -236,4 +236,11 @@ router.patch('/', authenticate, requireProfile, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// Food checklist — returns items pre-selected for user's community
+router.get('/food-checklist', authenticate, requireProfile, (req, res) => {
+  const { getChecklist } = require('../server/data/food-checklist');
+  const p = req.user.profile;
+  res.json(getChecklist(p.languageCommunity, p.culturalFoodAvoidances));
+});
+
 module.exports = router;
