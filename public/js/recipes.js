@@ -24,6 +24,8 @@ const RECIPES = [
       "Cook for 2–3 minutes until edges turn golden and crispy. Fold and serve with Allam Chutney.",
       "Tip: Batter made the previous night improves crispiness. Don't add urad dal — that's the traditional recipe."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:120, proteinG:12, carbsG:38, fatG:4, servingSizeG:200 }
   },
   { id:1, icon:"🍳", cat:"breakfast", name:"Andhra Anda Bhurji (Egg Scramble)", time:"12 min", cal:280, p:18, f:20, c:5,
     cuisine: 'south-indian',
@@ -51,6 +53,8 @@ const RECIPES = [
       "Cook on medium-low for 2 minutes stirring continuously until eggs are just set (not dry).",
       "Garnish with fresh coriander. Serve hot with Pesarattu or Phulka."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:187, proteinG:18, carbsG:5, fatG:20, servingSizeG:150 }
   },
   { id:2, icon:"🍳", cat:"breakfast", name:"Masala Omelet (Telugu Style)", time:"10 min", cal:265, p:18, f:20, c:4,
     cuisine: 'south-indian',
@@ -76,6 +80,8 @@ const RECIPES = [
       "Carefully flip with a spatula and cook the other side for 1 minute.",
       "Fold in half and serve with any chutney of choice."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:221, proteinG:18, carbsG:4, fatG:20, servingSizeG:120 }
   },
   { id:3, icon:"🥣", cat:"breakfast", name:"Oats Upma (Oat Rava Upma)", time:"15 min", cal:220, p:8, f:5, c:35,
     cuisine: 'south-indian',
@@ -107,6 +113,8 @@ const RECIPES = [
       "Cover and cook for 3–4 minutes, stirring once, until all water is absorbed.",
       "Squeeze lemon juice, garnish with coriander. Serve with coconut chutney."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:110, proteinG:8, carbsG:35, fatG:5, servingSizeG:200 }
   },
   { id:4, icon:"🥣", cat:"breakfast", name:"Rava Upma (Semolina Upma)", time:"20 min", cal:210, p:6, f:5, c:36,
     cuisine: 'south-indian',
@@ -136,6 +144,8 @@ const RECIPES = [
       "Keep stirring to prevent lumps. Cover and cook on low heat for 3–4 minutes.",
       "Add a squeeze of lemon, fluff with a fork, and serve with coconut chutney."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:105, proteinG:6, carbsG:36, fatG:5, servingSizeG:200 }
   },
   { id:5, icon:"🍚", cat:"breakfast", name:"Idli with Sambar & Chutney", time:"20 min (store-bought batter)", cal:200, p:6, f:2, c:40,
     cuisine: 'south-indian',
@@ -156,6 +166,8 @@ const RECIPES = [
       "Serve hot with warm Andhra Sambar poured on top and coconut/allam chutney on the side.",
       "Tip: For weight loss, eat 2 idli max per serving. Pair with protein-rich sambar."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:67, proteinG:6, carbsG:40, fatG:2, servingSizeG:300 }
   },
   { id:6, icon:"🧀", cat:"breakfast", name:"Paneer Bhurji (Scrambled Cottage Cheese)", time:"15 min", cal:235, p:14, f:17, c:6,
     cuisine: 'south-indian',
@@ -182,6 +194,8 @@ const RECIPES = [
       "Add garam masala and stir. Do not over-cook or paneer becomes rubbery.",
       "Garnish with fresh coriander. Serve with 1 Phulka or alongside Pesarattu."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:157, proteinG:14, carbsG:6, fatG:17, servingSizeG:150 }
   },
   // ── DAL & VEGETARIAN CURRIES ──────────────────────────────────────────────
   { id:7, icon:"🍲", cat:"lunch", name:"Kandi Pappu (Andhra Toor Dal)", time:"25 min", cal:185, p:11, f:5, c:26,
@@ -204,6 +218,8 @@ const RECIPES = [
       "Taste and adjust salt. Serve hot over rice or with Phulka.",
       "Tip: Kandi Pappu is the soul of Andhra meals. Ghee tadka is non-negotiable for flavor!"
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:93, proteinG:11, carbsG:26, fatG:5, servingSizeG:200 }
   },
   { id:8, icon:"🥬", cat:"lunch", name:"Palakura Pappu (Spinach Dal)", time:"30 min", cal:165, p:11, f:4, c:22,
     cuisine: 'south-indian',
@@ -227,6 +243,8 @@ const RECIPES = [
       "Pour tadka over the dal. Stir and serve.",
       "Thyroid note: Spinach must be cooked (not raw) for thyroid safety. Cooking neutralizes goitrogens."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:83, proteinG:11, carbsG:22, fatG:4, servingSizeG:200 }
   },
   { id:9, icon:"🍲", cat:"lunch", name:"Sorakaya Pappu (Bottle Gourd Dal)", time:"30 min", cal:145, p:8, f:3, c:20,
     cuisine: 'south-indian',
@@ -249,6 +267,8 @@ const RECIPES = [
       "Pour tadka over dal and serve hot with rice.",
       "Tip: Sorakaya (bottle gourd) is low-calorie and extremely cooling — ideal for summer and weight loss."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:73, proteinG:8, carbsG:20, fatG:3, servingSizeG:200 }
   },
   { id:10, icon:"🥘", cat:"lunch", name:"Andhra Sambar", time:"35 min", cal:125, p:5, f:3, c:20,
     cuisine: 'south-indian',
@@ -275,6 +295,8 @@ const RECIPES = [
       "Pour tadka into sambar. Simmer for 2 more minutes. Adjust salt and tanginess.",
       "Andhra sambar is thinner and spicier than Tamil sambar — perfect with idli, dosa, or rice."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:63, proteinG:5, carbsG:20, fatG:3, servingSizeG:200 }
   },
   { id:11, icon:"🫘", cat:"lunch", name:"Senagapappu Curry (Chana Dal Curry)", time:"30 min", cal:205, p:10, f:5, c:30,
     cuisine: 'south-indian',
@@ -302,6 +324,8 @@ const RECIPES = [
       "Add cooked chana dal and ½ cup water. Simmer for 5 minutes.",
       "Add garam masala, stir, and serve with Phulka or rice."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:103, proteinG:10, carbsG:30, fatG:5, servingSizeG:200 }
   },
   { id:12, icon:"🫘", cat:"lunch", name:"Soyabean Curry (Thyroid-Safe)", time:"30 min", cal:155, p:12, f:5, c:16,
     cuisine: 'south-indian',
@@ -329,6 +353,8 @@ const RECIPES = [
       "Add cooked soyabeans and ½ cup water. Mix well and simmer 5 minutes.",
       "Serve with 2 Phulka or ½ cup rice. Limit to 100g cooked soy, max 3x per week."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:78, proteinG:12, carbsG:16, fatG:5, servingSizeG:200 }
   },
   { id:13, icon:"🫘", cat:"lunch", name:"Rajma Curry (Kidney Bean Curry)", time:"40 min", cal:225, p:12, f:4, c:34,
     cuisine: 'south-indian',
@@ -356,6 +382,8 @@ const RECIPES = [
       "Add cooked rajma with its water. Mash a few beans with the back of the spoon to thicken the gravy.",
       "Simmer on low heat for 10 minutes. Add garam masala and serve with rice or Phulka."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:113, proteinG:12, carbsG:34, fatG:4, servingSizeG:200 }
   },
   { id:14, icon:"🍆", cat:"lunch", name:"Gutti Vankaya Curry (Stuffed Brinjal Curry)", time:"30 min", cal:165, p:4, f:9, c:19,
     cuisine: 'south-indian',
@@ -385,6 +413,8 @@ const RECIPES = [
       "Uncover and cook 5 minutes more until the masala coats the brinjals and oil separates.",
       "Serve with rice — a festive Andhra dish!"
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:83, proteinG:4, carbsG:19, fatG:9, servingSizeG:200 }
   },
   { id:15, icon:"🥚", cat:"lunch", name:"Andhra Egg Curry (Kodi Guddu Kura)", time:"25 min", cal:285, p:19, f:21, c:8,
     cuisine: 'south-indian',
@@ -413,6 +443,8 @@ const RECIPES = [
       "Simmer on low heat for 5 minutes. Add garam masala, garnish with coriander.",
       "Serve with Phulka or rice. Andhra egg curry has more masala than gravy — thick and spicy!"
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:143, proteinG:19, carbsG:8, fatG:21, servingSizeG:200 }
   },
   { id:16, icon:"🧀", cat:"lunch", name:"Tawa Paneer Tikka (No-Oven)", time:"20 min", cal:225, p:15, f:17, c:5,
     cuisine: 'south-indian',
@@ -439,6 +471,8 @@ const RECIPES = [
       "Flip carefully and cook other side for 2 minutes.",
       "Serve immediately with mint chutney and lemon squeeze. The char is essential!"
     ]
+    mealType: ['lunch', 'snack'],
+    nutrition: { caloriesPer100g:150, proteinG:15, carbsG:5, fatG:17, servingSizeG:150 }
   },
   { id:17, icon:"🥦", cat:"lunch", name:"Bendakaya Fry (Andhra Okra Fry)", time:"20 min", cal:85, p:2, f:4, c:12,
     cuisine: 'south-indian',
@@ -465,6 +499,8 @@ const RECIPES = [
       "Add turmeric, chili powder, coriander, and salt only when okra is 80% cooked.",
       "Stir and cook 3 more minutes. Serve as a side with dal and rice."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:57, proteinG:2, carbsG:12, fatG:4, servingSizeG:150 }
   },
   // ── CHICKEN ──────────────────────────────────────────────────────────────────
   { id:18, icon:"🍗", cat:"dinner", name:"Kodi Vepudu (Andhra Chicken Fry)", time:"35 min", cal:285, p:33, f:15, c:5,
@@ -496,6 +532,8 @@ const RECIPES = [
       "Squeeze lemon, garnish with coriander. Serve with rice or Phulka.",
       "Always cook chicken thoroughly to 75°C internal temperature. Rest 2–3 minutes before serving."
     ]
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:143, proteinG:33, carbsG:5, fatG:15, servingSizeG:200 }
   },
   { id:19, icon:"🍗", cat:"lunch", name:"Kodi Pulusu (Andhra Chicken Curry)", time:"45 min", cal:265, p:28, f:12, c:10,
     cuisine: 'south-indian',
@@ -527,6 +565,8 @@ const RECIPES = [
       "Add garam masala. Simmer uncovered for 5 minutes to thicken gravy.",
       "Pulusu (tamarind curry) is the signature Andhra dish — sour, spicy, and deeply savory."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:106, proteinG:28, carbsG:10, fatG:12, servingSizeG:250 }
   },
   { id:20, icon:"🍗", cat:"lunch", name:"Gongura Chicken Curry", time:"40 min", cal:255, p:30, f:12, c:6,
     cuisine: 'south-indian',
@@ -554,6 +594,8 @@ const RECIPES = [
       "Cook covered on medium heat for 20–25 minutes until chicken is tender and gravy thickens.",
       "The sour, spicy flavor of gongura is iconic Andhra — unique to Telugu cuisine!"
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:102, proteinG:30, carbsG:6, fatG:12, servingSizeG:250 }
   },
   { id:21, icon:"🍲", cat:"dinner", name:"Kodi Rasam (Chicken Rasam)", time:"40 min", cal:120, p:15, f:4, c:8,
     cuisine: 'south-indian',
@@ -581,6 +623,8 @@ const RECIPES = [
       "Garnish with coriander. Serve as a light dinner soup with ¾ cup rice.",
       "Kodi Rasam is Andhra's healing broth — perfect after workout days for recovery."
     ]
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:40, proteinG:15, carbsG:8, fatG:4, servingSizeG:300 }
   },
   // ── CHUTNEYS ──────────────────────────────────────────────────────────────────
   { id:22, icon:"🫙", cat:"chutney", name:"Allam Chutney (Ginger Chutney)", time:"10 min", cal:35, p:1, f:1, c:6,
@@ -604,6 +648,8 @@ const RECIPES = [
       "Pour tadka over chutney and mix.",
       "Allam chutney is THE classic pairing for Pesarattu. Ginger aids digestion."
     ]
+    mealType: ['breakfast', 'lunch', 'dinner'],
+    nutrition: { caloriesPer100g:117, proteinG:1, carbsG:6, fatG:1, servingSizeG:30 }
   },
   { id:23, icon:"🫙", cat:"chutney", name:"Nuvvulu Chutney (Sesame Seed Chutney)", time:"8 min", cal:90, p:3, f:7, c:4,
     cuisine: 'south-indian',
@@ -626,6 +672,8 @@ const RECIPES = [
       "Sesame is rich in calcium and healthy fats — excellent thyroid support.",
       "Serve with Pesarattu, Idli, or as a spread with Phulka."
     ]
+    mealType: ['breakfast', 'lunch', 'dinner'],
+    nutrition: { caloriesPer100g:300, proteinG:3, carbsG:4, fatG:7, servingSizeG:30 }
   },
   { id:24, icon:"🫙", cat:"chutney", name:"Coconut Chutney (Kobbari Pachadi)", time:"8 min", cal:80, p:2, f:7, c:4,
     cuisine: 'south-indian',
@@ -646,6 +694,8 @@ const RECIPES = [
       "Pour tadka over chutney and mix.",
       "Store in fridge up to 2 days. This chutney pairs well with Idli, Dosa, Pesarattu, and Upma."
     ]
+    mealType: ['breakfast', 'lunch', 'dinner'],
+    nutrition: { caloriesPer100g:267, proteinG:2, carbsG:4, fatG:7, servingSizeG:30 }
   },
   { id:25, icon:"🫙", cat:"chutney", name:"Tomato Chutney (Tomato Pachadi)", time:"12 min", cal:45, p:1, f:2, c:6,
     cuisine: 'south-indian',
@@ -667,6 +717,8 @@ const RECIPES = [
       "Prepare tadka: Heat a little oil, add mustard seeds. Once popped, add curry leaves and a pinch of hing.",
       "Pour tadka over chutney. Serve with Pesarattu, Idli, or Egg Bhurji."
     ]
+    mealType: ['breakfast', 'lunch', 'dinner'],
+    nutrition: { caloriesPer100g:150, proteinG:1, carbsG:6, fatG:2, servingSizeG:30 }
   },
   { id:26, icon:"🫙", cat:"chutney", name:"Gongura Pachadi (Sorrel Chutney)", time:"15 min", cal:40, p:1, f:2, c:5,
     cuisine: 'south-indian',
@@ -689,6 +741,8 @@ const RECIPES = [
       "Pour tadka over chutney and mix well.",
       "Gongura Pachadi is the pride of Andhra Pradesh! Extremely tangy and spicy. A must-have with plain rice."
     ]
+    mealType: ['breakfast', 'lunch', 'dinner'],
+    nutrition: { caloriesPer100g:133, proteinG:1, carbsG:5, fatG:2, servingSizeG:30 }
   },
   { id:27, icon:"🫙", cat:"chutney", name:"Pudina Chutney (Mint Green Chutney)", time:"5 min", cal:30, p:1, f:1, c:4,
     cuisine: 'south-indian',
@@ -711,6 +765,8 @@ const RECIPES = [
       "Serve immediately or store in airtight container in fridge for up to 2 days.",
       "Mint chutney pairs best with Paneer Tikka, Kebabs, and as a sandwich spread."
     ]
+    mealType: ['breakfast', 'lunch', 'dinner'],
+    nutrition: { caloriesPer100g:100, proteinG:1, carbsG:4, fatG:1, servingSizeG:30 }
   },
   // ── SIDES & OTHERS ────────────────────────────────────────────────────────────
   { id:28, icon:"🫓", cat:"breakfast", name:"Phulka / Whole Wheat Roti", time:"20 min", cal:70, p:3, f:1, c:14,
@@ -732,6 +788,8 @@ const RECIPES = [
       "Transfer directly to a flame (gas stove) and it will puff up. Rotate with tongs.",
       "Smear ½ tsp ghee on one side. Each phulka = ~70 kcal. 1 Phulka is about 30g atta."
     ]
+    mealType: ['breakfast', 'lunch', 'dinner'],
+    nutrition: { caloriesPer100g:175, proteinG:3, carbsG:14, fatG:1, servingSizeG:40 }
   },
   { id:29, icon:"🥛", cat:"snack", name:"Chaas / Majjiga (Spiced Buttermilk)", time:"3 min", cal:45, p:3, f:2, c:4,
     cuisine: 'south-indian',
@@ -753,6 +811,8 @@ const RECIPES = [
       "Serve chilled. Drink after lunch for digestion — a Telugu household essential!",
       "200ml chaas = ~45 kcal. Excellent probiotic for gut health and thyroid support."
     ]
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:11, proteinG:3, carbsG:4, fatG:2, servingSizeG:400 }
   },
   { id:30, icon:"🌰", cat:"snack", name:"Seed & Nut Mix (Daily Snack)", time:"5 min", cal:160, p:5, f:13, c:6,
     cuisine: 'south-indian',
@@ -775,6 +835,8 @@ const RECIPES = [
       "This mix provides selenium (thyroid support), zinc, omega-3, and healthy fats.",
       "Total per serving (~35g): 160 kcal, 5g protein, 13g fat, 6g carbs"
     ]
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:457, proteinG:5, carbsG:6, fatG:13, servingSizeG:35 }
   },
   // ── NORTH INDIAN – BREAKFAST ─────────────────────────────────────────────
   { id:31, icon:"🫓", cat:"breakfast", name:"Aloo Paratha with Curd", time:"30 min", cal:380, p:10, f:12, c:58,
@@ -799,6 +861,8 @@ const RECIPES = [
       "Cook on a hot tawa for 2 minutes each side until golden spots appear.",
       "Apply ½ tsp ghee on each side. Serve hot with cold curd and pickle."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:190, proteinG:10, carbsG:58, fatG:12, servingSizeG:200 }
   },
   { id:32, icon:"🫓", cat:"breakfast", name:"Dal Paratha (Chana Dal Stuffed)", time:"35 min", cal:340, p:13, f:9, c:52,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -822,6 +886,8 @@ const RECIPES = [
       "Cook on hot tawa with ghee until golden brown on both sides.",
       "Serve with plain curd and mint chutney."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:189, proteinG:13, carbsG:52, fatG:9, servingSizeG:180 }
   },
   { id:33, icon:"🧀", cat:"breakfast", name:"Paneer Bhurji with Paratha", time:"20 min", cal:410, p:20, f:22, c:35,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -846,6 +912,8 @@ const RECIPES = [
       "Add garam masala. Stir once. Remove from heat — overcooking makes paneer rubbery.",
       "Serve with 2 phulkas or 1 paratha and a glass of chaas."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:164, proteinG:20, carbsG:35, fatG:22, servingSizeG:250 }
   },
   { id:34, icon:"🍳", cat:"breakfast", name:"Egg Bhurji Roti", time:"15 min", cal:320, p:22, f:18, c:20,
     cuisine:'north-indian', dietType:['eggetarian','non-vegetarian'],
@@ -872,6 +940,8 @@ const RECIPES = [
       "Cook on medium heat stirring until eggs are just set — remove from heat while still slightly soft.",
       "Garnish with coriander. Serve with 2 warm rotis."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:160, proteinG:22, carbsG:20, fatG:18, servingSizeG:200 }
   },
   { id:35, icon:"🥞", cat:"breakfast", name:"Besan Chilla (Gram Flour Pancake)", time:"20 min", cal:250, p:12, f:8, c:32,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -896,6 +966,8 @@ const RECIPES = [
       "Flip and cook 1–2 minutes more until golden.",
       "Serve hot with mint chutney or curd. Besan chilla is a high-protein vegan breakfast."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:167, proteinG:12, carbsG:32, fatG:8, servingSizeG:150 }
   },
   // ── NORTH INDIAN – LUNCH ─────────────────────────────────────────────────
   { id:36, icon:"🫘", cat:"lunch", name:"Dal Makhani", time:"50 min", cal:310, p:14, f:12, c:38,
@@ -923,6 +995,8 @@ const RECIPES = [
       "Simmer on very low heat for 20 minutes, stirring frequently. This slow cook is the secret.",
       "Add garam masala, kasuri methi, and cream. Simmer 3 more minutes. Serve with jeera rice or roti."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:124, proteinG:14, carbsG:38, fatG:12, servingSizeG:250 }
   },
   { id:37, icon:"🍚", cat:"lunch", name:"Rajma Chawal (NI Style)", time:"45 min", cal:390, p:16, f:7, c:68,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -951,6 +1025,8 @@ const RECIPES = [
       "Meanwhile cook basmati rice separately with salt.",
       "Serve rajma over rice with a dollop of butter. The ultimate North Indian comfort meal."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:111, proteinG:16, carbsG:68, fatG:7, servingSizeG:350 }
   },
   { id:38, icon:"🥙", cat:"lunch", name:"Chole Bhature", time:"50 min", cal:520, p:16, f:18, c:75,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -976,6 +1052,8 @@ const RECIPES = [
       "Roll into oval shapes and deep fry in hot oil until puffed and golden.",
       "Serve chole with 2 bhaturas, sliced onion, and lemon wedge."
     ]
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:149, proteinG:16, carbsG:75, fatG:18, servingSizeG:350 }
   },
   { id:39, icon:"🧀", cat:"lunch", name:"Paneer Butter Masala with Roti", time:"30 min", cal:430, p:18, f:24, c:38,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1004,6 +1082,8 @@ const RECIPES = [
       "Add cream, garam masala, and kasuri methi (crush between palms). Simmer 3 minutes.",
       "Serve with 2 phulkas. Do not simmer too long — paneer should remain soft."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:143, proteinG:18, carbsG:38, fatG:24, servingSizeG:300 }
   },
   { id:40, icon:"🍗", cat:"lunch", name:"Chicken Curry Rice (NI Style)", time:"40 min", cal:420, p:32, f:14, c:46,
     cuisine:'north-indian', dietType:['non-vegetarian'],
@@ -1031,6 +1111,8 @@ const RECIPES = [
       "Add garam masala. Simmer uncovered 5 minutes to thicken.",
       "Serve with steamed basmati rice and sliced onion salad."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:120, proteinG:32, carbsG:46, fatG:14, servingSizeG:350 }
   },
   { id:41, icon:"🍚", cat:"lunch", name:"Mutton Biryani", time:"75 min", cal:520, p:30, f:20, c:58,
     cuisine:'north-indian', dietType:['non-vegetarian'],
@@ -1058,6 +1140,8 @@ const RECIPES = [
       "Seal the pot with dough or tight foil. Cook on dum (very low heat) for 25–30 minutes.",
       "Open and mix gently from bottom. Serve with raita."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:149, proteinG:30, carbsG:58, fatG:20, servingSizeG:350 }
   },
   { id:42, icon:"🍲", cat:"lunch", name:"Kadhi Chawal", time:"40 min", cal:320, p:10, f:10, c:48,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1081,6 +1165,8 @@ const RECIPES = [
       "Prepare tadka: Heat ghee. Add mustard seeds, cumin, red chilies, curry leaves, and garlic. Fry until garlic is golden.",
       "Pour tadka into kadhi. Simmer 2 minutes. Serve over steamed rice."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:91, proteinG:10, carbsG:48, fatG:10, servingSizeG:350 }
   },
   { id:43, icon:"🥬", cat:"lunch", name:"Sarson Da Saag with Makki Roti", time:"60 min", cal:340, p:10, f:14, c:44,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1108,6 +1194,8 @@ const RECIPES = [
       "Cook on tawa with ghee until both sides have golden spots.",
       "Serve saag topped with extra butter alongside hot makki roti and jaggery."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:113, proteinG:10, carbsG:44, fatG:14, servingSizeG:300 }
   },
   // ── NORTH INDIAN – DINNER ────────────────────────────────────────────────
   { id:44, icon:"🍲", cat:"dinner", name:"Dal Tadka with Roti", time:"30 min", cal:280, p:14, f:8, c:40,
@@ -1133,6 +1221,8 @@ const RECIPES = [
       "Pour sizzling tadka over the dal immediately. Don't stir — let it sit 30 seconds. Then mix.",
       "Squeeze lemon, garnish with coriander. Serve with phulkas."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:93, proteinG:14, carbsG:40, fatG:8, servingSizeG:300 }
   },
   { id:45, icon:"🥬", cat:"dinner", name:"Palak Paneer", time:"30 min", cal:295, p:16, f:20, c:14,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1161,6 +1251,8 @@ const RECIPES = [
       "Add paneer cubes. Gently fold. Cook 3 minutes.",
       "Add garam masala, butter, and cream. Stir once and serve."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:148, proteinG:16, carbsG:14, fatG:20, servingSizeG:200 }
   },
   { id:46, icon:"🥔", cat:"dinner", name:"Aloo Matar with Roti", time:"25 min", cal:265, p:9, f:7, c:44,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1189,6 +1281,8 @@ const RECIPES = [
       "Add green peas. Cook uncovered 5 more minutes.",
       "Add garam masala and fresh coriander. Serve with phulkas."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:88, proteinG:9, carbsG:44, fatG:7, servingSizeG:300 }
   },
   { id:47, icon:"🍗", cat:"dinner", name:"Chicken Saag Rice", time:"40 min", cal:390, p:30, f:13, c:40,
     cuisine:'north-indian', dietType:['non-vegetarian'],
@@ -1215,6 +1309,8 @@ const RECIPES = [
       "Add garam masala. Simmer uncovered 5 minutes to thicken.",
       "Serve over steamed basmati rice."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:111, proteinG:30, carbsG:40, fatG:13, servingSizeG:350 }
   },
   { id:48, icon:"🥩", cat:"dinner", name:"Keema Matar with Roti", time:"35 min", cal:380, p:28, f:20, c:24,
     cuisine:'north-indian', dietType:['non-vegetarian'],
@@ -1243,6 +1339,8 @@ const RECIPES = [
       "Add green peas and cook uncovered 8 more minutes until peas are done and water evaporates.",
       "Add garam masala. Garnish with coriander. Serve with phulkas."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:127, proteinG:28, carbsG:24, fatG:20, servingSizeG:300 }
   },
   { id:49, icon:"🍆", cat:"dinner", name:"Baingan Bharta with Roti", time:"35 min", cal:195, p:5, f:8, c:28,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1270,6 +1368,8 @@ const RECIPES = [
       "Add mashed brinjal and mix thoroughly. Cook on medium heat for 5 minutes.",
       "Add garam masala and fresh coriander. Serve with phulkas."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:78, proteinG:5, carbsG:28, fatG:8, servingSizeG:250 }
   },
   { id:50, icon:"🥩", cat:"dinner", name:"Mutton Rogan Josh", time:"70 min", cal:420, p:32, f:22, c:18,
     cuisine:'north-indian', dietType:['non-vegetarian'],
@@ -1298,6 +1398,8 @@ const RECIPES = [
       "Add fried onions and ½ cup water. Cover and cook on low heat for 40–45 minutes until mutton is very tender.",
       "Add garam masala. Simmer uncovered 5 minutes. Serve with basmati rice or naan."
     ]
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:168, proteinG:32, carbsG:18, fatG:22, servingSizeG:250 }
   },
   // ── NORTH INDIAN – SNACKS ────────────────────────────────────────────────
   { id:51, icon:"🥟", cat:"snack", name:"Samosa (Baked or Fried)", time:"45 min", cal:210, p:5, f:9, c:28,
@@ -1317,6 +1419,8 @@ const RECIPES = [
       "Deep fry in medium-hot oil (170°C) for 8–10 minutes turning until golden and crispy.",
       "Serve with mint chutney and tamarind chutney."
     ]
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:210, proteinG:5, carbsG:28, fatG:9, servingSizeG:100 }
   },
   { id:52, icon:"🥗", cat:"snack", name:"Bhel Puri", time:"10 min", cal:180, p:5, f:5, c:30,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1341,6 +1445,8 @@ const RECIPES = [
       "Squeeze lemon juice and garnish with fresh coriander.",
       "Tip: Make it spicier with extra green chutney or add raw mango for extra tang."
     ]
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:120, proteinG:5, carbsG:30, fatG:5, servingSizeG:150 }
   },
   { id:53, icon:"🥜", cat:"snack", name:"Peanut Chaat", time:"10 min", cal:200, p:9, f:13, c:14,
     cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1364,6 +1470,8 @@ const RECIPES = [
       "Serve immediately. Peanut chaat is high in protein and healthy fats — excellent pre-workout snack.",
       "Variation: Add boiled chickpeas or pomegranate seeds for extra nutrition."
     ]
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:200, proteinG:9, carbsG:14, fatG:13, servingSizeG:100 }
   },
   { id:54, icon:"🍗", cat:"snack", name:"Chicken Tikka", time:"40 min", cal:230, p:28, f:10, c:6,
     cuisine:'north-indian', dietType:['non-vegetarian'],
@@ -1390,6 +1498,8 @@ const RECIPES = [
       "Brush with a little oil and cook 2 more minutes until juices run clear.",
       "Internal temperature should reach 75°C. Serve with mint chutney and lemon wedge."
     ]
+    mealType: ['snack', 'dinner'],
+    nutrition: { caloriesPer100g:153, proteinG:28, carbsG:6, fatG:10, servingSizeG:150 }
   },
   { id:55, icon:"🥩", cat:"snack", name:"Seekh Kebab", time:"30 min", cal:245, p:24, f:14, c:8,
     cuisine:'north-indian', dietType:['non-vegetarian'],
@@ -1415,6 +1525,8 @@ const RECIPES = [
       "Cook for 12–15 minutes until well browned and cooked through.",
       "Serve with mint chutney, sliced onion rings, and lemon wedge."
     ]
+    mealType: ['snack', 'dinner'],
+    nutrition: { caloriesPer100g:163, proteinG:24, carbsG:8, fatG:14, servingSizeG:150 }
   },
   // ── CONTINENTAL – BREAKFAST ──────────────────────────────────────────────
   { id:56, icon:"🫙", cat:"breakfast", name:"Overnight Oats with Berries", time:"5 min (prep) + overnight", cal:310, p:12, f:8, c:48,
@@ -1438,6 +1550,8 @@ const RECIPES = [
       "In the morning, top with mixed berries and almond flakes.",
       "No cooking needed! Can be prepared 3–4 jars at once for the week."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:103, proteinG:12, carbsG:48, fatG:8, servingSizeG:300 }
   },
   { id:57, icon:"🥑", cat:"breakfast", name:"Avocado Toast with Poached Egg", time:"15 min", cal:340, p:16, f:20, c:28,
     cuisine:'continental', dietType:['eggetarian','non-vegetarian'],
@@ -1461,6 +1575,8 @@ const RECIPES = [
       "Remove with a slotted spoon and drain. Place on avocado toast.",
       "Season with chili flakes and black pepper. Serve immediately."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:155, proteinG:16, carbsG:28, fatG:20, servingSizeG:220 }
   },
   { id:58, icon:"🥛", cat:"breakfast", name:"Greek Yogurt Granola Bowl", time:"5 min", cal:290, p:14, f:8, c:42,
     cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1482,6 +1598,8 @@ const RECIPES = [
       "Sprinkle chia seeds and walnuts.",
       "Eat immediately — granola loses its crunch if it sits too long in yogurt."
     ]
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:116, proteinG:14, carbsG:42, fatG:8, servingSizeG:250 }
   },
   // ── CONTINENTAL – LUNCH ──────────────────────────────────────────────────
   { id:59, icon:"🥗", cat:"lunch", name:"Quinoa Buddha Bowl", time:"25 min", cal:380, p:14, f:12, c:54,
@@ -1507,6 +1625,8 @@ const RECIPES = [
       "Assemble bowl: Quinoa base, then greens, sweet potato, chickpeas, avocado, and cherry tomatoes.",
       "Drizzle tahini dressing generously. Serve immediately."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:109, proteinG:14, carbsG:54, fatG:12, servingSizeG:350 }
   },
   { id:60, icon:"🥗", cat:"lunch", name:"Grilled Chicken Caesar Salad", time:"25 min", cal:360, p:32, f:18, c:14,
     cuisine:'continental', dietType:['non-vegetarian'],
@@ -1528,6 +1648,8 @@ const RECIPES = [
       "Plate the dressed lettuce. Top with sliced chicken, croutons, and parmesan.",
       "Squeeze lemon on the chicken. Serve immediately."
     ]
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:120, proteinG:32, carbsG:14, fatG:18, servingSizeG:300 }
   },
   { id:61, icon:"🌯", cat:"lunch", name:"Tuna Wrap", time:"10 min", cal:350, p:30, f:10, c:34,
     cuisine:'continental', dietType:['non-vegetarian'],
@@ -1552,6 +1674,8 @@ const RECIPES = [
       "Add cucumber slices.",
       "Roll tightly, tucking in the sides. Cut diagonally and serve immediately."
     ]
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:140, proteinG:30, carbsG:34, fatG:10, servingSizeG:250 }
   },
   { id:62, icon:"🥗", cat:"lunch", name:"Greek Salad with Hummus", time:"10 min", cal:280, p:10, f:16, c:26,
     cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1578,6 +1702,8 @@ const RECIPES = [
       "Serve alongside hummus and pita or use hummus as a dip for the pita bread.",
       "Tip: Let salad sit 5 minutes after dressing — the vegetables absorb flavor better."
     ]
+    mealType: ['lunch', 'snack'],
+    nutrition: { caloriesPer100g:93, proteinG:10, carbsG:26, fatG:16, servingSizeG:300 }
   },
   { id:63, icon:"🍲", cat:"lunch", name:"Lentil Soup with Bread", time:"35 min", cal:320, p:16, f:6, c:52,
     cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1605,6 +1731,8 @@ const RECIPES = [
       "Use an immersion blender to partially blend — leave some texture.",
       "Season with salt, pepper, and a squeeze of lemon. Serve with whole grain bread."
     ]
+    mealType: ['lunch', 'dinner'],
+    nutrition: { caloriesPer100g:80, proteinG:16, carbsG:52, fatG:6, servingSizeG:400 }
   },
   // ── CONTINENTAL – DINNER ─────────────────────────────────────────────────
   { id:64, icon:"🍝", cat:"dinner", name:"Pasta Primavera", time:"25 min", cal:360, p:12, f:10, c:56,
@@ -1633,6 +1761,8 @@ const RECIPES = [
       "Add reserved pasta water to loosen. Season with salt and pepper.",
       "Serve topped with parmesan and fresh basil leaves."
     ]
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:120, proteinG:12, carbsG:56, fatG:10, servingSizeG:300 }
   },
   { id:65, icon:"🐟", cat:"dinner", name:"Grilled Salmon with Roasted Veggies", time:"30 min", cal:420, p:36, f:22, c:18,
     cuisine:'continental', dietType:['non-vegetarian'],
@@ -1656,6 +1786,8 @@ const RECIPES = [
       "Flip salmon. Cook 2 minutes more. For medium doneness, the centre should be slightly translucent.",
       "Squeeze lemon over salmon. Serve alongside roasted vegetables."
     ]
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:140, proteinG:36, carbsG:18, fatG:22, servingSizeG:300 }
   },
   { id:66, icon:"🍗", cat:"dinner", name:"Chicken Stir Fry Rice", time:"25 min", cal:390, p:30, f:10, c:46,
     cuisine:'continental', dietType:['non-vegetarian'],
@@ -1682,6 +1814,8 @@ const RECIPES = [
       "Add cooked rice, soy sauce, and oyster sauce. Toss everything together on high heat.",
       "Return chicken to the wok. Add sesame oil and toss. Garnish with spring onion."
     ]
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:111, proteinG:30, carbsG:46, fatG:10, servingSizeG:350 }
   },
   { id:67, icon:"🍄", cat:"dinner", name:"Mushroom Risotto", time:"35 min", cal:360, p:12, f:12, c:52,
     cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1708,6 +1842,8 @@ const RECIPES = [
       "When rice is al dente and creamy, stir in mushrooms, remaining butter, and parmesan.",
       "Season with salt and pepper. Serve immediately — risotto waits for no one."
     ]
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:103, proteinG:12, carbsG:52, fatG:12, servingSizeG:350 }
   },
   // ── CONTINENTAL – SNACKS ─────────────────────────────────────────────────
   { id:68, icon:"🌰", cat:"snack", name:"Mixed Nuts and Fruit", time:"2 min", cal:190, p:5, f:14, c:16,
@@ -1728,6 +1864,8 @@ const RECIPES = [
       "Avoid salted or flavored commercial nut mixes — plain is always better.",
       "This is the simplest high-quality snack — healthy fats, fiber, and natural sugars for sustained energy."
     ]
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:190, proteinG:5, carbsG:16, fatG:14, servingSizeG:100 }
   },
   { id:69, icon:"🥚", cat:"snack", name:"Hard Boiled Eggs", time:"12 min", cal:155, p:13, f:11, c:1,
     cuisine:'continental', dietType:['eggetarian','non-vegetarian'],
@@ -1747,6 +1885,8 @@ const RECIPES = [
       "Peel and season with salt, pepper, or hot sauce.",
       "Batch prep: boil 6 eggs and store unpeeled in the fridge for up to 7 days."
     ]
+    mealType: ['snack', 'breakfast'],
+    nutrition: { caloriesPer100g:155, proteinG:13, carbsG:1, fatG:11, servingSizeG:100 }
   },
   { id:70, icon:"🥙", cat:"snack", name:"Hummus with Veggies", time:"5 min (store-bought) / 10 min (homemade)", cal:185, p:7, f:9, c:20,
     cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
@@ -1767,21 +1907,55 @@ const RECIPES = [
       "Arrange vegetable sticks around the hummus bowl.",
       "Dip and eat. Hummus + raw veggies is a nutritionally complete snack — protein, fiber, and healthy fat."
     ]
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:93, proteinG:7, carbsG:20, fatG:9, servingSizeG:200 }
   }
 ];
 
-function getFilteredRecipes(profile) {
-  if (!profile) return RECIPES;
-  const { cuisinePreference, dietType } = profile;
-  return RECIPES.filter(recipe => {
-    const cuisineMatch = !cuisinePreference || cuisinePreference === 'mixed'
-      || recipe.cuisine === cuisinePreference
-      || recipe.cuisine === 'mixed';
-    const dietMatch = !dietType
-      || !recipe.dietType
-      || recipe.dietType.includes(dietType);
-    return cuisineMatch && dietMatch;
+function getFilteredRecipes(profile, options) {
+  options = options || {};
+  var mealType  = options.mealType;
+  var goal      = options.goal;
+  var limit     = options.limit || 20;
+
+  var avoidances    = (profile.culturalFoodAvoidances || []).map(function(a){ return a.toLowerCase(); });
+  var userFoodNames = (profile.foodList || []).map(function(f){ return f.name.toLowerCase(); });
+  var hasFoodList   = userFoodNames.length >= 10;
+  var cuisine       = profile.cuisinePreference || 'mixed';
+
+  var results = RECIPES.filter(function(r) {
+    // 1. Hard-exclude if recipe name OR any ingredient matches an avoidance
+    if (avoidances.length > 0) {
+      var ingredLower = (r.ingredients || []).map(function(i){ return i.toLowerCase(); });
+      var inName = r.name.toLowerCase();
+      if (avoidances.some(function(a){ return inName.includes(a) || ingredLower.some(function(i){ return i.includes(a); }); })) return false;
+    }
+
+    // 2. Food list filter (only when >= 10 items in user's list)
+    if (hasFoodList && r.ingredients && r.ingredients.length > 0) {
+      var allInList = r.ingredients.every(function(ing) {
+        return userFoodNames.some(function(fn){ return ing.toLowerCase().includes(fn) || fn.includes(ing.toLowerCase()); });
+      });
+      if (!allInList) return false;
+    }
+
+    // 3. Cuisine filter
+    if (cuisine !== 'mixed' && r.cuisine !== cuisine && r.cuisine !== 'mixed') return false;
+
+    // 4. Meal type filter
+    if (mealType && r.mealType && r.mealType.length > 0 && !r.mealType.includes(mealType)) return false;
+
+    return true;
   });
+
+  // 5. Goal-based sort boost
+  if (goal === 'weight-loss') {
+    results.sort(function(a,b){ return ((b.tags||[]).includes('low-calorie')?1:0) - ((a.tags||[]).includes('low-calorie')?1:0); });
+  } else if (goal === 'muscle-gain') {
+    results.sort(function(a,b){ return ((b.tags||[]).includes('high-protein')?1:0) - ((a.tags||[]).includes('high-protein')?1:0); });
+  }
+
+  return results.slice(0, limit);
 }
 window.getFilteredRecipes = getFilteredRecipes;
 
