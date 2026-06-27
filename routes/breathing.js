@@ -2,9 +2,14 @@ const express = require('express');
 const BreathingSession = require('../models/BreathingSession');
 const authenticate = require('../middleware/authenticate');
 const requireProfile = require('../middleware/requireProfile');
+const { getFilteredPranayama } = require('../server/data/pranayama');
 
 const router = express.Router();
 router.use(authenticate, requireProfile);
+
+router.get('/techniques', (req, res) => {
+  res.json(getFilteredPranayama(req.user.profile));
+});
 
 router.post('/sessions', async (req, res, next) => {
   const { technique, durationSeconds, cyclesCompleted, moodBefore, moodAfter } = req.body;
