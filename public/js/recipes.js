@@ -753,16 +753,21 @@ function renderRecipes(cat) {
   // Filter by dietary preference when user profile is available
   if (currentUser && currentUser.profile) {
     const diet = currentUser.profile.dietType;
-    if (diet === 'vegetarian' || diet === 'vegan') {
+
+    // Eggetarian, vegetarian, vegan: remove meat/fish (eggs are OK for eggetarian)
+    if (diet === 'vegetarian' || diet === 'vegan' || diet === 'eggetarian') {
       recs = recs.filter(r =>
-        !r.tags.some(t => ['chicken', 'meat', 'fish', 'non-veg'].includes(t)) &&
-        !r.name.toLowerCase().includes('chicken')
+        !r.tags.some(t => ['chicken', 'meat', 'fish', 'non-veg', 'mutton'].includes(t)) &&
+        !r.name.toLowerCase().includes('chicken') &&
+        !r.name.toLowerCase().match(/\b(fish|mutton|prawn|shrimp)\b/)
       );
     }
+
+    // Vegan: additionally remove eggs and dairy
     if (diet === 'vegan') {
       recs = recs.filter(r =>
         !r.tags.some(t => t.includes('egg')) &&
-        !r.name.toLowerCase().match(/\b(egg|omelet|omelette|paneer|ghee)\b/)
+        !r.name.toLowerCase().match(/\b(egg|omelet|omelette|paneer|ghee|dairy)\b/)
       );
     }
   }
