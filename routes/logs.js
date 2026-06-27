@@ -80,6 +80,23 @@ router.get('/:date', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+router.patch('/:date', async (req, res) => {
+  const allowed = ['weight', 'waterIntake', 'completedWorkout', 'moodScore', 'energyScore', 'notes', 'meals', 'exerciseLog'];
+  const update = {};
+  for (const key of allowed) {
+    if (key in req.body) update[key] = req.body[key];
+  }
+  if (!Object.keys(update).length) return res.status(400).json({ error: 'No valid fields provided' });
+  try {
+    const log = await HealthLog.findOneAndUpdate(
+      { userId: req.user._id, date: req.params.date },
+      { $set: update },
+      { new: true, upsert: true, runValidators: true }
+    );
+    res.json(log);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 router.post('/', async (req, res) => {
   const { date, checklist, waterIntake, weight, completedWorkout, moodScore, energyScore, notes } = req.body;
   try {

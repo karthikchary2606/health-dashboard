@@ -267,3 +267,86 @@ function dismissReviewBanner() {
     // Storage unavailable (private browsing, quota exceeded) — dismiss is still visual
   }
 }
+
+async function logWeight() {
+  var input = document.getElementById('qlWeight');
+  var w = parseFloat(input.value);
+  if (!w || w < 20 || w > 300) { showQLMsg('Enter a valid weight (20–300 kg)', 'error'); return; }
+  var today = new Date().toISOString().slice(0, 10);
+  var res = await apiFetch('/api/logs/' + today, {
+    method: 'PATCH',
+    body: JSON.stringify({ weight: w })
+  });
+  if (res.ok) { input.value = ''; showQLMsg('Weight logged ✓'); }
+  else showQLMsg('Error: ' + ((res.data && res.data.error) || ''), 'error');
+}
+
+async function logWater(litres) {
+  var today = new Date().toISOString().slice(0, 10);
+  var logRes = await apiFetch('/api/logs/' + today);
+  var current = (logRes.ok && logRes.data) ? (logRes.data.waterIntake || 0) : 0;
+  var res = await apiFetch('/api/logs/' + today, {
+    method: 'PATCH',
+    body: JSON.stringify({ waterIntake: parseFloat((current + litres).toFixed(2)) })
+  });
+  if (res.ok) showQLMsg('+' + Math.round(litres * 1000) + 'ml logged ✓');
+  else showQLMsg('Error logging water', 'error');
+}
+
+async function toggleWorkoutLog() {
+  var detail = document.getElementById('exerciseDetail');
+  var btn = document.getElementById('workoutLogBtn');
+  var today = new Date().toISOString().slice(0, 10);
+  await apiFetch('/api/logs/' + today, {
+    method: 'PATCH',
+    body: JSON.stringify({ completedWorkout: true })
+  });
+  btn.textContent = '✅ Workout done!';
+  btn.style.background = '#f0fdf4';
+  detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+  if (!document.getElementById('exerciseRows').children.length) addExerciseRow();
+  showQLMsg('Workout marked done ✓');
+}
+
+function addExerciseRow() {
+  var rows = document.getElementById('exerciseRows');
+  var row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap';
+  row.innerHTML =
+    '<input placeholder="Exercise name" style="flex:2;min-width:120px;padding:4px 8px;border:1px solid #d1d5db;border-radius:6px;font-size:.82rem">' +
+    '<input type="number" placeholder="Sets" style="width:50px;padding:4px 6px;border:1px solid #d1d5db;border-radius:6px;font-size:.82rem">' +
+    '<input type="number" placeholder="Reps" style="width:50px;padding:4px 6px;border:1px solid #d1d5db;border-radius:6px;font-size:.82rem">' +
+    '<input type="number" step="0.5" placeholder="kg" style="width:55px;padding:4px 6px;border:1px solid #d1d5db;border-radius:6px;font-size:.82rem">';
+  rows.appendChild(row);
+}
+
+async function saveExerciseLog() {
+  var rows = Array.from(document.getElementById('exerciseRows').children);
+  var exerciseLog = rows.map(function(row) {
+    var inputs = row.querySelectorAll('input');
+    return {
+      exerciseName: inputs[0].value.trim(),
+      sets:     parseInt(inputs[1].value) || 0,
+      reps:     parseInt(inputs[2].value) || 0,
+      weightKg: parseFloat(inputs[3].value) || 0,
+      durationMin: 0
+    };
+  }).filter(function(e) { return e.exerciseName; });
+
+  if (!exerciseLog.length) { showQLMsg('No exercises to save', 'error'); return; }
+  var today = new Date().toISOString().slice(0, 10);
+  var res = await apiFetch('/api/logs/' + today, {
+    method: 'PATCH',
+    body: JSON.stringify({ exerciseLog: exerciseLog })
+  });
+  if (res.ok) showQLMsg('Exercise log saved ✓');
+  else showQLMsg('Error saving', 'error');
+}
+
+function showQLMsg(text, type) {
+  var el = document.getElementById('qlMsg');
+  if (!el) return;
+  el.textContent = text;
+  el.style.color = (type === 'error') ? '#dc2626' : '#16a34a';
+  setTimeout(function() { if (el) el.textContent = ''; }, 3000);
+}

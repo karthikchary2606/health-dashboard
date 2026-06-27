@@ -550,6 +550,44 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
         </div>
       </div>
     </div>
+
+    <!-- Quick Log Panel -->
+    <div class="card" id="quickLogPanel" style="margin-bottom:16px">
+      <div class="card-header">⚡ Quick Log</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:12px 0">
+
+        <div style="flex:1;min-width:140px">
+          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Weight</div>
+          <div style="display:flex;gap:6px">
+            <input type="number" id="qlWeight" step="0.1" placeholder="kg" style="width:70px;padding:5px 8px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem">
+            <button onclick="logWeight()" style="background:#1b4332;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:.82rem">Log</button>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:140px">
+          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Water</div>
+          <div style="display:flex;gap:6px">
+            <button onclick="logWater(0.25)" style="background:#e0f2fe;color:#0284c7;border:1px solid #bae6fd;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.82rem">+250ml</button>
+            <button onclick="logWater(0.5)" style="background:#e0f2fe;color:#0284c7;border:1px solid #bae6fd;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.82rem">+500ml</button>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:140px">
+          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Workout</div>
+          <button onclick="toggleWorkoutLog()" id="workoutLogBtn" style="background:#f0fdf4;color:#1b4332;border:1px solid #bbf7d0;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.82rem">Mark Done ✓</button>
+        </div>
+
+      </div>
+
+      <div id="exerciseDetail" style="display:none;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:10px">
+        <div style="font-size:.82rem;font-weight:600;margin-bottom:6px">Today's exercises (optional)</div>
+        <div id="exerciseRows"></div>
+        <button onclick="addExerciseRow()" style="font-size:.78rem;color:#1b4332;background:none;border:none;cursor:pointer;margin-top:4px">+ Add exercise</button>
+        <button onclick="saveExerciseLog()" style="margin-left:12px;background:#1b4332;color:#fff;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem">Save Log</button>
+      </div>
+
+      <div id="qlMsg" style="font-size:.8rem;margin-top:6px;color:#16a34a"></div>
+    </div>
   </div>
 
   <!-- ===== DIET PLAN ===== -->
