@@ -12,7 +12,14 @@ const HealthLogSchema = new mongoose.Schema({
   completedWorkout: { type: Boolean, default: false },
   moodScore: { type: Number, default: 3 },
   energyScore: { type: Number, default: 3 },
-  notes: { type: String, default: '' }
+  notes: { type: String, default: '' },
+  sleepEntry: {
+    bedtime:         { type: String },
+    wakeTime:        { type: String },
+    durationMinutes: { type: Number },
+    quality:         { type: Number, min: 1, max: 5 },
+    notes:           { type: String, default: '' }
+  }
 }, { timestamps: true });
 
 HealthLogSchema.index({ userId: 1, date: 1 }, { unique: true });
