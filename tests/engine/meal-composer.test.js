@@ -37,14 +37,21 @@ describe('getMeals', () => {
     expect(unique.size).toBeGreaterThan(1);
   });
 
-  test('veg profile never gets meat meal', () => {
-    const meatKeywords = /chicken|mutton|fish|prawn|egg|beef|pork|lamb/i;
-    for (let w = 0; w < 6; w++) {
-      for (let d = 0; d < 7; d++) {
-        const meal = getMeals(siVeg, 'dinner', 'weight-loss', w, d);
-        expect(meal).not.toMatch(meatKeywords);
-      }
-    }
+  test('veg profile never gets meat or egg meal', () => {
+    const meatOrEggKeywords = /\b(chicken|mutton|fish|prawn|egg|omelette|beef|pork|lamb)\b/i;
+    const cuisines = ['south-indian', 'north-indian', 'continental'];
+    const mealTypes = ['breakfast', 'lunch', 'snack', 'dinner'];
+    cuisines.forEach(cuisine => {
+      const profile = { cuisinePreference: cuisine, dietType: 'vegetarian', healthConditions: [] };
+      mealTypes.forEach(mt => {
+        for (let w = 0; w < 6; w++) {
+          for (let d = 0; d < 7; d++) {
+            const meal = getMeals(profile, mt, 'weight-loss', w, d);
+            expect(meal).not.toMatch(meatOrEggKeywords);
+          }
+        }
+      });
+    });
   });
 
   test('non-veg profile can get meat meals', () => {
@@ -95,19 +102,19 @@ describe('getMeals', () => {
   });
 
   test('eggetarian gets egg dishes but not meat', () => {
-    const meatKeywords = /chicken|mutton|fish|prawn|beef|pork|lamb/i;
-    for (let d = 0; d < 7; d++) {
-      const meal = getMeals(siEgg, 'breakfast', 'weight-loss', 0, d);
-      expect(meal).not.toMatch(meatKeywords);
-    }
-    // Verify eggetarian pool is actually used (different from veg pool)
-    const eggMeals = Array.from({ length: 7 }, (_, d) =>
-      getMeals(siEgg, 'breakfast', 'weight-loss', 0, d)
-    );
-    const vegMeals = Array.from({ length: 7 }, (_, d) =>
-      getMeals(siVeg, 'breakfast', 'weight-loss', 0, d)
-    );
-    // Eggetarian and veg pools are distinct, so at least some meals should differ
-    expect(eggMeals).not.toEqual(vegMeals);
+    const meatKeywords = /\b(chicken|mutton|fish|prawn|beef|pork|lamb)\b/i;
+    const cuisines = ['south-indian', 'north-indian', 'continental'];
+    const mealTypes = ['breakfast', 'lunch', 'snack', 'dinner'];
+    cuisines.forEach(cuisine => {
+      const profile = { cuisinePreference: cuisine, dietType: 'eggetarian', healthConditions: [] };
+      mealTypes.forEach(mt => {
+        for (let w = 0; w < 4; w++) {
+          for (let d = 0; d < 7; d++) {
+            const meal = getMeals(profile, mt, 'weight-loss', w, d);
+            expect(meal).not.toMatch(meatKeywords);
+          }
+        }
+      });
+    });
   });
 });

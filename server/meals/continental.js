@@ -6,7 +6,7 @@ module.exports = {
       'Avocado Toast',
       'Oatmeal with Berries',
       'Granola with Yogurt',
-      'Veggie Omelette',
+      'Banana Nut Smoothie Bowl',
       'Whole Grain Pancakes',
       'Smoothie Bowl',
     ],

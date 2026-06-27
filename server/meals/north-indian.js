@@ -63,6 +63,7 @@ module.exports = {
       'Bhel Puri',
       'Dahi Puri',
       'Lassi',
+      'Roasted Chana',
     ],
     eggetarian: [
       'Egg Puff',
@@ -83,6 +84,8 @@ module.exports = {
       'Palak Khichdi',
       'Baingan Bharta with Roti',
       'Rajma Rice',
+      'Methi Dal Roti',
+      'Aloo Matar with Paratha',
     ],
     eggetarian: [
       'Egg Curry with Rice',
@@ -98,6 +101,8 @@ module.exports = {
       'Chicken Tikka Masala with Naan',
       'Prawn Curry with Rice',
       'Lamb Seekh Kebab with Paratha',
+      'Chicken Biryani',
+      'Mutton Shorba Rice',
     ],
   },
 };
