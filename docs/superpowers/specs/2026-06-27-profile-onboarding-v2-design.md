@@ -45,6 +45,12 @@ foodList: [{
 // Periodic review
 reviewReminderDays: Number   // 30 | 60 | 90 (default: 60)
 lastReviewedAt:     Date
+
+// Workout preferences
+workoutPreferences:  [String]  // ['gym', 'yoga', 'walking', 'running', 'home-bodyweight', 'sports', 'swimming']
+workoutDaysPerWeek:  Number    // 2–6
+workoutTime:         String    // 'morning' | 'afternoon' | 'evening'
+yogaStyle:           String    // 'hatha' | 'vinyasa' | 'pranayama-only' | 'none'
 ```
 
 ### 3.2 Existing Fields — Modified
@@ -124,6 +130,12 @@ Percentage = fields filled / total Phase 2 fields.
 - Cuisine preference: south-indian / north-indian / continental / mixed
 - Equipment available: 7-option checkbox group (same as current onboarding step 4)
 
+**Workout Preferences**
+- Preferred workout types (multi-select): Gym workout / Yoga / Walking / Running / Home bodyweight / Sports / Swimming
+- Workout days per week: 2 / 3 / 4 / 5 / 6
+- Preferred workout time: Morning / Afternoon / Evening (display scheduling only)
+- Yoga style (shown only if Yoga selected): Hatha / Vinyasa / Pranayama-only / No preference
+
 **Your Food List**
 - Categorised checklist: Grains, Vegetables, Proteins, Dairy, Snacks, Beverages
 - Each category expandable — shows common items for that category pre-populated based on `languageCommunity` (e.g., Telugu users see Pesarattu, Gongura, Pulusu in Vegetables)
@@ -176,6 +188,38 @@ Percentage = fields filled / total Phase 2 fields.
   - Others: generic South Indian / North Indian sets
 - User can uncheck any pre-selected item
 - `culturalFoodAvoidances` from Phase 1 are pre-checked in avoidances list
+
+### 6.5 Age + Medication → Workout Personalisation
+
+**Age tiers:**
+| Age range | Workout profile |
+|-----------|----------------|
+| < 30 | All types available; advanced intensity unlocked |
+| 30–45 | All types; moderate-advanced intensity; yoga recommended as supplement |
+| 46–60 | Gym/yoga/walking preferred; high-impact exercises flagged with caution; pranayama included in every plan |
+| 60+ | Walking, yoga, pranayama primary; gym exercises replaced with chair/resistance-band alternatives; no high-impact moves |
+
+**Workout type → plan composition:**
+- If `workoutPreferences` includes `yoga`: yoga sessions replace 1–2 cardio days; pranayama block added to every day
+- If only `walking`: cardio plan becomes structured walking (duration, pace zones, step targets) — no gym exercises
+- If `gym` or `home-bodyweight`: existing strength/flexibility composer used
+- Mixed selections: rotated across `workoutDaysPerWeek` — e.g., 3 gym + 2 yoga if both selected
+
+**Medication contraindications on exercise:**
+- Beta-blockers → cap target heart rate at 60% max; no HIIT
+- Statins → flag muscle soreness risk; reduce initial intensity; no extreme leg-day volume
+- Blood thinners → no contact sports; avoid high-fall-risk exercises
+- Diabetes medication → post-meal exercise timing warnings; carry snack reminders
+- These are flags on the exercise plan UI — not hard blocks (user is responsible)
+
+**Breathing exercises (pranayama) — Indian yoga standards:**
+- Nadi Shodhana (alternate nostril): all ages, anxiety/stress, hypertension
+- Kapalabhati: 18–55 only; not for hypertension, pregnancy, or heart conditions
+- Bhramari: all ages; especially for anxiety, insomnia
+- Anulom Vilom: all ages; diabetes, BP management
+- Bhastrika: 18–45 only; not for heart conditions
+- Age 60+: only Nadi Shodhana, Bhramari, Anulom Vilom
+- Each pranayama tagged with: `ageMin`, `ageMax`, `contraindicatedConditions[]`, `contraindicatedMedications[]`
 
 ---
 
