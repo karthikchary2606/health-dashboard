@@ -1,5 +1,22 @@
 const mongoose = require('mongoose');
 
+const mealEntrySchema = new mongoose.Schema({
+  mealType:   { type: String, enum: ['breakfast', 'lunch', 'dinner', 'snack'] },
+  recipeName: { type: String },
+  calories:   { type: Number, default: 0 },
+  proteinG:   { type: Number, default: 0 },
+  carbsG:     { type: Number, default: 0 },
+  fatG:       { type: Number, default: 0 }
+}, { _id: false });
+
+const exerciseEntrySchema = new mongoose.Schema({
+  exerciseName: { type: String, required: true },
+  sets:         { type: Number, default: 0 },
+  reps:         { type: Number, default: 0 },
+  weightKg:     { type: Number, default: 0 },
+  durationMin:  { type: Number, default: 0 }
+}, { _id: false });
+
 const HealthLogSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   date: { type: String, required: true },
@@ -19,7 +36,9 @@ const HealthLogSchema = new mongoose.Schema({
     durationMinutes: { type: Number, min: 0 },
     quality:         { type: Number, min: 1, max: 5 },
     notes:           { type: String, default: '' }
-  }
+  },
+  meals:       { type: [mealEntrySchema], default: [] },
+  exerciseLog: { type: [exerciseEntrySchema], default: [] }
 }, { timestamps: true });
 
 HealthLogSchema.index({ userId: 1, date: 1 }, { unique: true });
