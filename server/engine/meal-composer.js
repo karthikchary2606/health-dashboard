@@ -13,6 +13,13 @@ const CUISINE_MAP = {
 // Mixed rotates by weekIndex % 3
 const MIXED_ROTATION = ['south-indian', 'north-indian', 'continental'];
 
+function activeConditions(profile) {
+  const conditions = profile.healthConditions || [];
+  return conditions
+    .filter(c => typeof c === 'string' || c.active !== false)
+    .map(c => (typeof c === 'string' ? c : c.name));
+}
+
 function resolveCuisine(profile, weekIndex) {
   const pref = profile.cuisinePreference;
   if (!pref || pref === 'mixed') {
@@ -46,8 +53,17 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
   const poolKey  = resolvePool(profile.dietType);
   const pool     = cuisine[mealType][poolKey];
 
-  const index = (weekIndex * 7 + dayIndex) % pool.length;
-  return pool[index];
+  const avoidances = (profile.culturalFoodAvoidances || []).map(a => a.toLowerCase());
+  const filteredPool = avoidances.length > 0
+    ? pool.filter(meal => !avoidances.some(a => meal.toLowerCase().includes(a)))
+    : pool;
+  const usePool = filteredPool.length > 0 ? filteredPool : pool;
+
+  // activeConditions available for future goal/condition-based filtering
+  const _active = activeConditions(profile); // eslint-disable-line no-unused-vars
+
+  const index = (weekIndex * 7 + dayIndex) % usePool.length;
+  return usePool[index];
 }
 
 module.exports = { getMeals };
