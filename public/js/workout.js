@@ -15,7 +15,27 @@ async function initWorkout() {
   if (!plan) return;
 
   _workoutData = plan.workout;
-  currentWorkoutMonth = plan.meta.currentMonth - 1; // convert 1-based to 0-based index
+  currentWorkoutMonth = plan.meta.currentMonth - 1;
+
+  // Render lower-back safety note only for users with that condition
+  const profile = window.currentUser && window.currentUser.profile;
+  const conditions = (profile && profile.healthConditions) || [];
+  const safetyEl = document.getElementById('workoutSafetyNote');
+  if (safetyEl) {
+    if (conditions.includes('lower-back-pain')) {
+      safetyEl.innerHTML = `<div class="alert-box">
+        <div class="alert-title">⚠️ Spinal Safety Protocol — Always Active</div>
+        <ul>
+          <li>NO heavy conventional deadlifts or barbell back squats (axial loading)</li>
+          <li>Core bracing (Cat-Cow → Bird-Dog → Dead Bug) MANDATORY before every session</li>
+          <li>Stop immediately if sharp lower-back pain occurs. Substitute with floor-based variation</li>
+          <li>Glute activation (bridges) daily — weak glutes are the primary cause of mechanical LBP</li>
+        </ul>
+      </div>`;
+    } else {
+      safetyEl.innerHTML = '';
+    }
+  }
 
   buildWorkout();
 }

@@ -14,15 +14,30 @@ async function loadProgress() {
     const stats = statsRes.data;
     const profile = (profileRes.ok && profileRes.data) || {};
     const targetWeight = profile.goalWeightKg || null;
-    const startWeight  = profile.currentWeightKg || null;
+    const startWeight  = profile.startWeightKg || profile.currentWeightKg || null;
     const currentW = stats.latestWeight || startWeight || 0;
+
+    // Update dynamic subtitle
+    const goalLabels = { 'weight-loss': 'Weight Loss Journey', 'muscle-gain': 'Muscle Gain Journey', 'maintenance': 'Maintenance Journey', 'general-fitness': 'Fitness Journey' };
+    const subtitleEl = document.getElementById('progressSubtitle');
+    if (subtitleEl && profile.primaryGoal) {
+      const goalLabel = goalLabels[profile.primaryGoal] || 'Your Health Journey';
+      const startW = startWeight ? startWeight + 'kg' : '—';
+      const tgtW = targetWeight ? ' → ' + targetWeight + 'kg' : '';
+      subtitleEl.textContent = goalLabel + ' · ' + startW + tgtW + ' · 6-month program';
+    }
+
+    // Chart target note
+    const noteEl = document.getElementById('chartTargetNote');
+    if (noteEl) noteEl.textContent = targetWeight ? 'Green dashed line = ' + targetWeight + 'kg target' : '';
+
     renderWeightChart(history, targetWeight);
     document.getElementById("workoutStreakVal").textContent = stats.workoutStreak || 0;
     document.getElementById("waterStreakVal").textContent = stats.waterStreak || 0;
     document.getElementById("completionVal").textContent = (stats.avgCompletion || 0) + "%";
     const lost = stats.weightLost || 0;
-    document.getElementById("weightLostVal").textContent = (lost > 0 ? "-" : "") + Math.abs(lost) + "kg";
-    updateBMI(currentW);
+    document.getElementById("weightLostVal").textContent = (lost > 0 ? "-" : (lost < 0 ? "+" : "")) + Math.abs(lost) + "kg";
+    updateBMI(currentW, profile);
     renderStats(stats);
     renderMilestones(currentW, startWeight, targetWeight);
   } catch(e) {
@@ -102,20 +117,28 @@ function renderStats(stats) {
     </div>`;
 }
 
-function updateBMI(w) {
-  const heightM = (currentUser && currentUser.profile && currentUser.profile.heightCm)
-    ? currentUser.profile.heightCm / 100
-    : 1.75;
-  const bmi = (w / (heightM * heightM)).toFixed(1);
+function updateBMI(w, profile) {
+  const p = profile || (currentUser && currentUser.profile) || {};
+  const heightM = p.heightCm ? p.heightCm / 100 : 1.75;
+  const bmi = w > 0 ? (w / (heightM * heightM)).toFixed(1) : '—';
   const bmiEl = document.getElementById("bmiVal");
   const catEl = document.getElementById("bmiCat");
   const markerEl = document.getElementById("bmiMarker");
-  const displayEl = document.getElementById("bmiWeightDisplay");
-  if(bmiEl) { bmiEl.textContent = bmi; displayEl.textContent = w+"kg"; }
+  const detailsEl = document.getElementById("bmiDetails");
+  const displayEl = document.getElementById("bmiWeightDisplay"); // legacy — may not exist
+  if (bmiEl) bmiEl.textContent = bmi;
+  if (displayEl) displayEl.textContent = w + "kg";
   let cat = "Normal", color = "#22c55e";
-  if(bmi >= 30) { cat="Obese"; color="#ef4444"; }
-  else if(bmi >= 25) { cat="Overweight"; color="#f59e0b"; }
-  if(catEl) { catEl.textContent = cat; catEl.style.color = color; }
-  const pct = Math.min(100, Math.max(0, ((bmi - 20) / 15) * 100));
-  if(markerEl) markerEl.style.left = pct + "%";
+  if (bmi >= 30) { cat = "Obese"; color = "#ef4444"; }
+  else if (bmi >= 25) { cat = "Overweight"; color = "#f59e0b"; }
+  if (catEl) { catEl.textContent = cat; catEl.style.color = color; }
+  const pct = w > 0 ? Math.min(100, Math.max(0, ((bmi - 20) / 15) * 100)) : 0;
+  if (markerEl) markerEl.style.left = pct + "%";
+  if (detailsEl) {
+    const heightCm = p.heightCm || '—';
+    const goalW = p.goalWeightKg;
+    const goalBmi = goalW && p.heightCm ? (goalW / (heightM * heightM)).toFixed(1) : null;
+    detailsEl.innerHTML = `Height: ${heightCm}cm · Current: ${w > 0 ? w + 'kg' : '—'}`
+      + (goalBmi ? `<br>Target BMI at ${goalW}kg: <strong>${goalBmi}</strong> (Normal &lt;25)` : '');
+  }
 }

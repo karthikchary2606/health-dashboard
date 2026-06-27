@@ -568,17 +568,9 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== WORKOUT ===== -->
   <div id="sec-workout" class="section">
     <div class="section-header">
-      <div><h2>6-Month Workout Plan</h2><p>Spinal-safe · Home dumbbells/barbells · Progressive overload</p></div>
+      <div><h2>6-Month Workout Plan</h2><p>Progressive overload · Your equipment · Your fitness level</p></div>
     </div>
-    <div class="alert-box">
-      <div class="alert-title">⚠️ Spinal Safety Protocol — Always Active</div>
-      <ul>
-        <li>NO heavy conventional deadlifts or barbell back squats (axial loading banned)</li>
-        <li>Core bracing (Cat-Cow → Bird-Dog → Dead Bug) MANDATORY before every session</li>
-        <li>Stop immediately if sharp lower-back pain occurs. Substitute with floor-based variation</li>
-        <li>All pressing done floor or incline (no overhead axial compression)</li>
-      </ul>
-    </div>
+    <div id="workoutSafetyNote"></div>
     <div class="month-selector" id="workoutMonthSelector"></div>
     <div id="workoutPhaseBanner"></div>
     <div class="hscroll"><div class="workout-day-grid" id="workoutDayGrid"></div></div>
@@ -588,14 +580,10 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== CARDIO ===== -->
   <div id="sec-cardio" class="section">
     <div class="section-header">
-      <div><h2>Cardio Plan</h2><p>Low-impact progressive · Back-safe · Fat-burning</p></div>
+      <div><h2>Cardio Plan</h2><p>Progressive cardio · Adapted to your goal and fitness level</p></div>
     </div>
 
-    <div class="phase-card">
-      <h3>🚶 Phase 1 (Weeks 1–4): Foundation Walking</h3>
-      <p>Fasted morning walks before breakfast. Primary fat-burning tool. Zero spinal compression.</p>
-      <span class="phase-badge">CURRENT PHASE</span>
-    </div>
+    <div id="cardioCurrentPhase"></div>
 
     <div class="grid-2" style="margin-bottom:20px">
       <div class="card">
@@ -621,23 +609,23 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== PROGRESS ===== -->
   <div id="sec-progress" class="section">
     <div class="section-header">
-      <div><h2>Progress Tracker</h2><p>Weight loss journey · 95kg → 75kg · 6-month program</p></div>
+      <div><h2>Progress Tracker</h2><p id="progressSubtitle">Your health journey · 6-month program</p></div>
       <button class="btn btn-primary btn-sm" onclick="loadProgress()">🔄 Refresh</button>
     </div>
 
     <div class="streak-row" id="streakRow">
       <div class="streak-chip"><span class="s-icon">🔥</span><div><div class="s-val" id="workoutStreakVal">-</div><div class="s-lbl">Workout Streak</div></div></div>
-      <div class="streak-chip" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><span class="s-icon">💧</span><div><div class="s-val" id="waterStreakVal">-</div><div class="s-lbl">Water Streak (3L+)</div></div></div>
+      <div class="streak-chip" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><span class="s-icon">💧</span><div><div class="s-val" id="waterStreakVal">-</div><div class="s-lbl">Water Streak</div></div></div>
       <div class="streak-chip" style="background:linear-gradient(135deg,#10b981,#065f46)"><span class="s-icon">📋</span><div><div class="s-val" id="completionVal">-%</div><div class="s-lbl">Avg Checklist Done</div></div></div>
-      <div class="streak-chip" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95)"><span class="s-icon">⚖️</span><div><div class="s-val" id="weightLostVal">-kg</div><div class="s-lbl">Weight Lost</div></div></div>
+      <div class="streak-chip" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95)"><span class="s-icon">⚖️</span><div><div class="s-val" id="weightLostVal">-kg</div><div class="s-lbl">Weight Change</div></div></div>
     </div>
 
     <div class="grid-2">
       <div>
         <div class="chart-wrap">
-          <div class="card-title" style="margin-bottom:14px">📉 Weight Loss Chart</div>
+          <div class="card-title" style="margin-bottom:14px">📉 Weight Chart</div>
           <canvas id="weightChart"></canvas>
-          <p style="font-size:.72rem;color:var(--text-light);text-align:center;margin-top:8px">Green dashed line = 75kg target</p>
+          <p id="chartTargetNote" style="font-size:.72rem;color:var(--text-light);text-align:center;margin-top:8px"></p>
         </div>
         <div class="card">
           <div class="card-title">🏆 Milestones</div>
@@ -648,13 +636,10 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
         <div class="card" style="margin-bottom:14px">
           <div class="card-title">⚖️ BMI Tracker</div>
           <div class="bmi-display">
-            <div class="bmi-value" id="bmiVal">29.9</div>
-            <div class="bmi-category" id="bmiCat">Overweight</div>
+            <div class="bmi-value" id="bmiVal">—</div>
+            <div class="bmi-category" id="bmiCat">—</div>
           </div>
-          <div style="font-size:.78rem;color:var(--text-light);text-align:center">
-            Height: 178cm · Current: <span id="bmiWeightDisplay">95kg</span><br>
-            Target BMI at 75kg: <strong>23.7</strong> (Normal range &lt;25)
-          </div>
+          <div id="bmiDetails" style="font-size:.78rem;color:var(--text-light);text-align:center"></div>
           <div style="margin-top:12px">
             <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-light);margin-bottom:4px"><span>Obese &gt;30</span><span>Overweight 25–30</span><span>Normal &lt;25</span></div>
             <div style="height:10px;background:linear-gradient(to right,#ef4444 0%,#f59e0b 40%,#22c55e 100%);border-radius:5px;position:relative">
@@ -850,7 +835,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setGreeting();
   loadProgress();
   loadSleepSummary();
-  updateBMI(currentUser && currentUser.profile && currentUser.profile.startWeightKg || 95);
+  updateBMI(currentUser && currentUser.profile && (currentUser.profile.currentWeightKg || currentUser.profile.startWeightKg) || 0);
   loadDateData(); // now safe to read _phaseTasks
   } catch(e) {
     console.error('Dashboard init error:', e);

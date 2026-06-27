@@ -10,7 +10,7 @@ let _phaseIdx   = 0;   // 0-based phase index (meta.currentPhase - 1)
 let _monthIdx   = 0;   // 0-based month index (meta.currentMonth - 1)
 let _weekIdx    = 0;   // 0-based week index within month (meta.currentWeek - 1)
 let _workoutPlan = []; // plan.workout array
-let _dietPlan    = []; // plan.diet array
+let _dashDietPlan = []; // plan.diet array (prefixed to avoid conflict with diet.js's _dietPlan)
 
 async function buildTimeline() {
   const plan = await window.planCache.getPlan();
@@ -22,7 +22,7 @@ async function buildTimeline() {
   _weekIdx    = Math.max(0, (meta.currentWeek  || 1) - 1);
   _phaseTasks = plan.checklist || [];
   _workoutPlan = plan.workout || [];
-  _dietPlan    = plan.diet || [];
+  _dashDietPlan = plan.diet || [];
 
   const container = document.getElementById("timelineContainer");
   container.innerHTML = "";
@@ -38,7 +38,7 @@ async function buildTimeline() {
 
   // ── Today's meals preview ──
   const todayName = new Date().toLocaleDateString("en-US",{weekday:"long"});
-  const md = _dietPlan[_monthIdx];
+  const md = _dashDietPlan[_monthIdx];
   let weekdays = [];
   if (md) {
     if (md.weeks && Array.isArray(md.weeks)) {
