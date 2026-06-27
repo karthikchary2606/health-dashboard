@@ -85,3 +85,38 @@ test('culturalFoodAvoidances stores array', async () => {
   });
   expect(u.profile.culturalFoodAvoidances).toEqual(['beef', 'pork']);
 });
+
+test('foodList rejects entry without name', async () => {
+  await expect(
+    User.create({
+      ...BASE, email: 'fl-invalid@x.com',
+      profile: { foodList: [{ category: 'grains' }] }
+    })
+  ).rejects.toThrow();
+});
+
+test('reviewReminderDays rejects invalid value', async () => {
+  await expect(
+    User.create({
+      ...BASE, email: 'rr-invalid@x.com',
+      profile: { reviewReminderDays: 45 }
+    })
+  ).rejects.toThrow();
+});
+
+test('workoutDaysPerWeek accepts 1 day per week', async () => {
+  const u = await User.create({
+    ...BASE, email: 'wd1@x.com',
+    profile: { workoutDaysPerWeek: 1 }
+  });
+  expect(u.profile.workoutDaysPerWeek).toBe(1);
+});
+
+test('workoutDaysPerWeek rejects 0', async () => {
+  await expect(
+    User.create({
+      ...BASE, email: 'wd0@x.com',
+      profile: { workoutDaysPerWeek: 0 }
+    })
+  ).rejects.toThrow();
+});

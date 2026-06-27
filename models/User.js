@@ -67,7 +67,7 @@ const profileSchema = new mongoose.Schema({
 
   // Workout preferences
   workoutPreferences:  [String],
-  workoutDaysPerWeek:  { type: Number, min: 2, max: 6 },
+  workoutDaysPerWeek:  { type: Number, min: 1, max: 7 },
   workoutTime:         { type: String, enum: ['morning', 'afternoon', 'evening'] },
   yogaStyle:           { type: String, enum: ['hatha', 'vinyasa', 'pranayama-only', 'none'] },
 
