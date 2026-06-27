@@ -47,7 +47,7 @@ reviewReminderDays: Number   // 30 | 60 | 90 (default: 60)
 lastReviewedAt:     Date
 
 // Workout preferences
-workoutPreferences:  [String]  // ['gym', 'yoga', 'walking', 'running', 'home-bodyweight', 'sports', 'swimming']
+workoutPreferences:  [String]  // ['gym', 'yoga', 'surya-namaskar', 'walking', 'running', 'home-bodyweight', 'sports', 'swimming']
 workoutDaysPerWeek:  Number    // 2–6
 workoutTime:         String    // 'morning' | 'afternoon' | 'evening'
 yogaStyle:           String    // 'hatha' | 'vinyasa' | 'pranayama-only' | 'none'
@@ -131,10 +131,10 @@ Percentage = fields filled / total Phase 2 fields.
 - Equipment available: 7-option checkbox group (same as current onboarding step 4)
 
 **Workout Preferences**
-- Preferred workout types (multi-select): Gym workout / Yoga / Walking / Running / Home bodyweight / Sports / Swimming
+- Preferred workout types (multi-select): Gym workout / Yoga / Surya Namaskar / Walking / Running / Home bodyweight / Sports / Swimming
 - Workout days per week: 2 / 3 / 4 / 5 / 6
 - Preferred workout time: Morning / Afternoon / Evening (display scheduling only)
-- Yoga style (shown only if Yoga selected): Hatha / Vinyasa / Pranayama-only / No preference
+- Yoga style (shown only if Yoga or Surya Namaskar selected): Hatha / Vinyasa / Pranayama-only / No preference
 
 **Your Food List**
 - Categorised checklist: Grains, Vegetables, Proteins, Dairy, Snacks, Beverages
@@ -201,6 +201,14 @@ Percentage = fields filled / total Phase 2 fields.
 
 **Workout type → plan composition:**
 - If `workoutPreferences` includes `yoga`: yoga sessions replace 1–2 cardio days; pranayama block added to every day
+- If `workoutPreferences` includes `yoga` or `walking`: **Surya Namaskar** is included as morning routine — rounds scaled by age and fitness level:
+  | Age / Fitness | Rounds per session |
+  |---------------|--------------------|
+  | <30, active | 12–24 rounds |
+  | 30–45, moderate | 8–12 rounds |
+  | 46–60 | 5–8 rounds (slow pace) |
+  | 60+ | 3–5 rounds (chair-assisted option) |
+- Surya Namaskar contraindications: wrist injury, severe knee pain, acute lower-back pain, recent surgery → substituted with seated sun salutation or skipped
 - If only `walking`: cardio plan becomes structured walking (duration, pace zones, step targets) — no gym exercises
 - If `gym` or `home-bodyweight`: existing strength/flexibility composer used
 - Mixed selections: rotated across `workoutDaysPerWeek` — e.g., 3 gym + 2 yoga if both selected
