@@ -673,43 +673,11 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== GUIDELINES ===== -->
   <div id="sec-guidelines" class="section">
     <div class="section-header">
-      <div><h2>Medical Guidelines</h2><p>Clinical guardrails · Thyroid, Fatty Liver, Lumbar Spine</p></div>
+      <div><h2>Medical Guidelines</h2><p id="guidelinesSubtitle">Clinical guardrails · Your personal health protocols</p></div>
     </div>
     <div class="grid-2">
       <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="card danger">
-          <div class="card-title">🔴 Thyroid (Hypothyroid · Thyronorm 12.5mg)</div>
-          <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
-            <li style="margin-bottom:6px">Take Thyronorm at <strong>06:30 AM</strong> on empty stomach · Wait 45–60 min before eating</li>
-            <li style="margin-bottom:6px"><strong>Zero Soy/Soya</strong> — blocks hormone absorption (soy milk, tofu, soya chunks ALL banned)</li>
-            <li style="margin-bottom:6px">Cruciferous vegetables (cauliflower, broccoli, cabbage) — <strong>ALWAYS fully steamed/cooked</strong> to deactivate goitrogens</li>
-            <li style="margin-bottom:6px">Avoid raw cruciferous in any form (salads with raw cabbage, uncooked cauliflower)</li>
-            <li style="margin-bottom:6px">High selenium foods encouraged: eggs, brazil nuts (1–2/day max)</li>
-            <li>Recheck thyroid levels every 3 months</li>
-          </ul>
-        </div>
-        <div class="card warning">
-          <div class="card-title">🟡 Fatty Liver (Early Stage)</div>
-          <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
-            <li style="margin-bottom:6px"><strong>Zero refined sugars, jaggery, glucose, fructose syrups</strong></li>
-            <li style="margin-bottom:6px">Zero processed foods, packaged snacks, bread, rice, wheat</li>
-            <li style="margin-bottom:6px">Limit alcohol completely</li>
-            <li style="margin-bottom:6px">Apple Cider Vinegar (with mother) 1 tsp in warm water every morning — aids liver detox</li>
-            <li style="margin-bottom:6px">Prioritise natural fats (ghee, eggs, nuts) over refined seed oils</li>
-            <li>Turmeric + black pepper daily — potent anti-inflammatory for liver</li>
-          </ul>
-        </div>
-        <div class="card" style="border-top-color:#3b82f6">
-          <div class="card-title">🔵 Lumbar Spine (Mechanical LBP)</div>
-          <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
-            <li style="margin-bottom:6px">No heavy axial loading — barbell back squats &amp; conventional deadlifts <strong>BANNED</strong></li>
-            <li style="margin-bottom:6px">Core stability work (Cat-Cow, Bird-Dog, Dead Bug) before every gym session</li>
-            <li style="margin-bottom:6px">Motorcycle commuting: use lumbar support cushion, limit rides &gt;30 min</li>
-            <li style="margin-bottom:6px">Sleep posture: side-lying with pillow between knees recommended</li>
-            <li style="margin-bottom:6px">Desk setup: monitor at eye level, lumbar-supported chair</li>
-            <li>Glute activation (bridges) daily — weak glutes = primary cause of mechanical LBP</li>
-          </ul>
-        </div>
+        <div id="conditionCards"></div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:14px">
@@ -718,7 +686,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
           <p style="font-size:.78rem;color:var(--text-light);margin-bottom:14px">250g stock each. 30g combined daily cap to prevent caloric surplus.</p>
           <div id="seedTracker"></div>
           <div style="margin-top:14px;padding:10px;background:#f0fdf4;border-radius:8px;font-size:.78rem;color:#166534">
-            <strong>💡 Tip:</strong> Weigh daily on a kitchen scale. Mix all 8 seeds in a jar = custom trail mix. Pumpkin seeds = highest magnesium for thyroid support.
+            <strong>💡 Tip:</strong> Weigh daily on a kitchen scale. Mix all 8 seeds in a jar = custom trail mix.
           </div>
         </div>
 
@@ -728,39 +696,8 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
         </div>
 
         <div class="card">
-          <div class="card-title">🍽️ Foods Recommended vs Banned</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div>
-              <div style="font-size:.78rem;font-weight:700;color:#166534;margin-bottom:8px">✅ EAT FREELY</div>
-              <ul style="padding-left:14px;font-size:.78rem;color:var(--text-med)">
-                <li>Eggs (all forms)</li>
-                <li>Chicken (all cuts)</li>
-                <li>Paneer (full fat)</li>
-                <li>Ghee, Butter</li>
-                <li>Coconut oil/milk</li>
-                <li>Leafy greens</li>
-                <li>Cucumber, Zucchini</li>
-                <li>Bell peppers</li>
-                <li>Green tea, Herbal tea</li>
-                <li>ACV (with mother)</li>
-              </ul>
-            </div>
-            <div>
-              <div style="font-size:.78rem;font-weight:700;color:#991b1b;margin-bottom:8px">❌ BANNED</div>
-              <ul style="padding-left:14px;font-size:.78rem;color:var(--text-med)">
-                <li>ALL soy products</li>
-                <li>Raw cruciferous veg</li>
-                <li>Sugar / Jaggery</li>
-                <li>Rice / Wheat / Bread</li>
-                <li>Processed snacks</li>
-                <li>Fruit juices</li>
-                <li>Refined seed oils</li>
-                <li>Alcohol</li>
-                <li>High-sugar fruits</li>
-                <li>Packaged foods</li>
-              </ul>
-            </div>
-          </div>
+          <div class="card-title">🍽️ Foods Recommended vs Avoided</div>
+          <div id="foodGuidelines"></div>
         </div>
       </div>
     </div>
@@ -775,11 +712,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <div class="month-selector" id="groceryMonthSelector"></div>
     <div id="groceryBudgetBar"></div>
     <div class="hscroll"><div id="groceryContent"></div></div>
-    <div class="thyroid-note">
-      🔬 <strong>Thyroid Shopping Rules:</strong> Always buy iodized salt. Choose full-fat paneer. Buy eggs in bulk (min 30/week).
-      Soyabean: max 100g cooked 2x/week. All cruciferous veg must be cooked, never raw.
-      Ghee preferred over refined oils.
-    </div>
+    <div id="groceryNote"></div>
   </div>
 
   <!-- ===== BREATHING ===== -->

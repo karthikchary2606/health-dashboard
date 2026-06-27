@@ -1,5 +1,5 @@
-// Guidelines rendering — profile-driven, no hardcoded medications or personal health protocols.
-// Populates: #seedTracker (generic seeds), #suppTiming (medications + generic schedule).
+// Guidelines rendering — fully profile-driven.
+// Populates: #conditionCards, #seedTracker, #suppTiming, #foodGuidelines, #groceryNote
 
 const SEEDS = [
   { name: 'Pumpkin Seeds',    daily: 8,  note: 'Rich in magnesium, zinc, and healthy fats' },
@@ -11,6 +11,54 @@ const SEEDS = [
   { name: 'Walnuts',          daily: 1,  note: 'Best omega-3 nut for brain and heart health' },
   { name: 'Pistachios',       daily: 1,  note: 'L-arginine for circulation + gut-friendly fibre' }
 ];
+
+const CONDITION_CARDS = {
+  thyroid: {
+    cls: 'danger',
+    title: '🔴 Thyroid Disorder (Hypothyroid)',
+    items: [
+      'Take thyroid medication at <strong>06:30 AM</strong> on empty stomach · Wait 45–60 min before eating',
+      '<strong>Zero Soy/Soya</strong> — blocks hormone absorption (soy milk, tofu, soya chunks all avoided)',
+      'Cruciferous vegetables (cauliflower, broccoli, cabbage) — <strong>ALWAYS fully steamed/cooked</strong> to deactivate goitrogens',
+      'High selenium foods encouraged: eggs, brazil nuts (1–2/day max)',
+      'Recheck thyroid levels every 3 months as advised by your doctor'
+    ]
+  },
+  diabetes: {
+    cls: 'warning',
+    title: '🟡 Diabetes Management',
+    items: [
+      '<strong>Zero refined sugars</strong> — avoid jaggery, glucose syrups, sweetened beverages',
+      'Prefer low-GI foods: oats, millets, legumes, non-starchy vegetables',
+      'Eat every 3–4 hours — avoid long fasting windows that cause blood sugar spikes',
+      'Monitor blood glucose as directed by your doctor',
+      'Include fibre with every meal to slow glucose absorption'
+    ]
+  },
+  hypertension: {
+    cls: 'warning',
+    title: '🟠 Hypertension Management',
+    items: [
+      'Limit sodium to <strong>&lt;2,300mg/day</strong> — avoid processed foods, pickles, papad',
+      'DASH diet principles: fruits, vegetables, whole grains, low-fat dairy',
+      'Limit caffeine and alcohol',
+      'Daily 30-min moderate aerobic activity (walking, cycling) is highly effective',
+      'Monitor blood pressure regularly; take medications as prescribed'
+    ]
+  },
+  'lower-back-pain': {
+    cls: '',
+    style: 'border-top-color:#3b82f6',
+    title: '🔵 Lower Back Pain (Mechanical LBP)',
+    items: [
+      'No heavy axial loading — barbell back squats &amp; conventional deadlifts avoided',
+      'Core stability work (Cat-Cow, Bird-Dog, Dead Bug) before every gym session',
+      'Sleep posture: side-lying with pillow between knees recommended',
+      'Desk setup: monitor at eye level, lumbar-supported chair',
+      'Glute activation (bridges) daily — weak glutes are the primary driver of mechanical LBP'
+    ]
+  }
+};
 
 function buildGenericSchedule(profile) {
   const goal = profile && profile.primaryGoal;
@@ -103,6 +151,100 @@ function renderSchedule(profile) {
 }
 
 function buildGuidelines(profile) {
+  const conditions = profile ? (profile.healthConditions || []) : [];
+  const dietType   = profile ? (profile.dietType || 'non-veg') : 'non-veg';
+
+  // Condition cards
+  const cardEl = document.getElementById('conditionCards');
+  if (cardEl) {
+    const activeConditions = Object.keys(CONDITION_CARDS).filter(k => conditions.includes(k));
+    if (activeConditions.length > 0) {
+      cardEl.innerHTML = activeConditions.map(key => {
+        const c = CONDITION_CARDS[key];
+        const styleAttr = c.style ? ` style="${c.style}"` : '';
+        return `<div class="card ${c.cls}"${styleAttr}>
+          <div class="card-title">${c.title}</div>
+          <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
+            ${c.items.map(i => `<li style="margin-bottom:6px">${i}</li>`).join('')}
+          </ul>
+        </div>`;
+      }).join('');
+    } else {
+      cardEl.innerHTML = `<div class="card" style="border-top-color:#6b7280">
+        <div class="card-title">✅ No Health Conditions Logged</div>
+        <p style="font-size:.83rem;color:var(--text-light)">
+          Great news — no health conditions on record. If you have any, 
+          <a href="settings.html" style="color:var(--primary)">add them in Settings</a> to get personalised guardrails.
+        </p>
+      </div>`;
+    }
+
+    // Update subtitle to reflect actual conditions
+    const subtitleEl = document.getElementById('guidelinesSubtitle');
+    if (subtitleEl) {
+      const labels = activeConditions.map(k => CONDITION_CARDS[k].title.replace(/^[^\s]+\s/, '').split('(')[0].trim());
+      subtitleEl.textContent = labels.length
+        ? `Clinical guardrails · ${labels.join(', ')}`
+        : 'Clinical guardrails · Your personal health protocols';
+    }
+  }
+
+  // Food guidelines — based on dietType + health conditions
+  const foodEl = document.getElementById('foodGuidelines');
+  if (foodEl) {
+    const eatList  = ['Eggs (all forms)', 'Paneer (full fat)', 'Ghee, Butter', 'Coconut oil/milk', 'Leafy greens', 'Cucumber, Zucchini', 'Bell peppers', 'Nuts & seeds', 'Green tea'];
+    const avoidList = ['Sugar & sweetened drinks', 'Processed / packaged snacks', 'Refined seed oils', 'Alcohol'];
+
+    if (dietType === 'vegan') {
+      eatList.splice(0, 2, 'Tofu / Tempeh', 'Legumes, lentils', 'Oat milk, Almond milk');
+      avoidList.push('All animal products (meat, eggs, dairy)');
+    } else if (dietType === 'vegetarian') {
+      eatList.splice(0, 1);
+      avoidList.push('Meat, Fish, Poultry');
+    } else if (dietType === 'eggetarian') {
+      avoidList.push('Meat, Fish, Poultry');
+    } else {
+      eatList.unshift('Chicken / Fish / Eggs');
+    }
+
+    if (conditions.includes('thyroid')) {
+      avoidList.unshift('ALL soy products (tofu, soya chunks, soy milk)');
+      avoidList.push('Raw cruciferous vegetables (cook them fully)');
+    }
+    if (conditions.includes('diabetes') || conditions.includes('hypertension')) {
+      avoidList.push('High-GI foods: white rice, white bread, fruit juices');
+    }
+    if (conditions.includes('hypertension')) {
+      avoidList.push('High-sodium foods: pickles, papad, processed meats');
+    }
+
+    foodEl.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:.78rem;font-weight:700;color:#166534;margin-bottom:8px">✅ EAT FREELY</div>
+        <ul style="padding-left:14px;font-size:.78rem;color:var(--text-med)">
+          ${eatList.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:.78rem;font-weight:700;color:#991b1b;margin-bottom:8px">⚠️ LIMIT / AVOID</div>
+        <ul style="padding-left:14px;font-size:.78rem;color:var(--text-med)">
+          ${avoidList.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+      </div>
+    </div>`;
+  }
+
+  // Grocery note — only show thyroid rules when user has thyroid condition
+  const groceryNoteEl = document.getElementById('groceryNote');
+  if (groceryNoteEl) {
+    if (conditions.includes('thyroid')) {
+      groceryNoteEl.className = 'thyroid-note';
+      groceryNoteEl.innerHTML = '🔬 <strong>Thyroid Shopping Rules:</strong> Always buy iodized salt. Choose full-fat paneer. Buy eggs in bulk. ALL cruciferous veg must be cooked, never raw. Ghee preferred over refined oils. <strong>Zero soy products.</strong>';
+    } else {
+      groceryNoteEl.innerHTML = '';
+    }
+  }
+
   // Seeds tracker
   const seedEl = document.getElementById('seedTracker');
   if (seedEl) {
