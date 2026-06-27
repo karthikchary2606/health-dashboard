@@ -1,8 +1,9 @@
 const express = require('express');
-const router = express.Router();
-const authenticate = require('../middleware/authenticate');
+const router  = express.Router();
+const authenticate   = require('../middleware/authenticate');
 const requireProfile = require('../middleware/requireProfile');
-const User = require('../models/User');
+const User            = require('../models/User');
+const ProfileSnapshot = require('../models/ProfileSnapshot');
 
 const TEMPLATES = {
   'weight-loss':     require('../server/templates/weight-loss'),
@@ -11,55 +12,134 @@ const TEMPLATES = {
   'general-fitness': require('../server/templates/general-fitness')
 };
 
-// Onboarding: authenticate only — user doesn't have a profile yet
+// ── helpers ──────────────────────────────────────────────────────────────────
+
+function computeWaterGoal(weightKg) {
+  if (!weightKg) return 2.5;
+  return Math.round((weightKg * 30) / 1000 * 10) / 10;
+}
+
+function computeMacroTargets(profile) {
+  if (!profile.age || !profile.heightCm || !profile.currentWeightKg) return {};
+  const w = profile.currentWeightKg, h = profile.heightCm, a = profile.age;
+  // Mifflin-St Jeor (male constant — gender field not captured in V1 onboarding)
+  const bmr = 10 * w + 6.25 * h - 5 * a + 5;
+  const multipliers = {
+    sedentary: 1.2, 'lightly-active': 1.375,
+    'moderately-active': 1.55, 'very-active': 1.725
+  };
+  const tdee = bmr * (multipliers[profile.fitnessLevel] || 1.2);
+  const goalAdj = { 'weight-loss': -500, 'muscle-gain': 300, maintenance: 0, 'general-fitness': 0 };
+  const calories = Math.round(tdee + (goalAdj[profile.primaryGoal] || 0));
+  const macros = ({
+    'weight-loss':     { p: 0.35, c: 0.40, f: 0.25 },
+    'muscle-gain':     { p: 0.40, c: 0.40, f: 0.20 },
+    maintenance:       { p: 0.30, c: 0.45, f: 0.25 },
+    'general-fitness': { p: 0.30, c: 0.45, f: 0.25 }
+  })[profile.primaryGoal] || { p: 0.30, c: 0.45, f: 0.25 };
+  return {
+    dailyCalorieTarget: calories,
+    dailyProteinG:  Math.round(calories * macros.p / 4),
+    dailyCarbsG:    Math.round(calories * macros.c / 4),
+    dailyFatG:      Math.round(calories * macros.f / 9)
+  };
+}
+
+const PHASE2_FIELDS = [
+  'cuisinePreference', 'equipmentAvailable', 'workoutPreferences',
+  'workoutDaysPerWeek', 'workoutTime', 'yogaStyle',
+  'foodList', 'religion', 'languageCommunity', 'reviewReminderDays'
+];
+
+function computeCompletionPct(profile) {
+  const filled = PHASE2_FIELDS.filter(f => {
+    const v = profile[f];
+    if (v === null || v === undefined) return false;
+    if (Array.isArray(v)) return v.length > 0;
+    return true;
+  });
+  return Math.round((filled.length / PHASE2_FIELDS.length) * 100);
+}
+
+async function writeSnapshot(userId, profile, reason) {
+  await ProfileSnapshot.create({ userId, reason, data: profile });
+}
+
+function normaliseConditions(arr) {
+  return (arr || []).map(c =>
+    typeof c === 'string' ? { name: c, active: true } : { ...c, active: c.active !== false }
+  );
+}
+
+function normaliseMeds(arr) {
+  return (arr || []).map(m =>
+    typeof m === 'string' ? { name: m, active: true } : { ...m, active: m.active !== false }
+  );
+}
+
+// ── routes ────────────────────────────────────────────────────────────────────
+
+// Onboarding — no existing profile required
 router.post('/onboarding', authenticate, async (req, res) => {
   try {
     const {
       primaryGoal, currentWeightKg, goalWeightKg, heightCm, age,
-      dietType, cuisinePreference, foodAllergies, fitnessLevel,
-      equipmentAvailable, healthConditions, medications,
-      secondaryGoals, waterGoalL
+      fitnessLevel, religion, languageCommunity, culturalFoodAvoidances,
+      healthConditions, medications, secondaryGoals,
+      workoutPreferences, workoutDaysPerWeek, workoutTime, yogaStyle,
+      foodAllergies, dietType, cuisinePreference, equipmentAvailable
     } = req.body;
 
-    const VALID_TEMPLATES = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
-    if (primaryGoal && !VALID_TEMPLATES.includes(primaryGoal)) {
+    const VALID = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
+    if (primaryGoal && !VALID.includes(primaryGoal)) {
       return res.status(400).json({ error: `Invalid primaryGoal: ${primaryGoal}` });
     }
 
-    await User.findByIdAndUpdate(req.user._id, {
-      profileComplete: true,
-      'profile.primaryGoal':       primaryGoal,
-      'profile.planTemplate':      primaryGoal,
-      'profile.currentWeightKg':   currentWeightKg,
-      'profile.startWeightKg':     currentWeightKg,
-      'profile.goalWeightKg':      goalWeightKg,
-      'profile.heightCm':          heightCm,
-      'profile.age':               age,
-      'profile.dietType':          dietType,
-      'profile.cuisinePreference': cuisinePreference || 'mixed',
-      'profile.foodAllergies':     foodAllergies || [],
-      'profile.fitnessLevel':      fitnessLevel,
-      'profile.equipmentAvailable': equipmentAvailable || [],
-      'profile.healthConditions':  healthConditions || [],
-      'profile.medications':       medications || [],
-      'profile.secondaryGoals':    secondaryGoals || [],
-      'profile.waterGoalL':        waterGoalL || 2.5,
-      'profile.startDate':         new Date()
-    }, { runValidators: true, new: true });
+    const partialProfile = {
+      primaryGoal, planTemplate: primaryGoal,
+      currentWeightKg, startWeightKg: currentWeightKg,
+      goalWeightKg, heightCm, age, fitnessLevel,
+      religion, languageCommunity,
+      culturalFoodAvoidances: culturalFoodAvoidances || [],
+      healthConditions: normaliseConditions(healthConditions),
+      medications:      normaliseMeds(medications),
+      secondaryGoals:   secondaryGoals || [],
+      foodAllergies:    foodAllergies  || [],
+      dietType,
+      cuisinePreference:  cuisinePreference  || 'mixed',
+      equipmentAvailable: equipmentAvailable || [],
+      workoutPreferences: workoutPreferences || [],
+      workoutDaysPerWeek, workoutTime, yogaStyle,
+      startDate: new Date()
+    };
 
+    partialProfile.waterGoalL = computeWaterGoal(currentWeightKg);
+    Object.assign(partialProfile, computeMacroTargets(partialProfile));
+
+    const updates = {};
+    Object.entries(partialProfile).forEach(([k, v]) => {
+      if (v !== undefined) updates[`profile.${k}`] = v;
+    });
+    updates.profileComplete = true;
+
+    const updated = await User.findByIdAndUpdate(
+      req.user._id, updates, { runValidators: true, new: true, lean: true }
+    );
+
+    await writeSnapshot(req.user._id, updated.profile, 'onboarding');
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// Plan generation
 router.get('/plan', authenticate, requireProfile, async (req, res) => {
   try {
     const profile = req.user.profile;
     const templateKey = profile.planTemplate || profile.primaryGoal || 'weight-loss';
     const template = TEMPLATES[templateKey];
     if (!template) return res.status(400).json({ error: `Unknown template: ${templateKey}` });
-
     res.json({
       meta:      template.getPlanMeta(profile),
       diet:      template.getDietPlan(profile),
@@ -68,37 +148,98 @@ router.get('/plan', authenticate, requireProfile, async (req, res) => {
       grocery:   template.getGroceryList(profile),
       checklist: template.getDefaultChecklist(profile)
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-router.get('/', authenticate, requireProfile, async (req, res) => {
-  // req.user is a lean plain object (from authenticate middleware)
+// Profile completion percentage
+router.get('/completion', authenticate, requireProfile, (req, res) => {
+  const pct = computeCompletionPct(req.user.profile);
+  const missing = PHASE2_FIELDS.filter(f => {
+    const v = req.user.profile[f];
+    if (v === null || v === undefined) return true;
+    if (Array.isArray(v)) return v.length === 0;
+    return false;
+  });
+  res.json({ percentage: pct, missingFields: missing });
+});
+
+// Snapshot history
+router.get('/snapshots', authenticate, requireProfile, async (req, res) => {
+  try {
+    const snaps = await ProfileSnapshot.find({ userId: req.user._id })
+      .sort({ snapshotAt: -1, _id: -1 }).limit(20).lean();
+    res.json(snaps);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// Get profile
+router.get('/', authenticate, requireProfile, (req, res) => {
   res.json(req.user.profile);
 });
 
+// Periodic review submission
+router.post('/review', authenticate, requireProfile, async (req, res) => {
+  try {
+    const updates = { 'profile.lastReviewedAt': new Date() };
+    if (req.body.healthConditions) {
+      updates['profile.healthConditions'] = normaliseConditions(req.body.healthConditions);
+    }
+    if (req.body.medications) {
+      updates['profile.medications'] = normaliseMeds(req.body.medications);
+    }
+    const updated = await User.findByIdAndUpdate(
+      req.user._id, updates, { runValidators: true, new: true, lean: true }
+    );
+    await writeSnapshot(req.user._id, updated.profile, 'periodic-review');
+    res.json({ success: true, lastReviewedAt: updated.profile.lastReviewedAt });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// PATCH profile (settings + phase 2 updates)
 router.patch('/', authenticate, requireProfile, async (req, res) => {
   try {
-    const VALID_TEMPLATES = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
-    if (req.body.planTemplate && !VALID_TEMPLATES.includes(req.body.planTemplate)) {
+    const VALID = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
+    if (req.body.planTemplate && !VALID.includes(req.body.planTemplate)) {
       return res.status(400).json({ error: `Invalid planTemplate: ${req.body.planTemplate}` });
     }
 
     const allowed = [
       'currentWeightKg', 'goalWeightKg', 'heightCm', 'age', 'dietType',
       'cuisinePreference', 'foodAllergies', 'fitnessLevel', 'equipmentAvailable',
-      'healthConditions', 'medications', 'secondaryGoals', 'waterGoalL', 'planTemplate'
+      'healthConditions', 'medications', 'secondaryGoals', 'waterGoalL', 'planTemplate',
+      'religion', 'languageCommunity', 'culturalFoodAvoidances', 'foodList',
+      'workoutPreferences', 'workoutDaysPerWeek', 'workoutTime', 'yogaStyle',
+      'reviewReminderDays'
     ];
+
     const updates = {};
     allowed.forEach(field => {
-      if (req.body[field] !== undefined) updates[`profile.${field}`] = req.body[field];
+      if (req.body[field] === undefined) return;
+      if (field === 'healthConditions') {
+        updates[`profile.${field}`] = normaliseConditions(req.body[field]);
+      } else if (field === 'medications') {
+        updates[`profile.${field}`] = normaliseMeds(req.body[field]);
+      } else {
+        updates[`profile.${field}`] = req.body[field];
+      }
     });
-    const updated = await User.findByIdAndUpdate(req.user._id, updates, { runValidators: true, new: true, lean: true });
+
+    if (req.body.currentWeightKg) {
+      updates['profile.waterGoalL'] = computeWaterGoal(req.body.currentWeightKg);
+    }
+
+    const updated = await User.findByIdAndUpdate(
+      req.user._id, updates, { runValidators: true, new: true, lean: true }
+    );
+
+    const snapshotFields = ['foodList', 'culturalFoodAvoidances', 'healthConditions',
+                            'medications', 'primaryGoal', 'religion', 'languageCommunity'];
+    if (snapshotFields.some(f => req.body[f] !== undefined)) {
+      await writeSnapshot(req.user._id, updated.profile, 'user-edit');
+    }
+
     res.json(updated.profile);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 module.exports = router;
