@@ -63,6 +63,45 @@ function buildBreathingSection() {
       <div style="font-size:.75rem;color:var(--text-light)">Best for: ${t.use}</div>
     </div>`).join('');
   loadBreathingHistory();
+  loadPranayama();
+}
+
+async function loadPranayama() {
+  var container = document.getElementById('pranayamaSection');
+  if (!container) return;
+
+  var res = await apiFetch('/api/breathing/techniques');
+  if (!res.ok || !res.data || !res.data.length) {
+    container.innerHTML = '<h3 style="font-size:1rem;font-weight:700;color:#1b4332;margin-bottom:4px">🕉️ Indian Pranayama</h3>' +
+      '<p style="color:#6b7280;font-size:.85rem">No pranayama techniques available for your profile.</p>';
+    return;
+  }
+
+  container.innerHTML = '<h3 style="font-size:1rem;font-weight:700;color:#1b4332;margin-bottom:4px">🕉️ Indian Pranayama</h3>' +
+    '<p style="font-size:.82rem;color:#6b7280;margin-bottom:12px">Personalised for your age and health conditions</p>' +
+    res.data.map(function(tech) {
+      return '<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:12px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start">' +
+          '<div>' +
+            '<h4 style="font-weight:700;color:#1b4332;margin:0 0 2px">' + tech.name + '</h4>' +
+            '<div style="font-size:.78rem;color:#6b7280">' + tech.sanskrit + ' · ' + tech.aka + '</div>' +
+          '</div>' +
+          '<div style="font-size:.78rem;background:#f0fdf4;color:#1b4332;padding:3px 8px;border-radius:8px">' + tech.bestTime + '</div>' +
+        '</div>' +
+        '<div style="margin-top:8px;font-size:.82rem;color:#374151">' +
+          '<strong>Benefits:</strong> ' + tech.benefits.slice(0, 2).join(' · ') +
+        '</div>' +
+        '<div style="margin-top:6px;font-size:.82rem">' +
+          '<strong>' + tech.rounds + ' rounds · ' + tech.durationMin + ' min</strong>' +
+        '</div>' +
+        '<details style="margin-top:8px">' +
+          '<summary style="cursor:pointer;font-size:.82rem;color:#1b4332;font-weight:600">How to practise ▸</summary>' +
+          '<ol style="margin-top:6px;padding-left:16px">' +
+            tech.steps.map(function(s) { return '<li style="margin-bottom:4px;font-size:.82rem">' + s + '</li>'; }).join('') +
+          '</ol>' +
+        '</details>' +
+      '</div>';
+    }).join('');
 }
 
 function selectTechnique(key) {

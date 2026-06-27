@@ -481,7 +481,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <!-- Stats Row -->
     <div class="grid-4" style="margin-bottom:20px" id="statsRow">
       <div class="stat-chip" style="border-left-color:#f59e0b"><div class="label">Target Calories</div><div class="value" id="calorieStat">—</div><div class="sub" id="calorieStatSub">kcal/day</div></div>
-      <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div></div>
+      <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div><span id="waterGoalDisplay" style="font-weight:700;color:#0284c7"></span><div id="waterGoalHint" style="font-size:.72rem;color:#6b7280;margin-top:2px"></div></div>
       <div class="stat-chip" style="border-left-color:#10b981"><div class="label">Checklist</div><div class="value" id="checkStat">0/—</div><div class="sub">Daily tasks done</div></div>
       <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">95</div><div class="sub">kg · Goal: 75kg</div></div>
     </div>
@@ -832,6 +832,12 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <div class="card" style="margin-top:24px">
       <div class="card-title">📜 Recent Sessions</div>
       <div id="breathing-history"><p style="color:var(--text-light);font-size:.85rem">Loading...</p></div>
+    </div>
+
+    <!-- Pranayama section -->
+    <div id="pranayamaSection" style="margin-top:24px">
+      <h3 style="font-size:1rem;font-weight:700;color:#1b4332;margin-bottom:4px">🕉️ Indian Pranayama</h3>
+      <p style="font-size:.82rem;color:#6b7280;margin-bottom:12px">Personalised for your age and health conditions</p>
     </div>
   </div>
 

@@ -228,6 +228,19 @@ apiFetch('/api/profile/completion').then(res => {
   }
 });
 
+// Show auto-calculated water goal based on weight
+(function updateWaterGoalDisplay() {
+  var p = (window.currentUser && window.currentUser.profile) || {};
+  var goalEl = document.getElementById('waterGoalDisplay');
+  if (goalEl && p.waterGoalL) {
+    goalEl.textContent = p.waterGoalL + 'L';
+  }
+  var hint = document.getElementById('waterGoalHint');
+  if (hint && p.currentWeightKg) {
+    hint.textContent = 'Based on your weight (' + p.currentWeightKg + 'kg × 30ml)';
+  }
+})();
+
 // Review reminder banner — use currentUser.profile instead of extra API call
 (function checkReviewBanner() {
   const p = (window.currentUser || {}).profile;
