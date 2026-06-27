@@ -170,16 +170,20 @@ async function saveAll() {
     .map(cb => ({ name: cb.value, category: cb.dataset.category, custom: false }));
 
   const conditions = (_profile.healthConditions || []).map((c, i) => {
+    // c may be a legacy string from older profile data
+    const condName = typeof c === 'string' ? c : c.name;
+    const condActive = typeof c === 'string' ? true : c.active;
     const cb = document.getElementById(`cond-active-${i}`);
-    const active = cb ? cb.checked : c.active;
+    const active = cb ? cb.checked : condActive;
     const dateEl = document.getElementById(`cond-date-${i}`);
-    return { name: c.name, active, resolvedAt: !active && dateEl ? dateEl.value : null };
+    return { name: condName, active, resolvedAt: !active && dateEl ? dateEl.value : null };
   });
 
   const medications = (_profile.medications || []).map((m, i) => {
+    const medName = typeof m === 'string' ? m : m.name;
     const cb = document.getElementById(`med-active-${i}`);
-    const active = cb ? cb.checked : m.active;
-    return { name: m.name, dosage: m.dosage, timing: m.timing, active, resolvedAt: null };
+    const active = cb ? cb.checked : (typeof m === 'string' ? true : m.active);
+    return { name: medName, dosage: m.dosage || '', timing: m.timing || '', active, resolvedAt: null };
   });
 
   const workoutPreferences = Array.from(

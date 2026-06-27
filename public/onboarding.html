@@ -717,7 +717,7 @@ async function submitProfile() {
     primaryGoal:     checkedRadio('goal') || undefined,
     goalWeightKg:    val('f-goalweight') !== '' ? parseFloat(val('f-goalweight')) : undefined,
     fitnessLevel:    checkedRadio('fitness') || undefined,
-    healthConditions: conds,
+    healthConditions: conds.map(name => ({ name, active: true })),
     dietType:        checkedRadio('diet') || undefined,
     cuisinePreference: document.querySelector('input[name="cuisinePreference"]:checked')?.value || 'mixed',
     equipmentAvailable: Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value),
