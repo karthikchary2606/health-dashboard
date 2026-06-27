@@ -7,20 +7,20 @@ test('getSuryaNamaskarRounds is exported', () => {
 
 test('getSuryaNamaskarRounds: age < 30 returns value in 12-24 range', () => {
   const rounds = getSuryaNamaskarRounds({ age: 25, fitnessLevel: 'very-active' });
-  expect(rounds).toBeGreaterThanOrEqual(10);
+  expect(rounds).toBeGreaterThanOrEqual(12);
   expect(rounds).toBeLessThanOrEqual(24);
 });
 
 test('getSuryaNamaskarRounds: age 60+ returns 3-8 range', () => {
   const rounds = getSuryaNamaskarRounds({ age: 65, fitnessLevel: 'sedentary' });
   expect(rounds).toBeGreaterThanOrEqual(3);
-  expect(rounds).toBeLessThanOrEqual(8);
+  expect(rounds).toBeLessThanOrEqual(5);
 });
 
 test('getSuryaNamaskarRounds: age 46-60 returns 5-12 range', () => {
   const rounds = getSuryaNamaskarRounds({ age: 52, fitnessLevel: 'moderately-active' });
   expect(rounds).toBeGreaterThanOrEqual(5);
-  expect(rounds).toBeLessThanOrEqual(12);
+  expect(rounds).toBeLessThanOrEqual(8);
 });
 
 test('getExercises does not throw with resolved conditions', () => {
