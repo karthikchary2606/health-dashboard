@@ -16,7 +16,7 @@ const HealthLogSchema = new mongoose.Schema({
   sleepEntry: {
     bedtime:         { type: String },
     wakeTime:        { type: String },
-    durationMinutes: { type: Number },
+    durationMinutes: { type: Number, min: 0 },
     quality:         { type: Number, min: 1, max: 5 },
     notes:           { type: String, default: '' }
   }
