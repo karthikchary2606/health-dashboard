@@ -10,6 +10,7 @@ async function loadProfile() {
   if (!profRes.ok) { window.location = '/login.html'; return; }
   _profile = profRes.data;
 
+  populateGoalsDiet();
   populateCuisineEquipment();
   populateWorkoutPrefs();
   populateConditionReview();
@@ -18,6 +19,13 @@ async function loadProfile() {
 
   if (checklistRes.ok) renderFoodChecklist(checklistRes.data);
   updateCompletionBar();
+}
+
+function populateGoalsDiet() {
+  const goal = document.getElementById('primaryGoal');
+  if (goal && _profile.primaryGoal) goal.value = _profile.primaryGoal;
+  const diet = document.getElementById('dietType');
+  if (diet && _profile.dietType) diet.value = _profile.dietType;
 }
 
 function populateCuisineEquipment() {
@@ -191,6 +199,9 @@ async function saveAll() {
   ).map(cb => cb.value);
 
   const payload = {
+    primaryGoal:     document.getElementById('primaryGoal')?.value || undefined,
+    planTemplate:    document.getElementById('primaryGoal')?.value || undefined,
+    dietType:        document.getElementById('dietType')?.value || undefined,
     cuisinePreference: document.getElementById('cuisinePreference')?.value || undefined,
     equipmentAvailable: Array.from(
       document.querySelectorAll('#equipmentGroup input[type=checkbox]:checked')
@@ -204,6 +215,9 @@ async function saveAll() {
     medications,
     reviewReminderDays: parseInt(document.getElementById('reviewReminderDays')?.value) || 60
   };
+
+  // Strip undefined so PATCH doesn't overwrite existing values with null
+  Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
 
   const res = await apiFetch('/api/profile', { method: 'PATCH', body: JSON.stringify(payload) });
   if (res.ok) {
