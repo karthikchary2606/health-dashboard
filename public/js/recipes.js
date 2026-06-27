@@ -23,7 +23,7 @@ const RECIPES = [
       "Drizzle ½ tsp ghee or oil on the edges. Optionally sprinkle finely chopped onion on top.",
       "Cook for 2–3 minutes until edges turn golden and crispy. Fold and serve with Allam Chutney.",
       "Tip: Batter made the previous night improves crispiness. Don't add urad dal — that's the traditional recipe."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:120, proteinG:12, carbsG:38, fatG:4, servingSizeG:200 }
   },
@@ -52,7 +52,7 @@ const RECIPES = [
       "Now scramble everything together, breaking yolks and mixing with masala.",
       "Cook on medium-low for 2 minutes stirring continuously until eggs are just set (not dry).",
       "Garnish with fresh coriander. Serve hot with Pesarattu or Phulka."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:187, proteinG:18, carbsG:5, fatG:20, servingSizeG:150 }
   },
@@ -79,7 +79,7 @@ const RECIPES = [
       "Cook for 2–3 minutes until bottom is golden and set.",
       "Carefully flip with a spatula and cook the other side for 1 minute.",
       "Fold in half and serve with any chutney of choice."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:221, proteinG:18, carbsG:4, fatG:20, servingSizeG:120 }
   },
@@ -112,7 +112,7 @@ const RECIPES = [
       "Add roasted oats and stir well. Reduce heat to low.",
       "Cover and cook for 3–4 minutes, stirring once, until all water is absorbed.",
       "Squeeze lemon juice, garnish with coriander. Serve with coconut chutney."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:110, proteinG:8, carbsG:35, fatG:5, servingSizeG:200 }
   },
@@ -143,7 +143,7 @@ const RECIPES = [
       "Reduce heat to low. While stirring continuously, add roasted rava in a slow, steady stream.",
       "Keep stirring to prevent lumps. Cover and cook on low heat for 3–4 minutes.",
       "Add a squeeze of lemon, fluff with a fork, and serve with coconut chutney."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:105, proteinG:6, carbsG:36, fatG:5, servingSizeG:200 }
   },
@@ -165,7 +165,7 @@ const RECIPES = [
       "Let cool for 2 minutes before removing with a wet spoon.",
       "Serve hot with warm Andhra Sambar poured on top and coconut/allam chutney on the side.",
       "Tip: For weight loss, eat 2 idli max per serving. Pair with protein-rich sambar."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:67, proteinG:6, carbsG:40, fatG:2, servingSizeG:300 }
   },
@@ -193,7 +193,7 @@ const RECIPES = [
       "Add crumbled paneer and mix gently. Cook on medium heat for 3–4 minutes.",
       "Add garam masala and stir. Do not over-cook or paneer becomes rubbery.",
       "Garnish with fresh coriander. Serve with 1 Phulka or alongside Pesarattu."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:157, proteinG:14, carbsG:6, fatG:17, servingSizeG:150 }
   },
@@ -217,7 +217,7 @@ const RECIPES = [
       "Add hing. Pour this tadka immediately over the cooked dal and mix well.",
       "Taste and adjust salt. Serve hot over rice or with Phulka.",
       "Tip: Kandi Pappu is the soul of Andhra meals. Ghee tadka is non-negotiable for flavor!"
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:93, proteinG:11, carbsG:26, fatG:5, servingSizeG:200 }
   },
@@ -242,7 +242,7 @@ const RECIPES = [
       "Prepare tadka: Heat ghee, add mustard seeds. Once they pop, add cumin, curry leaves, garlic, and hing.",
       "Pour tadka over the dal. Stir and serve.",
       "Thyroid note: Spinach must be cooked (not raw) for thyroid safety. Cooking neutralizes goitrogens."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:83, proteinG:11, carbsG:22, fatG:4, servingSizeG:200 }
   },
@@ -266,7 +266,7 @@ const RECIPES = [
       "Prepare tadka: Heat ghee, add mustard seeds, cumin, curry leaves, garlic, red chili, and hing.",
       "Pour tadka over dal and serve hot with rice.",
       "Tip: Sorakaya (bottle gourd) is low-calorie and extremely cooling — ideal for summer and weight loss."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:73, proteinG:8, carbsG:20, fatG:3, servingSizeG:200 }
   },
@@ -294,7 +294,7 @@ const RECIPES = [
       "Prepare tadka: Heat oil, add mustard seeds. Once popped, add curry leaves, red chilies, and hing.",
       "Pour tadka into sambar. Simmer for 2 more minutes. Adjust salt and tanginess.",
       "Andhra sambar is thinner and spicier than Tamil sambar — perfect with idli, dosa, or rice."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:63, proteinG:5, carbsG:20, fatG:3, servingSizeG:200 }
   },
@@ -323,7 +323,7 @@ const RECIPES = [
       "Add tomatoes, red chili powder, coriander powder, and salt. Cook until oil separates.",
       "Add cooked chana dal and ½ cup water. Simmer for 5 minutes.",
       "Add garam masala, stir, and serve with Phulka or rice."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:103, proteinG:10, carbsG:30, fatG:5, servingSizeG:200 }
   },
@@ -352,7 +352,7 @@ const RECIPES = [
       "Cook masala until oil separates from the sides (8–10 minutes).",
       "Add cooked soyabeans and ½ cup water. Mix well and simmer 5 minutes.",
       "Serve with 2 Phulka or ½ cup rice. Limit to 100g cooked soy, max 3x per week."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:78, proteinG:12, carbsG:16, fatG:5, servingSizeG:200 }
   },
@@ -381,7 +381,7 @@ const RECIPES = [
       "Add red chili powder, coriander powder, and salt. Cook 3 more minutes.",
       "Add cooked rajma with its water. Mash a few beans with the back of the spoon to thicken the gravy.",
       "Simmer on low heat for 10 minutes. Add garam masala and serve with rice or Phulka."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:113, proteinG:12, carbsG:34, fatG:4, servingSizeG:200 }
   },
@@ -412,7 +412,7 @@ const RECIPES = [
       "Gently turn brinjals. Add 3–4 tbsp water, cover and cook 10 more minutes until tender.",
       "Uncover and cook 5 minutes more until the masala coats the brinjals and oil separates.",
       "Serve with rice — a festive Andhra dish!"
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:83, proteinG:4, carbsG:19, fatG:9, servingSizeG:200 }
   },
@@ -442,7 +442,7 @@ const RECIPES = [
       "Add ¼ cup water. Add the whole eggs to the gravy and coat gently.",
       "Simmer on low heat for 5 minutes. Add garam masala, garnish with coriander.",
       "Serve with Phulka or rice. Andhra egg curry has more masala than gravy — thick and spicy!"
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:143, proteinG:19, carbsG:8, fatG:21, servingSizeG:200 }
   },
@@ -470,7 +470,7 @@ const RECIPES = [
       "Place marinated paneer pieces. Cook on high heat for 2 minutes until charred marks appear.",
       "Flip carefully and cook other side for 2 minutes.",
       "Serve immediately with mint chutney and lemon squeeze. The char is essential!"
-    ]
+    ],
     mealType: ['lunch', 'snack'],
     nutrition: { caloriesPer100g:150, proteinG:15, carbsG:5, fatG:17, servingSizeG:150 }
   },
@@ -498,7 +498,7 @@ const RECIPES = [
       "Cook on medium-high heat, stirring every 2 minutes, for 12–15 minutes until okra is completely cooked and slightly crispy.",
       "Add turmeric, chili powder, coriander, and salt only when okra is 80% cooked.",
       "Stir and cook 3 more minutes. Serve as a side with dal and rice."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:57, proteinG:2, carbsG:12, fatG:4, servingSizeG:150 }
   },
@@ -531,7 +531,7 @@ const RECIPES = [
       "Uncover. Increase heat and fry, stirring, until chicken is deeply colored and nearly dry (5–8 minutes).",
       "Squeeze lemon, garnish with coriander. Serve with rice or Phulka.",
       "Always cook chicken thoroughly to 75°C internal temperature. Rest 2–3 minutes before serving."
-    ]
+    ],
     mealType: ['dinner'],
     nutrition: { caloriesPer100g:143, proteinG:33, carbsG:5, fatG:15, servingSizeG:200 }
   },
@@ -564,7 +564,7 @@ const RECIPES = [
       "Cover and cook on low heat for 20–25 minutes until chicken is tender.",
       "Add garam masala. Simmer uncovered for 5 minutes to thicken gravy.",
       "Pulusu (tamarind curry) is the signature Andhra dish — sour, spicy, and deeply savory."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:106, proteinG:28, carbsG:10, fatG:12, servingSizeG:250 }
   },
@@ -593,7 +593,7 @@ const RECIPES = [
       "Add gongura paste (the star ingredient!) and ½ cup water. Mix well.",
       "Cook covered on medium heat for 20–25 minutes until chicken is tender and gravy thickens.",
       "The sour, spicy flavor of gongura is iconic Andhra — unique to Telugu cuisine!"
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:102, proteinG:30, carbsG:6, fatG:12, servingSizeG:250 }
   },
@@ -622,7 +622,7 @@ const RECIPES = [
       "Prepare tadka: Heat ghee, add cumin, curry leaves, and remaining garlic (sliced). Pour over rasam.",
       "Garnish with coriander. Serve as a light dinner soup with ¾ cup rice.",
       "Kodi Rasam is Andhra's healing broth — perfect after workout days for recovery."
-    ]
+    ],
     mealType: ['dinner'],
     nutrition: { caloriesPer100g:40, proteinG:15, carbsG:8, fatG:4, servingSizeG:300 }
   },
@@ -647,7 +647,7 @@ const RECIPES = [
       "Prepare tadka: Heat oil, add mustard seeds. Once popped, add curry leaves.",
       "Pour tadka over chutney and mix.",
       "Allam chutney is THE classic pairing for Pesarattu. Ginger aids digestion."
-    ]
+    ],
     mealType: ['breakfast', 'lunch', 'dinner'],
     nutrition: { caloriesPer100g:117, proteinG:1, carbsG:6, fatG:1, servingSizeG:30 }
   },
@@ -671,7 +671,7 @@ const RECIPES = [
       "Prepare tadka: Oil + mustard seeds + curry leaves. Pour over chutney.",
       "Sesame is rich in calcium and healthy fats — excellent thyroid support.",
       "Serve with Pesarattu, Idli, or as a spread with Phulka."
-    ]
+    ],
     mealType: ['breakfast', 'lunch', 'dinner'],
     nutrition: { caloriesPer100g:300, proteinG:3, carbsG:4, fatG:7, servingSizeG:30 }
   },
@@ -693,7 +693,7 @@ const RECIPES = [
       "Prepare tadka: Heat oil, add mustard seeds. Once popped, add curry leaves and red chili.",
       "Pour tadka over chutney and mix.",
       "Store in fridge up to 2 days. This chutney pairs well with Idli, Dosa, Pesarattu, and Upma."
-    ]
+    ],
     mealType: ['breakfast', 'lunch', 'dinner'],
     nutrition: { caloriesPer100g:267, proteinG:2, carbsG:4, fatG:7, servingSizeG:30 }
   },
@@ -716,7 +716,7 @@ const RECIPES = [
       "Cool slightly. Blend to a smooth or slightly chunky paste. Add salt.",
       "Prepare tadka: Heat a little oil, add mustard seeds. Once popped, add curry leaves and a pinch of hing.",
       "Pour tadka over chutney. Serve with Pesarattu, Idli, or Egg Bhurji."
-    ]
+    ],
     mealType: ['breakfast', 'lunch', 'dinner'],
     nutrition: { caloriesPer100g:150, proteinG:1, carbsG:6, fatG:2, servingSizeG:30 }
   },
@@ -740,7 +740,7 @@ const RECIPES = [
       "Prepare generous tadka: Heat oil, add mustard seeds, then curry leaves, red chilies, and sliced garlic. Fry until garlic is golden.",
       "Pour tadka over chutney and mix well.",
       "Gongura Pachadi is the pride of Andhra Pradesh! Extremely tangy and spicy. A must-have with plain rice."
-    ]
+    ],
     mealType: ['breakfast', 'lunch', 'dinner'],
     nutrition: { caloriesPer100g:133, proteinG:1, carbsG:5, fatG:2, servingSizeG:30 }
   },
@@ -764,7 +764,7 @@ const RECIPES = [
       "Taste and adjust lemon/salt/chili.",
       "Serve immediately or store in airtight container in fridge for up to 2 days.",
       "Mint chutney pairs best with Paneer Tikka, Kebabs, and as a sandwich spread."
-    ]
+    ],
     mealType: ['breakfast', 'lunch', 'dinner'],
     nutrition: { caloriesPer100g:100, proteinG:1, carbsG:4, fatG:1, servingSizeG:30 }
   },
@@ -787,7 +787,7 @@ const RECIPES = [
       "Flip and cook 30 seconds more.",
       "Transfer directly to a flame (gas stove) and it will puff up. Rotate with tongs.",
       "Smear ½ tsp ghee on one side. Each phulka = ~70 kcal. 1 Phulka is about 30g atta."
-    ]
+    ],
     mealType: ['breakfast', 'lunch', 'dinner'],
     nutrition: { caloriesPer100g:175, proteinG:3, carbsG:14, fatG:1, servingSizeG:40 }
   },
@@ -810,7 +810,7 @@ const RECIPES = [
       "Optional: blend with mint leaves and ginger for Masala Chaas.",
       "Serve chilled. Drink after lunch for digestion — a Telugu household essential!",
       "200ml chaas = ~45 kcal. Excellent probiotic for gut health and thyroid support."
-    ]
+    ],
     mealType: ['snack'],
     nutrition: { caloriesPer100g:11, proteinG:3, carbsG:4, fatG:2, servingSizeG:400 }
   },
@@ -834,7 +834,7 @@ const RECIPES = [
       "Thyroid note: Flaxseeds should be ground or cracked to release omega-3s. Limit to 15g/day.",
       "This mix provides selenium (thyroid support), zinc, omega-3, and healthy fats.",
       "Total per serving (~35g): 160 kcal, 5g protein, 13g fat, 6g carbs"
-    ]
+    ],
     mealType: ['snack'],
     nutrition: { caloriesPer100g:457, proteinG:5, carbsG:6, fatG:13, servingSizeG:35 }
   },
@@ -860,7 +860,7 @@ const RECIPES = [
       "Gently roll into a 6-inch circle on a floured surface — don't press too hard.",
       "Cook on a hot tawa for 2 minutes each side until golden spots appear.",
       "Apply ½ tsp ghee on each side. Serve hot with cold curd and pickle."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:190, proteinG:10, carbsG:58, fatG:12, servingSizeG:200 }
   },
@@ -885,7 +885,7 @@ const RECIPES = [
       "Stuff and roll parathas same as Aloo Paratha technique.",
       "Cook on hot tawa with ghee until golden brown on both sides.",
       "Serve with plain curd and mint chutney."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:189, proteinG:13, carbsG:52, fatG:9, servingSizeG:180 }
   },
@@ -911,7 +911,7 @@ const RECIPES = [
       "Add crumbled paneer. Mix gently and cook 3–4 minutes on medium heat.",
       "Add garam masala. Stir once. Remove from heat — overcooking makes paneer rubbery.",
       "Serve with 2 phulkas or 1 paratha and a glass of chaas."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:164, proteinG:20, carbsG:35, fatG:22, servingSizeG:250 }
   },
@@ -939,7 +939,7 @@ const RECIPES = [
       "Scramble everything together. Add pav bhaji masala and stir.",
       "Cook on medium heat stirring until eggs are just set — remove from heat while still slightly soft.",
       "Garnish with coriander. Serve with 2 warm rotis."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:160, proteinG:22, carbsG:20, fatG:18, servingSizeG:200 }
   },
@@ -965,7 +965,7 @@ const RECIPES = [
       "Cook on medium heat for 2–3 minutes until edges lift and top looks set.",
       "Flip and cook 1–2 minutes more until golden.",
       "Serve hot with mint chutney or curd. Besan chilla is a high-protein vegan breakfast."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:167, proteinG:12, carbsG:32, fatG:8, servingSizeG:150 }
   },
@@ -994,7 +994,7 @@ const RECIPES = [
       "Add cooked dal to the masala. Stir well and add ½ cup water for creamy consistency.",
       "Simmer on very low heat for 20 minutes, stirring frequently. This slow cook is the secret.",
       "Add garam masala, kasuri methi, and cream. Simmer 3 more minutes. Serve with jeera rice or roti."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:124, proteinG:14, carbsG:38, fatG:12, servingSizeG:250 }
   },
@@ -1024,7 +1024,7 @@ const RECIPES = [
       "Simmer 10 minutes on low heat. Add garam masala.",
       "Meanwhile cook basmati rice separately with salt.",
       "Serve rajma over rice with a dollop of butter. The ultimate North Indian comfort meal."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:111, proteinG:16, carbsG:68, fatG:7, servingSizeG:350 }
   },
@@ -1051,7 +1051,7 @@ const RECIPES = [
       "For bhatura: Mix maida, curd, baking soda, salt, and enough water into a soft dough. Rest 30 min.",
       "Roll into oval shapes and deep fry in hot oil until puffed and golden.",
       "Serve chole with 2 bhaturas, sliced onion, and lemon wedge."
-    ]
+    ],
     mealType: ['lunch'],
     nutrition: { caloriesPer100g:149, proteinG:16, carbsG:75, fatG:18, servingSizeG:350 }
   },
@@ -1081,7 +1081,7 @@ const RECIPES = [
       "Add paneer cubes. Gently fold into the gravy.",
       "Add cream, garam masala, and kasuri methi (crush between palms). Simmer 3 minutes.",
       "Serve with 2 phulkas. Do not simmer too long — paneer should remain soft."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:143, proteinG:18, carbsG:38, fatG:24, servingSizeG:300 }
   },
@@ -1110,7 +1110,7 @@ const RECIPES = [
       "Add 1 cup water. Cover and cook on medium heat for 20–25 minutes until chicken is tender.",
       "Add garam masala. Simmer uncovered 5 minutes to thicken.",
       "Serve with steamed basmati rice and sliced onion salad."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:120, proteinG:32, carbsG:46, fatG:14, servingSizeG:350 }
   },
@@ -1139,7 +1139,7 @@ const RECIPES = [
       "Layer: mutton at bottom, then rice, then fried onions, mint, coriander, saffron milk, and ghee.",
       "Seal the pot with dough or tight foil. Cook on dum (very low heat) for 25–30 minutes.",
       "Open and mix gently from bottom. Serve with raita."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:149, proteinG:30, carbsG:58, fatG:20, servingSizeG:350 }
   },
@@ -1164,7 +1164,7 @@ const RECIPES = [
       "For pakodas: Mix besan, onion, ajwain, and salt into thick batter. Drop spoonfuls into hot oil and fry until golden. Add to kadhi.",
       "Prepare tadka: Heat ghee. Add mustard seeds, cumin, red chilies, curry leaves, and garlic. Fry until garlic is golden.",
       "Pour tadka into kadhi. Simmer 2 minutes. Serve over steamed rice."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:91, proteinG:10, carbsG:48, fatG:10, servingSizeG:350 }
   },
@@ -1193,7 +1193,7 @@ const RECIPES = [
       "For makki roti: Knead makki atta with warm water into a crumbly dough. Pat by hand into small thick rotis.",
       "Cook on tawa with ghee until both sides have golden spots.",
       "Serve saag topped with extra butter alongside hot makki roti and jaggery."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:113, proteinG:10, carbsG:44, fatG:14, servingSizeG:300 }
   },
@@ -1220,7 +1220,7 @@ const RECIPES = [
       "Add red chili powder OFF the heat — the residual heat blooms the spice without burning.",
       "Pour sizzling tadka over the dal immediately. Don't stir — let it sit 30 seconds. Then mix.",
       "Squeeze lemon, garnish with coriander. Serve with phulkas."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:93, proteinG:14, carbsG:40, fatG:8, servingSizeG:300 }
   },
@@ -1250,7 +1250,7 @@ const RECIPES = [
       "Add spinach puree and simmer 5 minutes on medium heat.",
       "Add paneer cubes. Gently fold. Cook 3 minutes.",
       "Add garam masala, butter, and cream. Stir once and serve."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:148, proteinG:16, carbsG:14, fatG:20, servingSizeG:200 }
   },
@@ -1280,7 +1280,7 @@ const RECIPES = [
       "Cover and cook on medium heat for 12 minutes until potatoes are nearly tender.",
       "Add green peas. Cook uncovered 5 more minutes.",
       "Add garam masala and fresh coriander. Serve with phulkas."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:88, proteinG:9, carbsG:44, fatG:7, servingSizeG:300 }
   },
@@ -1308,7 +1308,7 @@ const RECIPES = [
       "Add spinach puree and ¼ cup water. Cover and cook 15 minutes until chicken is cooked through.",
       "Add garam masala. Simmer uncovered 5 minutes to thicken.",
       "Serve over steamed basmati rice."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:111, proteinG:30, carbsG:40, fatG:13, servingSizeG:350 }
   },
@@ -1338,7 +1338,7 @@ const RECIPES = [
       "Reduce heat. Add ½ cup water. Cover and cook 15 minutes.",
       "Add green peas and cook uncovered 8 more minutes until peas are done and water evaporates.",
       "Add garam masala. Garnish with coriander. Serve with phulkas."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:127, proteinG:28, carbsG:24, fatG:20, servingSizeG:300 }
   },
@@ -1367,7 +1367,7 @@ const RECIPES = [
       "Add turmeric, red chili, and salt. Mix well.",
       "Add mashed brinjal and mix thoroughly. Cook on medium heat for 5 minutes.",
       "Add garam masala and fresh coriander. Serve with phulkas."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:78, proteinG:5, carbsG:28, fatG:8, servingSizeG:250 }
   },
@@ -1397,7 +1397,7 @@ const RECIPES = [
       "Beat curd with all dry spices. Add to the mutton. Cook on medium heat until curd is absorbed and oil surfaces (10 min).",
       "Add fried onions and ½ cup water. Cover and cook on low heat for 40–45 minutes until mutton is very tender.",
       "Add garam masala. Simmer uncovered 5 minutes. Serve with basmati rice or naan."
-    ]
+    ],
     mealType: ['dinner'],
     nutrition: { caloriesPer100g:168, proteinG:32, carbsG:18, fatG:22, servingSizeG:250 }
   },
@@ -1418,7 +1418,7 @@ const RECIPES = [
       "Fill cone with potato mixture. Seal the open edge firmly.",
       "Deep fry in medium-hot oil (170°C) for 8–10 minutes turning until golden and crispy.",
       "Serve with mint chutney and tamarind chutney."
-    ]
+    ],
     mealType: ['snack'],
     nutrition: { caloriesPer100g:210, proteinG:5, carbsG:28, fatG:9, servingSizeG:100 }
   },
@@ -1444,7 +1444,7 @@ const RECIPES = [
       "Mix well and quickly — bhel puri should be eaten immediately before it gets soggy.",
       "Squeeze lemon juice and garnish with fresh coriander.",
       "Tip: Make it spicier with extra green chutney or add raw mango for extra tang."
-    ]
+    ],
     mealType: ['snack'],
     nutrition: { caloriesPer100g:120, proteinG:5, carbsG:30, fatG:5, servingSizeG:150 }
   },
@@ -1469,7 +1469,7 @@ const RECIPES = [
       "Squeeze lemon juice and add fresh coriander.",
       "Serve immediately. Peanut chaat is high in protein and healthy fats — excellent pre-workout snack.",
       "Variation: Add boiled chickpeas or pomegranate seeds for extra nutrition."
-    ]
+    ],
     mealType: ['snack'],
     nutrition: { caloriesPer100g:200, proteinG:9, carbsG:14, fatG:13, servingSizeG:100 }
   },
@@ -1497,7 +1497,7 @@ const RECIPES = [
       "Cook on high heat for 3–4 minutes per side until charred spots appear.",
       "Brush with a little oil and cook 2 more minutes until juices run clear.",
       "Internal temperature should reach 75°C. Serve with mint chutney and lemon wedge."
-    ]
+    ],
     mealType: ['snack', 'dinner'],
     nutrition: { caloriesPer100g:153, proteinG:28, carbsG:6, fatG:10, servingSizeG:150 }
   },
@@ -1524,7 +1524,7 @@ const RECIPES = [
       "Grill on a hot tawa or grill pan, turning every 2 minutes, basting with oil.",
       "Cook for 12–15 minutes until well browned and cooked through.",
       "Serve with mint chutney, sliced onion rings, and lemon wedge."
-    ]
+    ],
     mealType: ['snack', 'dinner'],
     nutrition: { caloriesPer100g:163, proteinG:24, carbsG:8, fatG:14, servingSizeG:150 }
   },
@@ -1549,7 +1549,7 @@ const RECIPES = [
       "Cover and refrigerate overnight (minimum 6 hours).",
       "In the morning, top with mixed berries and almond flakes.",
       "No cooking needed! Can be prepared 3–4 jars at once for the week."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:103, proteinG:12, carbsG:48, fatG:8, servingSizeG:300 }
   },
@@ -1574,7 +1574,7 @@ const RECIPES = [
       "Slide the egg into the centre of the swirl. Poach for 3–4 minutes for a runny yolk.",
       "Remove with a slotted spoon and drain. Place on avocado toast.",
       "Season with chili flakes and black pepper. Serve immediately."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:155, proteinG:16, carbsG:28, fatG:20, servingSizeG:220 }
   },
@@ -1597,7 +1597,7 @@ const RECIPES = [
       "Drizzle honey on top.",
       "Sprinkle chia seeds and walnuts.",
       "Eat immediately — granola loses its crunch if it sits too long in yogurt."
-    ]
+    ],
     mealType: ['breakfast'],
     nutrition: { caloriesPer100g:116, proteinG:14, carbsG:42, fatG:8, servingSizeG:250 }
   },
@@ -1624,7 +1624,7 @@ const RECIPES = [
       "Make tahini dressing: Whisk tahini with lemon juice, garlic, salt, and 2 tbsp water.",
       "Assemble bowl: Quinoa base, then greens, sweet potato, chickpeas, avocado, and cherry tomatoes.",
       "Drizzle tahini dressing generously. Serve immediately."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:109, proteinG:14, carbsG:54, fatG:12, servingSizeG:350 }
   },
@@ -1647,7 +1647,7 @@ const RECIPES = [
       "Toss romaine lettuce with Caesar dressing in a large bowl.",
       "Plate the dressed lettuce. Top with sliced chicken, croutons, and parmesan.",
       "Squeeze lemon on the chicken. Serve immediately."
-    ]
+    ],
     mealType: ['lunch'],
     nutrition: { caloriesPer100g:120, proteinG:32, carbsG:14, fatG:18, servingSizeG:300 }
   },
@@ -1673,7 +1673,7 @@ const RECIPES = [
       "Spoon tuna mixture over the greens.",
       "Add cucumber slices.",
       "Roll tightly, tucking in the sides. Cut diagonally and serve immediately."
-    ]
+    ],
     mealType: ['lunch'],
     nutrition: { caloriesPer100g:140, proteinG:30, carbsG:34, fatG:10, servingSizeG:250 }
   },
@@ -1701,7 +1701,7 @@ const RECIPES = [
       "Top with crumbled feta cheese — don't over-toss after adding feta.",
       "Serve alongside hummus and pita or use hummus as a dip for the pita bread.",
       "Tip: Let salad sit 5 minutes after dressing — the vegetables absorb flavor better."
-    ]
+    ],
     mealType: ['lunch', 'snack'],
     nutrition: { caloriesPer100g:93, proteinG:10, carbsG:26, fatG:16, servingSizeG:300 }
   },
@@ -1730,7 +1730,7 @@ const RECIPES = [
       "Reduce heat, cover, and simmer for 20–25 minutes until lentils are completely soft.",
       "Use an immersion blender to partially blend — leave some texture.",
       "Season with salt, pepper, and a squeeze of lemon. Serve with whole grain bread."
-    ]
+    ],
     mealType: ['lunch', 'dinner'],
     nutrition: { caloriesPer100g:80, proteinG:16, carbsG:52, fatG:6, servingSizeG:400 }
   },
@@ -1760,7 +1760,7 @@ const RECIPES = [
       "Add drained pasta to the pan. Toss everything together.",
       "Add reserved pasta water to loosen. Season with salt and pepper.",
       "Serve topped with parmesan and fresh basil leaves."
-    ]
+    ],
     mealType: ['dinner'],
     nutrition: { caloriesPer100g:120, proteinG:12, carbsG:56, fatG:10, servingSizeG:300 }
   },
@@ -1785,7 +1785,7 @@ const RECIPES = [
       "Press lightly with spatula and cook without moving for 3–4 minutes until skin is crispy.",
       "Flip salmon. Cook 2 minutes more. For medium doneness, the centre should be slightly translucent.",
       "Squeeze lemon over salmon. Serve alongside roasted vegetables."
-    ]
+    ],
     mealType: ['dinner'],
     nutrition: { caloriesPer100g:140, proteinG:36, carbsG:18, fatG:22, servingSizeG:300 }
   },
@@ -1813,7 +1813,7 @@ const RECIPES = [
       "Push everything to the side. Add beaten egg and scramble.",
       "Add cooked rice, soy sauce, and oyster sauce. Toss everything together on high heat.",
       "Return chicken to the wok. Add sesame oil and toss. Garnish with spring onion."
-    ]
+    ],
     mealType: ['dinner'],
     nutrition: { caloriesPer100g:111, proteinG:30, carbsG:46, fatG:10, servingSizeG:350 }
   },
@@ -1841,7 +1841,7 @@ const RECIPES = [
       "Add wine. Stir until absorbed. Then add warm stock one ladle at a time, stirring constantly and waiting for each ladle to absorb before adding the next (18–20 min).",
       "When rice is al dente and creamy, stir in mushrooms, remaining butter, and parmesan.",
       "Season with salt and pepper. Serve immediately — risotto waits for no one."
-    ]
+    ],
     mealType: ['dinner'],
     nutrition: { caloriesPer100g:103, proteinG:12, carbsG:52, fatG:12, servingSizeG:350 }
   },
@@ -1863,7 +1863,7 @@ const RECIPES = [
       "For variety, lightly dry-roast nuts with a pinch of cinnamon.",
       "Avoid salted or flavored commercial nut mixes — plain is always better.",
       "This is the simplest high-quality snack — healthy fats, fiber, and natural sugars for sustained energy."
-    ]
+    ],
     mealType: ['snack'],
     nutrition: { caloriesPer100g:190, proteinG:5, carbsG:16, fatG:14, servingSizeG:100 }
   },
@@ -1884,7 +1884,7 @@ const RECIPES = [
       "Transfer immediately to ice-cold water for 5 minutes — this stops cooking and makes peeling easy.",
       "Peel and season with salt, pepper, or hot sauce.",
       "Batch prep: boil 6 eggs and store unpeeled in the fridge for up to 7 days."
-    ]
+    ],
     mealType: ['snack', 'breakfast'],
     nutrition: { caloriesPer100g:155, proteinG:13, carbsG:1, fatG:11, servingSizeG:100 }
   },
@@ -1906,7 +1906,7 @@ const RECIPES = [
       "Plate hummus in a shallow bowl. Sprinkle paprika and drizzle olive oil.",
       "Arrange vegetable sticks around the hummus bowl.",
       "Dip and eat. Hummus + raw veggies is a nutritionally complete snack — protein, fiber, and healthy fat."
-    ]
+    ],
     mealType: ['snack'],
     nutrition: { caloriesPer100g:93, proteinG:7, carbsG:20, fatG:9, servingSizeG:200 }
   }
