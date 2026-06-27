@@ -18,11 +18,13 @@ function getDefaultChecklist(profile) {
     { category: 'hydration', text: 'Drink 2.5–3L water daily' },
     { category: 'sleep',     text: 'Get 7–8 hours of sleep' },
     { category: 'tracking',  text: 'Log meals and weight weekly' },
-    { category: 'activity',  text: 'Hit 7,000+ steps per day' },
+    { category: 'activity',  text: 'Hit 7,000+ steps per day' }
   ];
-  (profile.medications || []).forEach(med => {
-    items.push({ category: 'medication', text: `Take ${med.name} as prescribed` });
-  });
+  if (profile && profile.medications) {
+    profile.medications.forEach(med => {
+      items.push({ category: 'medication', text: `Take ${med.name} as prescribed` });
+    });
+  }
   return items;
 }
 

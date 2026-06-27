@@ -1,6 +1,12 @@
 'use strict';
 const { buildDietPlan, buildWorkoutPlan, buildCardioPlan, buildGroceryList } = require('../engine/plan-builder');
 
+const PHASES = [
+  { months: [1, 2], label: 'Stabilize' },
+  { months: [3, 4], label: 'Optimize' },
+  { months: [5, 6], label: 'Sustain' }
+];
+
 function getDietPlan(profile)    { return buildDietPlan(profile, 'maintenance'); }
 function getWorkoutPlan(profile) { return buildWorkoutPlan(profile, 'maintenance'); }
 function getCardioPlan(profile)  { return buildCardioPlan(profile, 'maintenance'); }
@@ -26,11 +32,7 @@ function getPlanMeta(profile, currentMonth = 1, currentWeek = 1) {
   currentMonth = Math.max(1, Math.min(6, currentMonth));
   currentWeek  = Math.max(1, Math.min(4, currentWeek));
   
-  const phases = [
-    { months: [1, 2], label: 'Stabilize' },
-    { months: [3, 4], label: 'Optimize' },
-    { months: [5, 6], label: 'Sustain' }
-  ];
+  const phases = PHASES;
   const currentPhaseObj = phases.find(p => p.months.includes(currentMonth)) || phases[0];
   return {
     templateName: 'maintenance',
