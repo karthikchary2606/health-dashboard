@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
 
 const medicationSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  dosage: String,
-  timing: String
+  name:       { type: String, required: true },
+  dosage:     String,
+  timing:     String,
+  active:     { type: Boolean, default: true },
+  resolvedAt: { type: Date, default: null }
+}, { _id: false });
+
+const healthConditionSchema = new mongoose.Schema({
+  name:       { type: String, required: true },
+  active:     { type: Boolean, default: true },
+  resolvedAt: { type: Date, default: null }
 }, { _id: false });
 
 const profileSchema = new mongoose.Schema({
@@ -36,7 +44,7 @@ const profileSchema = new mongoose.Schema({
     enum: ['sedentary', 'lightly-active', 'moderately-active', 'very-active']
   },
   equipmentAvailable: [String],
-  healthConditions: [String],
+  healthConditions: [healthConditionSchema],
   medications: [medicationSchema],
   planTemplate: {
     type: String,
