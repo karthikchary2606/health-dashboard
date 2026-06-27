@@ -408,7 +408,110 @@ Grocery list is derived from the current week's meal plan:
 
 ---
 
-## 13. API Changes
+## 13. Existing Feature Enhancements
+
+### 13.1 Breathing Exercises — Add Indian Pranayama
+
+**Current state:** Box Breathing, 4-7-8, Wim Hof — all Western techniques. No Indian yoga pranayama.
+
+**Enhancement:** Add 6 pranayama techniques with age/condition gates (as defined in Section 6.5):
+
+| Technique | Age range | Contraindicated for |
+|-----------|-----------|---------------------|
+| Nadi Shodhana | All ages | None |
+| Anulom Vilom | All ages | None |
+| Bhramari | All ages | None |
+| Kapalabhati | 18–55 | Hypertension, heart conditions, pregnancy |
+| Bhastrika | 18–45 | Heart conditions, hypertension |
+| Ujjayi | All ages | None |
+
+- Breathing page shows only techniques applicable to user's age + active conditions
+- Each pranayama has: step-by-step instructions, round count, benefits, when to practice (morning/evening)
+- Existing Western techniques remain (not removed — just supplemented)
+
+### 13.2 HealthLog Model — Add Food + Workout Detail
+
+**Current state:** `completedWorkout: Boolean` (no detail), no food entries, no calorie tracking.
+
+**Enhancement — new fields on HealthLog:**
+```js
+meals: [{
+  mealType:   String,    // 'breakfast' | 'lunch' | 'dinner' | 'snack'
+  recipeName: String,
+  calories:   Number,
+  proteinG:   Number,
+  carbsG:     Number,
+  fatG:       Number
+}],
+exerciseLog: [{
+  exerciseName: String,
+  sets:         Number,
+  reps:         Number,
+  weightKg:     Number,   // 0 for bodyweight
+  durationMin:  Number    // for cardio/yoga
+}],
+caloriesConsumed: Number,  // sum of meals[].calories (computed)
+proteinConsumed:  Number   // sum of meals[].proteinG (computed)
+```
+
+- Dashboard quick-log panel: one-tap buttons to log a meal from today's plan, log water, log weight, mark workout done
+- Detailed workout log: expandable per-exercise entry after marking workout complete
+
+### 13.3 Progress Page — Add Sleep, Mood, Energy Trends
+
+**Current state:** Only weight trend + basic streak cards.
+
+**Enhancement — additional charts:**
+- **Sleep quality trend** — 7/30-day bar chart (hours slept, quality score 1–5)
+- **Mood & Energy trend** — dual-line chart (mood score + energy score over time)
+- **Macro tracking** — daily calories consumed vs target (bar chart), protein/carbs/fat breakdown (stacked)
+- **Workout adherence** — weekly heatmap (days completed vs planned per week, 6-month view)
+
+All charts respect `profile.primaryGoal` — which sections are prominent changes per goal (Section 9.2).
+
+### 13.4 Guidelines Page — Personalise by Community + Active Conditions
+
+**Current state:** Hardcoded condition cards (thyroid, diabetes) shown for all users regardless of whether they have those conditions.
+
+**Enhancement:**
+- Show only condition cards for `active: true` healthConditions
+- Add community-specific nutritional notes: Telugu users see guidance on Ragi, Gongura, raw turmeric usage; Tamil users see guidance on Sesame, Kollu; etc.
+- Seeds tracker pre-selects seeds relevant to active conditions (e.g., flax for thyroid, fenugreek for diabetes)
+- When a condition is marked resolved, its card disappears from guidelines
+
+### 13.5 Water Goal — Auto-Calculate from Weight
+
+**Current state:** Static default 2.5L for all users.
+
+**Enhancement:**
+- Auto-calculate on profile save: `waterGoalL = Math.round((weightKg * 30) / 1000 * 10) / 10`
+- Shown on dashboard water tracker with note "Based on your weight (Xkg)"
+- User can override in settings
+
+### 13.6 Checklist — Condition-Aware Auto-Population
+
+**Current state:** Fully custom checklist — user writes their own items.
+
+**Enhancement:**
+- On profile save / condition change: auto-suggest checklist items from active conditions
+  - Thyroid → "Take thyroid medication at 6:30 AM on empty stomach"
+  - Diabetes → "Check blood sugar before breakfast"
+  - Hypertension → "10-minute evening walk before dinner"
+- Suggestions appear as "Add to checklist?" prompts — user accepts or dismisses
+- Custom items remain fully supported
+
+### 13.7 Dashboard — Quick Log Panel
+
+**Current state:** Water intake and mood/energy logging exists but food + workout logging is absent from dashboard.
+
+**Enhancement — Quick Log panel on dashboard:**
+- **Log meal:** dropdown of today's planned meals → one tap to log with pre-filled calories
+- **Log water:** +250ml / +500ml buttons (existing, keep)
+- **Log weight:** number input, submits with today's date
+- **Mark workout done:** checkbox → expands to per-exercise entry form
+- All entries write to `HealthLog` for the current date
+
+---
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
@@ -423,6 +526,10 @@ Grocery list is derived from the current week's meal plan:
 | POST | `/api/logs` | Log entry (food, water, weight, workout) |
 | GET | `/api/grocery/week` | Current week's generated grocery list |
 | PATCH | `/api/grocery/week/:itemId` | Mark grocery item purchased / remove |
+| GET | `/api/logs/data/macros` | Daily calorie + macro consumed vs target (for progress charts) |
+| GET | `/api/logs/data/sleep-trend` | 30-day sleep quality + duration trend |
+| GET | `/api/logs/data/mood-trend` | 30-day mood + energy trend |
+| GET | `/api/breathing/techniques` | Returns pranayama techniques filtered for user's age + conditions |
 
 ---
 
@@ -448,9 +555,13 @@ Migration script: `scripts/migrate-profile-v2.js`
 - Unit: Mifflin-St Jeor BMR calculation correct for male/female/age/weight/height
 - Unit: Grocery list derived from week's meals — correct deduplication and grouping
 - Unit: Pranayama age/condition filter — Kapalabhati excluded for 60+, hypertension
+- Unit: Water goal auto-calculation (weight × 30ml formula)
+- Unit: computeStats returns caloriesConsumed, proteinConsumed from meals[] entries
+- Unit: Checklist suggestions generated for active conditions (thyroid → medication reminder item)
 - Integration: Full onboarding wizard submit → ProfileSnapshot created
 - Integration: Phase 2 save → snapshot written + plan cache invalidated
 - Integration: Periodic review banner logic (overdue, dismiss, non-dismissible after 3)
 - Integration: Recipe filter — cultural avoidances always excluded, food list filter when ≥10 items
-- Integration: Progress summary returns goal-appropriate sections
+- Integration: Progress summary returns goal-appropriate sections with sleep + mood data
+- Integration: Guidelines page shows only active condition cards
 - Migration: existing user data shape preserved and extended correctly
