@@ -209,6 +209,8 @@ async function saveAll() {
   if (res.ok) {
     showMsg('Profile updated successfully! ✅');
     updateCompletionBar();
+    // Bust the plan cache so diet/workout regenerates with new profile choices
+    if (window.planCache) window.planCache.invalidate();
   } else {
     showMsg('Error saving: ' + (res.data?.error || 'Unknown error'), 'error');
   }

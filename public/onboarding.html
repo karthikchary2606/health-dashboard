@@ -752,6 +752,8 @@ async function submitProfile() {
       return;
     }
     localStorage.removeItem(DRAFT_KEY);
+    // Bust plan cache so diet/workout regenerates with new profile on next load
+    if (window.planCache) window.planCache.invalidate();
     sucEl.textContent = 'Profile saved! Redirecting…';
     sucEl.style.display = 'block';
     btn.textContent = '✓ Done';
