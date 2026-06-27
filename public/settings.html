@@ -125,6 +125,7 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     <div class="form-group">
       <label for="cuisinePreference">Cuisine Preference</label>
       <select id="cuisinePreference" name="cuisinePreference" onchange="onPreferenceChanged()">
+        <option value="">Select cuisine…</option>
         <option value="south-indian">South Indian</option>
         <option value="north-indian">North Indian</option>
         <option value="continental">Continental</option>
@@ -407,7 +408,9 @@ async function switchPlan() {
   if (ok) {
     _loadedProfile.planTemplate = _selectedPlan;
     markCurrentPlan(_selectedPlan);
-    window.planCache.invalidate();
+    if (typeof planCache !== 'undefined' && planCache && typeof planCache.invalidate === 'function') {
+      planCache.invalidate();
+    }
     showMsg('msg-plan', 'success', '✓ Plan switched successfully.');
   } else {
     showMsg('msg-plan', 'error', (data && data.error) || 'Failed to switch plan.');
