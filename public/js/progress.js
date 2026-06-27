@@ -40,6 +40,15 @@ async function loadProgress() {
     updateBMI(currentW, profile);
     renderStats(stats);
     renderMilestones(currentW, startWeight, targetWeight);
+    // V2 charts
+    renderMacroChart(stats, {
+      dailyCalorieTarget: profile.dailyCalorieTarget,
+      dailyProteinG:      profile.dailyProteinG,
+      dailyCarbsG:        profile.dailyCarbsG,
+      dailyFatG:          profile.dailyFatG
+    });
+    renderSleepChart();
+    renderMoodChart();
   } catch(e) {
     console.warn("Progress API offline");
     renderWeightChart([], null);
@@ -141,4 +150,127 @@ function updateBMI(w, profile) {
     detailsEl.innerHTML = `Height: ${heightCm}cm · Current: ${w > 0 ? w + 'kg' : '—'}`
       + (goalBmi ? `<br>Target BMI at ${goalW}kg: <strong>${goalBmi}</strong> (Normal &lt;25)` : '');
   }
+}
+
+function renderMacroChart(stats, targets) {
+  var section = document.getElementById('macroSection');
+  if (!section) return;
+  if (!stats.avgCalories && !stats.avgProtein) return;
+  section.style.display = 'block';
+
+  var ctx = document.getElementById('macroChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Calories', 'Protein (g)', 'Carbs (g)', 'Fat (g)'],
+      datasets: [
+        {
+          label: 'Consumed (avg)',
+          data: [stats.avgCalories || 0, stats.avgProtein || 0, stats.avgCarbs || 0, stats.avgFat || 0],
+          backgroundColor: '#1b4332'
+        },
+        {
+          label: 'Target',
+          data: [targets.dailyCalorieTarget || 0, targets.dailyProteinG || 0, targets.dailyCarbsG || 0, targets.dailyFatG || 0],
+          backgroundColor: '#86efac'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  var summary = document.getElementById('macroSummary');
+  if (summary) {
+    summary.innerHTML = [
+      { label: 'Calories', val: stats.avgCalories, target: targets.dailyCalorieTarget, unit: 'kcal' },
+      { label: 'Protein',  val: stats.avgProtein,  target: targets.dailyProteinG,      unit: 'g' },
+      { label: 'Carbs',    val: stats.avgCarbs,    target: targets.dailyCarbsG,         unit: 'g' },
+      { label: 'Fat',      val: stats.avgFat,      target: targets.dailyFatG,           unit: 'g' }
+    ].map(function(m) {
+      var pct = m.target ? Math.round((m.val / m.target) * 100) : 0;
+      var color = (pct >= 90 && pct <= 110) ? '#16a34a' : '#d97706';
+      return '<div style="text-align:center"><div style="font-weight:700;color:' + color + '">' + (m.val || 0) + m.unit + '</div><div style="color:#6b7280">' + m.label + '<br>' + (m.target || '—') + m.unit + ' target</div></div>';
+    }).join('');
+  }
+}
+
+async function renderSleepChart() {
+  var section = document.getElementById('sleepSection');
+  if (!section) return;
+  var res = await apiFetch('/api/logs/data/sleep-trend');
+  if (!res.ok || !res.data || !res.data.length) return;
+  section.style.display = 'block';
+
+  var ctx = document.getElementById('sleepChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: res.data.map(function(d){ return d.date.slice(5); }),
+      datasets: [
+        {
+          label: 'Hours slept',
+          data: res.data.map(function(d){ return parseFloat((d.durationMinutes / 60).toFixed(1)); }),
+          backgroundColor: '#7c3aed',
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'Quality (1-5)',
+          data: res.data.map(function(d){ return d.quality; }),
+          borderColor: '#f59e0b',
+          backgroundColor: 'transparent',
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        y:  { beginAtZero: true, max: 12, title: { display: true, text: 'Hours' } },
+        y1: { beginAtZero: true, max: 5, position: 'right', title: { display: true, text: 'Quality' } }
+      }
+    }
+  });
+}
+
+async function renderMoodChart() {
+  var section = document.getElementById('moodSection');
+  if (!section) return;
+  var res = await apiFetch('/api/logs/data/mood-trend');
+  if (!res.ok || !res.data || !res.data.length) return;
+  section.style.display = 'block';
+
+  var ctx = document.getElementById('moodChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: res.data.map(function(d){ return d.date.slice(5); }),
+      datasets: [
+        {
+          label: 'Mood',
+          data: res.data.map(function(d){ return d.moodScore; }),
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16,185,129,.1)',
+          fill: true, tension: 0.3
+        },
+        {
+          label: 'Energy',
+          data: res.data.map(function(d){ return d.energyScore; }),
+          borderColor: '#f59e0b',
+          backgroundColor: 'rgba(245,158,11,.1)',
+          fill: true, tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' } },
+      scales: { y: { min: 1, max: 5 } }
+    }
+  });
 }

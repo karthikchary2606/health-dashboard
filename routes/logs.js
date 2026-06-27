@@ -40,6 +40,35 @@ router.get('/data/weekly-summary', authenticate, requireProfile, async (req, res
   }
 });
 
+router.get('/data/sleep-trend', authenticate, requireProfile, async (req, res) => {
+  try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const logs = await HealthLog.find({
+      userId: req.user._id,
+      date: { $gte: thirtyDaysAgo.toISOString().slice(0, 10) },
+      'sleepEntry.durationMinutes': { $gt: 0 }
+    }).select('date sleepEntry -_id').sort({ date: 1 }).lean();
+    res.json(logs.map(l => ({
+      date: l.date,
+      durationMinutes: l.sleepEntry.durationMinutes,
+      quality: l.sleepEntry.quality || 0
+    })));
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.get('/data/mood-trend', authenticate, requireProfile, async (req, res) => {
+  try {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const logs = await HealthLog.find({
+      userId: req.user._id,
+      date: { $gte: thirtyDaysAgo.toISOString().slice(0, 10) }
+    }).select('date moodScore energyScore -_id').sort({ date: 1 }).lean();
+    res.json(logs.filter(l => l.moodScore > 0 || l.energyScore > 0));
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 router.get('/:date', async (req, res) => {
   try {
     let log = await HealthLog.findOne({ userId: req.user._id, date: req.params.date });
