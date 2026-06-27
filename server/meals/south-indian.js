@@ -1,0 +1,108 @@
+'use strict';
+
+module.exports = {
+  breakfast: {
+    veg: [
+      'Idli with Sambar',
+      'Masala Dosa',
+      'Rava Upma',
+      'Pongal with Chutney',
+      'Medu Vada',
+      'Rava Idli',
+      'Oats Pongal',
+      'Pesarattu with Ginger Chutney',
+    ],
+    eggetarian: [
+      'Egg Dosa',
+      'Egg Upma',
+      'Egg Parotta',
+      'Masala Egg Omelette with Idli',
+      'Scrambled Eggs with Appam',
+    ],
+    'non-veg': [
+      'Chicken Keema Dosa',
+      'Fish Curry with Idli',
+      'Prawn Masala with Appam',
+      'Mutton Kheema with Parotta',
+      'Chicken Chettinad Breakfast Bowl',
+    ],
+  },
+  lunch: {
+    veg: [
+      'Sambar Rice with Papad',
+      'Vegetable Biryani',
+      'Rasam Rice with Poriyal',
+      'Curd Rice with Pickle',
+      'Kootu Curry with Rice',
+      'Tamarind Rice',
+      'Vegetable Kuzhambu with Rice',
+      'Tomato Rice with Raita',
+    ],
+    eggetarian: [
+      'Egg Curry with Rice',
+      'Egg Biryani',
+      'Egg Masala with Parotta',
+      'Egg Kuzhambu with Rice',
+      'Egg Fried Rice',
+    ],
+    'non-veg': [
+      'Chicken Chettinad with Rice',
+      'Fish Curry with Rice',
+      'Prawn Biryani',
+      'Mutton Kuzhambu with Rice',
+      'Chicken Biryani',
+      'Fish Fry with Sambar Rice',
+      'Prawn Masala with Rice',
+      'Chicken 65 Rice Bowl',
+    ],
+  },
+  snack: {
+    veg: [
+      'Murukku with Tea',
+      'Sundal',
+      'Banana Chips',
+      'Onion Pakoda',
+      'Tapioca Chips',
+      'Coconut Ladoo',
+    ],
+    eggetarian: [
+      'Egg Bhurji on Toast',
+      'Boiled Egg with Pepper',
+      'Egg Puff',
+    ],
+    'non-veg': [
+      'Chicken Lollipop',
+      'Fish Fry Bites',
+      'Prawn Fry',
+    ],
+  },
+  dinner: {
+    veg: [
+      'Chapati with Vegetable Curry',
+      'Dosa with Sambar',
+      'Parotta with Salna',
+      'Idiyappam with Coconut Milk',
+      'Pongal with Vada',
+      'Vegetable Kurma with Rice',
+      'Kothu Parotta (Veg)',
+      'Adai with Avial',
+    ],
+    eggetarian: [
+      'Egg Kothu Parotta',
+      'Egg Curry with Chapati',
+      'Egg Masala Dosa',
+      'Egg Rice Bowl',
+      'Omelette with Idiyappam',
+    ],
+    'non-veg': [
+      'Chicken Curry with Rice',
+      'Fish Fry with Rasam Rice',
+      'Mutton Biryani',
+      'Prawn Curry with Idiyappam',
+      'Chicken Kothu Parotta',
+      'Fish Kuzhambu with Rice',
+      'Chicken Pepper Fry with Parotta',
+      'Crab Curry with Rice',
+    ],
+  },
+};

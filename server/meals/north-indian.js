@@ -1,0 +1,103 @@
+'use strict';
+
+module.exports = {
+  breakfast: {
+    veg: [
+      'Aloo Paratha with Curd',
+      'Poha with Peanuts',
+      'Upma with Chutney',
+      'Besan Chilla',
+      'Puri with Aloo Bhaji',
+      'Methi Paratha',
+      'Dal Paratha',
+      'Sooji Halwa with Puri',
+    ],
+    eggetarian: [
+      'Egg Paratha',
+      'Egg Bhurji with Roti',
+      'Masala Omelette with Poha',
+      'Egg Frankie',
+      'Egg Kathi Roll',
+    ],
+    'non-veg': [
+      'Keema Paratha',
+      'Chicken Frankie',
+      'Mutton Kheema with Puri',
+      'Chicken Tikka Breakfast Bowl',
+      'Prawn Masala with Roti',
+    ],
+  },
+  lunch: {
+    veg: [
+      'Dal Tadka with Roti',
+      'Paneer Butter Masala with Rice',
+      'Rajma Chawal',
+      'Chole Bhature',
+      'Sabzi with Roti',
+      'Palak Paneer with Rice',
+      'Kadhi Chawal',
+      'Aloo Gobi with Roti',
+    ],
+    eggetarian: [
+      'Egg Curry with Roti',
+      'Egg Biryani',
+      'Egg Masala with Rice',
+      'Egg Bhurji with Paratha',
+      'Egg Fried Rice',
+    ],
+    'non-veg': [
+      'Chicken Biryani',
+      'Mutton Rogan Josh with Rice',
+      'Butter Chicken with Naan',
+      'Fish Curry with Rice',
+      'Lamb Curry with Roti',
+      'Chicken Korma with Rice',
+      'Prawn Masala with Rice',
+      'Mutton Biryani',
+    ],
+  },
+  snack: {
+    veg: [
+      'Samosa with Chutney',
+      'Pakoda with Chai',
+      'Bhel Puri',
+      'Dahi Puri',
+      'Lassi',
+    ],
+    eggetarian: [
+      'Egg Puff',
+      'Egg Roll',
+      'Boiled Eggs with Chaat Masala',
+    ],
+    'non-veg': [
+      'Chicken Tikka',
+      'Seekh Kebab',
+      'Mutton Shammi Kebab',
+    ],
+  },
+  dinner: {
+    veg: [
+      'Paneer Tikka Masala with Naan',
+      'Dal Makhani with Rice',
+      'Mixed Veg Sabzi with Roti',
+      'Palak Khichdi',
+      'Baingan Bharta with Roti',
+      'Rajma Rice',
+    ],
+    eggetarian: [
+      'Egg Curry with Rice',
+      'Egg Paratha with Curd',
+      'Egg Masala with Roti',
+      'Egg Biryani',
+      'Anda Bhurji with Naan',
+    ],
+    'non-veg': [
+      'Butter Chicken with Roti',
+      'Mutton Biryani',
+      'Fish Curry with Rice',
+      'Chicken Tikka Masala with Naan',
+      'Prawn Curry with Rice',
+      'Lamb Seekh Kebab with Paratha',
+    ],
+  },
+};
