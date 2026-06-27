@@ -14,6 +14,26 @@ const LEVEL_TIERS = {
 
 const TIER_PRIORITY = ['advanced', 'intermediate', 'beginner'];
 
+const SURYA_ROUNDS = {
+  under30:   { min: 12, max: 24 },
+  age30to45: { min: 8,  max: 12 },
+  age46to60: { min: 5,  max: 8  },
+  over60:    { min: 3,  max: 5  }
+};
+
+function getSuryaNamaskarRounds(profile) {
+  const age = profile.age || 30;
+  const fl  = profile.fitnessLevel || 'moderately-active';
+  let range;
+  if (age < 30)       range = SURYA_ROUNDS.under30;
+  else if (age <= 45) range = SURYA_ROUNDS.age30to45;
+  else if (age <= 60) range = SURYA_ROUNDS.age46to60;
+  else                range = SURYA_ROUNDS.over60;
+
+  if (fl === 'sedentary') return range.min;
+  return Math.round((range.min + range.max) / 2);
+}
+
 function highestTier(tiers) {
   return TIER_PRIORITY.find(t => tiers.includes(t));
 }
@@ -30,7 +50,10 @@ function equipmentMet(ex, profile) {
 }
 
 function resolveExercise(ex, tier, profile) {
-  const conditions = (profile.healthConditions || []).map(c => (typeof c === 'object' && c !== null) ? c.name : c);
+  const rawConditions = profile.healthConditions || [];
+  const conditions = rawConditions
+    .filter(c => typeof c === 'string' || c.active !== false)
+    .map(c => (typeof c === 'object' && c !== null) ? c.name : c);
   const violated   = conditions.filter(c => ex.contraindications.includes(c));
 
   if (violated.length === 0) {
@@ -106,4 +129,4 @@ function getExercises(profile, muscleGroup, goal) {
     .slice(0, 5);
 }
 
-module.exports = { getExercises };
+module.exports = { getExercises, getSuryaNamaskarRounds };
