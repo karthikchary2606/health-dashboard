@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Profile — Health Dashboard</title>
+  <style>
+    :root { --primary:#1b4332; --text-light:#6b7280; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:system-ui,sans-serif; background:#f9fafb; color:#111827; }
+    .header { background:var(--primary); color:#fff; padding:12px 20px; display:flex; align-items:center; gap:12px; }
+    .header a { color:#fff; text-decoration:none; font-size:.85rem; opacity:.8; }
+    .container { max-width:720px; margin:0 auto; padding:24px 16px; }
+    .completion-card { background:#fff; border-radius:12px; padding:16px 20px; margin-bottom:24px; border:1px solid #e5e7eb; }
+    .progress-bar-bg { background:#e5e7eb; border-radius:8px; height:10px; margin-top:8px; }
+    .progress-bar-fill { background:var(--primary); height:10px; border-radius:8px; transition:width .4s; }
+    .section-card { background:#fff; border-radius:12px; padding:20px; margin-bottom:16px; border:1px solid #e5e7eb; }
+    .section-card h3 { font-size:1rem; color:var(--primary); margin-bottom:12px; border-bottom:1px solid #f3f4f6; padding-bottom:8px; }
+    .form-group { margin-bottom:14px; }
+    .form-group label { font-size:.85rem; font-weight:600; color:#374151; display:block; margin-bottom:6px; }
+    select, input[type=number] { width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:8px; font-size:.9rem; }
+    .check-group { display:flex; flex-wrap:wrap; gap:8px; }
+    .check-option { display:flex; align-items:center; gap:6px; background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:6px 12px; cursor:pointer; font-size:.85rem; }
+    .check-option.selected { background:#f0fdf4; border-color:var(--primary); color:var(--primary); font-weight:600; }
+    .food-category { border:1px solid #e5e7eb; border-radius:8px; margin-bottom:8px; overflow:hidden; }
+    .food-category summary { padding:10px 14px; cursor:pointer; font-weight:600; font-size:.9rem; background:#f9fafb; }
+    .food-items { padding:10px 14px; display:flex; flex-wrap:wrap; gap:6px; }
+    .food-item { display:flex; align-items:center; gap:5px; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:6px; padding:4px 10px; cursor:pointer; font-size:.82rem; }
+    .food-item.selected { background:#f0fdf4; border-color:var(--primary); color:var(--primary); }
+    .review-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #f3f4f6; }
+    .review-name { flex:1; font-size:.9rem; }
+    .toggle-label { display:flex; align-items:center; gap:6px; cursor:pointer; font-size:.85rem; }
+    .btn-primary { background:var(--primary); color:#fff; border:none; padding:10px 24px; border-radius:8px; font-size:.9rem; cursor:pointer; }
+    .btn-small { background:#e5e7eb; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:.8rem; margin-left:6px; }
+    #saveMsg { font-size:.85rem; margin-left:12px; }
+    .hint { font-size:.75rem; font-weight:400; color:var(--text-light); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="/">← Dashboard</a>
+    <span style="font-weight:700">Complete Your Profile</span>
+  </div>
+
+  <div class="container">
+    <div class="completion-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700">Profile Completeness</span>
+        <span id="completionPct" style="font-weight:700;color:var(--primary)">—</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="completionBar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3>🍽️ Cuisine &amp; Equipment</h3>
+      <div class="form-group">
+        <label for="cuisinePreference">Cuisine Preference</label>
+        <select id="cuisinePreference">
+          <option value="">Select…</option>
+          <option value="south-indian">South Indian</option>
+          <option value="north-indian">North Indian</option>
+          <option value="continental">Continental</option>
+          <option value="mixed">Mixed (Rotates weekly)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Equipment Available</label>
+        <div class="check-group" id="equipmentGroup">
+          <label class="check-option"><input type="checkbox" value="dumbbells"> Dumbbells</label>
+          <label class="check-option"><input type="checkbox" value="barbell"> Barbell</label>
+          <label class="check-option"><input type="checkbox" value="pull-up-bar"> Pull-Up Bar</label>
+          <label class="check-option"><input type="checkbox" value="resistance-bands"> Resistance Bands</label>
+          <label class="check-option"><input type="checkbox" value="kettlebell"> Kettlebell</label>
+          <label class="check-option"><input type="checkbox" value="treadmill"> Treadmill</label>
+          <label class="check-option"><input type="checkbox" value="gym-access"> Full Gym Access</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3>🏋️ Workout Preferences</h3>
+      <div class="form-group">
+        <label>Preferred Workout Types</label>
+        <div class="check-group" id="workoutPrefGroup">
+          <label class="check-option"><input type="checkbox" value="gym"> Gym Workout</label>
+          <label class="check-option"><input type="checkbox" value="yoga"> Yoga</label>
+          <label class="check-option"><input type="checkbox" value="surya-namaskar"> Surya Namaskar</label>
+          <label class="check-option"><input type="checkbox" value="walking"> Walking</label>
+          <label class="check-option"><input type="checkbox" value="running"> Running</label>
+          <label class="check-option"><input type="checkbox" value="home-bodyweight"> Home Bodyweight</label>
+          <label class="check-option"><input type="checkbox" value="swimming"> Swimming</label>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <div class="form-group" style="flex:1;min-width:140px">
+          <label for="workoutDays">Days per week</label>
+          <select id="workoutDays">
+            <option value="">Select…</option>
+            <option value="1">1 day</option>
+            <option value="2">2 days</option>
+            <option value="3">3 days</option>
+            <option value="4">4 days</option>
+            <option value="5">5 days</option>
+            <option value="6">6 days</option>
+            <option value="7">7 days</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;min-width:140px">
+          <label for="workoutTime">Preferred time</label>
+          <select id="workoutTime">
+            <option value="">Select…</option>
+            <option value="morning">Morning</option>
+            <option value="afternoon">Afternoon</option>
+            <option value="evening">Evening</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:1;min-width:140px">
+          <label for="yogaStyle">Yoga style</label>
+          <select id="yogaStyle">
+            <option value="">Select…</option>
+            <option value="hatha">Hatha</option>
+            <option value="vinyasa">Vinyasa</option>
+            <option value="pranayama-only">Pranayama Only</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h3>🥗 Your Food List</h3>
+      <p style="font-size:.82rem;color:#6b7280;margin-bottom:12px">Select all foods you regularly eat. Pre-selected based on your community.</p>
+      <div id="foodChecklist">Loading…</div>
+    </div>
+
+    <div class="section-card">
+      <h3>🩺 Health Conditions</h3>
+      <p style="font-size:.82rem;color:#6b7280;margin-bottom:12px">Mark conditions as resolved if they no longer affect your health.</p>
+      <div id="conditionReview"></div>
+    </div>
+
+    <div class="section-card">
+      <h3>💊 Medications</h3>
+      <p style="font-size:.82rem;color:#6b7280;margin-bottom:12px">Mark medications as resolved if you've stopped taking them.</p>
+      <div id="medicationReview"></div>
+    </div>
+
+    <div class="section-card">
+      <h3>⚙️ Review Preferences</h3>
+      <div class="form-group">
+        <label for="reviewReminderDays">Remind me to review profile every</label>
+        <select id="reviewReminderDays" style="width:auto;min-width:160px">
+          <option value="30">30 days</option>
+          <option value="60" selected>60 days</option>
+          <option value="90">90 days</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;margin-top:8px;margin-bottom:32px">
+      <button class="btn-primary" onclick="saveAll()">Save Profile</button>
+      <span id="saveMsg"></span>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/profile-complete.js"></script>
+</body>
+</html>
