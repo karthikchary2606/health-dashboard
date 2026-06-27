@@ -19,7 +19,7 @@ function timeToMinutes(str) {
 function calcDuration(bedtime, wakeTime) {
   let bed = timeToMinutes(bedtime);
   let wake = timeToMinutes(wakeTime);
-  if (wake <= bed) wake += 24 * 60; // overnight
+  if (wake < bed) wake += 24 * 60; // overnight only — equal times → 0 min → hits <= 0 validation
   return wake - bed;
 }
 
@@ -31,6 +31,19 @@ router.post('/', async (req, res, next) => {
 
     // Default date to today
     if (!date) date = new Date().toISOString().slice(0, 10);
+
+    // Validate date format
+    if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return res.status(400).json({ error: 'date must be in YYYY-MM-DD format' });
+    }
+
+    // Validate bedtime and wakeTime format
+    if (bedtime !== undefined && (typeof bedtime !== 'string' || !/^\d{2}:\d{2}$/.test(bedtime))) {
+      return res.status(400).json({ error: 'bedtime must be in HH:MM format' });
+    }
+    if (wakeTime !== undefined && (typeof wakeTime !== 'string' || !/^\d{2}:\d{2}$/.test(wakeTime))) {
+      return res.status(400).json({ error: 'wakeTime must be in HH:MM format' });
+    }
 
     // Calculate duration from times if provided
     if (bedtime && wakeTime) {
