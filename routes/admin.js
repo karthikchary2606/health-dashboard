@@ -17,7 +17,7 @@ router.get('/users', async (req, res) => {
       { $group: { _id: '$userId', count: { $sum: 1 } } }
     ]);
     const countMap = {};
-    counts.forEach(c => { countMap[c._id.toString()] = c.count; });
+    counts.forEach(c => { if (c._id) countMap[c._id.toString()] = c.count; });
     const result = users.map(u => ({
       ...u.toObject(),
       logCount: countMap[u._id.toString()] || 0
