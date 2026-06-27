@@ -251,7 +251,182 @@ Percentage = fields filled / total Phase 2 fields.
 
 ---
 
-## 9. Migration
+## 9. Progress Page — Personalised Dashboard
+
+### 9.1 Problems with current progress page
+- Shows very few data points
+- Same layout regardless of goal
+- No macro breakdown, no workout adherence, no streaks
+
+### 9.2 Progress page sections (goal-aware)
+
+**Always visible:**
+- **Weight trend chart** — line chart, last 30 / 90 / 180 days; target weight line overlaid
+- **Streak cards** — workout streak (days), breathing streak (days), water goal streak (days)
+- **This week at a glance** — workouts completed / planned, calories logged / target, water intake
+
+**Goal-specific sections:**
+
+| Goal | Additional sections shown |
+|------|--------------------------|
+| weight-loss | Calorie deficit chart (daily intake vs target), body weight % change, fat-loss pace estimate |
+| muscle-gain | Strength progression (lift weights logged over time per muscle group), protein intake vs target, muscle group coverage heatmap |
+| maintenance | Macro balance (carbs/protein/fat %), consistency score (% days on plan), 6-month weight stability band |
+| general-fitness | VO2 proxy (cardio minutes/week trend), flexibility sessions completed, mood/energy log |
+
+**Monthly summary card:**
+- Auto-generated on 1st of each month
+- "Last month: lost 1.2kg, hit workout target 18/20 days, avg 7.2h sleep"
+
+### 9.3 Data sources
+- Weight: from `HealthLog` (user logs daily/weekly)
+- Workouts: from `HealthLog` workout entries
+- Calories/macros: from `HealthLog` food entries (requires calorie data on meals — see Section 11)
+- Sleep: from existing sleep tracker
+- Water: from `HealthLog` water entries
+- Breathing: from `BreathingSession`
+
+### 9.4 Logging improvements needed
+- `HealthLog` must support: food entries with calorie + macro fields, water entries, weight entries, workout entries (exercise name, sets, reps, weight used)
+- Log entry form on dashboard — quick-add panel for each type
+
+---
+
+## 10. Recipes — Preference-Driven Expansion
+
+### 10.1 Problems with current recipes
+- Only 71 recipes (fixed list)
+- Not filtered by user's actual food list
+- No nutritional info (calories, protein, carbs, fat)
+- No meal-type tagging (breakfast / lunch / dinner / snack)
+
+### 10.2 Recipe data model
+
+Each recipe must have:
+```js
+{
+  name:        String,
+  cuisine:     String,           // 'south-indian' | 'north-indian' | 'continental'
+  mealType:    [String],         // ['breakfast'] | ['lunch','dinner'] etc.
+  dietType:    [String],         // existing tags
+  ingredients: [String],         // ingredient names — matched against user's foodList
+  nutrition: {
+    caloriesPer100g: Number,
+    proteinG:        Number,
+    carbsG:          Number,
+    fatG:            Number,
+    servingSizeG:    Number
+  },
+  prepTimeMin: Number,
+  tags:        [String]          // 'high-protein' | 'quick' | 'festive' | 'diabetic-friendly' etc.
+}
+```
+
+### 10.3 Filtering logic
+
+`getFilteredRecipes(profile)` must apply all of the following in order:
+
+1. **Hard exclude** any recipe containing an ingredient in `culturalFoodAvoidances[]`
+2. **Food list filter** (when `foodList.length >= 10`): only show recipes where all ingredients are in user's food list
+3. **Cuisine filter**: match `cuisinePreference` (or all cuisines if 'mixed')
+4. **Meal type filter**: caller passes `mealType` parameter to get breakfast / lunch etc.
+5. **Goal filter**: tag-based boost — weight-loss users see 'low-calorie' tagged recipes first; muscle-gain users see 'high-protein' first
+
+### 10.4 Recipe count targets
+
+| Cuisine | Current | Target |
+|---------|---------|--------|
+| South Indian | 31 | 80 |
+| North Indian | 25 | 60 |
+| Continental | 15 | 40 |
+| **Total** | **71** | **180** |
+
+New recipes must have `ingredients[]` and `nutrition{}` fields — existing 71 recipes need these fields backfilled.
+
+### 10.5 Community-specific recipes
+
+Based on `languageCommunity`, additional recipes surfaced:
+- Telugu: Gongura pachadi, Pesarattu, Pulihora, Boorelu, Gutti Vankaya, Rayalaseema Ragi Sangati
+- Tamil: Pongal, Kozhukattai, Chettinad Chicken, Vazhaipoo Vadai
+- Kannada: Bisi Bele Bath, Ragi Mudde, Neer Dosa, Coorg Pandi Curry
+
+These are tagged `community: 'telugu'` etc. and surfaced when `languageCommunity` matches.
+
+---
+
+## 11. Calorie & Macro Calculation
+
+### 11.1 Per-user daily targets (derived at plan generation)
+
+Using Mifflin-St Jeor BMR formula:
+- Male BMR = 10 × weightKg + 6.25 × heightCm − 5 × age + 5
+- Female BMR = 10 × weightKg + 6.25 × heightCm − 5 × age − 161
+- TDEE = BMR × activity multiplier (sedentary 1.2 → very-active 1.725)
+- Goal adjustments: weight-loss → TDEE − 500 kcal; muscle-gain → TDEE + 300 kcal; maintenance → TDEE
+
+Macro split by goal:
+| Goal | Protein | Carbs | Fat |
+|------|---------|-------|-----|
+| weight-loss | 35% | 40% | 25% |
+| muscle-gain | 40% | 40% | 20% |
+| maintenance | 30% | 45% | 25% |
+| general-fitness | 30% | 45% | 25% |
+
+### 11.2 Stored on User model
+
+```js
+dailyCalorieTarget: Number,   // computed and stored on plan generation
+dailyProteinG:      Number,
+dailyCarbsG:        Number,
+dailyFatG:          Number
+```
+
+### 11.3 Diet plan calorie display
+
+Each day's meal plan shows total estimated calories and macros — summed from recipe `nutrition` fields of assigned meals. Displayed in diet page and progress page.
+
+---
+
+## 12. Grocery List — Preference-Driven Generation
+
+### 12.1 Problem
+Current grocery list is static — same items regardless of what the user actually eats.
+
+### 12.2 New logic
+
+Grocery list is derived from the current week's meal plan:
+1. Collect all recipes assigned to the user's meal plan for the week
+2. Extract `ingredients[]` from each recipe
+3. Deduplicate and group by category (Grains, Vegetables, Proteins, Dairy, Spices, Snacks)
+4. Apply quantity estimation: based on servings × days × household size (default: 1 person)
+5. Hard-exclude any ingredient in `culturalFoodAvoidances[]`
+
+### 12.3 User control
+- User can check off items as purchased (persisted per-week)
+- User can add custom items ("Add to list")
+- User can remove items they already have ("Already have it")
+
+---
+
+## 13. API Changes
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| PATCH | `/api/profile` | Extended to accept all new fields incl. workout prefs |
+| GET | `/api/profile/snapshots` | Returns snapshot history for a user |
+| POST | `/api/profile/review` | Marks periodic review complete, writes snapshot |
+| GET | `/api/profile/completion` | Returns % complete for Phase 2 prompt |
+| GET | `/api/recipes` | Returns filtered recipes for current user |
+| GET | `/api/recipes/:id` | Single recipe with full nutrition + ingredients |
+| GET | `/api/progress/summary` | Goal-aware progress summary (weight trend, streaks, macros) |
+| GET | `/api/progress/monthly/:month` | Monthly summary card data |
+| POST | `/api/logs` | Log entry (food, water, weight, workout) |
+| GET | `/api/grocery/week` | Current week's generated grocery list |
+| PATCH | `/api/grocery/week/:itemId` | Mark grocery item purchased / remove |
+
+---
+
+## 14. Migration
 
 Existing users:
 - `healthConditions: [String]` → migrated to `[{ name, active: true }]` (all assumed active)
@@ -264,13 +439,18 @@ Migration script: `scripts/migrate-profile-v2.js`
 
 ---
 
-## 10. Testing
+## 15. Testing
 
 - Unit: ProfileSnapshot writes on each trigger
 - Unit: Plan engine reads only `active: true` conditions/medications
-- Unit: `culturalFoodAvoidances` hard-excludes from meal results
-- Unit: foodList filter returns no meals with avoided ingredients
+- Unit: `culturalFoodAvoidances` hard-excludes from meal and recipe results
+- Unit: foodList filter returns no meals/recipes with avoided ingredients
+- Unit: Mifflin-St Jeor BMR calculation correct for male/female/age/weight/height
+- Unit: Grocery list derived from week's meals — correct deduplication and grouping
+- Unit: Pranayama age/condition filter — Kapalabhati excluded for 60+, hypertension
 - Integration: Full onboarding wizard submit → ProfileSnapshot created
 - Integration: Phase 2 save → snapshot written + plan cache invalidated
 - Integration: Periodic review banner logic (overdue, dismiss, non-dismissible after 3)
+- Integration: Recipe filter — cultural avoidances always excluded, food list filter when ≥10 items
+- Integration: Progress summary returns goal-appropriate sections
 - Migration: existing user data shape preserved and extended correctly
