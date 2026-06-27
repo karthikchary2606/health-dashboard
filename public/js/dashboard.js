@@ -186,3 +186,32 @@ function setGreeting() {
   const name = (currentUser && currentUser.name) ? currentUser.name.split(" ")[0] : "there";
   document.getElementById("dashGreeting").textContent = `${greet}, ${name}! · ${day}`;
 }
+
+async function loadSleepSummary() {
+  try {
+    const res = await apiFetch('/api/sleep/history');
+    const el = document.getElementById('sleepSummaryContent');
+    if (!el) return;
+
+    if (!res.ok || !res.data || res.data.length === 0) {
+      el.innerHTML = '<a href="/sleep.html" style="color:#6366f1;">Log last night\'s sleep →</a>';
+      return;
+    }
+
+    const QUALITY_EMOJIS = ['', '😩', '😴', '😐', '😊', '🤩'];
+    const entry = res.data[0];
+    const h = Math.floor(entry.durationMinutes / 60);
+    const m = entry.durationMinutes % 60;
+    const dur = m === 0 ? `${h}h` : `${h}h ${m}m`;
+    const qual = QUALITY_EMOJIS[entry.quality] || '';
+    const [ey, em, ed] = entry.date.split('-').map(Number);
+    const dateLabel = new Date(ey, em - 1, ed).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+
+    el.innerHTML = `
+      <div style="font-size:1.4rem;font-weight:700;color:#1e293b;">${dur} ${qual}</div>
+      <div style="font-size:.8rem;color:#94a3b8;margin-top:2px;">${dateLabel} · <a href="/sleep.html" style="color:#6366f1;">View all →</a></div>
+    `;
+  } catch (e) {
+    console.warn('Sleep summary load failed:', e);
+  }
+}

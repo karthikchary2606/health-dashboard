@@ -398,6 +398,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <li class="nav-item" onclick="showSection('guidelines',this)"><span class="nav-icon">🛡️</span>Guidelines</li>
     <li class="nav-item" onclick="showSection('grocery',this)"><span class="nav-icon">🛒</span>Grocery</li>
     <li class="nav-item" onclick="showSection('breathing',this)"><span class="nav-icon">🌬️</span>Breathing</li>
+    <li class="nav-item"><a href="/sleep.html" style="display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none;width:100%"><span class="nav-icon">😴</span>Sleep</a></li>
     <li class="nav-item"><a href="/settings.html" style="display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none;width:100%"><span class="nav-icon">⚙️</span>Settings</a></li>
   </ul>
   <div class="sidebar-footer" id="sidebar-footer"></div>
@@ -485,6 +486,12 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
             <div class="water-btn" id="w3" onclick="toggleWater(3)">3L</div>
             <div class="water-btn" id="w4" onclick="toggleWater(4)">4L</div>
           </div>
+        </div>
+
+        <!-- Sleep Summary Card -->
+        <div class="card" id="sleepSummaryCard">
+          <div class="card-title">😴 Last Night's Sleep</div>
+          <div id="sleepSummaryContent" style="color:#64748b;font-size:.9rem;">Loading...</div>
         </div>
 
         <!-- Workout Log -->
@@ -909,6 +916,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   buildBreathingSection();
   setGreeting();
   loadProgress();
+  loadSleepSummary();
   updateBMI(currentUser && currentUser.profile && currentUser.profile.startWeightKg || 95);
   loadDateData(); // now safe to read _phaseTasks
   } catch(e) {
