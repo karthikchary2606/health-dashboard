@@ -253,7 +253,7 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
 
     <div class="form-group">
       <label>Cuisine Preference</label>
-      <div class="radio-group">
+      <div class="radio-group" id="rg-cuisinePreference">
         <label><input type="radio" name="cuisinePreference" value="south-indian"> South Indian</label>
         <label><input type="radio" name="cuisinePreference" value="north-indian"> North Indian</label>
         <label><input type="radio" name="cuisinePreference" value="continental"> Continental</label>
@@ -263,7 +263,7 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
 
     <div class="form-group">
       <label>Equipment Available <span class="hint">(select all that apply)</span></label>
-      <div class="checkbox-group">
+      <div class="checkbox-group" id="cg-equipment">
         <label><input type="checkbox" name="equipment" value="dumbbells"> Dumbbells</label>
         <label><input type="checkbox" name="equipment" value="barbell"> Barbell</label>
         <label><input type="checkbox" name="equipment" value="pull-up-bar"> Pull-Up Bar</label>
@@ -368,6 +368,8 @@ function loadDraft() {
     if (d.fitnessLevel) setRadio('rg-fitness', d.fitnessLevel);
     if (d.healthConditions && d.healthConditions.length) setCheckboxes('cg-conditions', d.healthConditions);
     if (d.dietType) setRadio('rg-diet', d.dietType);
+    if (d.cuisinePreference) setRadio('rg-cuisinePreference', d.cuisinePreference);
+    if (d.equipmentAvailable && d.equipmentAvailable.length) setCheckboxes('cg-equipment', d.equipmentAvailable);
     if (d.medications && d.medications.length) {
       d.medications.forEach(m => addMed(m));
     }
