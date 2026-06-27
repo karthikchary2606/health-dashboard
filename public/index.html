@@ -662,6 +662,25 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
         </div>
       </div>
     </div>
+
+    <!-- Macro tracking chart -->
+    <div id="macroSection" style="display:none;margin-top:16px">
+      <h3 style="font-size:.95rem;font-weight:700;margin:0 0 8px">📊 Daily Nutrition (avg)</h3>
+      <canvas id="macroChart" height="120"></canvas>
+      <div id="macroSummary" style="display:flex;gap:16px;margin-top:8px;font-size:.82rem;flex-wrap:wrap"></div>
+    </div>
+
+    <!-- Sleep trend chart -->
+    <div id="sleepSection" style="display:none;margin-top:16px">
+      <h3 style="font-size:.95rem;font-weight:700;margin:0 0 8px">😴 Sleep Trend (30 days)</h3>
+      <canvas id="sleepChart" height="100"></canvas>
+    </div>
+
+    <!-- Mood + Energy trend -->
+    <div id="moodSection" style="display:none;margin-top:16px">
+      <h3 style="font-size:.95rem;font-weight:700;margin:0 0 8px">🧠 Mood &amp; Energy (30 days)</h3>
+      <canvas id="moodChart" height="100"></canvas>
+    </div>
   </div>
 
   <!-- ===== GUIDELINES ===== -->
@@ -671,6 +690,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     </div>
     <div class="grid-2">
       <div style="display:flex;flex-direction:column;gap:14px">
+        <div id="communityNotes" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 16px;margin-bottom:16px;display:none"></div>
         <div id="conditionCards"></div>
       </div>
 

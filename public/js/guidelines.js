@@ -151,44 +151,100 @@ function renderSchedule(profile) {
   suppEl.innerHTML += scheduleHtml;
 }
 
+var COMMUNITY_NOTES = {
+  'Telugu': [
+    '🌿 <strong>Ragi (finger millet)</strong> is highly recommended — rich in calcium and fibre. Use for rotis or porridge.',
+    '🌿 <strong>Gongura (sorrel leaves)</strong> are iron-rich and support anaemia prevention — include 2-3x/week.',
+    '🌿 <strong>Raw turmeric</strong> (fresh Haridra) in morning milk or tea supports inflammation reduction.',
+    '🌿 <strong>Neem leaves</strong> — 5-6 leaves on empty stomach weekly supports blood sugar and skin.',
+    '🌿 Prefer <strong>cold-pressed coconut oil or sesame oil (gingelly oil)</strong> over refined oils.'
+  ],
+  'Tamil': [
+    '🌿 <strong>Kollu (horse gram)</strong> — high protein legume; include weekly for weight management.',
+    '🌿 <strong>Sesame seeds (til)</strong> — excellent calcium source; add to rice, ladoo, or chutney.',
+    '🌿 <strong>Moringa (murungai keerai)</strong> leaves — exceptionally high in iron, calcium, Vitamin C.',
+    '🌿 Prefer <strong>gingelly oil (sesame oil)</strong> for cooking — heart-healthy monounsaturated fats.'
+  ],
+  'Kannada': [
+    '🌿 <strong>Ragi (Raagi)</strong> is the staple grain of Karnataka — excellent for bone health and weight management.',
+    '🌿 <strong>Bisi bele bath</strong> with ghee — complete protein + carb meal; ideal post-workout.',
+    '🌿 Prefer <strong>coconut oil</strong> for coastal Karnataka cooking and <strong>groundnut oil</strong> for northern Karnataka.'
+  ],
+  'Malayalam': [
+    '🌿 <strong>Coconut</strong> (fresh, coconut milk, coconut oil) is central to Kerala cuisine and provides healthy MCTs.',
+    '🌿 <strong>Moringa (muringakka)</strong> and <strong>drumstick</strong> are dietary staples; include regularly.',
+    '🌿 <strong>Fish</strong> (especially sardines and mackerel) — omega-3 rich; 3-4x/week recommended.'
+  ]
+};
+
+function renderConditionCards(profile) {
+  const cardEl = document.getElementById('conditionCards');
+  if (!cardEl) return;
+
+  // Only show cards for active conditions (strings are always active; objects need active !== false)
+  const activeConditionNames = (profile ? (profile.healthConditions || []) : [])
+    .filter(c => typeof c === 'string' || c.active !== false)
+    .map(c => (typeof c === 'string' ? c : c.name).toLowerCase());
+
+  const cardsToShow = Object.entries(CONDITION_CARDS).filter(([key]) =>
+    activeConditionNames.some(ac => ac.includes(key) || key.includes(ac))
+  );
+
+  if (cardsToShow.length > 0) {
+    cardEl.innerHTML = cardsToShow.map(([key, c]) => {
+      const styleAttr = c.style ? ` style="${c.style}"` : '';
+      return `<div class="card ${c.cls}"${styleAttr}>
+        <div class="card-title">${c.title}</div>
+        <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
+          ${c.items.map(i => `<li style="margin-bottom:6px">${i}</li>`).join('')}
+        </ul>
+      </div>`;
+    }).join('');
+  } else {
+    cardEl.innerHTML = `<div class="card" style="border-top-color:#6b7280">
+      <div class="card-title">✅ No Active Health Conditions</div>
+      <p style="font-size:.83rem;color:var(--text-light)">
+        Great news — no active health conditions on record. If you have any, 
+        <a href="settings.html" style="color:var(--primary)">add them in Settings</a> to get personalised guardrails.
+      </p>
+    </div>`;
+  }
+
+  // Update subtitle to reflect active conditions
+  const subtitleEl = document.getElementById('guidelinesSubtitle');
+  if (subtitleEl) {
+    const labels = cardsToShow.map(([, c]) => c.title.replace(/^[^\s]+\s/, '').split('(')[0].trim());
+    subtitleEl.textContent = labels.length
+      ? `Clinical guardrails · ${labels.join(', ')}`
+      : 'Clinical guardrails · Your personal health protocols';
+  }
+}
+
+function renderCommunityNotes(profile) {
+  const container = document.getElementById('communityNotes');
+  if (!container) return;
+  const community = profile && profile.languageCommunity;
+  const notes = COMMUNITY_NOTES[community];
+  if (!notes || !notes.length) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+  container.innerHTML =
+    `<h4 style="font-weight:700;margin-bottom:8px">🍽️ ${community} Community Nutritional Tips</h4>` +
+    `<ul style="padding-left:16px">` +
+    notes.map(n => `<li style="margin-bottom:6px;font-size:.85rem">${n}</li>`).join('') +
+    `</ul>`;
+}
+
 function buildGuidelines(profile) {
-  const conditions = (profile ? (profile.healthConditions || []) : []).map(c => (typeof c === 'object' && c !== null) ? c.name : c);
+  const conditions = (profile ? (profile.healthConditions || []) : [])
+    .filter(c => typeof c === 'string' || c.active !== false)
+    .map(c => (typeof c === 'object' && c !== null) ? c.name : c);
   const dietType   = profile ? (profile.dietType || 'non-vegetarian') : 'non-vegetarian';
 
-  // Condition cards
-  const cardEl = document.getElementById('conditionCards');
-  if (cardEl) {
-    const activeConditions = Object.keys(CONDITION_CARDS).filter(k => conditions.includes(k));
-    if (activeConditions.length > 0) {
-      cardEl.innerHTML = activeConditions.map(key => {
-        const c = CONDITION_CARDS[key];
-        const styleAttr = c.style ? ` style="${c.style}"` : '';
-        return `<div class="card ${c.cls}"${styleAttr}>
-          <div class="card-title">${c.title}</div>
-          <ul style="padding-left:18px;font-size:.83rem;color:var(--text-med)">
-            ${c.items.map(i => `<li style="margin-bottom:6px">${i}</li>`).join('')}
-          </ul>
-        </div>`;
-      }).join('');
-    } else {
-      cardEl.innerHTML = `<div class="card" style="border-top-color:#6b7280">
-        <div class="card-title">✅ No Health Conditions Logged</div>
-        <p style="font-size:.83rem;color:var(--text-light)">
-          Great news — no health conditions on record. If you have any, 
-          <a href="settings.html" style="color:var(--primary)">add them in Settings</a> to get personalised guardrails.
-        </p>
-      </div>`;
-    }
-
-    // Update subtitle to reflect actual conditions
-    const subtitleEl = document.getElementById('guidelinesSubtitle');
-    if (subtitleEl) {
-      const labels = activeConditions.map(k => CONDITION_CARDS[k].title.replace(/^[^\s]+\s/, '').split('(')[0].trim());
-      subtitleEl.textContent = labels.length
-        ? `Clinical guardrails · ${labels.join(', ')}`
-        : 'Clinical guardrails · Your personal health protocols';
-    }
-  }
+  renderConditionCards(profile);
+  renderCommunityNotes(profile);
 
   // Food guidelines — based on dietType + health conditions
   const foodEl = document.getElementById('foodGuidelines');
