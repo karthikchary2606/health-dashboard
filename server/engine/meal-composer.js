@@ -66,4 +66,4 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
   return usePool[index];
 }
 
-module.exports = { getMeals };
+module.exports = { getMeals, activeConditions };

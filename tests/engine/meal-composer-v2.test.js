@@ -7,10 +7,24 @@ test('getMeals returns a string', () => {
   expect(result.length).toBeGreaterThan(0);
 });
 
-test('getMeals with foodList < 10 falls back to cuisine pool', () => {
-  const smallList = { cuisinePreference: 'south-indian', dietType: 'vegetarian', culturalFoodAvoidances: [], foodList: [{ name: 'Rice' }] };
-  const result = getMeals(smallList, 'breakfast', 'weight-loss', 0, 0);
+test('getMeals works with empty foodList', () => {
+  const result = getMeals({ cuisinePreference: 'south-indian', dietType: 'vegetarian', culturalFoodAvoidances: [], foodList: [] }, 'breakfast', 'weight-loss', 0, 0);
   expect(typeof result).toBe('string');
+  expect(result.length).toBeGreaterThan(0);
+});
+
+test('getMeals works with large foodList (>= 10 items)', () => {
+  const result = getMeals({
+    cuisinePreference: 'south-indian', dietType: 'vegetarian',
+    culturalFoodAvoidances: [],
+    foodList: [
+      { name: 'Idli' }, { name: 'Dosa' }, { name: 'Upma' }, { name: 'Pongal' },
+      { name: 'Rice' }, { name: 'Sambar' }, { name: 'Rasam' }, { name: 'Curd' },
+      { name: 'Tomato' }, { name: 'Spinach' }, { name: 'Dal' }
+    ]
+  }, 'breakfast', 'weight-loss', 0, 0);
+  expect(typeof result).toBe('string');
+  expect(result.length).toBeGreaterThan(0);
 });
 
 test('getMeals active conditions filter excludes resolved conditions', () => {
