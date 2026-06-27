@@ -215,3 +215,11 @@ async function loadSleepSummary() {
     console.warn('Sleep summary load failed:', e);
   }
 }
+
+function dismissReviewBanner() {
+  const banner = document.getElementById('reviewBanner');
+  if (banner) banner.style.display = 'none';
+  const count = parseInt(localStorage.getItem('reviewBannerDismissCount') || '0') + 1;
+  localStorage.setItem('reviewBannerDismissCount', count);
+  localStorage.setItem('reviewBannerSnoozeUntil', Date.now() + 7 * 86400000);
+}
