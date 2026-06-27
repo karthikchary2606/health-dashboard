@@ -115,12 +115,34 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
       <label>Diet Type</label>
       <select id="f-diet">
         <option value="">Select…</option>
-        <option value="standard">Standard</option>
+        <option value="non-vegetarian">Non-Vegetarian</option>
         <option value="vegetarian">Vegetarian</option>
-        <option value="vegan">Vegan</option>
         <option value="eggetarian">Eggetarian</option>
-        <option value="gluten-free">Gluten-Free</option>
+        <option value="vegan">Vegan</option>
       </select>
+    </div>
+
+    <div class="form-group">
+      <label for="cuisinePreference">Cuisine Preference</label>
+      <select id="cuisinePreference" name="cuisinePreference" onchange="onPreferenceChanged()">
+        <option value="south-indian">South Indian</option>
+        <option value="north-indian">North Indian</option>
+        <option value="continental">Continental</option>
+        <option value="mixed">Mixed (Rotates weekly)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Equipment Available</label>
+      <div class="checkbox-group" id="equipmentCheckboxes">
+        <label><input type="checkbox" class="equipment-cb" value="dumbbells"> Dumbbells</label>
+        <label><input type="checkbox" class="equipment-cb" value="barbell"> Barbell</label>
+        <label><input type="checkbox" class="equipment-cb" value="pull-up-bar"> Pull-Up Bar</label>
+        <label><input type="checkbox" class="equipment-cb" value="resistance-bands"> Resistance Bands</label>
+        <label><input type="checkbox" class="equipment-cb" value="kettlebell"> Kettlebell</label>
+        <label><input type="checkbox" class="equipment-cb" value="treadmill"> Treadmill</label>
+        <label><input type="checkbox" class="equipment-cb" value="gym-access"> Full Gym Access</label>
+      </div>
     </div>
 
     <div class="form-group">
@@ -199,6 +221,12 @@ let _selectedPlan = null;
 
 // ── Helpers ──────────────────────────────────────────────
 
+function onPreferenceChanged() {
+  if (typeof planCache !== 'undefined' && planCache && typeof planCache.invalidate === 'function') {
+    planCache.invalidate();
+  }
+}
+
 function toggleCheck(el) {
   el.classList.toggle('selected', el.querySelector('input').checked);
 }
@@ -275,6 +303,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (p.fitnessLevel)           document.getElementById('f-fitness').value        = p.fitnessLevel;
   if (p.dietType)               document.getElementById('f-diet').value           = p.dietType;
 
+  if (p.cuisinePreference) {
+    document.getElementById('cuisinePreference').value = p.cuisinePreference;
+  }
+  if (p.equipmentAvailable && p.equipmentAvailable.length > 0) {
+    document.querySelectorAll('.equipment-cb').forEach(cb => {
+      cb.checked = p.equipmentAvailable.includes(cb.value);
+    });
+  }
+  // Equipment change listeners for cache invalidation
+  document.querySelectorAll('.equipment-cb').forEach(cb => {
+    cb.addEventListener('change', onPreferenceChanged);
+  });
+
   setCheckboxes('cg-conditions', p.healthConditions);
 
   const currentPlan = p.planTemplate || p.primaryGoal;
@@ -299,6 +340,8 @@ async function saveProfile() {
   const fitnessLevel  = document.getElementById('f-fitness').value;
   const dietType      = document.getElementById('f-diet').value;
   const conditions    = checkedBoxes('cg-conditions');
+  const cuisinePreference = document.getElementById('cuisinePreference').value;
+  const equipmentAvailable = Array.from(document.querySelectorAll('.equipment-cb:checked')).map(cb => cb.value);
 
   const diff = {};
 
@@ -312,6 +355,11 @@ async function saveProfile() {
     diff.fitnessLevel = fitnessLevel;
   if (dietType && dietType !== _loadedProfile.dietType)
     diff.dietType = dietType;
+  if (cuisinePreference && cuisinePreference !== _loadedProfile.cuisinePreference)
+    diff.cuisinePreference = cuisinePreference;
+  const prevEquip = JSON.stringify([...(_loadedProfile.equipmentAvailable || [])].sort());
+  const nextEquip = JSON.stringify([...equipmentAvailable].sort());
+  if (prevEquip !== nextEquip) diff.equipmentAvailable = equipmentAvailable;
 
   const prevConds = JSON.stringify([...(_loadedProfile.healthConditions || [])].sort());
   const nextConds = JSON.stringify([...conditions].sort());
