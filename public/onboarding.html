@@ -99,6 +99,43 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
   .med-item input{grid-column:1}
   .med-item .btn-remove{grid-column:2;grid-row:1 / span 3;align-self:center}
 }
+
+/* ============ MOBILE RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .nav-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; gap: 4px; padding-bottom: 4px; }
+  .nav-tabs .tab-btn { font-size: 0.75rem; padding: 6px 10px; white-space: nowrap; }
+  .container, .main-content { padding: 12px 8px; }
+  .dashboard-grid, .stats-grid { grid-template-columns: 1fr; gap: 12px; }
+  .card, .section-card { padding: 14px 12px; }
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.15rem; }
+  h3 { font-size: 1rem; }
+  table { font-size: 0.82rem; }
+  table th, table td { padding: 6px 8px; }
+  .day-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; gap: 4px; }
+  .day-tab { font-size: 0.72rem; padding: 5px 8px; white-space: nowrap; }
+  .workout-grid { grid-template-columns: 1fr; }
+  .btn, button[type=submit] { width: 100%; margin-bottom: 8px; }
+  .grocery-table { font-size: 0.8rem; }
+  .grocery-table th, .grocery-table td { padding: 5px 6px; }
+  .wizard-step { padding: 16px 12px; }
+  .option-grid, .check-grid { grid-template-columns: 1fr 1fr; }
+  .profile-form { padding: 12px; }
+  .form-group { margin-bottom: 12px; }
+  .form-group label { font-size: 0.88rem; }
+  header, .header { flex-direction: column; gap: 8px; text-align: center; }
+  .header-actions { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  canvas { max-width: 100%; height: auto !important; }
+  .quick-log-row { flex-direction: column; gap: 8px; }
+  .quick-log-row input { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .nav-tabs .tab-btn { font-size: 0.68rem; padding: 5px 7px; }
+  .option-grid, .check-grid { grid-template-columns: 1fr; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  h1 { font-size: 1.2rem; }
+}
 </style>
 </head>
 <body>

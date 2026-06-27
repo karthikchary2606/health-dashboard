@@ -14,7 +14,7 @@ window.planCache = (() => {
 
   function getPlan() {
     if (!_promise) {
-      const p = apiFetch('/api/profile/plan').then(({ ok, data }) => {
+      const p = apiFetch('/api/profile/plan?v=' + Date.now()).then(({ ok, data }) => {
         if (!ok) {
           if (_promise === p) _promise = null;
           return null;

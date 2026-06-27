@@ -1,55 +1,99 @@
-// Grocery rendering — data sourced from window.planCache.getPlan()
-
-let _groceryPlan = null;
-let _currentGroceryMonth = 0; // 0-based; set by initGrocery from plan.meta.currentMonth
+// Grocery rendering — live data from /api/grocery/week
 
 async function initGrocery() {
-  const plan = await window.planCache.getPlan();
-  if (!plan) return;
-
-  _groceryPlan = plan.grocery;
-  _currentGroceryMonth = plan.meta.currentMonth - 1; // server is 1-based, convert to 0-based
-  buildGrocery();
+  await renderGrocery();
 }
 
-function buildGrocery() {
-  if (!_groceryPlan) return;
+async function renderGrocery() {
+  const container = document.getElementById('groceryContent');
+  const totalEl   = document.getElementById('groceryNote');
+  const { ok, data } = await apiFetch('/api/grocery/week');
+  if (!ok || !data) {
+    container.innerHTML = '<p style="color:var(--danger)">Failed to load grocery list.</p>';
+    return;
+  }
 
-  const sel = document.getElementById("groceryMonthSelector");
-  sel.innerHTML = _groceryPlan.map((g, i) => {
-    if (!g) return ''; // skip stub months
-    const label = g.monthLabel || `Month ${i + 1}`;
-    return `<button class="month-btn${_currentGroceryMonth===i?" active":""}" onclick="selectGroceryMonth(${i})">${label}</button>`;
-  }).join("");
-  renderGrocery(_currentGroceryMonth);
-}
+  let totalPrice = 0;
+  let html = '';
 
-function selectGroceryMonth(m) {
-  const g = _groceryPlan[m];
-  if (!g) return; // stub month
-  _currentGroceryMonth = m;
-  document.querySelectorAll("#groceryMonthSelector .month-btn").forEach((b,i) => b.classList.toggle("active", i===m));
-  renderGrocery(m);
-}
+  data.forEach(cat => {
+    const visibleItems = cat.items.filter(i => !i.removed);
+    if (!visibleItems.length) return;
 
-function renderGrocery(month) {
-  if (!_groceryPlan) return;
-  const g = _groceryPlan[month];
-  if (!g) return;
+    html += `<div class="grocery-category">
+      <div class="grocery-cat-title">🛍️ ${cat.category}</div>
+      <table class="grocery-table">
+        <thead><tr><th>Item</th><th>Qty</th><th>Est. Price (₹)</th><th>✓</th></tr></thead>
+        <tbody>`;
 
-  document.getElementById("groceryBudgetBar").innerHTML = `<div class="phase-banner" style="margin-bottom:14px"><div><h4>🛒 ${g.monthLabel} Shopping List</h4><p>Estimated monthly spend · Local Telugu market rates</p></div><div style="text-align:right"><span class="phase-pill" style="font-size:.95rem">💰 Budget: ₹${g.budget.toLocaleString("en-IN")}</span></div></div>`;
-
-  let html = "";
-  g.categories.forEach(cat => {
-    html += `<div class="grocery-category"><div class="grocery-cat-title">🛍️ ${cat.name}</div><table class="grocery-table"><thead><tr><th>Item</th><th>Qty</th></tr></thead><tbody>`;
-    cat.items.forEach(item => {
-      const [itemName, qty = ''] = item.split(' — ');
-      html += `<tr><td>${itemName}</td><td>${qty}</td></tr>`;
+    visibleItems.forEach(item => {
+      totalPrice += item.estimatedPriceINR || 0;
+      const checked = item.purchased ? 'checked' : '';
+      const rowStyle = item.purchased ? 'style="opacity:0.5;text-decoration:line-through"' : '';
+      html += `<tr ${rowStyle}>
+        <td>${item.name}</td>
+        <td>${item.quantity || '—'}</td>
+        <td>₹${(item.estimatedPriceINR || 0).toLocaleString('en-IN')}</td>
+        <td><input type="checkbox" ${checked} onchange="toggleGroceryItem('${item.name.replace(/'/g, "\\'")}', this)"></td>
+      </tr>`;
     });
+
     html += `</tbody></table></div>`;
   });
-  html += `<div class="week-note" style="margin-top:16px">🏪 <strong>Shopping tip:</strong> Buy dal, rice, and dry spices in bulk monthly. Shop vegetables twice a week — Tuesdays & Saturdays from local sabzi mandi.</div>`;
-  document.getElementById("groceryContent").innerHTML = html;
+
+  container.innerHTML = html || '<p>No items in grocery list.</p>';
+  if (totalEl) {
+    totalEl.innerHTML = `<div style="text-align:right;font-weight:700;font-size:1rem;padding:10px 0">
+      🧾 Total Estimated: ₹${totalPrice.toLocaleString('en-IN')}
+    </div>`;
+  }
 }
 
-document.addEventListener('DOMContentLoaded', initGrocery);
+async function toggleGroceryItem(name, checkbox) {
+  const { ok } = await apiFetch(`/api/grocery/item/${encodeURIComponent(name)}/toggle`, { method: 'PUT', body: {} });
+  if (!ok) {
+    checkbox.checked = !checkbox.checked; // revert on failure
+  } else {
+    const row = checkbox.closest('tr');
+    if (row) {
+      if (checkbox.checked) {
+        row.style.opacity = '0.5';
+        row.style.textDecoration = 'line-through';
+      } else {
+        row.style.opacity = '';
+        row.style.textDecoration = '';
+      }
+    }
+  }
+}
+
+async function addCustomGroceryItem() {
+  const nameEl = document.getElementById('customItemInput');
+  const qtyEl  = document.getElementById('customItemQty');
+  const catEl  = document.getElementById('customItemCategory');
+  if (!nameEl) return;
+
+  const name     = nameEl.value.trim();
+  const quantity = qtyEl ? qtyEl.value.trim() : '';
+  const category = catEl ? catEl.value.trim() : 'Other';
+
+  if (!name) { nameEl.focus(); return; }
+
+  const { ok } = await apiFetch('/api/grocery/item', {
+    method: 'POST',
+    body: { name, quantity, category }
+  });
+
+  if (ok) {
+    nameEl.value = '';
+    if (qtyEl) qtyEl.value = '';
+    await renderGrocery();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initGrocery();
+  const addBtn = document.getElementById('customItemAddBtn');
+  if (addBtn) addBtn.addEventListener('click', addCustomGroceryItem);
+});
+

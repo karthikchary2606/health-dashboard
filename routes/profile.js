@@ -126,6 +126,7 @@ router.get('/plan', authenticate, requireProfile, async (req, res) => {
     const templateKey = profile.planTemplate || profile.primaryGoal || 'weight-loss';
     const template = TEMPLATES[templateKey];
     if (!template) return res.status(400).json({ error: `Unknown template: ${templateKey}` });
+    res.set('Cache-Control', 'no-store');
     res.json({
       meta:      template.getPlanMeta(profile),
       diet:      template.getDietPlan(profile),

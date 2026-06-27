@@ -34,6 +34,31 @@
     .btn-small { background:#e5e7eb; border:none; padding:4px 10px; border-radius:6px; cursor:pointer; font-size:.8rem; margin-left:6px; }
     #saveMsg { font-size:.85rem; margin-left:12px; }
     .hint { font-size:.75rem; font-weight:400; color:var(--text-light); }
+
+    /* ============ MOBILE RESPONSIVE ============ */
+    @media (max-width: 768px) {
+      .nav-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; gap: 4px; padding-bottom: 4px; }
+      .nav-tabs .tab-btn { font-size: 0.75rem; padding: 6px 10px; white-space: nowrap; }
+      .container, .main-content { padding: 12px 8px; }
+      .dashboard-grid, .stats-grid { grid-template-columns: 1fr; gap: 12px; }
+      .card, .section-card { padding: 14px 12px; }
+      h1 { font-size: 1.4rem; }
+      h2 { font-size: 1.15rem; }
+      h3 { font-size: 1rem; }
+      table { font-size: 0.82rem; }
+      table th, table td { padding: 6px 8px; }
+      .btn, button[type=submit] { width: 100%; margin-bottom: 8px; }
+      .profile-form { padding: 12px; }
+      .form-group { margin-bottom: 12px; }
+      .form-group label { font-size: 0.88rem; }
+      header, .header { flex-direction: column; gap: 8px; text-align: center; }
+      .header-actions { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
+      canvas { max-width: 100%; height: auto !important; }
+    }
+    @media (max-width: 480px) {
+      .option-grid, .check-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 1.2rem; }
+    }
   </style>
 </head>
 <body>
