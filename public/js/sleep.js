@@ -81,11 +81,11 @@ async function loadAll() {
   document.getElementById('statAvgHours').textContent =
     enough ? minutesToHM(stats.avgDurationMinutes) : '—';
   document.getElementById('statGoalNights').textContent =
-    enough ? `${stats.goalNightsThisWeek}/7` : '—';
+    (enough && stats.goalNightsThisWeek != null) ? `${stats.goalNightsThisWeek}/7` : '—';
   document.getElementById('statAvgQuality').textContent =
     enough ? (QUALITY_EMOJIS[Math.round(stats.avgQuality)] || '—') : '—';
   document.getElementById('statStreak').textContent =
-    history.length > 0 ? `${stats.currentStreak}🔥` : '—';
+    (history.length > 0 && stats.currentStreak != null) ? `${stats.currentStreak}🔥` : '—';
 
   renderChart(history);
   renderTable(history);
