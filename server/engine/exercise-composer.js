@@ -45,8 +45,13 @@ function resolveExercise(ex, tier, profile) {
   // Check if any substitution exists for a violated condition
   for (const cond of violated) {
     if (ex.substitutions[cond]) {
+      const substituteName = ex.substitutions[cond];
+      const subEntry = ALL_EXERCISES.find(e => e.name === substituteName);
+      if (subEntry && !equipmentMet(subEntry, profile)) {
+        return null; // substitute requires equipment the user doesn't have
+      }
       return {
-        name: ex.substitutions[cond],
+        name: substituteName,
         sets: ex.sets[tier],
         reps: ex.reps[tier],
         note: ex.note,
@@ -78,17 +83,21 @@ function getExercises(profile, muscleGroup, goal) {
     equipmentMet(ex, profile)
   );
 
-  // Fallback: relax goal + equipment filters if nothing matched
+  // Fallback 2: relax goal only (keep equipment filter)
+  if (candidates.length === 0) {
+    candidates = ALL_EXERCISES.filter(ex =>
+      ex.muscleGroup === muscleGroup &&
+      hasOverlap(ex.fitnessLevels, tiers) &&
+      equipmentMet(ex, profile)
+    );
+  }
+
+  // Fallback 3: last resort — relax both goal and equipment
   if (candidates.length === 0) {
     candidates = ALL_EXERCISES.filter(ex =>
       ex.muscleGroup === muscleGroup &&
       hasOverlap(ex.fitnessLevels, tiers)
     );
-  }
-
-  // Last resort: any exercise in the muscleGroup
-  if (candidates.length === 0) {
-    candidates = ALL_EXERCISES.filter(ex => ex.muscleGroup === muscleGroup);
   }
 
   return candidates
