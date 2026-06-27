@@ -11,7 +11,7 @@ const PROFILES = {
   CON_NVEG_ACT:  { name: 'Con NonVeg Active',    cuisinePreference: 'continental',   dietType: 'non-vegetarian', fitnessLevel: 'very-active',        equipmentAvailable: ['gym-access'] },
   MIX_VEG_SED:   { name: 'Mixed Veg Sedentary',  cuisinePreference: 'mixed',         dietType: 'vegetarian',     fitnessLevel: 'sedentary',          equipmentAvailable: [] },
   MIX_NVEG_ACT:  { name: 'Mixed NonVeg Active',  cuisinePreference: 'mixed',         dietType: 'non-vegetarian', fitnessLevel: 'very-active',        equipmentAvailable: ['dumbbells'] },
-  LBP_PROFILE:   { name: 'LBP No Deadlift',      cuisinePreference: 'south-indian',  dietType: 'vegetarian',     fitnessLevel: 'lightly-active',     equipmentAvailable: ['dumbbells'],               healthConditions: ['lower-back-pain'] },
+  LBP_PROFILE:   { name: 'LBP No Deadlift',      cuisinePreference: 'south-indian',  dietType: 'vegetarian',     fitnessLevel: 'lightly-active',     equipmentAvailable: ['dumbbells'],               healthConditions: [{ name: 'lower-back-pain' }] },
   VEGAN_NI:      { name: 'Vegan NI Active',      cuisinePreference: 'north-indian',  dietType: 'vegan',          fitnessLevel: 'moderately-active',  equipmentAvailable: ['barbell', 'dumbbells'] },
 };
 

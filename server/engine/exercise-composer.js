@@ -30,7 +30,7 @@ function equipmentMet(ex, profile) {
 }
 
 function resolveExercise(ex, tier, profile) {
-  const conditions = profile.healthConditions || [];
+  const conditions = (profile.healthConditions || []).map(c => (typeof c === 'object' && c !== null) ? c.name : c);
   const violated   = conditions.filter(c => ex.contraindications.includes(c));
 
   if (violated.length === 0) {

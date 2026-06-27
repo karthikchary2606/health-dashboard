@@ -23,13 +23,13 @@ const advancedFull = {
 const lowerBackPainProfile = {
   fitnessLevel: 'lightly-active',
   equipmentAvailable: ['barbell'],
-  healthConditions: ['lower-back-pain'],
+  healthConditions: [{ name: 'lower-back-pain' }],
 };
 
 const kneePainProfile = {
   fitnessLevel: 'sedentary',
   equipmentAvailable: [],
-  healthConditions: ['knee-pain'],
+  healthConditions: [{ name: 'knee-pain' }],
 };
 
 describe('getExercises', () => {

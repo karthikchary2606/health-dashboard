@@ -19,7 +19,7 @@ async function initWorkout() {
 
   // Render lower-back safety note only for users with that condition
   const profile = window.currentUser && window.currentUser.profile;
-  const conditions = (profile && profile.healthConditions) || [];
+  const conditions = (profile && profile.healthConditions || []).map(c => (typeof c === 'object' && c !== null) ? c.name : c);
   const safetyEl = document.getElementById('workoutSafetyNote');
   if (safetyEl) {
     if (conditions.includes('lower-back-pain')) {

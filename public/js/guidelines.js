@@ -62,7 +62,8 @@ const CONDITION_CARDS = {
 
 function buildGenericSchedule(profile) {
   const goal = profile && profile.primaryGoal;
-  const hasThyroid = profile && (profile.healthConditions || []).includes('thyroid');
+  const _conds = (profile && profile.healthConditions || []).map(c => (typeof c === 'object' && c !== null) ? c.name : c);
+  const hasThyroid = profile && _conds.includes('thyroid');
   const isActive = profile && (profile.fitnessLevel === 'intermediate' || profile.fitnessLevel === 'advanced');
 
   const schedule = [];
@@ -151,7 +152,7 @@ function renderSchedule(profile) {
 }
 
 function buildGuidelines(profile) {
-  const conditions = profile ? (profile.healthConditions || []) : [];
+  const conditions = (profile ? (profile.healthConditions || []) : []).map(c => (typeof c === 'object' && c !== null) ? c.name : c);
   const dietType   = profile ? (profile.dietType || 'non-vegetarian') : 'non-vegetarian';
 
   // Condition cards

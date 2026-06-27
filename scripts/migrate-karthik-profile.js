@@ -33,7 +33,7 @@ async function run() {
     foodAllergies: [],
     fitnessLevel: 'lightly-active',
     equipmentAvailable: ['dumbbells', 'resistance-bands'],
-    healthConditions: ['lower-back-pain'],
+    healthConditions: [{ name: 'lower-back-pain' }],
     medications: [
       { name: 'Thyronorm', dosage: '12.5mg', timing: 'morning-empty-stomach' }
     ],

@@ -4,7 +4,7 @@ const baseProfile = {
   primaryGoal: 'weight-loss',
   cuisinePreference: 'south-indian',
   dietType: 'non-vegetarian',
-  healthConditions: ['lower-back-pain'],
+  healthConditions: [{ name: 'lower-back-pain' }],
   medications: [{ name: 'Thyronorm', dosage: '12.5mg', timing: 'morning-empty-stomach' }],
   startDate: new Date('2025-01-01'),
   waterGoalL: 2.5
