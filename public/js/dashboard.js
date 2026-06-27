@@ -216,10 +216,54 @@ async function loadSleepSummary() {
   }
 }
 
+// Profile completion card
+apiFetch('/api/profile/completion').then(res => {
+  if (!res.ok) return;
+  const pct = res.data.percentage;
+  const card = document.getElementById('profileCompletionCard');
+  const pctEl = document.getElementById('completionPctDash');
+  if (card && pct < 100) {
+    card.style.display = 'flex';
+    if (pctEl) pctEl.textContent = pct;
+  }
+});
+
+// Review reminder banner — use currentUser.profile instead of extra API call
+(function checkReviewBanner() {
+  const p = (window.currentUser || {}).profile;
+  if (!p || !p.lastReviewedAt || !p.reviewReminderDays) return;
+  const daysSince = Math.floor((Date.now() - new Date(p.lastReviewedAt)) / 86400000);
+  let snoozeUntil = 0, dismissCount = 0;
+  try {
+    snoozeUntil  = parseInt(localStorage.getItem('reviewBannerSnoozeUntil') || '0');
+    dismissCount = parseInt(localStorage.getItem('reviewBannerDismissCount') || '0');
+  } catch (e) { /* storage unavailable — show banner anyway */ }
+  const banner = document.getElementById('reviewBanner');
+  if (!banner) return;
+  const isOverdue  = daysSince >= p.reviewReminderDays;
+  const isSnoozed  = Date.now() < snoozeUntil;
+  const forceShow  = dismissCount >= 3;
+  if (isOverdue && (!isSnoozed || forceShow)) {
+    banner.style.display = 'flex';
+    const dismissBtn = banner.querySelector('button');
+    if (forceShow && dismissBtn) {
+      dismissBtn.style.display = 'none';
+      const hint = document.createElement('span');
+      hint.style.cssText = 'font-size:.75rem;color:#6b7280;margin-left:8px';
+      hint.textContent = 'Please review when you can';
+      banner.appendChild(hint);
+    }
+  }
+})();
+
 function dismissReviewBanner() {
   const banner = document.getElementById('reviewBanner');
   if (banner) banner.style.display = 'none';
-  const count = parseInt(localStorage.getItem('reviewBannerDismissCount') || '0') + 1;
-  localStorage.setItem('reviewBannerDismissCount', count);
-  localStorage.setItem('reviewBannerSnoozeUntil', Date.now() + 7 * 86400000);
+  try {
+    const count = parseInt(localStorage.getItem('reviewBannerDismissCount') || '0') + 1;
+    localStorage.setItem('reviewBannerDismissCount', count);
+    localStorage.setItem('reviewBannerSnoozeUntil', Date.now() + 7 * 86400000);
+  } catch (e) {
+    // Storage unavailable (private browsing, quota exceeded) — dismiss is still visual
+  }
 }
