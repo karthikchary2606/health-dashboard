@@ -35,8 +35,15 @@ test('reason must be valid enum', async () => {
 
 test('findByUser returns snapshots sorted newest first', async () => {
   const userId = new mongoose.Types.ObjectId();
-  await ProfileSnapshot.create({ userId, reason: 'onboarding', data: { v: 1 } });
+  await ProfileSnapshot.create({ userId, reason: 'onboarding', data: { v: 1 }, snapshotAt: new Date(Date.now() - 1000) });
   await ProfileSnapshot.create({ userId, reason: 'user-edit', data: { v: 2 } });
-  const snaps = await ProfileSnapshot.find({ userId }).sort({ snapshotAt: -1 });
+  const snaps = await ProfileSnapshot.find({ userId }).sort({ snapshotAt: -1, _id: -1 });
   expect(snaps[0].data.v).toBe(2);
+});
+
+test('ProfileSnapshot is immutable — save on existing doc throws', async () => {
+  const userId = new mongoose.Types.ObjectId();
+  const snap = await ProfileSnapshot.create({ userId, reason: 'onboarding', data: { v: 1 } });
+  snap.data = { v: 99 };
+  await expect(snap.save()).rejects.toThrow('immutable');
 });
