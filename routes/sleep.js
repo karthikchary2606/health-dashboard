@@ -72,6 +72,12 @@ router.post('/', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// GET /api/sleep — alias for /history (convenience route)
+router.get('/', async (req, res, next) => {
+  req.url = '/history';
+  router.handle(req, res, next);
+});
+
 // GET /api/sleep/history — last 30 days of sleep entries, newest first
 router.get('/history', async (req, res, next) => {
   try {

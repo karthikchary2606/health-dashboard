@@ -23,7 +23,7 @@ async function renderGrocery() {
     html += `<div class="grocery-category">
       <div class="grocery-cat-title">🛍️ ${cat.category}</div>
       <table class="grocery-table">
-        <thead><tr><th>Item</th><th>Qty</th><th>Est. Price (₹)</th><th>✓</th></tr></thead>
+        <thead><tr><th>Item</th><th>Qty</th><th>Est. Price (₹)</th><th></th><th>✓</th></tr></thead>
         <tbody>`;
 
     visibleItems.forEach(item => {
@@ -34,6 +34,7 @@ async function renderGrocery() {
         <td>${item.name}</td>
         <td>${item.quantity || '—'}</td>
         <td>₹${(item.estimatedPriceINR || 0).toLocaleString('en-IN')}</td>
+        <td><button onclick="removeGroceryItem('${item.name.replace(/'/g, "\\'")}')" style="background:none;border:none;cursor:pointer;color:var(--danger,#e53e3e);font-size:1rem" title="Remove">✕</button></td>
         <td><input type="checkbox" ${checked} onchange="toggleGroceryItem('${item.name.replace(/'/g, "\\'")}', this)"></td>
       </tr>`;
     });
@@ -50,21 +51,28 @@ async function renderGrocery() {
 }
 
 async function toggleGroceryItem(name, checkbox) {
-  const { ok } = await apiFetch(`/api/grocery/item/${encodeURIComponent(name)}/toggle`, { method: 'PUT', body: {} });
+  const purchased = checkbox.checked;
+  const { ok } = await apiFetch('/api/grocery/week/item', {
+    method: 'PATCH',
+    body: { name, purchased }
+  });
   if (!ok) {
     checkbox.checked = !checkbox.checked; // revert on failure
   } else {
     const row = checkbox.closest('tr');
     if (row) {
-      if (checkbox.checked) {
-        row.style.opacity = '0.5';
-        row.style.textDecoration = 'line-through';
-      } else {
-        row.style.opacity = '';
-        row.style.textDecoration = '';
-      }
+      row.style.opacity = purchased ? '0.5' : '';
+      row.style.textDecoration = purchased ? 'line-through' : '';
     }
   }
+}
+
+async function removeGroceryItem(name) {
+  const { ok } = await apiFetch('/api/grocery/week/item', {
+    method: 'PATCH',
+    body: { name, removed: true }
+  });
+  if (ok) await renderGrocery();
 }
 
 async function addCustomGroceryItem() {
@@ -79,7 +87,7 @@ async function addCustomGroceryItem() {
 
   if (!name) { nameEl.focus(); return; }
 
-  const { ok } = await apiFetch('/api/grocery/item', {
+  const { ok } = await apiFetch('/api/grocery/week/custom', {
     method: 'POST',
     body: { name, quantity, category }
   });
