@@ -254,23 +254,23 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     <div class="form-group">
       <label>Cuisine Preference</label>
       <div class="radio-group" id="rg-cuisinePreference">
-        <label><input type="radio" name="cuisinePreference" value="south-indian"> South Indian</label>
-        <label><input type="radio" name="cuisinePreference" value="north-indian"> North Indian</label>
-        <label><input type="radio" name="cuisinePreference" value="continental"> Continental</label>
-        <label><input type="radio" name="cuisinePreference" value="mixed" checked> Mixed (Rotates weekly)</label>
+        <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','south-indian',this)"><input type="radio" name="cuisinePreference" value="south-indian"> South Indian</label>
+        <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','north-indian',this)"><input type="radio" name="cuisinePreference" value="north-indian"> North Indian</label>
+        <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','continental',this)"><input type="radio" name="cuisinePreference" value="continental"> Continental</label>
+        <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','mixed',this)"><input type="radio" name="cuisinePreference" value="mixed" checked> Mixed (Rotates weekly)</label>
       </div>
     </div>
 
     <div class="form-group">
       <label>Equipment Available <span class="hint">(select all that apply)</span></label>
       <div class="checkbox-group" id="cg-equipment">
-        <label><input type="checkbox" name="equipment" value="dumbbells"> Dumbbells</label>
-        <label><input type="checkbox" name="equipment" value="barbell"> Barbell</label>
-        <label><input type="checkbox" name="equipment" value="pull-up-bar"> Pull-Up Bar</label>
-        <label><input type="checkbox" name="equipment" value="resistance-bands"> Resistance Bands</label>
-        <label><input type="checkbox" name="equipment" value="kettlebell"> Kettlebell</label>
-        <label><input type="checkbox" name="equipment" value="treadmill"> Treadmill</label>
-        <label><input type="checkbox" name="equipment" value="gym-access"> Full Gym Access</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="equipment" value="dumbbells"> Dumbbells</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="equipment" value="barbell"> Barbell</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="equipment" value="pull-up-bar"> Pull-Up Bar</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="equipment" value="resistance-bands"> Resistance Bands</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="equipment" value="kettlebell"> Kettlebell</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="equipment" value="treadmill"> Treadmill</label>
+        <label class="check-option" onclick="toggleCheck(this)"><input type="checkbox" name="equipment" value="gym-access"> Full Gym Access</label>
       </div>
       <p class="hint">No equipment selected = bodyweight workouts only</p>
     </div>
