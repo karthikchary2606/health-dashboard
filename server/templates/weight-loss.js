@@ -36,6 +36,10 @@ function getPlanMeta(profile, currentMonth, currentWeek) {
     currentWeek  = (Math.floor(msElapsed / msPerWeek) % 4) + 1;
   }
   currentWeek = currentWeek || 1;
+  
+  // Clamp to valid ranges
+  currentMonth = Math.max(1, Math.min(6, currentMonth));
+  currentWeek  = Math.max(1, Math.min(4, currentWeek));
   const phase = PHASES.find(p => p.months.includes(currentMonth)) || PHASES[0];
   return {
     templateName:      'weight-loss',

@@ -22,6 +22,10 @@ function getDefaultChecklist(profile) {
 }
 
 function getPlanMeta(profile, currentMonth = 1, currentWeek = 1) {
+  // Clamp to valid ranges
+  currentMonth = Math.max(1, Math.min(6, currentMonth));
+  currentWeek  = Math.max(1, Math.min(4, currentWeek));
+  
   const phases = [
     { months: [1, 2], label: 'Establish Routine' },
     { months: [3, 4], label: 'Build Consistency' },
