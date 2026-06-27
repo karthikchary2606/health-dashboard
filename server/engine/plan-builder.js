@@ -151,24 +151,28 @@ function buildWorkoutPlan(profile, goal) {
 // ─── buildCardioPlan ──────────────────────────────────────────────────────────
 
 function buildCardioPlan(profile, goal) {
-  return CARDIO_PHASES.map((phase, i) => ({
-    monthLabel: `Month ${i + 1}`,
-    phaseLabel: phase.phaseLabel,
-    sessions:   phase.sessions,
-    hrZones:    phase.hrZones,
+  return Array.from({ length: 6 }, (_, mi) => ({
+    monthLabel: `Month ${mi + 1}`,
+    phaseLabel: CARDIO_PHASES[mi].phaseLabel,
+    sessions: [...CARDIO_PHASES[mi].sessions],       // shallow copy — session objects are immutable
+    hrZones: { ...CARDIO_PHASES[mi].hrZones }        // shallow copy of flat object
   }));
 }
 
 // ─── buildGroceryList ─────────────────────────────────────────────────────────
 
-function buildGroceryList(profile, goal) {
-  const dietType   = profile.dietType;
-  const categories = GROCERY_CATEGORIES[dietType] || GROCERY_CATEGORIES['vegetarian'];
+function getGroceryCategories(dietType) {
+  return GROCERY_CATEGORIES[dietType] || GROCERY_CATEGORIES['vegetarian'];
+}
 
-  return Array.from({ length: 6 }, (_, i) => ({
-    monthLabel: `Month ${i + 1}`,
-    budget:     '₹3000–₹4000/week',
-    categories,
+function buildGroceryList(profile, goal) {
+  return Array.from({ length: 6 }, (_, mi) => ({
+    monthLabel: `Month ${mi + 1}`,
+    budget: '₹3000–₹4000/week',
+    categories: getGroceryCategories(profile.dietType).map(cat => ({
+      name: cat.name,
+      items: [...cat.items]   // fresh array per month so mutations don't propagate
+    }))
   }));
 }
 

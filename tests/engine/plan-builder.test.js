@@ -227,4 +227,17 @@ describe('buildGroceryList', () => {
       });
     });
   });
+
+  test('vegan grocery list has no dairy items', () => {
+    const vegan = { ...nonVegProfile, dietType: 'vegan' };
+    const result = buildGroceryList(vegan, 'weight-loss');
+    const dairyKeywords = /\b(paneer|yogurt|milk|ghee|butter|cream|cheese)\b/i;
+    result.forEach(m => {
+      m.categories.forEach(cat => {
+        cat.items.forEach(item => {
+          expect(item).not.toMatch(dairyKeywords);
+        });
+      });
+    });
+  });
 });
