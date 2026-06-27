@@ -207,10 +207,11 @@ async function saveAll() {
 
   const res = await apiFetch('/api/profile', { method: 'PATCH', body: JSON.stringify(payload) });
   if (res.ok) {
-    showMsg('Profile updated successfully! ✅');
-    updateCompletionBar();
-    // Bust the plan cache so diet/workout regenerates with new profile choices
     if (window.planCache) window.planCache.invalidate();
+    showMsg('Profile updated! Refreshing your plan… ✅');
+    updateCompletionBar();
+    // Redirect to dashboard after short delay so diet/workout are re-generated with fresh cache
+    setTimeout(() => { window.location.href = '/index.html'; }, 1500);
   } else {
     showMsg('Error saving: ' + (res.data?.error || 'Unknown error'), 'error');
   }

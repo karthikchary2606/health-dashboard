@@ -1,96 +1,179 @@
-﻿# ⚡ Health Engine — Personal Dashboard
+# 🏋️ Health Engine — Multi-User Health Dashboard
 
-> **Karthik Chary · 32yr · 178cm · 95kg → 85kg goal**  
-> LCHF/Keto Indian diet · Spinal-safe workout · Thyroid + Fatty Liver protocol
-
-A full-stack personal health tracking app built with Node.js, Express, MongoDB, and vanilla JS.
+A full-stack personalized health management app. Each user gets a **unique plan** built from their profile: goals, cuisine, diet type, health conditions, age, fitness level, religion, and language community.
 
 ---
 
-## 🖥️ Features
+## 🚀 Quick Start
 
-| Section | What it does |
-|---|---|
-| 🏠 **Dashboard** | Daily 12-checkpoint timeline, water tracker (4L), workout log, mood & energy check-in |
-| 🥗 **Diet Plan** | 7-day LCHF/Keto Indian meal plan with per-meal macros (~1600 kcal/day) |
-| 📖 **Recipes** | 12 thyroid-safe, fatty-liver-safe recipes with ingredients, steps & tips |
-| 💪 **Workout** | Spinal-safe weekly split (no axial loading) — dumbbells & barbells at home |
-| 🏃 **Cardio** | Phase-based cardio plan with heart rate zones |
-| 📈 **Progress** | Weight loss chart (Chart.js), streak tracker, BMI gauge, milestone badges |
-| 🛡️ **Guidelines** | Clinical guardrails for hypothyroid, fatty liver & mechanical lower back pain |
+### Prerequisites
+- Node.js 18+
+- MongoDB Atlas account (or local MongoDB)
 
----
-
-## 🏗️ Tech Stack
-
-- **Backend:** Node.js + Express
-- **Database:** MongoDB (Mongoose ODM) — MongoDB Atlas M0 free tier
-- **Frontend:** Vanilla HTML5 / CSS3 / JavaScript (single-page app)
-- **Charts:** Chart.js
-- **Fonts:** Google Fonts (Inter)
+### Setup
+```bash
+git clone https://github.com/karthikchary2606/health-dashboard
+cd health-dashboard
+npm install
+cp .env.example .env   # add MONGODB_URI and JWT_SECRET
+node server.js
+```
+Open http://localhost:3000
 
 ---
 
-## 🚀 Local Setup
+## 👤 First-Time User Flow
+
+### Step 1 — Register
+Go to `/register.html`, create your account. An admin must approve your account before you can log in (or approve yourself via the admin panel at `/admin.html`).
+
+### Step 2 — Complete Onboarding (8 steps)
+After first login you'll be redirected to `/onboarding.html`:
+
+| Step | What you set |
+|------|-------------|
+| 1 | Body stats — age, height, current weight, goal weight |
+| 2 | Primary goal — weight loss / muscle gain / maintenance / general fitness |
+| 3 | Fitness level — sedentary / lightly active / moderately active / very active |
+| 4 | Diet type — vegetarian / vegan / eggetarian / non-vegetarian |
+| 5 | Cuisine preference — south-indian / north-indian / continental / mixed |
+| 6 | Health conditions + medications |
+| 7 | Religion + language community (Telugu, Tamil, Kannada, Malayalam) + cultural food avoidances |
+| 8 | Review + Submit |
+
+After submission, your **personalized plan is generated immediately**.
+
+### Step 3 — Complete Your Profile (profile-complete.html)
+Click "Complete Profile" on the dashboard (shown when < 100%). Fill in:
+- Food checklist (select items you eat — community-specific preselection)
+- Workout preferences, equipment available, days/week, time of day
+- Yoga style preference
+- Review reminder frequency
+
+Once all fields are filled, your profile reaches **100% completion**.
+
+---
+
+## 📱 App Sections
+
+| Section | URL | What you get |
+|---------|-----|-------------|
+| 🏠 Dashboard | `/` | Today's timeline, quick-log panel, water tracker, mood/energy check-in |
+| 🥗 Diet Plan | Diet tab | 6-month personalized meal plan (breakfast/lunch/snack/dinner) based on your cuisine + diet type |
+| 🍳 Recipes | Recipes tab | Filtered recipes matching your food list and cultural avoidances |
+| 💪 Workout | Workout tab | Age-appropriate exercises, Surya Namaskar rounds personalized to your age/fitness |
+| 🏃 Cardio | Cardio tab | Phase-based cardio plan with heart rate zones |
+| 😴 Sleep | Sleep tab | Sleep tracker with quality and duration logging |
+| 📈 Progress | Progress tab | Weight chart, macro nutrition, sleep trend, mood/energy trends |
+| 🛡️ Guidelines | Guidelines tab | Active health condition cards + community-specific nutritional tips |
+| 🧘 Breathing | Breathing tab | Pranayama techniques filtered by your age and health conditions |
+| 🛒 Grocery | `/api/grocery/week` | Weekly grocery list with quantities and INR prices |
+
+---
+
+## ⚡ Quick Log (Dashboard)
+
+The **Quick Log** panel on the dashboard lets you log:
+- **Weight** — enter kg and tap Log
+- **Water** — tap +250ml or +500ml buttons
+- **Workout** — tap "Mark Done ✓", then optionally expand to log individual exercises (name, sets, reps, weight)
+
+---
+
+## 🕉️ Pranayama (Breathing Tab)
+
+6 techniques filtered to your age and active health conditions:
+- Nadi Shodhana, Anulom Vilom, Bhramari (all ages)
+- Kapalabhati (age 18–55, no hypertension/heart disease)
+- Bhastrika (age 18–45, no hypertension)
+- Ujjayi (all ages)
+
+Each technique shows benefits, rounds, duration, and step-by-step instructions.
+
+---
+
+## 🛒 Grocery List
+
+`GET /api/grocery/week` returns your weekly grocery list with:
+- **Category** (Grains & Legumes, Vegetables, Fruits, Dairy & Protein, Fats & Oils, Spices)
+- **Quantity** (suggested weekly purchase: "1 kg", "500 g", "1 dozen", etc.)
+- **Estimated Price (INR)** (approximate Indian retail price)
+
+Mark items purchased/removed via `PATCH /api/grocery/week/item`. Add custom items via `POST /api/grocery/week/custom`.
+
+---
+
+## 🌍 Cultural Personalization
+
+When you select your **language community** in onboarding, the app personalizes:
+- **Food checklist** pre-selects community-specific ingredients (e.g., Pesarattu, Gongura for Telugu)
+- **Guidelines page** shows community nutritional tips (e.g., ragi for Telugu/Kannada, horse gram for Tamil)
+- **Cultural food avoidances** filter out avoided ingredients from your diet plan and recipes
+
+---
+
+## 👑 Admin Panel
+
+Go to `/admin.html` (requires `role: admin`). To promote yourself to admin:
+```bash
+node scripts/seed-admin.js
+```
+Enter your registered email — it promotes the account to admin with full access.
+
+---
+
+## 🔧 Tech Stack
+
+| Layer | Tech |
+|-------|------|
+| Backend | Node.js + Express |
+| Database | MongoDB + Mongoose (Atlas M0 free) |
+| Frontend | Vanilla HTML5 / CSS3 / JavaScript (SPA) |
+| Auth | JWT (cookie-based) |
+| Charts | Chart.js |
+| Tests | Jest + Supertest + MongoMemoryServer |
+
+---
+
+## 🧪 Running Tests
 
 ```bash
-# 1. Clone
-git clone https://github.com/karthikchary2606/health-dashboard.git
-cd health-dashboard
-
-# 2. Install dependencies
-npm install
-
-# 3. Set environment variable
-# Copy .env.example → .env and fill in your MongoDB URI
-cp .env.example .env
-
-# 4. Start
-npm start
-# → http://localhost:3000
+npx jest --no-coverage
 ```
 
 ---
 
-## ⚙️ Environment Variables
-
-| Variable | Description |
-|---|---|
-| `MONGODB_URI` | MongoDB Atlas connection string |
-| `PORT` | Server port (default: 3000) |
-
-See `.env.example` for the template.
-
----
-
-## 🏥 Clinical Guardrails
-
-- **Thyronorm 12.5mg** — taken 06:30 AM on empty stomach (45-min food gap)
-- **Zero soy/soya** — blocks thyroid hormone synthesis
-- **Cruciferous veggies cooked only** — deactivates goitrogens
-- **Zero refined sugar/jaggery** — fatty liver reversal protocol
-- **No axial spinal loading** — mechanical LBP protection (no heavy deadlifts/squats)
-- **Seed & nut allotment** — strict 30g/day combined cap
-
----
-
-## 📁 Project Structure
+## 🗂️ Project Structure
 
 ```
 health-dashboard/
-├── server.js          # Express server + MongoDB API endpoints
-├── package.json
-├── .env.example       # Environment variable template
-├── .replit            # Replit deployment config
-├── railway.toml       # Railway deployment config
-└── public/
-    └── index.html     # Complete single-page frontend app
+├── models/           # Mongoose schemas (User, HealthLog, ProfileSnapshot, etc.)
+├── routes/           # Express routers (profile, logs, auth, breathing, grocery, etc.)
+├── server/
+│   ├── engine/       # Plan builders (meal-composer, exercise-composer)
+│   ├── templates/    # Goal-specific plan templates (weight-loss, muscle-gain, etc.)
+│   ├── meals/        # Cuisine meal pools (south-indian, north-indian, continental)
+│   └── data/         # Static data (pranayama, food-checklist)
+├── lib/              # computeStats, etc.
+├── middleware/       # authenticate, requireProfile
+├── public/           # Frontend (HTML, CSS, JS)
+│   └── js/           # diet.js, workout.js, progress.js, guidelines.js, breathing.js, etc.
+├── tests/            # Jest test suites
+└── scripts/          # Migration and seed scripts
 ```
 
 ---
 
-## 🌐 Deployment
+## 📊 Profile Completion
 
-Deployed on **Replit** (free tier) with **MongoDB Atlas M0** (free).
+Your profile completion % is based on 11 key fields:
 
-> Keep the app awake 24/7 with a free [UptimeRobot](https://uptimerobot.com) monitor pinging every 5 minutes.
+**Phase 1 (Onboarding):** primaryGoal, dietType, age, currentWeightKg, heightCm, fitnessLevel
+
+**Phase 2 (Profile Complete page):** cuisinePreference, workoutPreferences, foodList, religion, languageCommunity
+
+Fill all 11 to reach **100%**. The dashboard shows a completion card with direct link to `/profile-complete.html` when < 100%.
+
+---
+
+*Built by Karthik Chary · Powered by GitHub Copilot*

@@ -27,9 +27,10 @@ function computeMacroTargets(profile) {
 }
 
 const PHASE2_FIELDS = [
-  'cuisinePreference', 'equipmentAvailable', 'workoutPreferences',
-  'workoutDaysPerWeek', 'workoutTime', 'yogaStyle',
-  'foodList', 'religion', 'languageCommunity', 'reviewReminderDays'
+  // Phase 1 (onboarding core)
+  'primaryGoal', 'dietType', 'age', 'currentWeightKg', 'heightCm', 'fitnessLevel',
+  // Phase 2 (profile-complete page)
+  'cuisinePreference', 'workoutPreferences', 'foodList', 'religion', 'languageCommunity'
 ];
 
 function computeCompletionPct(profile) {

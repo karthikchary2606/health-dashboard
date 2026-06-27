@@ -13,6 +13,8 @@ const MEAL_META = {
 };
 
 async function initDiet() {
+  // planCache.invalidate() is called on profile save (profile-complete.js), so getPlan()
+  // always fetches a fresh plan when the user returns to the dashboard after updating their profile.
   const plan = await window.planCache.getPlan();
   if (!plan) return;
   _dietPlan = plan.diet;
