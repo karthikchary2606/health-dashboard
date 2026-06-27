@@ -117,18 +117,15 @@ function renderFoodChecklist(data) {
     const catLabel = category.charAt(0).toUpperCase() + category.slice(1);
     const itemsHtml = items.map(item => {
       const checked = userFoodSet.has(item.name) || item.preSelected;
-      const label = document.createElement('label');
-      label.className = 'food-item' + (checked ? ' selected' : '');
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.value = item.name;
-      cb.dataset.category = category;
-      cb.checked = checked;
-      cb.addEventListener('change', () => label.classList.toggle('selected', cb.checked));
-      label.appendChild(cb);
-      label.appendChild(document.createTextNode(' ' + item.name));
-      return label.outerHTML;
+      const safeVal = item.name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      return `<label class="food-item${checked ? ' selected' : ''}">
+        <input type="checkbox" value="${safeVal}" data-category="${category}"
+          ${checked ? 'checked' : ''}
+          onchange="this.closest('.food-item').classList.toggle('selected', this.checked)">
+        ${escHtml(item.name)}
+      </label>`;
     }).join('');
+
     return `<details class="food-category" open>
       <summary>${catLabel}</summary>
       <div class="food-items" id="food-cat-${category}">
@@ -149,15 +146,10 @@ function addCustomFood(btn, category) {
   const container = document.getElementById(`food-cat-${category}`);
   const label = document.createElement('label');
   label.className = 'food-item selected';
-  const cb = document.createElement('input');
-  cb.type = 'checkbox'; cb.value = name; cb.dataset.category = category; cb.checked = true;
-  cb.addEventListener('change', () => label.classList.toggle('selected', cb.checked));
-  label.appendChild(cb);
-  label.appendChild(document.createTextNode(' ' + name));
-  const em = document.createElement('em');
-  em.style.cssText = 'font-size:.7rem;color:#9ca3af';
-  em.textContent = ' (custom)';
-  label.appendChild(em);
+  const safeVal = name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  label.innerHTML = `<input type="checkbox" value="${safeVal}" data-category="${category}" checked
+    onchange="this.closest('.food-item').classList.toggle('selected', this.checked)">
+    ${escHtml(name)} <em style="font-size:.7rem;color:#9ca3af">(custom)</em>`;
   container.insertBefore(label, container.lastElementChild);
   input.value = '';
 }

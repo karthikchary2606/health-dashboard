@@ -59,7 +59,6 @@ const FOOD_ITEMS = {
   dairy: [
     { name: 'Milk',           communities: [], default: true },
     { name: 'Curd / Yoghurt', communities: [], default: true },
-    { name: 'Buttermilk',     communities: ['Telugu','Tamil','Kannada','Malayalam'] },
     { name: 'Ghee',           communities: ['Telugu','Tamil','Kannada','Hindi'], default: true },
     { name: 'Cheese',         communities: [] },
     { name: 'Butter',         communities: [], default: true },
