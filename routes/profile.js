@@ -31,6 +31,7 @@ router.post('/onboarding', authenticate, async (req, res) => {
       'profile.primaryGoal':       primaryGoal,
       'profile.planTemplate':      primaryGoal,
       'profile.currentWeightKg':   currentWeightKg,
+      'profile.startWeightKg':     currentWeightKg,
       'profile.goalWeightKg':      goalWeightKg,
       'profile.heightCm':          heightCm,
       'profile.age':               age,
