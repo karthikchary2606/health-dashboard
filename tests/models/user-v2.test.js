@@ -49,3 +49,39 @@ test('medications stores active + resolvedAt', async () => {
   expect(u.profile.medications[0].active).toBe(true);
   expect(u.profile.medications[0].resolvedAt).toBeNull();
 });
+
+test('foodList stores name + category + custom', async () => {
+  const u = await User.create({
+    ...BASE, email: 'fl@x.com',
+    profile: {
+      foodList: [
+        { name: 'Idli', category: 'grains', custom: false },
+        { name: 'Gongura Curry', category: 'vegetables', custom: true }
+      ]
+    }
+  });
+  expect(u.profile.foodList).toHaveLength(2);
+  expect(u.profile.foodList[0].category).toBe('grains');
+  expect(u.profile.foodList[1].custom).toBe(true);
+});
+
+test('workoutPreferences stores array of strings', async () => {
+  const u = await User.create({
+    ...BASE, email: 'wp@x.com',
+    profile: { workoutPreferences: ['yoga', 'surya-namaskar'] }
+  });
+  expect(u.profile.workoutPreferences).toEqual(['yoga', 'surya-namaskar']);
+});
+
+test('reviewReminderDays defaults to 60', async () => {
+  const u = await User.create({ ...BASE, email: 'rr@x.com' });
+  expect(u.profile.reviewReminderDays).toBe(60);
+});
+
+test('culturalFoodAvoidances stores array', async () => {
+  const u = await User.create({
+    ...BASE, email: 'cfa@x.com',
+    profile: { culturalFoodAvoidances: ['beef', 'pork'] }
+  });
+  expect(u.profile.culturalFoodAvoidances).toEqual(['beef', 'pork']);
+});
