@@ -21,28 +21,9 @@ function computeWaterGoal(weightKg) {
 
 function computeMacroTargets(profile) {
   if (!profile.age || !profile.heightCm || !profile.currentWeightKg) return {};
-  const w = profile.currentWeightKg, h = profile.heightCm, a = profile.age;
-  // Mifflin-St Jeor (male constant — gender field not captured in V1 onboarding)
-  const bmr = 10 * w + 6.25 * h - 5 * a + 5;
-  const multipliers = {
-    sedentary: 1.2, 'lightly-active': 1.375,
-    'moderately-active': 1.55, 'very-active': 1.725
-  };
-  const tdee = bmr * (multipliers[profile.fitnessLevel] || 1.2);
-  const goalAdj = { 'weight-loss': -500, 'muscle-gain': 300, maintenance: 0, 'general-fitness': 0 };
-  const calories = Math.round(tdee + (goalAdj[profile.primaryGoal] || 0));
-  const macros = ({
-    'weight-loss':     { p: 0.35, c: 0.40, f: 0.25 },
-    'muscle-gain':     { p: 0.40, c: 0.40, f: 0.20 },
-    maintenance:       { p: 0.30, c: 0.45, f: 0.25 },
-    'general-fitness': { p: 0.30, c: 0.45, f: 0.25 }
-  })[profile.primaryGoal] || { p: 0.30, c: 0.45, f: 0.25 };
-  return {
-    dailyCalorieTarget: calories,
-    dailyProteinG:  Math.round(calories * macros.p / 4),
-    dailyCarbsG:    Math.round(calories * macros.c / 4),
-    dailyFatG:      Math.round(calories * macros.f / 9)
-  };
+  // Gender not captured yet — return empty rather than apply wrong constant
+  // TODO: add gender field to onboarding to enable accurate BMR
+  return {};
 }
 
 const PHASE2_FIELDS = [
@@ -126,7 +107,11 @@ router.post('/onboarding', authenticate, async (req, res) => {
       req.user._id, updates, { runValidators: true, new: true, lean: true }
     );
 
-    await writeSnapshot(req.user._id, updated.profile, 'onboarding');
+    try {
+      await writeSnapshot(req.user._id, updated.profile, 'onboarding');
+    } catch (snapErr) {
+      console.error('[ProfileSnapshot] write failed:', snapErr.message);
+    }
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -190,7 +175,11 @@ router.post('/review', authenticate, requireProfile, async (req, res) => {
     const updated = await User.findByIdAndUpdate(
       req.user._id, updates, { runValidators: true, new: true, lean: true }
     );
-    await writeSnapshot(req.user._id, updated.profile, 'periodic-review');
+    try {
+      await writeSnapshot(req.user._id, updated.profile, 'periodic-review');
+    } catch (snapErr) {
+      console.error('[ProfileSnapshot] write failed:', snapErr.message);
+    }
     res.json({ success: true, lastReviewedAt: updated.profile.lastReviewedAt });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
@@ -224,7 +213,7 @@ router.patch('/', authenticate, requireProfile, async (req, res) => {
       }
     });
 
-    if (req.body.currentWeightKg) {
+    if (req.body.currentWeightKg && req.body.waterGoalL === undefined) {
       updates['profile.waterGoalL'] = computeWaterGoal(req.body.currentWeightKg);
     }
 
@@ -232,10 +221,15 @@ router.patch('/', authenticate, requireProfile, async (req, res) => {
       req.user._id, updates, { runValidators: true, new: true, lean: true }
     );
 
-    const snapshotFields = ['foodList', 'culturalFoodAvoidances', 'healthConditions',
-                            'medications', 'primaryGoal', 'religion', 'languageCommunity'];
-    if (snapshotFields.some(f => req.body[f] !== undefined)) {
-      await writeSnapshot(req.user._id, updated.profile, 'user-edit');
+    const snapshotFieldPaths = ['foodList', 'culturalFoodAvoidances', 'healthConditions',
+                                 'medications', 'religion', 'languageCommunity'];
+    const hasSignificantUpdate = snapshotFieldPaths.some(f => updates[`profile.${f}`] !== undefined);
+    if (hasSignificantUpdate) {
+      try {
+        await writeSnapshot(req.user._id, updated.profile, 'user-edit');
+      } catch (snapErr) {
+        console.error('[ProfileSnapshot] write failed:', snapErr.message);
+      }
     }
 
     res.json(updated.profile);
