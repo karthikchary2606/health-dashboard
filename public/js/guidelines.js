@@ -152,7 +152,7 @@ function renderSchedule(profile) {
 
 function buildGuidelines(profile) {
   const conditions = profile ? (profile.healthConditions || []) : [];
-  const dietType   = profile ? (profile.dietType || 'non-veg') : 'non-veg';
+  const dietType   = profile ? (profile.dietType || 'non-vegetarian') : 'non-vegetarian';
 
   // Condition cards
   const cardEl = document.getElementById('conditionCards');
