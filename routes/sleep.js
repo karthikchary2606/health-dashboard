@@ -38,10 +38,10 @@ router.post('/', async (req, res, next) => {
     }
 
     // Validate bedtime and wakeTime format
-    if (bedtime !== undefined && (typeof bedtime !== 'string' || !/^\d{2}:\d{2}$/.test(bedtime))) {
+    if (bedtime !== undefined && (typeof bedtime !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(bedtime))) {
       return res.status(400).json({ error: 'bedtime must be in HH:MM format' });
     }
-    if (wakeTime !== undefined && (typeof wakeTime !== 'string' || !/^\d{2}:\d{2}$/.test(wakeTime))) {
+    if (wakeTime !== undefined && (typeof wakeTime !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(wakeTime))) {
       return res.status(400).json({ error: 'wakeTime must be in HH:MM format' });
     }
 
