@@ -117,4 +117,17 @@ describe('getMeals', () => {
       });
     });
   });
+
+  test('undefined cuisinePreference does not crash', () => {
+    const profile = { cuisinePreference: undefined, dietType: 'non-vegetarian', healthConditions: [] };
+    expect(() => getMeals(profile, 'lunch', 'weight-loss', 0, 0)).not.toThrow();
+    expect(typeof getMeals(profile, 'lunch', 'weight-loss', 0, 0)).toBe('string');
+  });
+
+  test('unknown dietType defaults to veg pool (no meat)', () => {
+    const meatKeywords = /\b(chicken|mutton|fish|prawn|beef|pork|lamb)\b/i;
+    const profile = { cuisinePreference: 'south-indian', dietType: 'gluten-free', healthConditions: [] };
+    const meal = getMeals(profile, 'dinner', 'weight-loss', 0, 0);
+    expect(meal).not.toMatch(meatKeywords);
+  });
 });

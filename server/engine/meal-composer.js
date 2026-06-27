@@ -13,17 +13,22 @@ const CUISINE_MAP = {
 // Mixed rotates by weekIndex % 3
 const MIXED_ROTATION = ['south-indian', 'north-indian', 'continental'];
 
-function resolveCuisine(cuisinePreference, weekIndex) {
-  if (cuisinePreference === 'mixed') {
-    return CUISINE_MAP[MIXED_ROTATION[weekIndex % 3]];
+function resolveCuisine(profile, weekIndex) {
+  const pref = profile.cuisinePreference;
+  if (!pref || pref === 'mixed') {
+    // mixed: rotate south-indian → north-indian → continental
+    if (pref === 'mixed') return CUISINE_MAP[MIXED_ROTATION[weekIndex % 3]];
+    return CUISINE_MAP['south-indian']; // safe default for undefined/missing
   }
-  return CUISINE_MAP[cuisinePreference];
+  const known = ['south-indian', 'north-indian', 'continental'];
+  return CUISINE_MAP[known.includes(pref) ? pref : 'south-indian'];
 }
 
 function resolvePool(dietType) {
-  if (dietType === 'vegan' || dietType === 'vegetarian') return 'veg';
+  if (dietType === 'vegetarian' || dietType === 'vegan') return 'veg';
   if (dietType === 'eggetarian') return 'eggetarian';
-  return 'non-veg';
+  if (dietType === 'non-vegetarian') return 'non-veg';
+  return 'veg'; // safe default for unknown/legacy values
 }
 
 /**
@@ -37,7 +42,7 @@ function resolvePool(dietType) {
  * @returns {string}
  */
 function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
-  const cuisine  = resolveCuisine(profile.cuisinePreference, weekIndex);
+  const cuisine  = resolveCuisine(profile, weekIndex);
   const poolKey  = resolvePool(profile.dietType);
   const pool     = cuisine[mealType][poolKey];
 
