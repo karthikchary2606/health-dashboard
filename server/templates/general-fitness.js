@@ -45,4 +45,13 @@ function getPlanMeta(profile, currentMonth = 1, currentWeek = 1) {
   };
 }
 
-module.exports = { getDietPlan, getWorkoutPlan, getCardioPlan, getGroceryList, getDefaultChecklist, getPlanMeta };
+function getFullPlan(profile) {
+  return {
+    dietPlan:    getDietPlan(profile),
+    workoutPlan: getWorkoutPlan(profile),
+    cardioPlan:  getCardioPlan(profile),
+    groceryList: getGroceryList(profile),
+  };
+}
+
+module.exports = { getFullPlan, getDietPlan, getWorkoutPlan, getCardioPlan, getGroceryList, getDefaultChecklist, getPlanMeta };
