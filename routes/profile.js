@@ -139,7 +139,7 @@ router.get('/plan', authenticate, requireProfile, async (req, res) => {
 });
 
 // Profile completion percentage
-router.get('/completion', authenticate, requireProfile, (req, res) => {
+router.get('/completion', authenticate, (req, res) => {
   const pct = computeCompletionPct(req.user.profile);
   const missing = PHASE2_FIELDS.filter(f => {
     const v = req.user.profile[f];
@@ -160,7 +160,7 @@ router.get('/snapshots', authenticate, requireProfile, async (req, res) => {
 });
 
 // Get profile
-router.get('/', authenticate, requireProfile, (req, res) => {
+router.get('/', authenticate, (req, res) => {
   res.json(req.user.profile);
 });
 
@@ -187,7 +187,7 @@ router.post('/review', authenticate, requireProfile, async (req, res) => {
 });
 
 // PATCH profile (settings + phase 2 updates)
-router.patch('/', authenticate, requireProfile, async (req, res) => {
+router.patch('/', authenticate, async (req, res) => {
   try {
     const VALID = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
     if (req.body.planTemplate && !VALID.includes(req.body.planTemplate)) {
@@ -239,7 +239,7 @@ router.patch('/', authenticate, requireProfile, async (req, res) => {
 });
 
 // Food checklist — returns items pre-selected for user's community
-router.get('/food-checklist', authenticate, requireProfile, (req, res) => {
+router.get('/food-checklist', authenticate, (req, res) => {
   const { getChecklist } = require('../server/data/food-checklist');
   const p = req.user.profile;
   res.json(getChecklist(p.languageCommunity, p.culturalFoodAvoidances));

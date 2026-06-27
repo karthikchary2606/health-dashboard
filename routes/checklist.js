@@ -48,7 +48,12 @@ router.post('/items', async (req, res) => {
   const { label, order } = req.body;
   if (!label) return res.status(400).json({ error: 'label is required' });
   try {
-    const item = await ChecklistItem.create({ userId: req.user._id, label, order: order || 0 });
+    let resolvedOrder = order;
+    if (resolvedOrder === undefined || resolvedOrder === null) {
+      const last = await ChecklistItem.findOne({ userId: req.user._id }).sort({ order: -1 });
+      resolvedOrder = last ? last.order + 1 : 0;
+    }
+    const item = await ChecklistItem.create({ userId: req.user._id, label, order: resolvedOrder });
     res.status(201).json(item);
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
