@@ -1,11 +1,7 @@
 // In tests, globalSetup already sets MONGODB_URI to in-memory server.
 // dotenv must NOT override it — use plain config() so pre-set env vars win.
 // In production/dev, MONGODB_URI is not set before startup, so dotenv sets it.
-if (process.env.NODE_ENV !== 'test') {
-  require('dotenv').config({ override: true });
-} else {
-  require('dotenv').config();
-}
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
