@@ -18,21 +18,7 @@ const DASHBOARD_BLOCK_STATE = {
   ERROR: 'error'
 };
 
-function isDashboardV2Enabled() {
-  try {
-    const raw = new URLSearchParams(window.location.search).get('dashboard_v2');
-    return raw === '1' || raw === 'true' || raw === 'on';
-  } catch (e) {
-    return false;
-  }
-}
-
-const DASHBOARD_V2_ENABLED = isDashboardV2Enabled();
-
-function renderDashboardPrompt(blockKind, state, options) {
-  const next = options || {};
-  if (!DASHBOARD_V2_ENABLED) return next.v1 || '';
-
+function renderDashboardPrompt(blockKind, state) {
   const config = {
     timeline: {
       empty: {
@@ -61,15 +47,12 @@ function renderDashboardPrompt(blockKind, state, options) {
   };
 
   const entry = (config[blockKind] || {})[state];
-  if (!entry) return next.v1 || '';
+  if (!entry) return '';
   return "<div class='dashboard-state-callout'><p class='dashboard-state-title'>" + entry.title + "</p><p class='dashboard-state-detail'>" + entry.detail + "</p>" + entry.action + "</div>";
 }
 
 function applyDashboardVariant() {
-  if (!DASHBOARD_V2_ENABLED) return;
   document.body.classList.add('dashboard-v2-enabled');
-  const badge = document.getElementById('dashboardV2Badge');
-  if (badge) badge.style.display = 'inline-flex';
 }
 
 function setDashboardBlockState(blockId, state, options) {
@@ -89,9 +72,7 @@ function renderTimelineFromOverviewItems(items) {
   const timelineItems = Array.isArray(items) ? items : [];
   if (timelineItems.length === 0) {
     setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
-      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY, {
-        v1: "<p style='color:var(--text-light);font-size:.85rem'>No timeline updates yet.</p>"
-      })
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY)
     });
     return;
   }
@@ -109,9 +90,7 @@ function renderTimelineFromOverviewItems(items) {
 
   if (!html) {
     setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
-      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY, {
-        v1: "<p style='color:var(--text-light);font-size:.85rem'>No timeline updates yet.</p>"
-      })
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY)
     });
     return;
   }
@@ -147,9 +126,7 @@ async function loadDashboardOverview() {
     const { ok, data } = await apiFetch('/api/dashboard/overview');
     if (!ok || !data) {
       setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, {
-        html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.ERROR, {
-          v1: "<p style='color:#b91c1c;font-size:.85rem'>Could not load timeline. Please refresh.</p>"
-        })
+        html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.ERROR)
       });
       return null;
     }
@@ -163,9 +140,7 @@ async function loadDashboardOverview() {
     return data;
   } catch (e) {
     setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, {
-      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.ERROR, {
-        v1: "<p style='color:#b91c1c;font-size:.85rem'>Could not load timeline. Please refresh.</p>"
-      })
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.ERROR)
     });
     return null;
   }
@@ -177,9 +152,7 @@ async function buildTimeline() {
     _phaseTasks = [];
     updateCheckStat();
     setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
-      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY, {
-        v1: "<p style='color:var(--text-light);font-size:.85rem'>No timeline available yet.</p>"
-      })
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY)
     });
     return;
   }
@@ -244,9 +217,7 @@ async function buildTimeline() {
   updateCheckStat();
   if (_phaseTasks.length === 0) {
     setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
-      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY, {
-        v1: "<p style='color:var(--text-light);font-size:.85rem'>No checklist tasks for today.</p>"
-      })
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY)
     });
   } else {
     setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.READY);
@@ -387,18 +358,14 @@ async function loadSleepSummary() {
 
     if (!res.ok) {
       setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.ERROR, {
-        html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.ERROR, {
-          v1: '<span style="color:#b91c1c;">Unable to load sleep summary right now.</span>'
-        })
+        html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.ERROR)
       });
       return;
     }
 
     if (!res.data || res.data.length === 0) {
       setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.EMPTY, {
-        html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.EMPTY, {
-          v1: '<a href="/sleep.html" style="color:#6366f1;">Log last night\'s sleep →</a>'
-        })
+        html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.EMPTY)
       });
       return;
     }
@@ -419,9 +386,7 @@ async function loadSleepSummary() {
   } catch (e) {
     console.warn('Sleep summary load failed:', e);
     setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.ERROR, {
-      html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.ERROR, {
-        v1: '<span style="color:#b91c1c;">Unable to load sleep summary right now.</span>'
-      })
+      html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.ERROR)
     });
   }
 }
