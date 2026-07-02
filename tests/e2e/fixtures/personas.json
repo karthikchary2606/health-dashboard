@@ -1,0 +1,519 @@
+[
+  {
+    "id": "south-veg-beginner",
+    "description": "South Indian vegetarian fat-loss persona",
+    "constraints": {
+      "mustExclude": [
+        "chicken",
+        "fish",
+        "mutton",
+        "pork",
+        "egg"
+      ],
+      "mustIncludeAny": [
+        "idli",
+        "dosa",
+        "sambar",
+        "paneer",
+        "dal"
+      ]
+    },
+    "user": {
+      "id": "user-south-veg",
+      "name": "Anika Rao",
+      "email": "anika@example.com",
+      "role": "user",
+      "profile": {
+        "primaryGoal": "weight-loss",
+        "dietType": "vegetarian",
+        "cuisinePreference": "south-indian",
+        "currentWeightKg": 76,
+        "goalWeightKg": 67,
+        "heightCm": 165,
+        "age": 29,
+        "dailyCalorieTarget": 1650,
+        "fitnessLevel": "lightly-active",
+        "waterGoalL": 2.4
+      }
+    },
+    "overview": {
+      "timeline": [
+        {
+          "type": "meal",
+          "label": "Breakfast",
+          "value": "Ragi Idli + Peanut Chutney"
+        },
+        {
+          "type": "meal",
+          "label": "Lunch",
+          "value": "Vegetable Sambar + Brown Rice"
+        },
+        {
+          "type": "meal",
+          "label": "Snack",
+          "value": "Sprouts Chaat"
+        },
+        {
+          "type": "meal",
+          "label": "Dinner",
+          "value": "Paneer Millet Dosa"
+        },
+        {
+          "type": "habit",
+          "label": "Workout",
+          "completed": false
+        }
+      ],
+      "dietPreview": {
+        "dailyCalorieTarget": 1650,
+        "macros": {
+          "proteinG": 110,
+          "carbsG": 178,
+          "fatG": 46
+        },
+        "meals": {
+          "breakfast": "Ragi Idli + Peanut Chutney",
+          "lunch": "Vegetable Sambar + Brown Rice",
+          "snack": "Sprouts Chaat",
+          "dinner": "Paneer Millet Dosa"
+        }
+      },
+      "recipePreview": [
+        {
+          "mealType": "breakfast",
+          "name": "Ragi Idli"
+        },
+        {
+          "mealType": "lunch",
+          "name": "Vegetable Sambar Rice"
+        },
+        {
+          "mealType": "snack",
+          "name": "Sprouts Chaat"
+        },
+        {
+          "mealType": "dinner",
+          "name": "Paneer Dosa"
+        }
+      ],
+      "stats": {
+        "daysLogged": 4,
+        "avgWaterIntakeL": 2.1,
+        "avgMoodScore": 3.8
+      },
+      "profileCompleteness": {
+        "percentage": 100,
+        "missingFields": []
+      }
+    },
+    "plan": {
+      "meta": {
+        "currentMonth": 1,
+        "currentWeek": 1,
+        "currentPhase": 1,
+        "currentPhaseLabel": "Foundation",
+        "totalMonths": 6
+      },
+      "diet": [
+        {
+          "monthLabel": "Month 1 \u2014 Foundation",
+          "guidelines": [
+            "High-fiber meals",
+            "No sugary drinks"
+          ],
+          "weeks": [
+            {
+              "weekLabel": "Week 1",
+              "weekdays": [
+                {
+                  "day": "Monday",
+                  "breakfast": "Ragi Idli",
+                  "lunch": "Sambar Rice",
+                  "snack": "Fruit",
+                  "dinner": "Paneer Dosa"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "workout": [
+        {
+          "focus": "Form + consistency",
+          "phaseLabel": "Foundation"
+        }
+      ],
+      "checklist": [
+        {
+          "time": "07:00",
+          "text": "Hydration check"
+        }
+      ]
+    }
+  },
+  {
+    "id": "north-eggetarian-recomp",
+    "description": "North Indian eggetarian recomposition persona",
+    "constraints": {
+      "mustExclude": [
+        "chicken",
+        "fish",
+        "mutton",
+        "pork"
+      ],
+      "mustIncludeAny": [
+        "egg",
+        "paneer",
+        "dal",
+        "chilla"
+      ]
+    },
+    "user": {
+      "id": "user-north-eggetarian",
+      "name": "Vikram Singh",
+      "email": "vikram@example.com",
+      "role": "user",
+      "profile": {
+        "primaryGoal": "maintenance",
+        "dietType": "eggetarian",
+        "cuisinePreference": "north-indian",
+        "currentWeightKg": 82,
+        "goalWeightKg": 80,
+        "heightCm": 178,
+        "age": 34,
+        "dailyCalorieTarget": 2250,
+        "fitnessLevel": "moderately-active",
+        "waterGoalL": 2.7
+      }
+    },
+    "overview": {
+      "timeline": [
+        {
+          "type": "meal",
+          "label": "Breakfast",
+          "value": "Moong Dal Chilla + Boiled Egg"
+        },
+        {
+          "type": "meal",
+          "label": "Lunch",
+          "value": "Paneer Bhurji + Phulka"
+        },
+        {
+          "type": "meal",
+          "label": "Snack",
+          "value": "Roasted Chana"
+        },
+        {
+          "type": "meal",
+          "label": "Dinner",
+          "value": "Egg Curry + Jeera Rice"
+        },
+        {
+          "type": "habit",
+          "label": "Workout",
+          "completed": true
+        }
+      ],
+      "dietPreview": {
+        "dailyCalorieTarget": 2250,
+        "macros": {
+          "proteinG": 140,
+          "carbsG": 255,
+          "fatG": 70
+        },
+        "meals": {
+          "breakfast": "Moong Dal Chilla + Boiled Egg",
+          "lunch": "Paneer Bhurji + Phulka",
+          "snack": "Roasted Chana",
+          "dinner": "Egg Curry + Jeera Rice"
+        }
+      },
+      "recipePreview": [
+        {
+          "mealType": "breakfast",
+          "name": "Moong Chilla"
+        },
+        {
+          "mealType": "lunch",
+          "name": "Paneer Bhurji"
+        },
+        {
+          "mealType": "snack",
+          "name": "Roasted Chana"
+        },
+        {
+          "mealType": "dinner",
+          "name": "Egg Curry"
+        }
+      ],
+      "stats": {
+        "daysLogged": 6,
+        "avgWaterIntakeL": 2.6,
+        "avgMoodScore": 4.1
+      },
+      "profileCompleteness": {
+        "percentage": 100,
+        "missingFields": []
+      }
+    },
+    "plan": {
+      "meta": {
+        "currentMonth": 2,
+        "currentWeek": 1,
+        "currentPhase": 1,
+        "currentPhaseLabel": "Build",
+        "totalMonths": 6
+      },
+      "diet": [
+        {
+          "monthLabel": "Month 1 \u2014 Foundation",
+          "guidelines": [
+            "Balanced plate"
+          ],
+          "weeks": [
+            {
+              "weekLabel": "Week 1",
+              "weekdays": [
+                {
+                  "day": "Monday",
+                  "breakfast": "Egg Toast",
+                  "lunch": "Dal Rice",
+                  "snack": "Fruit",
+                  "dinner": "Paneer Wrap"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "monthLabel": "Month 2 \u2014 Build",
+          "guidelines": [
+            "Protein at each meal"
+          ],
+          "weeks": [
+            {
+              "weekLabel": "Week 1",
+              "weekdays": [
+                {
+                  "day": "Monday",
+                  "breakfast": "Boiled Egg",
+                  "lunch": "Paneer",
+                  "snack": "Nuts",
+                  "dinner": "Egg Curry"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "workout": [
+        {
+          "focus": "Foundation"
+        },
+        {
+          "focus": "Strength",
+          "phaseLabel": "Build"
+        }
+      ],
+      "checklist": [
+        {
+          "time": "08:00",
+          "text": "Protein target"
+        }
+      ]
+    }
+  },
+  {
+    "id": "continental-nonveg-cut",
+    "description": "Continental non-veg cutting persona",
+    "constraints": {
+      "mustExclude": [
+        "pork"
+      ],
+      "mustIncludeAny": [
+        "chicken",
+        "fish",
+        "salad",
+        "grilled"
+      ]
+    },
+    "user": {
+      "id": "user-continental-nonveg",
+      "name": "Neha Kapoor",
+      "email": "neha@example.com",
+      "role": "user",
+      "profile": {
+        "primaryGoal": "weight-loss",
+        "dietType": "non-vegetarian",
+        "cuisinePreference": "continental",
+        "currentWeightKg": 70,
+        "goalWeightKg": 63,
+        "heightCm": 168,
+        "age": 31,
+        "dailyCalorieTarget": 1825,
+        "fitnessLevel": "active",
+        "waterGoalL": 2.5
+      }
+    },
+    "overview": {
+      "timeline": [
+        {
+          "type": "meal",
+          "label": "Breakfast",
+          "value": "Greek Yogurt + Berry Bowl"
+        },
+        {
+          "type": "meal",
+          "label": "Lunch",
+          "value": "Grilled Chicken Salad"
+        },
+        {
+          "type": "meal",
+          "label": "Snack",
+          "value": "Protein Smoothie"
+        },
+        {
+          "type": "meal",
+          "label": "Dinner",
+          "value": "Baked Fish + Veggies"
+        },
+        {
+          "type": "habit",
+          "label": "Workout",
+          "completed": true
+        }
+      ],
+      "dietPreview": {
+        "dailyCalorieTarget": 1825,
+        "macros": {
+          "proteinG": 128,
+          "carbsG": 170,
+          "fatG": 58
+        },
+        "meals": {
+          "breakfast": "Greek Yogurt + Berry Bowl",
+          "lunch": "Grilled Chicken Salad",
+          "snack": "Protein Smoothie",
+          "dinner": "Baked Fish + Veggies"
+        }
+      },
+      "recipePreview": [
+        {
+          "mealType": "breakfast",
+          "name": "Greek Yogurt Bowl"
+        },
+        {
+          "mealType": "lunch",
+          "name": "Grilled Chicken Salad"
+        },
+        {
+          "mealType": "snack",
+          "name": "Protein Smoothie"
+        },
+        {
+          "mealType": "dinner",
+          "name": "Baked Fish"
+        }
+      ],
+      "stats": {
+        "daysLogged": 5,
+        "avgWaterIntakeL": 2.3,
+        "avgMoodScore": 3.9
+      },
+      "profileCompleteness": {
+        "percentage": 100,
+        "missingFields": []
+      }
+    },
+    "plan": {
+      "meta": {
+        "currentMonth": 3,
+        "currentWeek": 2,
+        "currentPhase": 2,
+        "currentPhaseLabel": "Cut",
+        "totalMonths": 6
+      },
+      "diet": [
+        {
+          "monthLabel": "Month 1 \u2014 Foundation",
+          "guidelines": [
+            "Consistency"
+          ],
+          "weeks": [
+            {
+              "weekLabel": "Week 1",
+              "weekdays": [
+                {
+                  "day": "Monday",
+                  "breakfast": "Oats",
+                  "lunch": "Chicken",
+                  "snack": "Fruit",
+                  "dinner": "Fish"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "monthLabel": "Month 2 \u2014 Build",
+          "guidelines": [
+            "Protein"
+          ],
+          "weeks": [
+            {
+              "weekLabel": "Week 1",
+              "weekdays": [
+                {
+                  "day": "Monday",
+                  "breakfast": "Egg",
+                  "lunch": "Chicken",
+                  "snack": "Nuts",
+                  "dinner": "Fish"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "monthLabel": "Month 3 \u2014 Cut",
+          "guidelines": [
+            "High protein",
+            "Fiber first"
+          ],
+          "weeks": [
+            {
+              "weekLabel": "Week 2",
+              "weekdays": [
+                {
+                  "day": "Monday",
+                  "breakfast": "Yogurt",
+                  "lunch": "Chicken salad",
+                  "snack": "Shake",
+                  "dinner": "Baked fish"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "workout": [
+        {
+          "focus": "Foundation"
+        },
+        {
+          "focus": "Build"
+        },
+        {
+          "focus": "Metabolic",
+          "phaseLabel": "Cut"
+        }
+      ],
+      "checklist": [
+        {
+          "time": "06:30",
+          "text": "Mobility warmup"
+        }
+      ]
+    }
+  }
+]
