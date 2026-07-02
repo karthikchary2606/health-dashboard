@@ -346,6 +346,27 @@ describe('buildWorkoutPlan — personalized', () => {
    expect(yogaDays.length).toBeGreaterThan(0);
    expect(strengthDays.length).toBeGreaterThan(0);
   });
+
+  test('hybrid profile 3-day: has at least 1 yoga day and 1 strength day', () => {
+  const hybrid3Day = {
+    dietType: 'vegetarian',
+    cuisinePreference: 'south-indian',
+    fitnessLevel: 'moderately-active',
+    equipmentAvailable: ['dumbbells'],
+    healthConditions: [],
+    workoutPreferences: ['gym', 'yoga'],
+    workoutDaysPerWeek: 3,
+    yogaStyle: 'hatha',
+    age: 30,
+  };
+  const plan = buildWorkoutPlan(hybrid3Day, 'weight-loss');
+  const activeDays   = plan[0].schedule.filter(d => d.type !== 'rest');
+  const yogaDays     = activeDays.filter(d => d.focus && d.focus.toLowerCase().includes('yoga'));
+  const strengthDays = activeDays.filter(d => d.type === 'Strength');
+  expect(activeDays.length).toBe(3);
+  expect(yogaDays.length).toBeGreaterThanOrEqual(1);
+  expect(strengthDays.length).toBeGreaterThanOrEqual(1);
+ });
 });
 
 // ─── Diet guidelines ──────────────────────────────────────────────────────────

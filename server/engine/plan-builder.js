@@ -137,6 +137,10 @@ const PHASE_LABELS = {
 // ─── Day slot templates by workoutDaysPerWeek ─────────────────────────────────
 
 const GYM_HOME_SLOTS = {
+  2: [
+    { day: 'Monday',   muscleGroup: 'full-body', focus: 'Full Body',  duration: '45 min' },
+    { day: 'Thursday', muscleGroup: 'chest',     focus: 'Upper Body', duration: '45 min' },
+  ],
   3: [
     { day: 'Monday',    muscleGroup: 'full-body', focus: 'Full Body',   duration: '45 min' },
     { day: 'Wednesday', muscleGroup: 'chest',     focus: 'Upper Body',  duration: '45 min' },
@@ -268,7 +272,8 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
   const activeDaysArr = YOGA_SLOTS[daysPerWeek] || YOGA_SLOTS[4];
   const activeSet     = new Set(activeDaysArr);
   const strengthCount = Math.ceil(activeDaysArr.length / 2);
-  const strengthSlotTemplate = GYM_HOME_SLOTS[strengthCount] || GYM_HOME_SLOTS[3];
+  const clampedStrength = Math.max(2, Math.min(strengthCount, 7));
+  const strengthSlotTemplate = GYM_HOME_SLOTS[clampedStrength] || GYM_HOME_SLOTS[2];
   const strengthDaySet = new Set(strengthSlotTemplate.map(s => s.day));
   let yogaDayIndex = 0;
 
