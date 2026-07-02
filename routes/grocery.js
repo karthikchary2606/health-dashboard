@@ -134,8 +134,8 @@ function deriveGroceryList(profile) {
   }
 
   const fullList = getGroceryList(profile);
-  // fullList is an array of months; take first month's categories
-  const categories = (fullList[0] && fullList[0].categories) || [];
+  // buildGroceryList returns a flat [{name, items}] array
+  const categories = Array.isArray(fullList) ? fullList : [];
 
   return categories.map(cat => ({
     category: cat.name,

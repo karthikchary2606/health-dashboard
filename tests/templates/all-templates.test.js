@@ -77,7 +77,7 @@ describe('getFullPlan shape', () => {
         expect(plan.dietPlan).toHaveLength(6);
         expect(plan.workoutPlan).toHaveLength(6);
         expect(plan.cardioPlan).toHaveLength(6);
-        expect(plan.groceryList).toHaveLength(6);
+        expect(plan.groceryList).toHaveLength(5);
       });
     });
   });

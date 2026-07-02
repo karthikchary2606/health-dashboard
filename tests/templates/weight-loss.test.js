@@ -64,9 +64,11 @@ test('getCardioPlan returns 6 items', () => {
   expect(plan.length).toBe(6);
 });
 
-test('getGroceryList returns 6 items', () => {
+test('getGroceryList returns flat category array with 5 categories', () => {
   const list = template.getGroceryList(baseProfile);
-  expect(list.length).toBe(6);
+  expect(list.length).toBe(5);
+  expect(list[0]).toHaveProperty('name');
+  expect(list[0]).toHaveProperty('items');
 });
 
 test('getDefaultChecklist includes medication item from profile', () => {

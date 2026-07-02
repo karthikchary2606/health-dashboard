@@ -198,32 +198,29 @@ describe('buildGroceryList', () => {
   let plan;
   beforeAll(() => { plan = buildGroceryList(vegProfile, goal); });
 
-  test('returns exactly 6 months', () => {
+  test('returns a non-empty array of categories', () => {
     expect(Array.isArray(plan)).toBe(true);
-    expect(plan).toHaveLength(6);
+    expect(plan.length).toBeGreaterThan(0);
   });
 
-  test('no null months', () => {
-    plan.forEach(month => expect(month).not.toBeNull());
+  test('no null categories', () => {
+    plan.forEach(cat => expect(cat).not.toBeNull());
   });
 
-  test('each month has monthLabel, budget, categories', () => {
-    plan.forEach((month, i) => {
-      expect(month.monthLabel).toBe(`Month ${i + 1}`);
-      expect(typeof month.budget).toBe('string');
-      expect(Array.isArray(month.categories)).toBe(true);
+  test('each category has name and items array', () => {
+    plan.forEach(cat => {
+      expect(typeof cat.name).toBe('string');
+      expect(Array.isArray(cat.items)).toBe(true);
     });
   });
 
   test('vegetarian grocery list has no meat items', () => {
     const vegPlan = buildGroceryList(vegProfile, goal);
     const meatTerms = ['chicken', 'fish', 'mutton', 'beef', 'pork', 'meat'];
-    vegPlan.forEach(month => {
-      month.categories.forEach(cat => {
-        cat.items.forEach(item => {
-          const lower = item.toLowerCase();
-          meatTerms.forEach(term => expect(lower).not.toContain(term));
-        });
+    vegPlan.forEach(cat => {
+      cat.items.forEach(item => {
+        const lower = item.toLowerCase();
+        meatTerms.forEach(term => expect(lower).not.toContain(term));
       });
     });
   });
@@ -231,12 +228,10 @@ describe('buildGroceryList', () => {
   test('vegan grocery list has no dairy items', () => {
     const vegan = { ...nonVegProfile, dietType: 'vegan' };
     const result = buildGroceryList(vegan, 'weight-loss');
-    const dairyKeywords = /\b(paneer|yogurt|milk|ghee|butter|cream|cheese)\b/i;
-    result.forEach(m => {
-      m.categories.forEach(cat => {
-        cat.items.forEach(item => {
-          expect(item).not.toMatch(dairyKeywords);
-        });
+    const dairyKeywords = /\b(paneer|yogurt|ghee|butter|cream|cheese|mozzarella)\b|\bcow milk\b|\bdairy milk\b/i;
+    result.forEach(cat => {
+      cat.items.forEach(item => {
+        expect(item).not.toMatch(dairyKeywords);
       });
     });
   });

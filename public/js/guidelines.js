@@ -1,5 +1,98 @@
 // Guidelines rendering — fully profile-driven.
-// Populates: #conditionCards, #seedTracker, #suppTiming, #foodGuidelines, #groceryNote
+// Populates: #goalGuidelines, #conditionCards, #seedTracker, #suppTiming, #foodGuidelines, #groceryNote
+
+const GOAL_GUIDELINES = {
+  'weight-loss': {
+    title: '🔥 Weight Loss Strategy',
+    color: '#fef3c7',
+    border: '#fde68a',
+    titleColor: '#92400e',
+    tips: [
+      'Maintain a <strong>300–500 kcal daily deficit</strong> — crash diets spike cortisol and kill muscle.',
+      'Eat <strong>protein with every meal</strong> (30–40g target per meal) — preserves lean mass during fat loss.',
+      'Cardio <em>after</em> strength training burns more fat — glycogen is depleted so the body taps fat immediately.',
+      'Sleep <strong>7–8 hours</strong> — ghrelin spikes on poor sleep, killing satiety and triggering cravings.',
+      'Weigh yourself <strong>weekly</strong> (same day, same time) — daily weight fluctuates by 1–2 kg due to water.',
+    ],
+    metric: function(p) {
+      if (p && p.goalWeightKg && p.currentWeightKg) {
+        var diff = Math.abs(p.currentWeightKg - p.goalWeightKg).toFixed(1);
+        return '🎯 Target: ' + p.goalWeightKg + ' kg · Currently: ' + p.currentWeightKg + ' kg · ' + diff + ' kg to go';
+      }
+      return null;
+    },
+  },
+  'muscle-gain': {
+    title: '💪 Muscle Building Strategy',
+    color: '#eff6ff',
+    border: '#bfdbfe',
+    titleColor: '#1e40af',
+    tips: [
+      'Protein target: <strong>1.6–2.2g per kg of bodyweight</strong> daily — this is the proven anabolic ceiling.',
+      '<strong>Progressive overload</strong> is the only driver of hypertrophy — add load or reps every week.',
+      'Eat a <strong>200–300 kcal surplus</strong> — more than this builds fat, not extra muscle.',
+      'Sleep <strong>8 hours minimum</strong> — 70% of growth hormone is released during deep sleep.',
+      'Pre-workout meal: <strong>complex carbs + protein</strong> 1.5–2 hours before training for sustained energy.',
+    ],
+    metric: function(p) {
+      if (p && p.currentWeightKg) {
+        return '🥩 Daily protein target: ' + Math.round(p.currentWeightKg * 1.8) + 'g (' + p.currentWeightKg + ' kg × 1.8g)';
+      }
+      return null;
+    },
+  },
+  'maintenance': {
+    title: '⚖️ Maintenance Strategy',
+    color: '#f0fdf4',
+    border: '#bbf7d0',
+    titleColor: '#166534',
+    tips: [
+      'Caloric maintenance: <strong>energy in = energy out</strong>. Track for 2 weeks to find your true TDEE.',
+      'Vary your training stimulus <strong>every 4–6 weeks</strong> to prevent adaptation and plateau.',
+      'Prioritise <strong>sleep and recovery</strong> — long-term maintenance is about sustainability, not heroics.',
+      'Body recomposition is possible at maintenance: lose fat AND gain muscle simultaneously.',
+      'Monthly check-in: assess energy levels, strength, and how clothes fit — not just scale weight.',
+    ],
+    metric: function(p) {
+      if (p && p.dailyCalorieTarget) {
+        return '⚡ Your estimated maintenance: ~' + p.dailyCalorieTarget + ' kcal/day';
+      }
+      return null;
+    },
+  },
+  'general-fitness': {
+    title: '🏃 General Fitness Strategy',
+    color: '#faf5ff',
+    border: '#e9d5ff',
+    titleColor: '#6b21a8',
+    tips: [
+      '<strong>Consistency beats intensity</strong> — 3 moderate sessions per week outperforms sporadic extreme workouts.',
+      'Mix <strong>cardio + resistance training</strong> for optimal cardiovascular health and metabolic rate.',
+      'Hydration: minimum <strong>8 glasses/day</strong>, more on training days and hot weather.',
+      '<strong>10,000 steps daily</strong> is a proven baseline for cardiovascular health — use a step counter.',
+      '10 min of <strong>stretching or flexibility work</strong> prevents injury and improves movement quality.',
+    ],
+    metric: function(p) {
+      return null;
+    },
+  },
+};
+
+function renderGoalGuidelines(profile) {
+  var el = document.getElementById('goalGuidelines');
+  if (!el) return;
+  var goal = profile && profile.primaryGoal;
+  var g = GOAL_GUIDELINES[goal] || GOAL_GUIDELINES['general-fitness'];
+  var metricLine = g.metric(profile);
+  el.innerHTML =
+    '<div style="background:' + g.color + ';border:1px solid ' + g.border + ';border-radius:10px;padding:14px 16px">' +
+      '<div style="font-weight:700;font-size:.95rem;color:' + g.titleColor + ';margin-bottom:10px">' + g.title + '</div>' +
+      '<ul style="padding-left:16px;margin:0 0 8px;font-size:.82rem;color:var(--text-med)">' +
+        g.tips.map(function(t) { return '<li style="margin-bottom:6px">' + t + '</li>'; }).join('') +
+      '</ul>' +
+      (metricLine ? '<div style="font-size:.8rem;font-weight:600;color:' + g.titleColor + ';padding:6px 10px;background:rgba(0,0,0,.04);border-radius:6px;margin-top:6px">' + metricLine + '</div>' : '') +
+    '</div>';
+}
 
 const SEEDS = [
   { name: 'Pumpkin Seeds',    daily: 8,  note: 'Rich in magnesium, zinc, and healthy fats' },
@@ -243,6 +336,7 @@ function buildGuidelines(profile) {
     .map(c => (typeof c === 'object' && c !== null) ? c.name : c);
   const dietType   = profile ? (profile.dietType || 'non-vegetarian') : 'non-vegetarian';
 
+  renderGoalGuidelines(profile);
   renderConditionCards(profile);
   renderCommunityNotes(profile);
 

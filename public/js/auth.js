@@ -5,6 +5,18 @@ async function initAuth() {
   const { ok, data } = await apiFetch('/api/auth/me');
   if (!ok) return; // apiFetch handles redirect on 401
   currentUser = data;
+  if (currentUser.profileComplete === false) {
+    window._profileIncomplete = true;
+    // Show a banner at the top of the page
+    const banner = document.createElement('div');
+    banner.id = 'profile-incomplete-banner';
+    banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#f59e0b;color:#000;padding:10px 16px;font-size:.85rem;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.2)';
+    banner.innerHTML = `
+      <span>⚠️ Your profile is incomplete — some features are unavailable.</span>
+      <a href="/onboarding.html" style="background:#000;color:#fff;padding:5px 14px;border-radius:4px;text-decoration:none;font-weight:600;font-size:.8rem;white-space:nowrap">Complete Profile →</a>
+    `;
+    document.body.insertBefore(banner, document.body.firstChild);
+  }
   const adminLink = document.getElementById('admin-link');
   if (adminLink && currentUser.role === 'admin') adminLink.style.display = 'inline-block';
   // Personalise sidebar

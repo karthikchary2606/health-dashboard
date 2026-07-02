@@ -1917,6 +1917,733 @@ const RECIPES = [
     ],
     mealType: ['snack'],
     nutrition: { caloriesPer100g:93, proteinG:7, carbsG:20, fatG:9, servingSizeG:200 }
+  },
+  { id:71, icon:"🫓", cat:"breakfast", name:"Aloo Paratha with Curd", time:"25 min", cal:380, p:10, f:14, c:52,
+    cuisine:'north-indian',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegetarian','breakfast','filling'],
+    ingredients:[
+      "2 whole wheat parathas (150g dough)",
+      "2 medium potatoes, boiled and mashed",
+      "½ tsp ajwain (carom seeds)",
+      "1 green chilli, finely chopped",
+      "1 tbsp ghee for cooking",
+      "½ cup curd (dahi) for serving"
+    ],
+    steps:[
+      "Mix mashed potatoes with ajwain, green chilli, salt, and a pinch of amchur. Divide into 2 balls.",
+      "Roll out a dough ball into a small disc, place potato filling in centre, seal and roll into a flat paratha.",
+      "Cook on a hot tawa with ghee for 2–3 minutes per side until golden brown and crisp.",
+      "Serve hot with cold curd and a pickle of choice."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:190, proteinG:5, carbsG:26, fatG:7, servingSizeG:200 }
+  },
+  { id:72, icon:"🫓", cat:"breakfast", name:"Methi Paratha", time:"20 min", cal:320, p:8, f:12, c:44,
+    cuisine:'north-indian',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegetarian','breakfast','iron-rich'],
+    ingredients:[
+      "1½ cups whole wheat flour",
+      "1 cup fresh methi (fenugreek) leaves, finely chopped",
+      "1 tsp cumin seeds",
+      "½ tsp turmeric",
+      "1 tbsp ghee for cooking",
+      "Salt and red chilli powder to taste"
+    ],
+    steps:[
+      "Combine flour, methi leaves, cumin, turmeric, salt, and chilli powder. Knead into a firm dough using water.",
+      "Rest dough for 10 minutes. Divide into 4 equal balls and roll each into a thin paratha.",
+      "Cook on a hot tawa, applying ghee on each side, until golden spots appear — about 2 minutes per side.",
+      "Serve with yogurt or a dollop of butter."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:160, proteinG:4, carbsG:22, fatG:6, servingSizeG:200 }
+  },
+  { id:73, icon:"🍚", cat:"breakfast", name:"Poha with Peanuts", time:"15 min", cal:290, p:8, f:8, c:44,
+    cuisine:'north-indian',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegan','breakfast','quick','light'],
+    ingredients:[
+      "1½ cups thick poha (flattened rice), rinsed and drained",
+      "3 tbsp roasted peanuts",
+      "1 medium onion, finely chopped",
+      "1 tsp mustard seeds",
+      "8–10 curry leaves",
+      "1 tsp turmeric, 1 tsp lemon juice, fresh coriander"
+    ],
+    steps:[
+      "Rinse poha in a colander until soft but not mushy. Sprinkle turmeric and salt; toss gently.",
+      "Heat oil in a pan. Add mustard seeds — let them splutter. Add curry leaves, onion, and green chilli; sauté 3 minutes.",
+      "Add peanuts and toss for 1 minute. Add seasoned poha and mix gently over low heat for 2 minutes.",
+      "Squeeze lemon juice, garnish with fresh coriander and serve immediately."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:145, proteinG:4, carbsG:22, fatG:4, servingSizeG:200 }
+  },
+  { id:74, icon:"🥚", cat:"breakfast", name:"Egg Paratha", time:"20 min", cal:380, p:16, f:16, c:44,
+    cuisine:'north-indian',
+    dietType:['eggetarian','non-vegetarian'],
+    tags:['north-indian','eggetarian','breakfast','high-protein'],
+    ingredients:[
+      "2 whole wheat parathas (150g dough)",
+      "2 large eggs",
+      "1 small onion, finely chopped",
+      "1 green chilli, chopped",
+      "Salt, cumin powder, and chilli flakes to taste",
+      "1 tsp oil or ghee"
+    ],
+    steps:[
+      "Roll paratha dough into a thin round. Cook one side on a hot tawa for 30 seconds.",
+      "Beat egg with onion, green chilli, salt, and spices. Pour over the half-cooked paratha side on tawa.",
+      "Flip carefully once egg starts to set. Press and cook for 2 minutes until egg is fully cooked.",
+      "Apply a little ghee on top. Serve with ketchup or mint chutney."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:190, proteinG:8, carbsG:22, fatG:8, servingSizeG:200 }
+  },
+  { id:75, icon:"🥣", cat:"breakfast", name:"Sooji Upma", time:"20 min", cal:260, p:7, f:8, c:40,
+    cuisine:'north-indian',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegan','breakfast','quick','light'],
+    ingredients:[
+      "¾ cup semolina (sooji/rava), dry-roasted",
+      "1 small onion, chopped",
+      "½ cup mixed vegetables (peas, carrot, beans)",
+      "1 tsp mustard seeds, 8 curry leaves",
+      "2 cups water",
+      "Salt and lemon juice to taste"
+    ],
+    steps:[
+      "Dry-roast sooji on medium heat for 4–5 minutes until light golden and fragrant. Set aside.",
+      "Heat oil in a heavy pan. Add mustard seeds, curry leaves, and onion; sauté until onion turns translucent.",
+      "Add vegetables and sauté 2 minutes. Pour in 2 cups boiling water, add salt.",
+      "Slowly add roasted sooji while stirring continuously to avoid lumps. Cook on low heat 3–4 minutes until thick. Finish with lemon juice."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:130, proteinG:3.5, carbsG:20, fatG:4, servingSizeG:200 }
+  },
+  { id:76, icon:"🫘", cat:"lunch", name:"Chana Masala with Bhatura", time:"45 min", cal:480, p:16, f:16, c:64,
+    cuisine:'north-indian',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegetarian','lunch','high-fiber','protein-rich'],
+    ingredients:[
+      "1 cup chickpeas (kabuli chana), soaked overnight and pressure-cooked",
+      "2 medium onions, finely chopped",
+      "2 tomatoes, pureed",
+      "1 tbsp ginger-garlic paste",
+      "1½ tsp chole masala, ½ tsp cumin",
+      "2 cups maida + curd for bhaturas"
+    ],
+    steps:[
+      "Heat oil; sauté cumin, onions until golden. Add ginger-garlic paste and cook 2 minutes.",
+      "Add tomato puree and all dry spices. Cook until oil separates — about 8 minutes.",
+      "Add cooked chickpeas and 1 cup water. Simmer 10 minutes. Adjust seasoning.",
+      "For bhaturas: knead maida with curd and salt into soft dough, rest 30 min, roll thick and deep-fry until puffed and golden."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:160, proteinG:5.3, carbsG:21.3, fatG:5.3, servingSizeG:300 }
+  },
+  { id:77, icon:"🧀", cat:"lunch", name:"Shahi Paneer with Naan", time:"35 min", cal:520, p:18, f:28, c:48,
+    cuisine:'north-indian',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegetarian','lunch','rich','restaurant-style'],
+    ingredients:[
+      "200g paneer, cubed",
+      "½ cup cashews, soaked and blended to paste",
+      "2 onions, 2 tomatoes — pureed together",
+      "½ cup fresh cream",
+      "1 tsp each: cardamom, garam masala, kasuri methi",
+      "2 naans (store-bought or tandoor-style)"
+    ],
+    steps:[
+      "Heat ghee; cook onion-tomato puree until thick and oil separates — 10 minutes.",
+      "Add cashew paste, cream, and all spices. Cook 5 minutes on low heat.",
+      "Fold in paneer cubes. Simmer gently 5 minutes — do not over-boil or paneer toughens.",
+      "Finish with crushed kasuri methi. Serve with warm naan."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:173, proteinG:6, carbsG:16, fatG:9.3, servingSizeG:300 }
+  },
+  { id:78, icon:"🍗", cat:"lunch", name:"Butter Chicken with Naan", time:"40 min", cal:540, p:36, f:24, c:44,
+    cuisine:'north-indian',
+    dietType:['eggetarian','non-vegetarian'],
+    tags:['north-indian','non-vegetarian','lunch','high-protein','restaurant-style'],
+    ingredients:[
+      "300g boneless chicken, cubed and marinated in yogurt + spices",
+      "2 tbsp butter",
+      "3 tomatoes, pureed",
+      "½ cup fresh cream",
+      "1 tbsp ginger-garlic paste, 1 tsp kashmiri chilli powder",
+      "2 naans for serving"
+    ],
+    steps:[
+      "Grill or pan-sear marinated chicken until charred on edges. Set aside.",
+      "Melt butter in a wide pan. Sauté ginger-garlic paste 1 minute. Add tomato puree and kashmiri chilli; cook until thick.",
+      "Add cream and a pinch of sugar to balance acidity. Simmer 5 minutes.",
+      "Add grilled chicken to the makhani sauce. Simmer 8–10 minutes. Serve with warm naan."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:180, proteinG:12, carbsG:14.7, fatG:8, servingSizeG:300 }
+  },
+  { id:79, icon:"🥦", cat:"lunch", name:"Aloo Gobi with Roti", time:"30 min", cal:340, p:8, f:10, c:52,
+    cuisine:'north-indian',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegan','lunch','light','everyday'],
+    ingredients:[
+      "2 medium potatoes, cubed",
+      "½ head cauliflower, cut into florets",
+      "1 onion, 2 tomatoes — chopped",
+      "1 tsp cumin, ½ tsp turmeric, 1 tsp coriander powder",
+      "Fresh ginger, green chilli, coriander leaves",
+      "3 whole wheat rotis for serving"
+    ],
+    steps:[
+      "Heat oil; add cumin seeds. Add ginger, green chilli, and onion — sauté until onion softens.",
+      "Add tomatoes and spices; cook until tomatoes break down and oil separates.",
+      "Add potatoes and cauliflower. Toss to coat with masala. Cover and cook on low heat 15 minutes, stirring occasionally.",
+      "Finish with fresh coriander. Serve with hot rotis."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:113, proteinG:2.7, carbsG:17.3, fatG:3.3, servingSizeG:300 }
+  },
+  { id:80, icon:"🍚", cat:"lunch", name:"Chicken Biryani (Lucknowi)", time:"60 min", cal:460, p:30, f:14, c:54,
+    cuisine:'north-indian',
+    dietType:['eggetarian','non-vegetarian'],
+    tags:['north-indian','non-vegetarian','lunch','high-protein','aromatic'],
+    ingredients:[
+      "300g bone-in chicken pieces",
+      "1½ cups basmati rice, soaked 30 min",
+      "½ cup fried onions (birista)",
+      "½ cup yogurt, 2 tbsp ghee",
+      "Whole spices: bay leaf, cardamom, cloves, cinnamon, star anise",
+      "Saffron soaked in warm milk, fresh mint and coriander"
+    ],
+    steps:[
+      "Marinate chicken in yogurt, ginger-garlic paste, and biryani masala for 30 minutes.",
+      "Cook marinated chicken on medium heat until 70% done — about 15 minutes.",
+      "Parboil rice (80% cooked) with whole spices and salt. Drain.",
+      "Layer chicken and rice alternately. Top with fried onions, saffron milk, ghee, and fresh herbs. Cover tightly and dum-cook on very low heat for 20 minutes."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:153, proteinG:10, carbsG:18, fatG:4.7, servingSizeG:300 }
+  },
+  { id:81, icon:"🟢", cat:"lunch", name:"Matar Paneer with Rice", time:"30 min", cal:400, p:16, f:16, c:48,
+    cuisine:'north-indian',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegetarian','lunch','protein-rich'],
+    ingredients:[
+      "150g paneer, cubed",
+      "¾ cup green peas (fresh or frozen)",
+      "2 tomatoes, 1 onion — pureed",
+      "1 tbsp ginger-garlic paste, 1 tsp garam masala",
+      "1 tbsp oil or ghee",
+      "1 cup basmati rice, cooked"
+    ],
+    steps:[
+      "Heat ghee; sauté onion-tomato puree with ginger-garlic paste until thick and fragrant.",
+      "Add cumin, coriander, turmeric, garam masala, and salt. Cook 3 minutes.",
+      "Add peas and ½ cup water; simmer 5 minutes. Fold in paneer cubes gently.",
+      "Cook 5 more minutes on low heat. Serve over steamed basmati rice."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:133, proteinG:5.3, carbsG:16, fatG:5.3, servingSizeG:300 }
+  },
+  { id:82, icon:"🥚", cat:"lunch", name:"Egg Curry with Rice", time:"25 min", cal:380, p:20, f:14, c:44,
+    cuisine:'north-indian',
+    dietType:['eggetarian','non-vegetarian'],
+    tags:['north-indian','eggetarian','lunch','high-protein','everyday'],
+    ingredients:[
+      "4 hard-boiled eggs, halved",
+      "2 onions, finely chopped",
+      "3 tomatoes, pureed",
+      "1 tbsp ginger-garlic paste",
+      "1 tsp each: turmeric, coriander powder, garam masala",
+      "1 cup basmati rice, cooked"
+    ],
+    steps:[
+      "Heat oil; fry onions until deep golden — this base is key for flavour.",
+      "Add ginger-garlic paste, tomato puree, and all spices. Cook until thick and oil separates.",
+      "Add ½ cup water; simmer 5 minutes to build a medium-thick gravy.",
+      "Score the eggs lightly and add to the curry. Simmer 5 minutes so eggs absorb flavour. Serve with steamed rice."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:127, proteinG:6.7, carbsG:14.7, fatG:4.7, servingSizeG:300 }
+  },
+  { id:83, icon:"🫘", cat:"dinner", name:"Dal Bukhara with Roti", time:"50 min", cal:360, p:14, f:10, c:52,
+    cuisine:'north-indian',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegetarian','dinner','slow-cooked','iron-rich'],
+    ingredients:[
+      "1 cup whole black urad dal, soaked overnight",
+      "2 tomatoes, pureed",
+      "2 tbsp butter",
+      "1 tbsp ginger-garlic paste",
+      "1 tsp cumin, ½ tsp chilli powder",
+      "3 whole wheat rotis for serving"
+    ],
+    steps:[
+      "Pressure-cook soaked urad dal with salt and water for 6–8 whistles until very soft.",
+      "In a heavy pan, heat butter; cook ginger-garlic paste 1 minute. Add tomato puree and spices; cook 10 minutes until thick.",
+      "Add cooked dal to the masala. Simmer on very low heat for 20 minutes, stirring occasionally — the long simmer is what makes dal bukhara.",
+      "Finish with a knob of butter. Serve with hot rotis."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:120, proteinG:4.7, carbsG:17.3, fatG:3.3, servingSizeG:300 }
+  },
+  { id:84, icon:"🍗", cat:"dinner", name:"Chicken Tikka Masala with Roti", time:"45 min", cal:480, p:34, f:20, c:40,
+    cuisine:'north-indian',
+    dietType:['eggetarian','non-vegetarian'],
+    tags:['north-indian','non-vegetarian','dinner','high-protein','restaurant-style'],
+    ingredients:[
+      "300g boneless chicken, cubed",
+      "½ cup yogurt + 1 tsp tandoori masala (marinade)",
+      "2 onions, 3 tomatoes — pureed",
+      "½ cup fresh cream",
+      "1 tbsp ginger-garlic paste, 1 tsp smoked paprika",
+      "3 whole wheat rotis for serving"
+    ],
+    steps:[
+      "Marinate chicken in yogurt, tandoori masala, salt and lemon juice for 30 minutes. Grill or broil until charred.",
+      "Heat oil; cook onion-tomato puree with ginger-garlic paste and paprika until thick.",
+      "Add cream and kasuri methi; simmer 5 minutes.",
+      "Add grilled chicken and simmer 10 minutes. Serve with warm rotis."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:160, proteinG:11.3, carbsG:13.3, fatG:6.7, servingSizeG:300 }
+  },
+  { id:85, icon:"🧀", cat:"dinner", name:"Paneer Tikka with Mint Chutney", time:"30 min", cal:300, p:18, f:16, c:18,
+    cuisine:'north-indian',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegetarian','dinner','high-protein','grilled'],
+    ingredients:[
+      "200g paneer, cut into thick cubes",
+      "1 bell pepper and 1 onion, cut into chunks",
+      "3 tbsp thick yogurt",
+      "1 tsp each: tandoori masala, chilli powder, chaat masala",
+      "1 tbsp lemon juice",
+      "½ cup mint chutney for serving"
+    ],
+    steps:[
+      "Mix yogurt with all spices and lemon juice. Marinate paneer, bell pepper, and onion for 20 minutes.",
+      "Thread onto skewers alternating paneer and vegetables.",
+      "Grill on a hot cast-iron pan or oven at 220°C for 12–15 minutes, turning once, until charred edges appear.",
+      "Dust with chaat masala and serve immediately with mint chutney."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:150, proteinG:9, carbsG:9, fatG:8, servingSizeG:200 }
+  },
+  { id:86, icon:"🍖", cat:"dinner", name:"Lamb Rogan Josh with Rice", time:"60 min", cal:500, p:32, f:24, c:36,
+    cuisine:'north-indian',
+    dietType:['non-vegetarian'],
+    tags:['north-indian','non-vegetarian','dinner','high-protein','kashmiri'],
+    ingredients:[
+      "350g bone-in lamb, cut into pieces",
+      "1 cup yogurt",
+      "2 onions, thinly sliced",
+      "2 tsp kashmiri chilli powder, 1 tsp fennel powder",
+      "Whole spices: bay leaf, cardamom, cloves, cinnamon",
+      "1 cup basmati rice, cooked"
+    ],
+    steps:[
+      "Heat mustard oil until smoking; reduce heat. Fry whole spices 30 seconds.",
+      "Add sliced onions and cook until dark golden — 12 minutes.",
+      "Add lamb and brown on all sides. Add kashmiri chilli, fennel, ginger-garlic paste, and salt.",
+      "Add beaten yogurt and 1 cup water. Cover and slow-cook 35–40 minutes until lamb is fall-off-bone tender. Serve with steamed rice."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:167, proteinG:10.7, carbsG:12, fatG:8, servingSizeG:300 }
+  },
+  { id:87, icon:"🥔", cat:"dinner", name:"Jeera Aloo with Paratha", time:"25 min", cal:380, p:8, f:12, c:58,
+    cuisine:'north-indian',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegan','dinner','simple','everyday'],
+    ingredients:[
+      "3 medium potatoes, boiled and cubed",
+      "1 tsp cumin seeds",
+      "½ tsp turmeric, 1 tsp coriander powder, ½ tsp amchur",
+      "1 tbsp oil",
+      "Fresh coriander, green chilli",
+      "2 whole wheat parathas for serving"
+    ],
+    steps:[
+      "Heat oil in a pan. Add cumin seeds and let them sizzle until fragrant — 30 seconds.",
+      "Add green chilli and boiled potato cubes. Toss gently over medium heat.",
+      "Add turmeric, coriander powder, amchur, and salt. Toss to coat evenly.",
+      "Cook 5 minutes until potatoes develop a slight crust. Garnish with coriander. Serve with hot parathas."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:127, proteinG:2.7, carbsG:19.3, fatG:4, servingSizeG:300 }
+  },
+  { id:88, icon:"🥔", cat:"snack", name:"Aloo Tikki with Chutney", time:"20 min", cal:200, p:5, f:8, c:28,
+    cuisine:'north-indian',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegan','snack','street-food'],
+    ingredients:[
+      "2 medium potatoes, boiled and mashed",
+      "2 tbsp breadcrumbs",
+      "½ tsp cumin, ½ tsp chaat masala, green chilli",
+      "1 tbsp oil for shallow-frying",
+      "2 tbsp green chutney + 2 tbsp tamarind chutney"
+    ],
+    steps:[
+      "Mix mashed potatoes with breadcrumbs, cumin, chaat masala, chilli, and salt. Shape into 4 flat tikkis.",
+      "Heat a non-stick pan with oil. Shallow-fry tikkis on medium heat 3–4 minutes per side until crisp and golden.",
+      "Drain briefly. Serve immediately with green chutney and tamarind chutney."
+    ],
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:100, proteinG:2.5, carbsG:14, fatG:4, servingSizeG:200 }
+  },
+  { id:89, icon:"🥣", cat:"snack", name:"Dahi Bhalle", time:"30 min", cal:220, p:9, f:6, c:32,
+    cuisine:'north-indian',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegetarian','snack','probiotic','street-food'],
+    ingredients:[
+      "½ cup urad dal, soaked and ground to a batter",
+      "1 cup thick cold dahi (yogurt), whisked with salt",
+      "2 tbsp tamarind chutney, 1 tbsp green chutney",
+      "½ tsp roasted cumin powder, chilli powder",
+      "Oil for deep-frying",
+      "Pomegranate seeds and coriander for garnish"
+    ],
+    steps:[
+      "Deep-fry spoonfuls of urad dal batter until light golden. Soak fried vadas in warm water for 10 minutes; squeeze gently.",
+      "Arrange soaked bhallas in a serving dish. Pour cold whisked dahi generously over them.",
+      "Drizzle tamarind and green chutney. Sprinkle cumin powder, chilli powder, and salt.",
+      "Garnish with pomegranate seeds and coriander. Serve chilled."
+    ],
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:110, proteinG:4.5, carbsG:16, fatG:3, servingSizeG:200 }
+  },
+  { id:90, icon:"🫘", cat:"snack", name:"Chana Chaat", time:"10 min", cal:180, p:8, f:4, c:28,
+    cuisine:'north-indian',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['north-indian','vegan','snack','high-fiber','quick'],
+    ingredients:[
+      "1 cup boiled chickpeas (kabuli chana)",
+      "1 small onion, finely chopped",
+      "1 tomato, finely chopped",
+      "1 tsp chaat masala, ½ tsp cumin powder",
+      "1 tbsp tamarind chutney",
+      "Fresh coriander and lemon juice"
+    ],
+    steps:[
+      "Drain and rinse boiled chickpeas. Pat dry.",
+      "Combine chickpeas, onion, and tomato in a bowl.",
+      "Add chaat masala, cumin powder, tamarind chutney, lemon juice, and salt. Toss well.",
+      "Garnish with fresh coriander and serve immediately — or chill for 10 minutes for better flavour."
+    ],
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:90, proteinG:4, carbsG:14, fatG:2, servingSizeG:200 }
+  },
+  { id:91, icon:"🍳", cat:"breakfast", name:"Eggs Benedict", time:"25 min", cal:420, p:22, f:28, c:24,
+    cuisine:'continental',
+    dietType:['eggetarian','non-vegetarian'],
+    tags:['continental','eggetarian','breakfast','brunch','high-protein'],
+    ingredients:[
+      "2 large eggs for poaching",
+      "2 English muffin halves, toasted",
+      "2 slices Canadian bacon or ham",
+      "3 tbsp hollandaise sauce (2 egg yolks, 50g butter, lemon juice)",
+      "White vinegar for poaching water",
+      "Chives and paprika for garnish"
+    ],
+    steps:[
+      "Make hollandaise: whisk egg yolks with lemon juice over a double boiler; slowly whisk in melted butter until thick and smooth.",
+      "Bring a shallow pan of water to a gentle simmer with a splash of vinegar. Crack eggs into cups; slide in gently. Poach 3–4 minutes.",
+      "Toast muffin halves. Warm ham briefly in the pan.",
+      "Stack: muffin → ham → poached egg → hollandaise. Finish with paprika and chives."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:210, proteinG:11, carbsG:12, fatG:14, servingSizeG:200 }
+  },
+  { id:92, icon:"🍞", cat:"breakfast", name:"French Toast with Maple Syrup", time:"15 min", cal:380, p:12, f:16, c:50,
+    cuisine:'continental',
+    dietType:['eggetarian','non-vegetarian'],
+    tags:['continental','eggetarian','breakfast','sweet','weekend-brunch'],
+    ingredients:[
+      "3 thick slices brioche or white bread",
+      "2 large eggs",
+      "¼ cup milk",
+      "½ tsp vanilla extract, ½ tsp cinnamon",
+      "1 tbsp butter",
+      "2 tbsp maple syrup and fresh berries for serving"
+    ],
+    steps:[
+      "Whisk eggs, milk, vanilla, and cinnamon together in a shallow bowl.",
+      "Dip bread slices in the egg mixture, coating both sides and letting them soak for 20 seconds each.",
+      "Melt butter in a non-stick pan over medium heat. Cook soaked bread 2–3 minutes per side until golden.",
+      "Serve immediately with maple syrup, powdered sugar, and fresh berries."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:190, proteinG:6, carbsG:25, fatG:8, servingSizeG:200 }
+  },
+  { id:93, icon:"🍓", cat:"breakfast", name:"Smoothie Bowl with Granola", time:"10 min", cal:320, p:10, f:8, c:52,
+    cuisine:'continental',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['continental','vegetarian','breakfast','antioxidant','quick'],
+    ingredients:[
+      "1 frozen banana",
+      "½ cup frozen mixed berries",
+      "½ cup Greek yogurt",
+      "¼ cup granola",
+      "1 tbsp honey",
+      "Toppings: chia seeds, sliced kiwi, fresh strawberries"
+    ],
+    steps:[
+      "Blend frozen banana, berries, and Greek yogurt until thick and smooth — use minimal liquid for a spoonable consistency.",
+      "Pour into a bowl. The base should be thick enough to hold toppings.",
+      "Arrange granola, sliced fruit, and chia seeds on top. Drizzle with honey.",
+      "Eat immediately — the base softens quickly."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:160, proteinG:5, carbsG:26, fatG:4, servingSizeG:200 }
+  },
+  { id:94, icon:"🍳", cat:"breakfast", name:"Veggie Omelette", time:"10 min", cal:280, p:18, f:18, c:8,
+    cuisine:'continental',
+    dietType:['eggetarian','non-vegetarian'],
+    tags:['continental','eggetarian','breakfast','high-protein','quick','keto-friendly'],
+    ingredients:[
+      "3 large eggs",
+      "½ bell pepper, diced",
+      "¼ cup mushrooms, sliced",
+      "2 tbsp cheddar or feta cheese, crumbled",
+      "1 tbsp butter",
+      "Salt, pepper, and fresh herbs"
+    ],
+    steps:[
+      "Beat eggs with salt and pepper until well combined.",
+      "Melt butter in a non-stick pan over medium heat. Sauté bell pepper and mushrooms 2 minutes until slightly soft.",
+      "Pour eggs over the vegetables. Let the edges set, then gently fold the omelette in half.",
+      "Add cheese just before folding so it melts from residual heat. Serve immediately with a side salad."
+    ],
+    mealType: ['breakfast'],
+    nutrition: { caloriesPer100g:140, proteinG:9, carbsG:4, fatG:9, servingSizeG:200 }
+  },
+  { id:95, icon:"🍝", cat:"lunch", name:"Spaghetti Aglio e Olio", time:"20 min", cal:400, p:12, f:16, c:52,
+    cuisine:'continental',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['continental','vegan','lunch','quick','italian'],
+    ingredients:[
+      "120g dry spaghetti",
+      "4 cloves garlic, thinly sliced",
+      "3 tbsp good-quality olive oil",
+      "1 tsp red chilli flakes",
+      "Fresh parsley and salt"
+    ],
+    steps:[
+      "Cook spaghetti in heavily salted water until al dente. Reserve 1 cup pasta water before draining.",
+      "Gently heat olive oil over low heat. Add garlic and cook slowly until pale golden — not brown. Add chilli flakes.",
+      "Add drained pasta to the pan. Toss with a splash of pasta water to emulsify into a light sauce.",
+      "Toss with fresh parsley, adjust salt, and serve immediately."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:133, proteinG:4, carbsG:17.3, fatG:5.3, servingSizeG:300 }
+  },
+  { id:96, icon:"🍅", cat:"lunch", name:"Caprese Salad with Balsamic", time:"10 min", cal:240, p:10, f:16, c:14,
+    cuisine:'continental',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['continental','vegetarian','lunch','fresh','mediterranean','light'],
+    ingredients:[
+      "150g fresh mozzarella, sliced",
+      "2 large ripe tomatoes, sliced",
+      "Handful of fresh basil leaves",
+      "2 tbsp extra-virgin olive oil",
+      "1 tbsp balsamic glaze",
+      "Sea salt and cracked black pepper"
+    ],
+    steps:[
+      "Slice mozzarella and tomatoes to equal thickness.",
+      "Arrange alternating slices of mozzarella and tomato on a plate, slightly overlapping.",
+      "Tuck fresh basil leaves between the slices.",
+      "Drizzle with olive oil and balsamic glaze. Season with sea salt and cracked pepper. Serve with crusty bread."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:120, proteinG:5, carbsG:7, fatG:8, servingSizeG:200 }
+  },
+  { id:97, icon:"🫔", cat:"lunch", name:"Chicken Fajita Bowl", time:"25 min", cal:440, p:36, f:14, c:44,
+    cuisine:'continental',
+    dietType:['non-vegetarian'],
+    tags:['continental','non-vegetarian','lunch','high-protein'],
+    ingredients:[
+      "250g chicken breast, sliced into strips",
+      "1 tsp fajita spice mix (cumin, smoked paprika, garlic powder, chilli)",
+      "1 bell pepper and 1 onion, sliced",
+      "1 cup cooked brown rice or cilantro-lime rice",
+      "2 tbsp sour cream, salsa, and shredded lettuce",
+      "½ lime"
+    ],
+    steps:[
+      "Season chicken strips with fajita spice mix and salt. Cook in a very hot cast-iron pan 3–4 minutes per side.",
+      "In the same pan, stir-fry bell pepper and onion on high heat until charred at edges — 4 minutes.",
+      "Assemble bowls: rice at the base, then chicken, then peppers and onion.",
+      "Top with sour cream, salsa, and shredded lettuce. Squeeze lime over the top."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:147, proteinG:12, carbsG:14.7, fatG:4.7, servingSizeG:300 }
+  },
+  { id:98, icon:"🥣", cat:"lunch", name:"Minestrone Soup with Bread", time:"35 min", cal:300, p:10, f:6, c:50,
+    cuisine:'continental',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['continental','vegan','lunch','high-fiber','italian','hearty'],
+    ingredients:[
+      "½ cup small pasta (ditalini or elbow)",
+      "1 can (400g) crushed tomatoes",
+      "1 cup mixed vegetables (zucchini, carrot, celery, spinach)",
+      "½ cup canned white beans, drained",
+      "2 cups vegetable broth",
+      "2 slices crusty sourdough bread"
+    ],
+    steps:[
+      "Sauté onion, celery, and carrot in olive oil 5 minutes. Add garlic and cook 1 minute.",
+      "Add tomatoes, broth, zucchini, and herbs. Bring to a boil then simmer 15 minutes.",
+      "Add pasta and white beans; cook 8–10 minutes until pasta is tender.",
+      "Adjust seasoning. Serve hot with crusty bread and a drizzle of olive oil."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:100, proteinG:3.3, carbsG:16.7, fatG:2, servingSizeG:300 }
+  },
+  { id:99, icon:"🌯", cat:"lunch", name:"Grilled Chicken Wrap", time:"20 min", cal:380, p:30, f:12, c:38,
+    cuisine:'continental',
+    dietType:['non-vegetarian'],
+    tags:['continental','non-vegetarian','lunch','high-protein','meal-prep'],
+    ingredients:[
+      "200g chicken breast, grilled and sliced",
+      "1 large whole wheat tortilla wrap",
+      "¼ cup shredded romaine lettuce",
+      "1 medium tomato, sliced",
+      "2 tbsp light mayonnaise or Greek yogurt sauce",
+      "¼ avocado, sliced"
+    ],
+    steps:[
+      "Season chicken breast with salt, pepper, and smoked paprika. Grill or pan-cook 5–6 minutes per side until cooked through. Slice.",
+      "Warm tortilla briefly in a dry pan — 30 seconds each side.",
+      "Spread mayonnaise on tortilla. Layer lettuce, tomato, avocado, and chicken.",
+      "Fold sides in and roll tightly. Cut diagonally and serve immediately."
+    ],
+    mealType: ['lunch'],
+    nutrition: { caloriesPer100g:127, proteinG:10, carbsG:12.7, fatG:4, servingSizeG:300 }
+  },
+  { id:100, icon:"🍝", cat:"dinner", name:"Spaghetti Bolognese", time:"50 min", cal:520, p:32, f:18, c:58,
+    cuisine:'continental',
+    dietType:['non-vegetarian'],
+    tags:['continental','non-vegetarian','dinner','high-protein','italian','hearty'],
+    ingredients:[
+      "300g lean beef mince",
+      "120g dry spaghetti",
+      "1 can (400g) crushed tomatoes",
+      "1 onion, 2 garlic cloves — finely chopped",
+      "1 tbsp olive oil, 1 tsp dried oregano",
+      "Parmesan cheese for serving"
+    ],
+    steps:[
+      "Heat olive oil; cook onion and garlic until soft. Add beef mince and brown on high heat, breaking up lumps.",
+      "Add crushed tomatoes, oregano, salt, and a pinch of sugar. Simmer uncovered 25–30 minutes until sauce reduces.",
+      "Cook spaghetti al dente in heavily salted water. Reserve pasta water.",
+      "Toss spaghetti with bolognese, adding pasta water if needed for consistency. Serve with Parmesan."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:173, proteinG:10.7, carbsG:19.3, fatG:6, servingSizeG:300 }
+  },
+  { id:101, icon:"🐟", cat:"dinner", name:"Baked Salmon with Asparagus", time:"25 min", cal:380, p:38, f:22, c:8,
+    cuisine:'continental',
+    dietType:['non-vegetarian'],
+    tags:['continental','non-vegetarian','dinner','high-protein','omega-3','low-carb'],
+    ingredients:[
+      "200g salmon fillet",
+      "10–12 asparagus spears, trimmed",
+      "2 tbsp olive oil",
+      "2 garlic cloves, minced",
+      "Lemon slices, salt, cracked pepper, fresh dill"
+    ],
+    steps:[
+      "Preheat oven to 200°C. Line a baking tray.",
+      "Place salmon and asparagus on the tray. Drizzle with olive oil, add garlic, season with salt and pepper.",
+      "Lay lemon slices on top of the salmon. Bake 15–18 minutes until salmon flakes easily and asparagus is tender.",
+      "Garnish with fresh dill and an extra squeeze of lemon. Serve immediately."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:190, proteinG:19, carbsG:4, fatG:11, servingSizeG:200 }
+  },
+  { id:102, icon:"🍕", cat:"dinner", name:"Margherita Pizza (Thin Crust)", time:"30 min", cal:440, p:16, f:18, c:52,
+    cuisine:'continental',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['continental','vegetarian','dinner','italian','classic'],
+    ingredients:[
+      "200g pizza dough (thin crust), stretched",
+      "4 tbsp tomato passata",
+      "100g fresh mozzarella, torn",
+      "Fresh basil leaves",
+      "1 tbsp olive oil",
+      "Salt and oregano"
+    ],
+    steps:[
+      "Preheat oven to 250°C with a pizza stone or heavy baking tray inside.",
+      "Spread passata thinly on stretched dough — leave a 1cm border. Season with salt and oregano.",
+      "Distribute torn mozzarella evenly.",
+      "Bake 10–12 minutes until crust is crisp and cheese is bubbling with golden spots. Top with fresh basil and a drizzle of olive oil."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:147, proteinG:5.3, carbsG:17.3, fatG:6, servingSizeG:300 }
+  },
+  { id:103, icon:"🍗", cat:"dinner", name:"Herb Roasted Chicken with Vegetables", time:"40 min", cal:480, p:38, f:22, c:28,
+    cuisine:'continental',
+    dietType:['non-vegetarian'],
+    tags:['continental','non-vegetarian','dinner','high-protein','meal-prep'],
+    ingredients:[
+      "2 chicken thighs (bone-in, skin-on, ~350g total)",
+      "1 tbsp olive oil, 1 tsp each dried thyme and rosemary",
+      "2 medium potatoes, cubed",
+      "1 cup broccoli florets, 1 medium carrot, sliced",
+      "3 garlic cloves, salt and pepper"
+    ],
+    steps:[
+      "Preheat oven to 200°C. Rub chicken with olive oil, herbs, garlic, salt, and pepper.",
+      "Toss vegetables with olive oil, salt, and pepper on a roasting tray. Nestle chicken on top.",
+      "Roast for 35–40 minutes until chicken skin is crispy and juices run clear (internal temp 74°C).",
+      "Rest 5 minutes before serving — allows juices to redistribute into the meat."
+    ],
+    mealType: ['dinner'],
+    nutrition: { caloriesPer100g:160, proteinG:12.7, carbsG:9.3, fatG:7.3, servingSizeG:300 }
+  },
+  { id:104, icon:"🥤", cat:"snack", name:"Protein Banana Smoothie", time:"5 min", cal:280, p:18, f:6, c:42,
+    cuisine:'continental',
+    dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['continental','vegetarian','snack','high-protein','quick','post-workout'],
+    ingredients:[
+      "1 large ripe banana",
+      "1 scoop vanilla protein powder (25g)",
+      "1 cup cold milk",
+      "1 tbsp peanut butter",
+      "Pinch of cinnamon"
+    ],
+    steps:[
+      "Add all ingredients to a blender.",
+      "Blend on high for 45 seconds until completely smooth.",
+      "Pour into a tall glass and drink immediately — the banana oxidises quickly."
+    ],
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:93, proteinG:6, carbsG:14, fatG:2, servingSizeG:300 }
+  },
+  { id:105, icon:"🍅", cat:"snack", name:"Bruschetta with Tomatoes", time:"10 min", cal:180, p:5, f:6, c:26,
+    cuisine:'continental',
+    dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    tags:['continental','vegan','snack','italian','light','fresh'],
+    ingredients:[
+      "3 thick slices sourdough or ciabatta",
+      "3 ripe tomatoes, diced",
+      "2 garlic cloves — 1 minced, 1 whole for rubbing",
+      "1 tbsp extra-virgin olive oil",
+      "Fresh basil leaves, sea salt, cracked pepper"
+    ],
+    steps:[
+      "Mix diced tomatoes with minced garlic, olive oil, torn basil, salt, and pepper. Let sit 5 minutes for flavours to meld.",
+      "Toast bread slices under a grill or in a toaster until golden and crisp.",
+      "While warm, rub the cut side of a garlic clove directly on the bread — it melts into the surface.",
+      "Spoon tomato mixture generously onto each slice. Serve immediately."
+    ],
+    mealType: ['snack'],
+    nutrition: { caloriesPer100g:90, proteinG:2.5, carbsG:13, fatG:3, servingSizeG:200 }
   }
 ];
 
