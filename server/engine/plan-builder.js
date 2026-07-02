@@ -286,12 +286,16 @@ function detectWorkoutMode(profile) {
   const prefs = profile.workoutPreferences || [];
   const hasGym  = prefs.includes('gym') ||
                   (profile.equipmentAvailable || []).includes('gym-access');
+  // home-workout + legacy value 'home-bodyweight' both mean home-strength
+  const hasHomeStrength = prefs.includes('home-workout') || prefs.includes('home-bodyweight');
   const hasYoga = prefs.includes('yoga');
   const hasCardio = prefs.includes('cardio');
-  if (hasGym && hasYoga) return 'hybrid';
-  if (hasYoga)           return 'yoga';
-  if (hasGym)            return 'gym';
-  if (hasCardio)         return 'cardio';
+  const hasStrength = hasGym || hasHomeStrength;
+  if (hasStrength && hasYoga) return 'hybrid';
+  if (hasYoga)                return 'yoga';
+  if (hasGym)                 return 'gym';
+  if (hasHomeStrength)        return 'home';
+  if (hasCardio)              return 'cardio';
   return 'home';
 }
 

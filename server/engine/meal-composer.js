@@ -38,6 +38,14 @@ function resolvePool(dietType) {
   return 'veg'; // safe default for unknown/legacy values
 }
 
+const DAIRY_TERMS = ['curd', 'raita', 'paneer', 'ghee', 'butter', 'yogurt', 'dahi', 'cheese', 'cream'];
+
+function isVeganFriendly(meal) {
+  // "coconut milk" is vegan-safe — strip it before checking
+  const text = meal.toLowerCase().replace('coconut milk', '');
+  return !DAIRY_TERMS.some(d => text.includes(d));
+}
+
 /**
  * Returns a deterministic meal string for the given inputs.
  *
@@ -54,10 +62,18 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
   const pool     = cuisine[mealType][poolKey];
 
   const avoidances = (profile.culturalFoodAvoidances || []).map(a => a.toLowerCase());
-  const filteredPool = avoidances.length > 0
+  let filteredPool = avoidances.length > 0
     ? pool.filter(meal => !avoidances.some(a => meal.toLowerCase().includes(a)))
     : pool;
-  const usePool = filteredPool.length > 0 ? filteredPool : pool;
+  if (filteredPool.length === 0) filteredPool = pool;
+
+  // Strip dairy items for vegan users
+  if (profile.dietType === 'vegan') {
+    const veganPool = filteredPool.filter(isVeganFriendly);
+    if (veganPool.length > 0) filteredPool = veganPool;
+  }
+
+  const usePool = filteredPool;
 
   // activeConditions available for future goal/condition-based filtering
   const _active = activeConditions(profile); // eslint-disable-line no-unused-vars

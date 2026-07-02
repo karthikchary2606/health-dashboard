@@ -5,8 +5,25 @@ const router         = express.Router();
 const authenticate   = require('../middleware/authenticate');
 const requireProfile = require('../middleware/requireProfile');
 
-// In-memory grocery state per user per week (keyed by userId + ISO week)
+// In-memory grocery state per user per week (keyed by userId + ISO week + profile fingerprint)
 const _groceryState = {};
+
+function _groceryKey(userId, weekKey, profile) {
+  const fp = [
+    profile.dietType || '',
+    profile.cuisinePreference || '',
+    profile.primaryGoal || '',
+    profile.planTemplate || ''
+  ].join('|');
+  return `${userId}-${weekKey}-${fp}`;
+}
+
+function _evictStaleGrocery(userId, weekKey, currentKey) {
+  const prefix = `${userId}-${weekKey}-`;
+  Object.keys(_groceryState).forEach(k => {
+    if (k.startsWith(prefix) && k !== currentKey) delete _groceryState[k];
+  });
+}
 
 // Price (INR) and quantity lookup for common Indian grocery items
 // quantity = suggested weekly purchase; price = approximate INR at Indian retail
@@ -155,7 +172,8 @@ function deriveGroceryList(profile) {
 router.get('/week', authenticate, requireProfile, (req, res) => {
   const userId   = req.user._id.toString();
   const weekKey  = getISOWeek();
-  const stateKey = `${userId}-${weekKey}`;
+  const stateKey = _groceryKey(userId, weekKey, req.user.profile);
+  _evictStaleGrocery(userId, weekKey, stateKey);
 
   if (!_groceryState[stateKey]) {
     _groceryState[stateKey] = deriveGroceryList(req.user.profile);
@@ -166,7 +184,7 @@ router.get('/week', authenticate, requireProfile, (req, res) => {
 router.patch('/week/item', authenticate, requireProfile, (req, res) => {
   const userId   = req.user._id.toString();
   const weekKey  = getISOWeek();
-  const stateKey = `${userId}-${weekKey}`;
+  const stateKey = _groceryKey(userId, weekKey, req.user.profile);
   const { name, purchased, removed } = req.body;
   if (!name) return res.status(400).json({ error: 'name required' });
 
@@ -193,7 +211,7 @@ router.post('/week/custom', authenticate, requireProfile, (req, res) => {
   if (!name) return res.status(400).json({ error: 'name required' });
   const userId   = req.user._id.toString();
   const weekKey  = getISOWeek();
-  const stateKey = `${userId}-${weekKey}`;
+  const stateKey = _groceryKey(userId, weekKey, req.user.profile);
 
   if (!_groceryState[stateKey]) {
     _groceryState[stateKey] = deriveGroceryList(req.user.profile);
