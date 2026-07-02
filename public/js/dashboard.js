@@ -12,9 +12,110 @@ let _weekIdx    = 0;   // 0-based week index within month (meta.currentWeek - 1)
 let _workoutPlan = []; // plan.workout array
 let _dashDietPlan = []; // plan.diet array (prefixed to avoid conflict with diet.js's _dietPlan)
 
+const DASHBOARD_BLOCK_STATE = {
+  READY: 'ready',
+  EMPTY: 'empty',
+  ERROR: 'error'
+};
+
+function setDashboardBlockState(blockId, state, options) {
+  const block = document.getElementById(blockId);
+  if (!block) return;
+  block.dataset.state = state;
+
+  const next = options || {};
+  if (Object.prototype.hasOwnProperty.call(next, 'html')) {
+    block.innerHTML = next.html;
+  } else if (Object.prototype.hasOwnProperty.call(next, 'text')) {
+    block.textContent = next.text;
+  }
+}
+
+function renderTimelineFromOverviewItems(items) {
+  const timelineItems = Array.isArray(items) ? items : [];
+  if (timelineItems.length === 0) {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
+      html: "<p style='color:var(--text-light);font-size:.85rem'>No timeline updates yet.</p>"
+    });
+    return;
+  }
+
+  let html = '';
+  timelineItems.forEach((item) => {
+    if (item.type === 'meal') {
+      html += "<div class='timeline-item'><span class='t-time'>🍽️ " + item.label + "</span><span class='t-text'>" + (item.value || '—') + "</span></div>";
+      return;
+    }
+    if (item.type === 'habit') {
+      html += "<div class='timeline-item" + (item.completed ? " done" : "") + "'><span class='t-time'>✅ Habit</span><span class='t-text'>" + item.label + "</span><input type='checkbox' " + (item.completed ? "checked" : "") + " disabled></div>";
+    }
+  });
+
+  if (!html) {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
+      html: "<p style='color:var(--text-light);font-size:.85rem'>No timeline updates yet.</p>"
+    });
+    return;
+  }
+
+  setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.READY, { html });
+}
+
+function applyOverviewStats(overview) {
+  if (!overview || !overview.dietPreview) return;
+  const calEl = document.getElementById("calorieStat");
+  const subEl = document.getElementById("calorieStatSub");
+  const target = overview.dietPreview.dailyCalorieTarget;
+  if (calEl) calEl.textContent = target ? target.toLocaleString('en-IN') : '—';
+  if (subEl) subEl.textContent = 'kcal/day';
+}
+
+function applyOverviewProfileCompleteness(overview) {
+  if (!overview || !overview.profileCompleteness) return;
+  const pct = overview.profileCompleteness.percentage;
+  const card = document.getElementById('profileCompletionCard');
+  const pctEl = document.getElementById('completionPctDash');
+  if (!card) return;
+  if (pct < 100) {
+    card.style.display = 'flex';
+    if (pctEl) pctEl.textContent = pct;
+  } else {
+    card.style.display = 'none';
+  }
+}
+
+async function loadDashboardOverview() {
+  try {
+    const { ok, data } = await apiFetch('/api/dashboard/overview');
+    if (!ok || !data) {
+      setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, {
+        html: "<p style='color:#b91c1c;font-size:.85rem'>Could not load timeline. Please refresh.</p>"
+      });
+      return null;
+    }
+
+    renderTimelineFromOverviewItems(data.timeline);
+    applyOverviewStats(data);
+    applyOverviewProfileCompleteness(data);
+    return data;
+  } catch (e) {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, {
+      html: "<p style='color:#b91c1c;font-size:.85rem'>Could not load timeline. Please refresh.</p>"
+    });
+    return null;
+  }
+}
+
 async function buildTimeline() {
   const plan = await window.planCache.getPlan();
-  if (!plan) return;
+  if (!plan) {
+    _phaseTasks = [];
+    updateCheckStat();
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
+      html: "<p style='color:var(--text-light);font-size:.85rem'>No timeline available yet.</p>"
+    });
+    return;
+  }
 
   const { meta } = plan;
   _phaseIdx   = Math.max(0, (meta.currentPhase || 1) - 1);
@@ -74,6 +175,13 @@ async function buildTimeline() {
     container.appendChild(div);
   });
   updateCheckStat();
+  if (_phaseTasks.length === 0) {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
+      html: "<p style='color:var(--text-light);font-size:.85rem'>No checklist tasks for today.</p>"
+    });
+  } else {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.READY);
+  }
 }
 
 function onCheckChange(i) {
@@ -197,7 +305,9 @@ async function loadSleepSummary() {
     if (!el) return;
 
     if (!res.ok || !res.data || res.data.length === 0) {
-      el.innerHTML = '<a href="/sleep.html" style="color:#6366f1;">Log last night\'s sleep →</a>';
+      setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.EMPTY, {
+        html: '<a href="/sleep.html" style="color:#6366f1;">Log last night\'s sleep →</a>'
+      });
       return;
     }
 
@@ -210,12 +320,15 @@ async function loadSleepSummary() {
     const [ey, em, ed] = entry.date.split('-').map(Number);
     const dateLabel = new Date(ey, em - 1, ed).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 
-    el.innerHTML = `
+    setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.READY, { html: `
       <div style="font-size:1.4rem;font-weight:700;color:#1e293b;">${dur} ${qual}</div>
       <div style="font-size:.8rem;color:#94a3b8;margin-top:2px;">${dateLabel} · <a href="/sleep.html" style="color:#6366f1;">View all →</a></div>
-    `;
+    ` });
   } catch (e) {
     console.warn('Sleep summary load failed:', e);
+    setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.ERROR, {
+      html: '<span style="color:#b91c1c;">Unable to load sleep summary right now.</span>'
+    });
   }
 }
 

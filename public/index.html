@@ -527,7 +527,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       <!-- Timeline -->
       <div class="card">
         <div class="card-title">📅 Daily Timeline</div>
-        <div id="timelineContainer"></div>
+        <div id="timelineContainer" data-state="loading"><p style="color:var(--text-light);font-size:.85rem">Loading...</p></div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:16px">
@@ -546,7 +546,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
         <!-- Sleep Summary Card -->
         <div class="card" id="sleepSummaryCard">
           <div class="card-title">😴 Last Night's Sleep</div>
-          <div id="sleepSummaryContent" style="color:#64748b;font-size:.9rem;">Loading...</div>
+          <div id="sleepSummaryContent" data-state="loading" style="color:#64748b;font-size:.9rem;">Loading...</div>
         </div>
 
         <!-- Workout Log -->
@@ -941,6 +941,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setGreeting();    // runs immediately after auth so greeting never stays "Loading..."
   updateWaterGoalDisplay(); // requires currentUser — must run after initAuth
   checkReviewBanner();      // requires currentUser — must run after initAuth
+  await loadDashboardOverview(); // contract-driven initial dashboard render path
 
   // Initialise stats chips from profile so they never show stale/hardcoded values
   if (currentUser && currentUser.profile) {
@@ -965,12 +966,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch(e) {
     console.error('Dashboard init error:', e);
     setGreeting(); // fallback: ensure greeting is never stuck if an exception fires above
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, { html: "<p style='color:#b91c1c;font-size:.85rem'>Unable to load dashboard timeline.</p>" });
+    setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.ERROR, { html: "<span style='color:#b91c1c;'>Unable to load sleep summary right now.</span>" });
   }
 });
 </script>
 </body>
 </html>
-
 
 
 
