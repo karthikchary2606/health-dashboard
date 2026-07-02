@@ -120,20 +120,6 @@ function validateOnboardingInput(req) {
     errors.push('goalWeightKg must be between 20 and 300 kg');
   }
 
-  // Validate weight-loss goal consistency
-  if (primaryGoal === 'weight-loss' && currentWeightKg && goalWeightKg) {
-    if (goalWeightKg >= currentWeightKg) {
-      errors.push('For weight-loss goal, goalWeightKg must be less than currentWeightKg');
-    }
-  }
-
-  // Validate muscle-gain goal consistency
-  if (primaryGoal === 'muscle-gain' && currentWeightKg && goalWeightKg) {
-    if (goalWeightKg <= currentWeightKg) {
-      errors.push('For muscle-gain goal, goalWeightKg must be greater than currentWeightKg');
-    }
-  }
-
   // Validate primaryGoal
   const VALID_GOALS = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
   if (primaryGoal && !VALID_GOALS.includes(primaryGoal)) {
