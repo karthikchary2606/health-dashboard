@@ -189,7 +189,7 @@ const HYBRID_STRENGTH_DAYS = {
   4: new Set(['Monday', 'Thursday']),                              // 2 strength + 2 yoga (Tue, Fri)
   5: new Set(['Monday', 'Wednesday', 'Thursday']),                 // 3 strength + 2 yoga (Tue, Fri)
   6: new Set(['Monday', 'Wednesday', 'Thursday']),                 // 3 strength + 3 yoga (Tue, Fri, Sat)
-  7: new Set(['Monday', 'Wednesday', 'Thursday', 'Saturday']),     // 4 strength + 3 yoga (Tue, Fri, Sun)
+  7: new Set(['Monday', 'Tuesday', 'Wednesday', 'Thursday']),     // 4 strength + 3 yoga (Fri, Sat, Sun)
 };
 
 function detectWorkoutMode(profile) {

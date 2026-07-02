@@ -409,6 +409,57 @@ describe('buildWorkoutPlan — personalized', () => {
   expect(strengthDays.length).toBe(3);  // Mon, Wed, Thu
   expect(yogaDays.length).toBe(2);      // Tue, Fri
  });
+
+ test('hybrid profile 6-day: 3 strength + 3 yoga active days', () => {
+   const hybrid6Day = {
+     dietType: 'vegetarian',
+     cuisinePreference: 'south-indian',
+     fitnessLevel: 'very-active',
+     equipmentAvailable: ['dumbbells', 'barbell'],
+     healthConditions: [],
+     workoutPreferences: ['gym', 'yoga'],
+     workoutDaysPerWeek: 6,
+     yogaStyle: 'vinyasa',
+     age: 28,
+   };
+   const plan = buildWorkoutPlan(hybrid6Day, 'muscle-gain');
+   const activeDays   = plan[0].schedule.filter(d => d.type !== 'rest');
+   const yogaDays     = activeDays.filter(d => d.focus && d.focus.toLowerCase().includes('yoga'));
+   const strengthDays = activeDays.filter(d => d.type === 'Strength');
+   expect(activeDays.length).toBe(6);
+   expect(strengthDays.length).toBe(3);
+   expect(yogaDays.length).toBe(3);
+   // All strength days must have real exercises beyond just surya namaskar
+   strengthDays.forEach(day => {
+     expect(day.exercises.length).toBeGreaterThan(1);
+   });
+ });
+
+ test('hybrid profile 7-day: 4 strength + 3 yoga active days, no focus/type mismatch', () => {
+   const hybrid7Day = {
+     dietType: 'non-vegetarian',
+     cuisinePreference: 'north-indian',
+     fitnessLevel: 'very-active',
+     equipmentAvailable: ['dumbbells', 'barbell'],
+     healthConditions: [],
+     workoutPreferences: ['gym', 'yoga'],
+     workoutDaysPerWeek: 7,
+     yogaStyle: 'hatha',
+     age: 25,
+   };
+   const plan = buildWorkoutPlan(hybrid7Day, 'muscle-gain');
+   const activeDays   = plan[0].schedule.filter(d => d.type !== 'rest');
+   const yogaDays     = activeDays.filter(d => d.focus && d.focus.toLowerCase().includes('yoga'));
+   const strengthDays = activeDays.filter(d => d.type === 'Strength');
+   expect(activeDays.length).toBe(7);
+   expect(strengthDays.length).toBe(4);
+   expect(yogaDays.length).toBe(3);
+   // No strength day should have a Flexibility or Recovery focus
+   strengthDays.forEach(day => {
+     expect(day.focus).not.toMatch(/flexibility|recovery/i);
+     expect(day.exercises.length).toBeGreaterThan(1);
+   });
+ });
 });
 
 // ─── Diet guidelines ──────────────────────────────────────────────────────────
