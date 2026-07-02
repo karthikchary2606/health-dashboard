@@ -174,7 +174,7 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 .dashboard-state-action{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border-teal);background:rgba(78,204,163,.1);color:#4ecca3;border-radius:999px;padding:5px 12px;font-size:.76rem;font-weight:600;text-decoration:none;cursor:pointer}
 /* WATER */
 .water-row{display:flex;gap:10px;margin-top:12px}
-.water-btn{flex:1;padding:14px 0;border:2px solid #93c5fd;border-radius:var(--radius-sm);background:#eff6ff;color:#1d4ed8;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;text-align:center}
+.water-btn{flex:1;padding:14px 0;border:2px solid rgba(93,173,226,.4);border-radius:var(--radius-sm);background:rgba(59,130,246,.12);color:#93c5fd;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;text-align:center}
 .water-btn.filled{background:#3b82f6;border-color:#3b82f6;color:#fff}
 /* MOOD/ENERGY */
 .score-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -185,8 +185,8 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 .alert-box.green{background:rgba(78,204,163,.08);border-color:rgba(78,204,163,.3)}
 .alert-box.yellow{background:rgba(255,193,7,.08);border-color:rgba(255,193,7,.3)}
 .alert-title{font-size:.85rem;font-weight:700;color:var(--danger);margin-bottom:6px}
-.alert-box.green .alert-title{color:#166534}
-.alert-box.yellow .alert-title{color:#92400e}
+.alert-box.green .alert-title{color:#4ecca3}
+.alert-box.yellow .alert-title{color:#ffc107}
 .alert-box ul{padding-left:18px;margin:0}
 .alert-box li{font-size:.82rem;color:var(--text-med);margin-bottom:3px}
 /* MEAL PLAN */
@@ -208,7 +208,7 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 .macro-pill.f{background:rgba(255,107,107,.15);color:#ff6b6b}
 .macro-pill.c{background:rgba(78,204,163,.15);color:#4ecca3}
 .macro-pill.total{background:var(--primary);color:#0f0f0f;font-size:.72rem;padding:3px 10px}
-.day-theme{font-size:.8rem;font-weight:600;color:var(--accent-dark);background:#fff7ed;padding:6px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.day-theme{font-size:.8rem;font-weight:600;color:var(--accent);background:rgba(200,168,130,.12);padding:6px 12px;border-radius:20px;display:inline-block;margin-bottom:14px}
 .day-total-bar{background:var(--primary);color:#fff;border-radius:var(--radius-sm);padding:12px 16px;display:flex;gap:20px;flex-wrap:wrap;margin-top:10px}
 .day-total-bar span{font-size:.8rem;font-weight:600}
 /* RECIPES */
@@ -256,7 +256,7 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 .exercise-name{font-size:.9rem;font-weight:700;color:var(--text)}
 .exercise-detail{font-size:.78rem;color:var(--text-med);margin-top:2px}
 .exercise-note{font-size:.72rem;color:var(--text-light);margin-top:3px;font-style:italic}
-.spine-badge{background:#fff5f5;border:1px solid #fecaca;color:#991b1b;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:4px}
+.spine-badge{background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.3);color:#ff6b6b;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:4px}
 /* CARDIO */
 .phase-card{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border-radius:var(--radius);padding:22px;margin-bottom:16px}
 .phase-card h3{font-size:1rem;font-weight:700;margin-bottom:6px}
@@ -507,7 +507,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <div id="profileCompletionCard" style="display:none;border:1px solid rgba(255,193,7,.3);border-radius:12px;padding:14px 18px;margin-bottom:16px;justify-content:space-between;align-items:center;background:rgba(255,193,7,.08)">
       <div>
         <div style="font-weight:700;font-size:.9rem">Your profile is <span id="completionPctDash">—</span>% complete</div>
-        <div style="font-size:.8rem;color:#92400e;margin-top:2px">Finish setup to get a fully personalised plan</div>
+        <div style="font-size:.8rem;color:var(--text-med);margin-top:2px">Finish setup to get a fully personalised plan</div>
       </div>
       <a href="/profile-complete.html" style="background:#d97706;color:#fff;padding:6px 14px;border-radius:8px;font-size:.82rem;text-decoration:none">Complete →</a>
     </div>
@@ -518,13 +518,13 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
         🔔 It's been a while since you reviewed your health conditions.
         <a href="/profile-complete.html#conditions" style="color:#5dade2;font-weight:700"> Review now →</a>
       </div>
-      <button onclick="dismissReviewBanner()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#6b7280">×</button>
+      <button onclick="dismissReviewBanner()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--text-light)">×</button>
     </div>
 
     <!-- Stats Row -->
     <div class="grid-4" style="margin-bottom:20px" id="statsRow">
       <div class="stat-chip" style="border-left-color:#f59e0b"><div class="label">Target Calories</div><div class="value" id="calorieStat">—</div><div class="sub" id="calorieStatSub">kcal/day</div></div>
-      <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div><span id="waterGoalDisplay" style="font-weight:700;color:#0284c7"></span><div id="waterGoalHint" style="font-size:.72rem;color:#6b7280;margin-top:2px"></div></div>
+      <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div><span id="waterGoalDisplay" style="font-weight:700;color:#93c5fd"></span><div id="waterGoalHint" style="font-size:.72rem;color:var(--text-light);margin-top:2px"></div></div>
       <div class="stat-chip" style="border-left-color:#10b981"><div class="label">Checklist</div><div class="value" id="checkStat">0/—</div><div class="sub">Daily tasks done</div></div>
       <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">—</div><div class="sub" id="weightStatSub">kg · Goal: —</div></div>
     </div>
@@ -600,36 +600,36 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       <div style="display:flex;flex-wrap:wrap;gap:10px;padding:12px 0">
 
         <div style="flex:1;min-width:140px">
-          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Weight</div>
+          <div style="font-size:.78rem;font-weight:600;color:var(--text-med);margin-bottom:4px">Weight</div>
           <div style="display:flex;gap:6px">
-            <input type="number" id="qlWeight" step="0.1" placeholder="kg" style="width:70px;padding:5px 8px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem">
+            <input type="number" id="qlWeight" step="0.1" placeholder="kg" style="width:70px;padding:5px 8px;border:1px solid var(--border);background:var(--card-elevated);color:var(--text);border-radius:6px;font-size:.85rem">
             <button onclick="logWeight()" style="background:var(--primary);color:#0f0f0f;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:.82rem">Log</button>
           </div>
         </div>
 
         <div style="flex:1;min-width:140px">
-          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Water</div>
+          <div style="font-size:.78rem;font-weight:600;color:var(--text-med);margin-bottom:4px">Water</div>
           <div style="display:flex;gap:6px">
-            <button onclick="logWater(0.25)" style="background:#e0f2fe;color:#0284c7;border:1px solid #bae6fd;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.82rem">+250ml</button>
-            <button onclick="logWater(0.5)" style="background:#e0f2fe;color:#0284c7;border:1px solid #bae6fd;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.82rem">+500ml</button>
+            <button onclick="logWater(0.25)" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(93,173,226,.3);padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.82rem">+250ml</button>
+            <button onclick="logWater(0.5)" style="background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(93,173,226,.3);padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.82rem">+500ml</button>
           </div>
         </div>
 
         <div style="flex:1;min-width:140px">
-          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Workout</div>
+          <div style="font-size:.78rem;font-weight:600;color:var(--text-med);margin-bottom:4px">Workout</div>
           <button onclick="toggleWorkoutLog()" id="workoutLogBtn" style="background:rgba(78,204,163,.1);color:#4ecca3;border:1px solid rgba(78,204,163,.3);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.82rem">Mark Done ✓</button>
         </div>
 
       </div>
 
-      <div id="exerciseDetail" style="display:none;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:10px">
+      <div id="exerciseDetail" style="display:none;margin-top:8px;border-top:1px solid var(--border);padding-top:10px">
         <div style="font-size:.82rem;font-weight:600;margin-bottom:6px">Today's exercises (optional)</div>
         <div id="exerciseRows"></div>
         <button onclick="addExerciseRow()" style="font-size:.78rem;color:#4ecca3;background:none;border:none;cursor:pointer;margin-top:4px">+ Add exercise</button>
         <button onclick="saveExerciseLog()" style="margin-left:12px;background:var(--primary);color:#0f0f0f;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem">Save Log</button>
       </div>
 
-      <div id="qlMsg" style="font-size:.8rem;margin-top:6px;color:#16a34a"></div>
+      <div id="qlMsg" style="font-size:.8rem;margin-top:6px;color:#4ecca3"></div>
     </div>
   </div>
 
@@ -781,7 +781,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
           <div class="card-title">🌱 Daily Seed &amp; Nut Allocation (30g MAX)</div>
           <p style="font-size:.78rem;color:var(--text-light);margin-bottom:14px">250g stock each. 30g combined daily cap to prevent caloric surplus.</p>
           <div id="seedTracker"></div>
-          <div style="margin-top:14px;padding:10px;background:rgba(78,204,163,.08);border-radius:8px;font-size:.78rem;color:#166534">
+          <div style="margin-top:14px;padding:10px;background:rgba(78,204,163,.08);border-radius:8px;font-size:.78rem;color:var(--text-med)">
             <strong>💡 Tip:</strong> Weigh daily on a kitchen scale. Mix all 8 seeds in a jar = custom trail mix.
           </div>
         </div>
@@ -858,7 +858,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       </div>
       <div id="breath-countdown" style="font-size:3rem;font-weight:800;color:var(--primary);margin-bottom:8px">—</div>
       <div id="breath-cycle-info" style="font-size:.9rem;color:var(--text-med);margin-bottom:24px">Round — of —</div>
-      <button class="btn btn-sm" onclick="stopBreathingSession()" style="background:#fff5f5;border:1px solid #fecaca;color:#991b1b">Stop Session</button>
+      <button class="btn btn-sm" onclick="stopBreathingSession()" style="background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.3);color:#ff6b6b">Stop Session</button>
     </div>
 
     <!-- Completion view -->
@@ -887,7 +887,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <!-- Pranayama section -->
     <div id="pranayamaSection" style="margin-top:24px">
       <h3 style="font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:4px">🕉️ Indian Pranayama</h3>
-      <p style="font-size:.82rem;color:#6b7280;margin-bottom:12px">Personalised for your age and health conditions</p>
+      <p style="font-size:.82rem;color:var(--text-light);margin-bottom:12px">Personalised for your age and health conditions</p>
     </div>
   </div>
 
