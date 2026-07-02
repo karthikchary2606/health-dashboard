@@ -89,7 +89,29 @@ router.patch('/:date', async (req, res) => {
   if (!DATE_RE.test(req.params.date)) {
     return res.status(400).json({ error: 'date must be in YYYY-MM-DD format' });
   }
-  const allowed = ['weight', 'waterIntake', 'completedWorkout', 'moodScore', 'energyScore', 'notes', 'meals', 'exerciseLog'];
+  
+  // Validate meals structure if present
+  if ('meals' in req.body) {
+    if (!Array.isArray(req.body.meals)) {
+      return res.status(400).json({ error: 'meals must be an array of meal objects' });
+    }
+    for (const meal of req.body.meals) {
+      if (typeof meal !== 'object' || meal === null) {
+        return res.status(400).json({ error: 'Each meal must be an object with {mealType, calories, proteinG, carbsG, fatG}' });
+      }
+      const validMealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
+      if (meal.mealType && !validMealTypes.includes(meal.mealType)) {
+        return res.status(400).json({ error: `mealType must be one of: ${validMealTypes.join(', ')}` });
+      }
+    }
+  }
+  
+  // Validate durationMinutes is not sent at top level
+  if ('durationMinutes' in req.body) {
+    return res.status(400).json({ error: 'Sleep duration must be logged via nested sleepEntry.durationMinutes or use POST /api/sleep. See API docs for format.' });
+  }
+  
+  const allowed = ['weight', 'waterIntake', 'completedWorkout', 'moodScore', 'energyScore', 'notes', 'meals', 'exerciseLog', 'sleepEntry'];
   const update = {};
   for (const key of allowed) {
     if (key in req.body) update[key] = req.body[key];

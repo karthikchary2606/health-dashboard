@@ -14,6 +14,12 @@ router.get('/techniques', (req, res) => {
 router.post('/sessions', async (req, res, next) => {
   const { technique, durationSeconds, cyclesCompleted, moodBefore, moodAfter } = req.body;
   if (!technique) return res.status(400).json({ error: 'technique is required' });
+  
+  const validTechniques = ['box', '4-7-8', 'wim-hof', 'diaphragmatic', 'nadi-shodhana', 'anulom-vilom', 'bhramari', 'kapalabhati', 'bhastrika', 'ujjayi'];
+  if (!validTechniques.includes(technique)) {
+    return res.status(400).json({ error: `Invalid technique. Must be one of: ${validTechniques.join(', ')}` });
+  }
+  
   try {
     const session = await BreathingSession.create({
       userId: req.user._id,

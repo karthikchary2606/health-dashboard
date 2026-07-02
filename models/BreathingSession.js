@@ -4,7 +4,7 @@ const BreathingSessionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   technique: {
     type: String,
-    enum: ['box', '4-7-8', 'wim-hof', 'diaphragmatic'],
+    enum: ['box', '4-7-8', 'wim-hof', 'diaphragmatic', 'nadi-shodhana', 'anulom-vilom', 'bhramari', 'kapalabhati', 'bhastrika', 'ujjayi'],
     required: true
   },
   durationSeconds: { type: Number, default: 0 },
