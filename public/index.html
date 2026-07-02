@@ -11,6 +11,7 @@
 <title>Health Engine</title>
 <link rel="stylesheet" href="/css/design-system.css">
 <link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/navigation.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -1000,5 +1001,64 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 </script>
+
+<!-- Bottom Navigation (mobile) -->
+<nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+  <button class="nav-item" data-nav="dashboard" aria-label="Dashboard">
+    <span class="nav-item__icon">⊞</span>
+    <span class="nav-item__label">Home</span>
+  </button>
+  <button class="nav-item" data-nav="diet" aria-label="Diet">
+    <span class="nav-item__icon">🥗</span>
+    <span class="nav-item__label">Diet</span>
+  </button>
+  <button class="nav-item" data-nav="workouts" aria-label="Workouts">
+    <span class="nav-item__icon">💪</span>
+    <span class="nav-item__label">Workouts</span>
+  </button>
+  <button class="nav-item" data-nav="progress" aria-label="Progress">
+    <span class="nav-item__icon">📈</span>
+    <span class="nav-item__label">Progress</span>
+  </button>
+  <button class="nav-item" data-nav="settings" aria-label="Settings">
+    <span class="nav-item__icon">⚙</span>
+    <span class="nav-item__label">Settings</span>
+  </button>
+</nav>
+
+<!-- Sidebar Navigation (tablet/desktop) -->
+<nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
+  <a href="/index.html" class="sidebar-nav__logo">
+    <div class="sidebar-nav__logo-mark">H</div>
+    <span class="sidebar-nav__app-name">HealthPulse</span>
+  </a>
+  <div class="sidebar-nav__section">
+    <p class="sidebar-nav__section-label">Main</p>
+    <button class="nav-item" data-nav="dashboard">
+      <span class="nav-item__icon">⊞</span>
+      <span class="nav-item__label">Dashboard</span>
+    </button>
+    <button class="nav-item" data-nav="diet">
+      <span class="nav-item__icon">🥗</span>
+      <span class="nav-item__label">Diet</span>
+    </button>
+    <button class="nav-item" data-nav="workouts">
+      <span class="nav-item__icon">💪</span>
+      <span class="nav-item__label">Workouts</span>
+    </button>
+    <button class="nav-item" data-nav="progress">
+      <span class="nav-item__icon">📈</span>
+      <span class="nav-item__label">Progress</span>
+    </button>
+  </div>
+  <div class="sidebar-nav__footer">
+    <button class="nav-item" data-nav="settings">
+      <span class="nav-item__icon">⚙</span>
+      <span class="nav-item__label">Settings</span>
+    </button>
+  </div>
+</nav>
+
+<script src="/js/bottom-nav.js"></script>
 </body>
 </html>
