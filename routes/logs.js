@@ -146,13 +146,58 @@ router.patch('/:date', async (req, res) => {
     if (key in req.body) update[key] = req.body[key];
   }
   if (!Object.keys(update).length) return res.status(400).json({ error: 'No valid fields provided' });
+  
   try {
+    let outlierDetected = false;
+    let outlierType = null;
+    let outlierMessage = null;
+    
+    // Check for weight outliers if weight is being updated
+    if ('weight' in update && update.weight > 0) {
+      const newWeight = update.weight;
+      
+      // Get the most recent previous log
+      const previousLog = await HealthLog.findOne({
+        userId: req.user._id,
+        date: { $lt: req.params.date },
+        weight: { $gt: 0 }
+      }).sort({ date: -1 }).select('weight date');
+      
+      if (previousLog && previousLog.weight > 0) {
+        const delta = Math.abs(newWeight - previousLog.weight);
+        // Flag if weight change is unrealistic (> 5kg in one day)
+        if (delta > 5) {
+          outlierDetected = true;
+          outlierType = 'weight-delta';
+          outlierMessage = `Weight change of ${delta.toFixed(1)}kg in one day. Previous weight: ${previousLog.weight}kg. Please verify.`;
+        }
+      }
+    }
+    
+    // Check for other outliers: calorie intake > 10,000 kcal
+    if ('meals' in update && Array.isArray(update.meals)) {
+      const totalCalories = update.meals.reduce((sum, meal) => sum + (meal.calories || 0), 0);
+      if (totalCalories > 10000) {
+        outlierDetected = true;
+        outlierType = 'calorie-intake';
+        outlierMessage = `Total calorie intake of ${totalCalories}kcal is unusually high. Please verify.`;
+      }
+    }
+    
     const log = await HealthLog.findOneAndUpdate(
       { userId: req.user._id, date: req.params.date },
       { $set: update },
       { new: true, upsert: true, runValidators: true }
     );
-    res.json(log);
+    
+    const response = log.toObject ? log.toObject() : log;
+    if (outlierDetected) {
+      response.outlierDetected = true;
+      response.outlierType = outlierType;
+      response.message = outlierMessage;
+      response.allowConfirm = true;
+    }
+    res.json(response);
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 

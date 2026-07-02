@@ -44,7 +44,7 @@ test('POST /api/profile/onboarding accepts V2 fields', async () => {
     .set('Cookie', token)
     .send({
       primaryGoal: 'weight-loss', currentWeightKg: 80, goalWeightKg: 70,
-      heightCm: 170, age: 30, fitnessLevel: 'moderately-active',
+      heightCm: 170, age: 30, fitnessLevel: 'moderately-active', dietType: 'vegetarian',
       religion: 'Hindu', languageCommunity: 'Telugu',
       culturalFoodAvoidances: ['beef'],
       healthConditions: [{ name: 'diabetes', active: true }],

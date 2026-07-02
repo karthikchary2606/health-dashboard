@@ -21,17 +21,44 @@ const SURYA_ROUNDS = {
   over60:    { min: 3,  max: 5  }
 };
 
+// Yoga style multipliers for Surya Namaskar rounds
+const YOGA_STYLE_MULTIPLIERS = {
+  'hatha':         0.8,
+  'vinyasa':       1.2,
+  'pranayama-only': 0
+};
+
 function getSuryaNamaskarRounds(profile) {
   const age = profile.age || 30;
   const fl  = profile.fitnessLevel || 'moderately-active';
+  const yogaStyle = profile.yogaStyle;
+  
+  // Pranayama-only: skip Surya Namaskar entirely
+  if (yogaStyle === 'pranayama-only') {
+    return 0;
+  }
+  
   let range;
   if (age < 30)       range = SURYA_ROUNDS.under30;
   else if (age <= 45) range = SURYA_ROUNDS.age30to45;
   else if (age <= 60) range = SURYA_ROUNDS.age46to60;
   else                range = SURYA_ROUNDS.over60;
 
-  if (fl === 'sedentary') return range.min;
-  return Math.round((range.min + range.max) / 2);
+  let baseRounds;
+  if (fl === 'sedentary') {
+    baseRounds = range.min;
+  } else {
+    baseRounds = Math.round((range.min + range.max) / 2);
+  }
+
+  // Apply yoga style multiplier only if explicitly provided and valid
+  if (yogaStyle && yogaStyle !== 'none' && YOGA_STYLE_MULTIPLIERS.hasOwnProperty(yogaStyle)) {
+    const multiplier = YOGA_STYLE_MULTIPLIERS[yogaStyle];
+    const finalRounds = Math.round(baseRounds * multiplier);
+    return Math.max(finalRounds, 0);
+  }
+  
+  return baseRounds;
 }
 
 function highestTier(tiers) {

@@ -74,8 +74,13 @@ test('GET /api/profile/plan returns plan with meta', async () => {
     profileComplete: true,
     profile: {
       primaryGoal: 'weight-loss',
+      age: 30,
+      currentWeightKg: 80,
+      heightCm: 170,
+      dietType: 'vegetarian',
       planTemplate: 'weight-loss',
       cuisinePreference: 'south-indian',
+      fitnessLevel: 'moderately-active',
       healthConditions: [],
       medications: [],
       startDate: new Date(),

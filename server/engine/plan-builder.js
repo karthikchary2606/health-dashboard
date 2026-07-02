@@ -205,6 +205,17 @@ function detectWorkoutMode(profile) {
 
 function suryaEntry(profile, gentle) {
   const rounds = getSuryaNamaskarRounds(profile);
+  
+  // Skip Surya Namaskar for pranayama-only (rounds = 0)
+  if (rounds === 0 && !gentle) {
+    return null;
+  }
+  
+  if (gentle && rounds === 0) {
+    // Skip gentle variant too for pranayama-only
+    return null;
+  }
+  
   if (gentle) {
     return {
       name: 'Gentle Surya Namaskar (optional)',
@@ -231,13 +242,13 @@ function buildStrengthSchedule(profile, goal, daysPerWeek) {
     if (!activeSet.has(day)) {
       return {
         day, focus: 'Rest', type: 'rest', duration: '-',
-        exercises: [suryaEntry(profile, true)]
+        exercises: [suryaEntry(profile, true)].filter(Boolean)
       };
     }
     const slot = slots.find(s => s.day === day);
     const exercises = slot.muscleGroup
-      ? [suryaEntry(profile, false), ...getExercises(profile, slot.muscleGroup, goal)]
-      : [suryaEntry(profile, false)];
+      ? [suryaEntry(profile, false), ...getExercises(profile, slot.muscleGroup, goal)].filter(Boolean)
+      : [suryaEntry(profile, false)].filter(Boolean);
     return {
       day,
       focus:     slot.focus,
@@ -256,7 +267,7 @@ function buildYogaSchedule(profile, daysPerWeek) {
     if (!activeDays.has(day)) {
       return {
         day, focus: 'Rest', type: 'rest', duration: '-',
-        exercises: [suryaEntry(profile, true)]
+        exercises: [suryaEntry(profile, true)].filter(Boolean)
       };
     }
     // If yogaStyle is explicitly set and valid, use it for ALL yoga days
@@ -270,7 +281,7 @@ function buildYogaSchedule(profile, daysPerWeek) {
       focus:     `Yoga — ${yogaType.charAt(0).toUpperCase() + yogaType.slice(1)}`,
       type:      'Yoga',
       duration:  '45 min',
-      exercises: [suryaEntry(profile, false), ...getYogaExercises(yogaType)]
+      exercises: [suryaEntry(profile, false), ...getYogaExercises(yogaType)].filter(Boolean)
     };
   });
 }
@@ -285,7 +296,7 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
     if (!activeSet.has(day)) {
       return {
         day, focus: 'Rest', type: 'rest', duration: '-',
-        exercises: [suryaEntry(profile, true)]
+        exercises: [suryaEntry(profile, true)].filter(Boolean)
       };
     }
     if (strengthDaySet.has(day)) {
@@ -295,8 +306,8 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
       const muscleGroup = slot ? slot.muscleGroup : 'full-body';
       const slotFocus   = slot ? slot.focus       : 'Full Body';
       const exercises = muscleGroup
-        ? [suryaEntry(profile, false), ...getExercises(profile, muscleGroup, goal)]
-        : [suryaEntry(profile, false)];
+        ? [suryaEntry(profile, false), ...getExercises(profile, muscleGroup, goal)].filter(Boolean)
+        : [suryaEntry(profile, false)].filter(Boolean);
       return {
         day,
         focus:     slotFocus,
@@ -315,7 +326,7 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
       focus:     `Yoga — ${yogaType.charAt(0).toUpperCase() + yogaType.slice(1)}`,
       type:      'Yoga',
       duration:  '45 min',
-      exercises: [suryaEntry(profile, false), ...getYogaExercises(yogaType)]
+      exercises: [suryaEntry(profile, false), ...getYogaExercises(yogaType)].filter(Boolean)
     };
   });
 }
