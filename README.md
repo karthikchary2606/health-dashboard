@@ -147,7 +147,22 @@ Enter your registered email — it promotes the account to admin with full acces
 ```bash
 npm test
 ```
-Expected: 291 tests passing, 25 test suites, 0 failures
+Expected: 308 tests passing, 28 test suites, 0 failures
+
+### Dashboard Reliability Release Gate (Required Before Deploy)
+Run the full reliability matrix and block release on any failure:
+
+```bash
+npm test
+npm run test:e2e
+curl -s https://health.kaha.online/api/health
+```
+
+Release criteria:
+- All Jest suites pass.
+- All persona E2E scenarios pass.
+- Health endpoint returns `{"status":"ok","db":"connected",...}`.
+- **Do not deploy if any persona test fails.**
 
 ### Module-by-Module Testing Guide
 
