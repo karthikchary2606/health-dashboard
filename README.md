@@ -150,19 +150,23 @@ npm test
 Expected: 308 tests passing, 28 test suites, 0 failures
 
 ### Dashboard Reliability Release Gate (Required Before Deploy)
-Run the full reliability matrix and block release on any failure:
+Run the full reliability matrix against the **candidate release** and block release on any failure:
 
 ```bash
+export CANDIDATE_URL="https://staging.health.kaha.online"  # or preview URL for this release
 npm test
 npm run test:e2e
-curl -s https://health.kaha.online/api/health
+curl --fail --silent --show-error "$CANDIDATE_URL/api/health"
+curl --fail --silent --show-error "$CANDIDATE_URL/api/health"   | jq -e '.status == "ok" and .db == "connected"' >/dev/null
 ```
+
+If `jq` is unavailable, install it or manually verify the JSON contains `"status":"ok"` and `"db":"connected"` before approving release.
 
 Release criteria:
 - All Jest suites pass.
 - All persona E2E scenarios pass.
-- Health endpoint returns `{"status":"ok","db":"connected",...}`.
-- **Do not deploy if any persona test fails.**
+- Candidate health check returns HTTP 2xx and valid JSON with `status=ok` and `db=connected`.
+- **Deploy is blocked unless every gate above passes.**
 
 ### Module-by-Module Testing Guide
 
