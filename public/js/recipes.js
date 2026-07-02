@@ -1939,6 +1939,18 @@ function getFilteredRecipes(profile, options) {
       if (avoidances.some(function(a){ return inName.includes(a) || ingredLower.some(function(i){ return i.includes(a); }); })) return false;
     }
 
+    // 1b. Diet type filter
+    if (profile.dietType && r.dietType && r.dietType.length > 0) {
+      var userDiet = profile.dietType;
+      // For vegan: only accept vegan recipes
+      if (userDiet === 'vegan' && !r.dietType.includes('vegan')) return false;
+      // For vegetarian: accept vegetarian or vegan; reject non-vegetarian
+      if (userDiet === 'vegetarian' && !r.dietType.some(function(d){ return d === 'vegetarian' || d === 'vegan'; })) return false;
+      // For eggetarian: accept eggetarian, vegetarian, vegan; reject non-vegetarian
+      if (userDiet === 'eggetarian' && r.dietType.every(function(d){ return d === 'non-vegetarian'; })) return false;
+      // non-vegetarian: no restriction
+    }
+
     // 2. Food list filter (only when >= 10 items in user's list)
     if (hasFoodList && r.ingredients && r.ingredients.length > 0) {
       var allInList = r.ingredients.every(function(ing) {
@@ -2029,7 +2041,11 @@ function renderRecipes(cat) {
 
   var grid = document.getElementById('recipeGrid');
   if (!recs || recs.length === 0) {
-    grid.innerHTML = '<p style="color:var(--text-light);padding:20px;text-align:center">No recipes match your profile preferences. <button onclick="toggleCuisineFilter(document.getElementById(\'cuisineToggleBtn\'))" style="color:#1b4332;background:none;border:none;cursor:pointer;text-decoration:underline">Show all cuisines</button></p>';
+    var emptyMsg = 'No recipes match your profile preferences.';
+    var toggleHint = !window._recipeShowAll
+      ? ' <button onclick="toggleCuisineFilter(document.getElementById(\'cuisineToggleBtn\'))" style="color:#1b4332;background:none;border:none;cursor:pointer;text-decoration:underline">Try showing all cuisines</button>'
+      : ' Try adjusting your food avoidances or dietary settings.';
+    grid.innerHTML = '<p style="color:var(--text-light);padding:20px;text-align:center">' + emptyMsg + toggleHint + '</p>';
     return;
   }
 
