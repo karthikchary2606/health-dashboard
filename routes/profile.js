@@ -255,6 +255,17 @@ router.patch('/', authenticate, async (req, res) => {
       updates['profile.waterGoalL'] = computeWaterGoal(req.body.currentWeightKg);
     }
 
+    const currentProfile = req.user.profile || {};
+    const patchedFields = {};
+    Object.entries(updates).forEach(([k, v]) => {
+      if (k.startsWith('profile.')) patchedFields[k.slice('profile.'.length)] = v;
+    });
+    const mergedProfile = { ...currentProfile, ...patchedFields };
+    const macros = computeMacroTargets(mergedProfile);
+    if (Object.keys(macros).length > 0) {
+      Object.entries(macros).forEach(([k, v]) => { updates[`profile.${k}`] = v; });
+    }
+
     const updated = await User.findByIdAndUpdate(
       req.user._id, updates, { runValidators: true, new: true, lean: true }
     );

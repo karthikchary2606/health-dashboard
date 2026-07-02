@@ -58,12 +58,11 @@ test('onboarding with complete stats computes macro targets', async () => {
     });
   expect(res.status).toBe(200);
   const updated = await User.findById(user._id);
-  // Mifflin male: 10*80 + 6.25*175 - 5*30 + 5 = 1800 BMR, x1.55 TDEE = 2790, -300 = 2490
-  expect(updated.profile.dailyCalorieTarget).toBeGreaterThan(2000);
-  expect(updated.profile.dailyCalorieTarget).toBeLessThan(3500);
-  expect(updated.profile.dailyProteinG).toBeGreaterThan(100);
-  expect(updated.profile.dailyCarbsG).toBeGreaterThan(100);
-  expect(updated.profile.dailyFatG).toBeGreaterThan(40);
+  // Mifflin male: base=1743.75, bmr=1748.75, tdee=2711, -300 deficit = 2411
+  expect(updated.profile.dailyCalorieTarget).toBe(2411);
+  expect(updated.profile.dailyProteinG).toBe(181);
+  expect(updated.profile.dailyCarbsG).toBe(271);
+  expect(updated.profile.dailyFatG).toBe(67);
 });
 
 test('macro targets not set when sex is missing', async () => {
