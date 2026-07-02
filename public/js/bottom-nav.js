@@ -14,6 +14,11 @@
     diet:      'diet',
     workouts:  'workout',
     progress:  'progress',
+    recipes:   'recipes',
+    cardio:    'cardio',
+    guidelines:'guidelines',
+    grocery:   'grocery',
+    breathing: 'breathing',
   };
 
   function getActiveScreen() {
