@@ -86,6 +86,41 @@ function resolveExercise(ex, tier, profile) {
   return null;
 }
 
+const YOGA_EXERCISES = {
+  hatha: [
+    { name: 'Vrikshasana (Tree Pose)',               sets: 3, reps: '30s hold per side', note: 'Balance and mental focus — arms above head',      cat: 'yoga' },
+    { name: 'Virabhadrasana II (Warrior II)',        sets: 3, reps: '45s hold per side', note: 'Hip strength and chest opening',                   cat: 'yoga' },
+    { name: 'Setu Bandhasana (Bridge Pose)',         sets: 3, reps: '12 reps',           note: 'Glute activation — squeeze at the top',            cat: 'yoga' },
+    { name: 'Paschimottanasana (Forward Fold)',      sets: 3, reps: '30s hold',          note: 'Hamstring and spine stretch — breathe into hold',  cat: 'yoga' },
+    { name: 'Shavasana (Corpse Pose)',               sets: 1, reps: '5 min',             note: 'Full-body relaxation — do not skip',               cat: 'yoga' },
+  ],
+  vinyasa: [
+    { name: 'Chaturanga → Up Dog → Down Dog Flow',  sets: 3, reps: '5 rounds',          note: 'Core and upper body — maintain straight spine',    cat: 'yoga' },
+    { name: 'Warrior I → II → Reverse Warrior',     sets: 3, reps: 'per side',          note: 'Full-body flow — synchronise breath with movement', cat: 'yoga' },
+    { name: 'Utkatasana (Chair Pose)',               sets: 3, reps: '45s hold',          note: 'Thigh and glute strength',                         cat: 'yoga' },
+    { name: 'Phalakasana → Vasisthasana (Plank → Side Plank)', sets: 3, reps: '30s each side', note: 'Core stability', cat: 'yoga' },
+    { name: 'Shavasana',                            sets: 1, reps: '3 min',             note: 'Recovery — let heart rate settle',                  cat: 'yoga' },
+  ],
+  'pranayama-only': [
+    { name: 'Anulom Vilom (Alternate Nostril)',      sets: 1, reps: '5 min',            note: 'Balance left/right hemisphere. Close right nostril inhale, close left exhale', cat: 'yoga' },
+    { name: 'Bhramari (Humming Bee Breath)',         sets: 1, reps: '5 min',            note: 'Index fingers on ears, hum on exhale — reduces anxiety', cat: 'yoga' },
+    { name: 'Kapalbhati (Skull-Shining Breath)',     sets: 3, reps: '30 cycles',        note: 'Forceful exhale through nose, passive inhale — energising', cat: 'yoga' },
+    { name: 'Uddiyana Bandha (Abdominal Lock)',      sets: 3, reps: '10 contractions',  note: 'Exhale fully, suck abdomen in and up — empty stomach only', cat: 'yoga' },
+    { name: 'Shavasana',                            sets: 1, reps: '10 min',            note: 'Deep relaxation — close eyes, no movement',         cat: 'yoga' },
+  ],
+};
+
+/**
+ * Returns the yoga exercise list for the given yoga style.
+ * Falls back to hatha for unknown styles.
+ *
+ * @param {string} yogaType - 'hatha' | 'vinyasa' | 'pranayama-only'
+ * @returns {Array<{name, sets, reps, note, cat}>}
+ */
+function getYogaExercises(yogaType) {
+  return YOGA_EXERCISES[yogaType] || YOGA_EXERCISES.hatha;
+}
+
 /**
  * Returns up to 5 resolved exercises for the given profile, muscleGroup, and goal.
  *
@@ -129,4 +164,4 @@ function getExercises(profile, muscleGroup, goal) {
     .slice(0, 5);
 }
 
-module.exports = { getExercises, getSuryaNamaskarRounds };
+module.exports = { getExercises, getSuryaNamaskarRounds, getYogaExercises };
