@@ -364,8 +364,8 @@ describe('buildWorkoutPlan — personalized', () => {
   const yogaDays     = activeDays.filter(d => d.focus && d.focus.toLowerCase().includes('yoga'));
   const strengthDays = activeDays.filter(d => d.type === 'Strength');
   expect(activeDays.length).toBe(3);
-  expect(yogaDays.length).toBeGreaterThanOrEqual(1);
-  expect(strengthDays.length).toBeGreaterThanOrEqual(1);
+  expect(yogaDays.length).toBe(1);      // Friday
+  expect(strengthDays.length).toBe(2);  // Monday + Wednesday
  });
 });
 

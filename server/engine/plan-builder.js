@@ -138,8 +138,8 @@ const PHASE_LABELS = {
 
 const GYM_HOME_SLOTS = {
   2: [
-    { day: 'Monday',   muscleGroup: 'full-body', focus: 'Full Body',  duration: '45 min' },
-    { day: 'Thursday', muscleGroup: 'chest',     focus: 'Upper Body', duration: '45 min' },
+    { day: 'Monday',    muscleGroup: 'full-body', focus: 'Full Body',  duration: '45 min' },
+    { day: 'Wednesday', muscleGroup: 'chest',     focus: 'Upper Body', duration: '45 min' },
   ],
   3: [
     { day: 'Monday',    muscleGroup: 'full-body', focus: 'Full Body',   duration: '45 min' },
