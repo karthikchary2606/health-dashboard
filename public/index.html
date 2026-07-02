@@ -941,7 +941,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setGreeting();    // runs immediately after auth so greeting never stays "Loading..."
   updateWaterGoalDisplay(); // requires currentUser — must run after initAuth
   checkReviewBanner();      // requires currentUser — must run after initAuth
-  await loadDashboardOverview(); // contract-driven initial dashboard render path
+  const overview = await loadDashboardOverview(); // contract-driven initial dashboard render path
 
   // Initialise stats chips from profile so they never show stale/hardcoded values
   if (currentUser && currentUser.profile) {
@@ -954,7 +954,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("logDate").value = today;
-  await buildTimeline(); // sets _phaseTasks from planCache
+  if (!overview) {
+    await buildTimeline(); // fallback when overview API is unavailable
+  } else {
+    updateCheckStat();
+  }
   updateCalorieStat();
   buildRecipes();
   buildBreathingSection();
@@ -973,6 +977,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 </body>
 </html>
-
 
 
