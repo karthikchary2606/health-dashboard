@@ -112,6 +112,11 @@ function validateOnboardingInput(req) {
     errors.push('age must be between 1 and 120');
   }
 
+  // Validate height
+  if (heightCm !== undefined && (heightCm < 50 || heightCm > 300)) {
+    errors.push('heightCm must be between 50 and 300 cm (enter in centimetres, e.g. 170)');
+  }
+
   // Validate weights
   if (currentWeightKg !== undefined && (currentWeightKg < 20 || currentWeightKg > 300)) {
     errors.push('currentWeightKg must be between 20 and 300 kg');
@@ -310,6 +315,9 @@ router.patch('/', authenticate, async (req, res) => {
     if (req.body.planTemplate && !VALID.includes(req.body.planTemplate)) {
       return res.status(400).json({ error: `Invalid planTemplate: ${req.body.planTemplate}` });
     }
+    if (req.body.heightCm !== undefined && (req.body.heightCm < 50 || req.body.heightCm > 300)) {
+      return res.status(400).json({ error: 'heightCm must be between 50 and 300 cm (enter in centimetres, e.g. 170)' });
+    }
 
     const allowed = [
       'currentWeightKg', 'goalWeightKg', 'heightCm', 'age', 'dietType',
@@ -320,9 +328,16 @@ router.patch('/', authenticate, async (req, res) => {
       'reviewReminderDays', 'sex'
     ];
 
+    const ENUM_FIELDS = new Set([
+      'dietType', 'cuisinePreference', 'fitnessLevel', 'workoutTime', 'yogaStyle',
+      'primaryGoal', 'planTemplate', 'religion', 'languageCommunity', 'sex'
+    ]);
+
     const updates = {};
     allowed.forEach(field => {
       if (req.body[field] === undefined) return;
+      // Skip empty strings for enum fields to avoid Mongoose rejection
+      if (ENUM_FIELDS.has(field) && req.body[field] === '') return;
       if (field === 'healthConditions') {
         updates[`profile.${field}`] = normaliseConditions(req.body[field]);
       } else if (field === 'medications') {
