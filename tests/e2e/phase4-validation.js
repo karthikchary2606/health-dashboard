@@ -64,6 +64,11 @@ async function request(method, path, body = null, headers = {}) {
 // Test: Check if server is up
 async function testServerHealth() {
   console.log('\n🏥 Testing Server Health...');
+  // Skip in CI environments - server won't be running
+  if (process.env.CI) {
+    console.log('⚠ Skipped in CI (server not running in pipeline)');
+    return null;
+  }
   try {
     const res = await request('GET', '/');
     if (res.status < 500) {
@@ -103,6 +108,11 @@ async function testMealStructure() {
 // Test: Verify plan API returns correct structure
 async function testPlanAPIStructure() {
   console.log('\n🎯 Testing Plan API Structure...');
+  // Skip in CI environments - server won't be running
+  if (process.env.CI) {
+    console.log('⚠ Skipped in CI (server not running in pipeline)');
+    return null;
+  }
   try {
     // Note: This would require a logged-in user
     // For now, check if the endpoint exists
@@ -137,6 +147,11 @@ async function testPlanAPIStructure() {
 // Test: Verify database has expected data
 async function testDatabaseIntegrity() {
   console.log('\n🗄️ Testing Database Integrity...');
+  // Skip in CI environments - server won't be running
+  if (process.env.CI) {
+    console.log('⚠ Skipped in CI (server not running in pipeline)');
+    return null;
+  }
   try {
     // Check if recipes endpoint works
     const res = await request('GET', '/api/recipes');
@@ -266,6 +281,7 @@ async function runValidation() {
 
   let passed = 0;
   let failed = 0;
+  let skipped = 0;
 
   results.forEach(([test, result]) => {
     if (result === true) {
@@ -276,11 +292,12 @@ async function runValidation() {
       failed++;
     } else {
       console.log(`⚠ ${test} (skipped)`);
+      skipped++;
     }
   });
 
   console.log('\n═════════════════════════════════════════════════════════');
-  console.log(`  RESULT: ${passed} passed, ${failed} failed`);
+  console.log(`  RESULT: ${passed} passed, ${failed} failed${skipped > 0 ? `, ${skipped} skipped` : ''}`);
   console.log('═════════════════════════════════════════════════════════\n');
 
   process.exit(failed > 0 ? 1 : 0);
