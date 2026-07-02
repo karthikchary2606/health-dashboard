@@ -86,7 +86,7 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
 // Real foodList-based upgrade logic (vegetarian -> eggetarian/non-vegetarian) is
 // implemented in a later task. This wiring exists so tests can import the symbol now.
 function deriveEffectiveDiet(profile) {
-  return profile.dietType;
+  return profile ? profile.dietType : undefined;
 }
 
 module.exports = { getMeals, activeConditions, deriveEffectiveDiet };

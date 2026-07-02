@@ -478,7 +478,16 @@ describe('effective diet inference impacts generated meals', () => {
     const strictBreakfasts   = strictVegPlan[0].weeks[0].weekdays.map(d => d.breakfast);
     const upgradedBreakfasts = upgradedPlan[0].weeks[0].weekdays.map(d => d.breakfast);
 
-    expect(upgradedBreakfasts).not.toEqual(strictBreakfasts);
+    const NON_VEG_OR_EGG_PATTERN = /chicken|mutton|prawn|keema|fish|egg/i;
+
+    // Strict vegetarian plan must never surface non-veg/egg items.
+    strictBreakfasts.forEach(meal => {
+      expect(meal).not.toMatch(NON_VEG_OR_EGG_PATTERN);
+    });
+
+    // Upgraded plan (vegetarian + chicken in foodList) must actually include
+    // at least one non-veg/egg meal — not just "some array difference".
+    expect(upgradedBreakfasts.some(meal => NON_VEG_OR_EGG_PATTERN.test(meal))).toBe(true);
   });
 });
 
