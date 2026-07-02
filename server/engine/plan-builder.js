@@ -78,6 +78,7 @@ const CARDIO_PHASES = [
 
 // ─── Grocery categories ───────────────────────────────────────────────────────
 
+// Kept for backwards-compatibility — no longer used by buildGroceryList.
 const GROCERY_CATEGORIES = {
   'non-vegetarian': [
     { name: 'Grains & Legumes', items: ['brown rice', 'dal', 'oats'] },
@@ -108,6 +109,74 @@ const GROCERY_CATEGORIES = {
     { name: 'Fats & Oils',      items: ['coconut oil', 'nuts', 'seeds'] },
   ],
 };
+
+// ─── Cuisine-specific pantry staples ─────────────────────────────────────────
+
+const CUISINE_STAPLES = {
+  'south-indian': {
+    grains: ['idli rice', 'urad dal', 'tamarind', 'rice flour', 'poha (beaten rice)'],
+    aromatics: ['curry leaves', 'mustard seeds', 'sambar powder', 'rasam powder', 'dried red chillies', 'coconut (grated/milk)', 'asafoetida (hing)'],
+    nonVegProteins: ['fish (pomfret/rohu/tilapia)', 'prawns', 'chicken curry cut'],
+    vegProteins: ['raw banana', 'drumstick (murungakkai)', 'ash gourd', 'colocasia (arbi)'],
+  },
+  'north-indian': {
+    grains: ['whole wheat atta', 'besan (chickpea flour)', 'rajma', 'chole (chickpeas)', 'moong dal'],
+    aromatics: ['ghee', 'garam masala', 'coriander powder', 'jeera (cumin)', 'kasuri methi', 'amchur powder', 'turmeric'],
+    nonVegProteins: ['chicken (whole/curry cut)', 'eggs'],
+    vegProteins: ['paneer 200g', 'sarson (mustard greens, seasonal)'],
+  },
+  'continental': {
+    grains: ['pasta (penne/spaghetti)', 'sourdough bread', 'quinoa', 'rolled oats'],
+    aromatics: ['extra virgin olive oil', 'mixed Italian herbs', 'balsamic vinegar', 'dijon mustard', 'garlic powder'],
+    nonVegProteins: ['salmon fillets', 'chicken breast (boneless)', 'eggs'],
+    vegProteins: ['mozzarella', 'cherry tomatoes', 'zucchini', 'aubergine (eggplant)', 'mixed salad greens'],
+  },
+  'mixed': {
+    grains: ['brown rice', 'whole wheat atta', 'oats', 'mixed dal'],
+    aromatics: ['turmeric', 'cumin', 'coriander powder', 'garlic', 'ginger'],
+    nonVegProteins: ['chicken breast 500g/week', 'fish 2-3 portions/week', 'eggs 4-5/week'],
+    vegProteins: ['paneer 100g/day', 'tofu', 'greek yogurt'],
+  },
+};
+
+function getCuisineGrocery(dietType, cuisinePreference) {
+  const isVeg = ['vegetarian', 'vegan', 'eggetarian'].includes(dietType);
+  const isVegan = dietType === 'vegan';
+  const staples = CUISINE_STAPLES[cuisinePreference] || CUISINE_STAPLES['mixed'];
+
+  const dairyTerms = ['mozzarella', 'paneer', 'yogurt', 'milk', 'ghee', 'butter', 'cream', 'cheese'];
+
+  let proteinItems = isVeg
+    ? staples.vegProteins
+    : [...staples.nonVegProteins, ...staples.vegProteins.slice(0, 2)];
+
+  if (isVegan) {
+    proteinItems = proteinItems.filter(
+      item => !dairyTerms.some(d => item.toLowerCase().includes(d))
+    );
+  }
+
+  return [
+    { name: 'Grains & Pantry', items: staples.grains },
+    { name: 'Aromatics & Oils', items: staples.aromatics },
+    { name: 'Proteins', items: proteinItems },
+    { name: 'Vegetables', items: ['spinach', 'broccoli', 'carrots', 'tomatoes', 'onions', 'capsicum'] },
+    { name: 'Fruits', items: ['banana', 'apple', 'orange', 'papaya', 'pomegranate'] },
+  ];
+}
+
+function filterOutAvoidances(categories, foodAllergies = [], culturalFoodAvoidances = []) {
+  const avoidTerms = [...(foodAllergies || []), ...(culturalFoodAvoidances || [])]
+    .map(s => (s || '').toLowerCase().trim())
+    .filter(Boolean);
+  if (!avoidTerms.length) return categories;
+  return categories.map(cat => ({
+    ...cat,
+    items: cat.items.filter(item =>
+      !avoidTerms.some(term => item.toLowerCase().includes(term))
+    ),
+  }));
+}
 
 // ─── Phase labels per goal ────────────────────────────────────────────────────
 
@@ -476,14 +545,10 @@ function getGroceryCategories(dietType) {
 }
 
 function buildGroceryList(profile, goal) {
-  return Array.from({ length: 6 }, (_, mi) => ({
-    monthLabel: `Month ${mi + 1}`,
-    budget: '₹3000–₹4000/week',
-    categories: getGroceryCategories(profile.dietType).map(cat => ({
-      name: cat.name,
-      items: [...cat.items]   // fresh array per month so mutations don't propagate
-    }))
-  }));
+  const dietType = profile.dietType || 'non-vegetarian';
+  const cuisinePreference = profile.cuisinePreference || 'mixed';
+  const categories = getCuisineGrocery(dietType, cuisinePreference);
+  return filterOutAvoidances(categories, profile.foodAllergies, profile.culturalFoodAvoidances);
 }
 
 function buildPlan(profile) {
