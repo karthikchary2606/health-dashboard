@@ -32,6 +32,10 @@ function matchesDiet(profileDietType, recipeDietTypes) {
     return recipeDietTypes.includes('vegetarian') || recipeDietTypes.includes('vegan');
   }
 
+  if (profileDietType === 'eggetarian') {
+    return recipeDietTypes.includes('eggetarian') || recipeDietTypes.includes('vegetarian') || recipeDietTypes.includes('vegan');
+  }
+
   return recipeDietTypes.includes(profileDietType);
 }
 

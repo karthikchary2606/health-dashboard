@@ -270,6 +270,17 @@ function updateCheckStat() {
   document.getElementById("checkStat").textContent = done + "/" + total;
 }
 
+function buildChecklistPayload() {
+  if (!Array.isArray(_phaseTasks) || _phaseTasks.length === 0) return null;
+  const checklist = _phaseTasks.map((_, i) => {
+    const c = document.getElementById("chk-" + i);
+    if (!c) return null;
+    return { done: Boolean(c.checked) };
+  });
+  if (checklist.some((entry) => entry === null)) return null;
+  return checklist;
+}
+
 function toggleWater(l) {
   waterLevel = (waterLevel === l) ? l - 1 : l;
   for(let i=1;i<=4;i++) {
@@ -334,8 +345,9 @@ async function syncData() {
   const notes = document.getElementById("workoutNotes").value;
   document.getElementById("weightStat").textContent = weight;
   updateBMI(weight);
-  const checklist = _phaseTasks.map((_, i) => { const c = document.getElementById("chk-"+i); return { done: c ? c.checked : false }; });
-  const payload = { date, checklist, waterIntake: waterLevel, weight, completedWorkout: document.getElementById("workoutToggle").checked, moodScore: currentMoodScore, energyScore: currentEnergyScore, notes };
+  const checklist = buildChecklistPayload();
+  const payload = { date, waterIntake: waterLevel, weight, completedWorkout: document.getElementById("workoutToggle").checked, moodScore: currentMoodScore, energyScore: currentEnergyScore, notes };
+  if (checklist) payload.checklist = checklist;
   try {
     const { ok } = await apiFetch("/api/logs", { method:"POST", body: payload });
     if (!ok) return;

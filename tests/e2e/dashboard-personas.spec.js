@@ -7,6 +7,7 @@ const personas = require('./fixtures/personas.json');
 const HOST = '127.0.0.1';
 const PORT = Number(process.env.E2E_PORT || 4173);
 const BASE_URL = process.env.E2E_BASE_URL || `http://${HOST}:${PORT}`;
+const ENABLE_VISUAL_SNAPSHOTS = !(process.env.CI && process.platform !== 'darwin');
 
 function createStaticServer() {
   const publicDir = path.resolve(__dirname, '../../public');
@@ -122,6 +123,9 @@ async function setupPersonaRoutes(page, persona, opts = {}) {
     }
 
     if (pathname === '/api/logs' || pathname.startsWith('/api/logs/')) {
+      if (pathname === '/api/logs' && route.request().method() === 'POST' && typeof options.onLogsPost === 'function') {
+        await options.onLogsPost(route.request());
+      }
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({}) });
       return;
     }
@@ -133,6 +137,11 @@ async function setupPersonaRoutes(page, persona, opts = {}) {
 
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({}) });
   });
+}
+
+async function expectPortableScreenshot(locator, name) {
+  if (!ENABLE_VISUAL_SNAPSHOTS) return;
+  await expect(locator).toHaveScreenshot(name);
 }
 
 for (const persona of personas) {
@@ -182,13 +191,13 @@ test('dashboard v2 cards show explicit empty prompts', async ({ page }) => {
   await expect(timeline).toHaveAttribute('data-state', 'empty');
   await expect(timeline).toContainText('No timeline updates yet');
   await expect(timeline).toContainText('Open Diet Plan');
-  await expect(timeline).toHaveScreenshot('dashboard-v2-timeline-empty.png');
+  await expectPortableScreenshot(timeline, 'dashboard-v2-timeline-empty.png');
 
   const sleepSummary = page.locator('#sleepSummaryContent');
   await expect(sleepSummary).toHaveAttribute('data-state', 'empty');
   await expect(sleepSummary).toContainText('No sleep entry found');
   await expect(sleepSummary).toContainText('Log sleep');
-  await expect(sleepSummary).toHaveScreenshot('dashboard-v2-sleep-empty.png');
+  await expectPortableScreenshot(sleepSummary, 'dashboard-v2-sleep-empty.png');
 });
 
 test('dashboard v2 cards show explicit error prompts', async ({ page }) => {
@@ -201,11 +210,32 @@ test('dashboard v2 cards show explicit error prompts', async ({ page }) => {
   await expect(timeline).toHaveAttribute('data-state', 'error');
   await expect(timeline).toContainText('Couldn’t load today’s timeline');
   await expect(timeline).toContainText('Retry');
-  await expect(timeline).toHaveScreenshot('dashboard-v2-timeline-error.png');
+  await expectPortableScreenshot(timeline, 'dashboard-v2-timeline-error.png');
 
   const sleepSummary = page.locator('#sleepSummaryContent');
   await expect(sleepSummary).toHaveAttribute('data-state', 'error');
   await expect(sleepSummary).toContainText('Sleep summary unavailable');
   await expect(sleepSummary).toContainText('Retry');
-  await expect(sleepSummary).toHaveScreenshot('dashboard-v2-sleep-error.png');
+  await expectPortableScreenshot(sleepSummary, 'dashboard-v2-sleep-error.png');
+});
+
+test('overview success path does not POST checklist when checklist inputs are absent', async ({ page }) => {
+  const persona = personas[0];
+  const logPosts = [];
+  await setupPersonaRoutes(page, persona, {
+    onLogsPost: async (request) => {
+      const body = request.postDataJSON ? request.postDataJSON() : JSON.parse(request.postData() || '{}');
+      logPosts.push(body);
+    }
+  });
+
+  await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#timelineContainer')).toHaveAttribute('data-state', 'ready');
+
+  await page.evaluate(() => {
+    toggleWater(1);
+  });
+
+  await expect.poll(() => logPosts.length).toBeGreaterThan(0);
+  expect(logPosts[0]).not.toHaveProperty('checklist');
 });

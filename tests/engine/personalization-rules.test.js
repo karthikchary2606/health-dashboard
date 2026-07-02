@@ -37,6 +37,19 @@ describe('applyRules', () => {
     expect(result.map(r => r.name)).toEqual(['Vegan Bowl', 'Veg Bowl']);
   });
 
+  test('eggetarian includes eggetarian, vegetarian, and vegan recipes', () => {
+    const profile = { dietType: 'eggetarian' };
+    const recipes = [
+      { name: 'Egg Bhurji', dietType: ['eggetarian'], ingredients: ['egg'] },
+      { name: 'Veg Bowl', dietType: ['vegetarian'], ingredients: ['paneer'] },
+      { name: 'Vegan Bowl', dietType: ['vegan'], ingredients: ['tofu'] },
+      { name: 'Chicken Bowl', dietType: ['non-vegetarian'], ingredients: ['chicken'] }
+    ];
+
+    const result = applyRules(profile, recipes);
+    expect(result.map(r => r.name)).toEqual(['Egg Bhurji', 'Veg Bowl', 'Vegan Bowl']);
+  });
+
   test('foodList affects ranking but does not hard-filter unmatched recipes', () => {
     const profile = {
       dietType: 'vegetarian',
