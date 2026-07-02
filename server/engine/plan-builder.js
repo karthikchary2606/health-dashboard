@@ -156,13 +156,22 @@ function getCuisineGrocery(dietType, cuisinePreference) {
     );
   }
 
-  return [
+  const categories = [
     { name: 'Grains & Pantry', items: staples.grains },
     { name: 'Aromatics & Oils', items: staples.aromatics },
     { name: 'Proteins', items: proteinItems },
     { name: 'Vegetables', items: ['spinach', 'broccoli', 'carrots', 'tomatoes', 'onions', 'capsicum'] },
     { name: 'Fruits', items: ['banana', 'apple', 'orange', 'papaya', 'pomegranate'] },
   ];
+
+  if (isVegan) {
+    return categories.map(cat => ({
+      ...cat,
+      items: cat.items.filter(item => !dairyTerms.some(d => item.toLowerCase().includes(d))),
+    }));
+  }
+
+  return categories;
 }
 
 function filterOutAvoidances(categories, foodAllergies = [], culturalFoodAvoidances = []) {

@@ -35,9 +35,12 @@ describe('buildGroceryList cuisine personalization', () => {
     expect(allItems.some(i => i.includes('prawns'))).toBe(false);
   });
 
-  test('missing cuisinePreference defaults to mixed', () => {
-    const list = buildGroceryList({ dietType: 'non-vegetarian' });
-    expect(list.length).toBeGreaterThan(0);
-    expect(list[0].items.length).toBeGreaterThan(0);
+  test('north-indian vegan excludes ghee from aromatics', () => {
+    const list = buildGroceryList({ dietType: 'vegan', cuisinePreference: 'north-indian' });
+    const allItems = list.flatMap(c => c.items).map(i => i.toLowerCase());
+    expect(allItems.some(i => i.includes('ghee'))).toBe(false);
+    expect(allItems.some(i => i.includes('paneer'))).toBe(false);
+    expect(allItems.some(i => i.includes('atta'))).toBe(true);
   });
+
 });
