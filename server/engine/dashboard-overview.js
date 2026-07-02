@@ -1,6 +1,10 @@
 'use strict';
 
 const HealthLog = require('../../models/HealthLog');
+const southIndianMeals = require('../meals/south-indian');
+const northIndianMeals = require('../meals/north-indian');
+const continentalMeals = require('../meals/continental');
+const { applyRules } = require('./personalization-rules');
 
 const TEMPLATES = {
   'weight-loss': require('../templates/weight-loss'),
@@ -19,6 +23,17 @@ const COMPLETENESS_FIELDS = [
 ];
 
 const DAY_NAMES = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+const MEAL_TYPES = ['breakfast', 'lunch', 'snack', 'dinner'];
+const POOL_TO_DIET = {
+  veg: ['vegetarian'],
+  eggetarian: ['eggetarian'],
+  'non-veg': ['non-vegetarian']
+};
+const CUISINE_MEALS = {
+  'south-indian': southIndianMeals,
+  'north-indian': northIndianMeals,
+  continental: continentalMeals
+};
 
 function getTemplate(profile = {}) {
   const key = profile.planTemplate || profile.primaryGoal || 'weight-loss';
@@ -64,15 +79,67 @@ function buildTimeline(todayMeals, latestLog) {
   return timeline;
 }
 
-function buildRecipePreview(todayMeals) {
-  if (!todayMeals) return [];
+function resolvePreviewMetadata(mealType, mealName, profile = {}) {
+  const normalizedName = String(mealName || '').toLowerCase().trim();
+  const preferredCuisine = String(profile.cuisinePreference || '').toLowerCase();
+  const cuisines = Object.keys(CUISINE_MEALS);
+  const orderedCuisines = preferredCuisine && preferredCuisine !== 'mixed'
+    ? [preferredCuisine, ...cuisines.filter((cuisine) => cuisine !== preferredCuisine)]
+    : cuisines;
 
-  return [
-    { mealType: 'breakfast', name: todayMeals.breakfast },
-    { mealType: 'lunch', name: todayMeals.lunch },
-    { mealType: 'snack', name: todayMeals.snack },
-    { mealType: 'dinner', name: todayMeals.dinner }
-  ].filter((item) => Boolean(item.name));
+  for (const cuisine of orderedCuisines) {
+    const cuisineMeals = CUISINE_MEALS[cuisine];
+    const mealPools = cuisineMeals && cuisineMeals[mealType];
+    if (!mealPools) continue;
+
+    for (const [poolName, meals] of Object.entries(mealPools)) {
+      if (!Array.isArray(meals)) continue;
+      const hasMatch = meals.some((meal) => String(meal || '').toLowerCase().trim() === normalizedName);
+      if (!hasMatch) continue;
+      return {
+        cuisine,
+        dietType: POOL_TO_DIET[poolName] || []
+      };
+    }
+  }
+
+  return {
+    cuisine: preferredCuisine && preferredCuisine !== 'mixed' ? preferredCuisine : 'mixed',
+    dietType: profile.dietType ? [String(profile.dietType).toLowerCase()] : []
+  };
+}
+
+function personalizeMealPreview(profile, todayMeals) {
+  if (!todayMeals) return { meals: null, recipePreview: [] };
+
+  const previewCandidates = MEAL_TYPES
+    .map((mealType) => {
+      const mealName = todayMeals[mealType];
+      if (!mealName) return null;
+      const metadata = resolvePreviewMetadata(mealType, mealName, profile);
+      return {
+        mealType,
+        name: mealName,
+        ingredients: [mealName],
+        cuisine: metadata.cuisine,
+        dietType: metadata.dietType
+      };
+    })
+    .filter(Boolean);
+
+  const personalizedPreview = applyRules(profile, previewCandidates);
+  const meals = personalizedPreview.reduce((acc, meal) => {
+    acc[meal.mealType] = meal.name;
+    return acc;
+  }, { breakfast: null, lunch: null, snack: null, dinner: null });
+
+  return {
+    meals,
+    recipePreview: personalizedPreview.map((meal) => ({
+      mealType: meal.mealType,
+      name: meal.name
+    }))
+  };
 }
 
 async function buildStats(userId) {
@@ -96,6 +163,7 @@ async function buildOverview(user) {
   const template = getTemplate(profile);
   const dietPlan = template.getDietPlan(profile);
   const todayMeals = pickTodayMeals(dietPlan);
+  const personalizedPreview = personalizeMealPreview(profile, todayMeals);
   const latestLog = await HealthLog.findOne({ userId: user._id }).sort({ date: -1 }).lean();
 
   return {
@@ -107,16 +175,9 @@ async function buildOverview(user) {
         carbsG: profile.dailyCarbsG || null,
         fatG: profile.dailyFatG || null
       },
-      meals: todayMeals
-        ? {
-            breakfast: todayMeals.breakfast,
-            lunch: todayMeals.lunch,
-            snack: todayMeals.snack,
-            dinner: todayMeals.dinner
-          }
-        : null
+      meals: personalizedPreview.meals
     },
-    recipePreview: buildRecipePreview(todayMeals),
+    recipePreview: personalizedPreview.recipePreview,
     stats: await buildStats(user._id),
     profileCompleteness: computeProfileCompleteness(profile)
   };

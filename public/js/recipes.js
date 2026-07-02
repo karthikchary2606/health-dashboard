@@ -2022,7 +2022,7 @@ function buildRecipes() {
       vegan:            'Vegan recipes',
       eggetarian:       'Egg-friendly recipes',
       'gluten-free':    'Gluten-free recipes',
-      'non-vegetarian': 'All recipes'
+      'non-vegetarian': 'Non-vegetarian recipes'
     };
     var diet    = currentUser && currentUser.profile && currentUser.profile.dietType;
     var cuisine = currentUser && currentUser.profile && currentUser.profile.cuisinePreference;

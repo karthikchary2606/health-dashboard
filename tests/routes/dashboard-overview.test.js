@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const app = require('../../server');
 const User = require('../../models/User');
+const northIndianMeals = require('../../server/meals/north-indian');
 
 beforeAll(async () => { await mongoose.connect(process.env.MONGODB_URI); });
 afterEach(async () => { await User.deleteMany({}); });
@@ -165,5 +166,42 @@ describe('GET /api/dashboard/overview', () => {
     expect(res.body.timeline.find((item) => item.type === 'habit')).toEqual(
       expect.objectContaining({ label: 'Workout', completed: false })
     );
+  });
+
+  test('aligns recipePreview and dietPreview meals with profile diet/cuisine semantics', async () => {
+    const user = await createUser({
+      email: 'north-veg@test.com',
+      profile: {
+        primaryGoal: 'weight-loss',
+        currentWeightKg: 80,
+        goalWeightKg: 70,
+        heightCm: 175,
+        age: 30,
+        cuisinePreference: 'north-indian',
+        dietType: 'vegetarian',
+        fitnessLevel: 'lightly-active',
+        waterGoalL: 2.5
+      }
+    });
+
+    const res = await request(app)
+      .get('/api/dashboard/overview')
+      .set(authHeader(user._id));
+
+    expect(res.status).toBe(200);
+    const mealMap = Object.fromEntries(
+      res.body.recipePreview.map((recipe) => [recipe.mealType, recipe.name])
+    );
+
+    expect(res.body.dietPreview.meals).toEqual({
+      breakfast: mealMap.breakfast || null,
+      lunch: mealMap.lunch || null,
+      snack: mealMap.snack || null,
+      dinner: mealMap.dinner || null
+    });
+
+    res.body.recipePreview.forEach((recipe) => {
+      expect(northIndianMeals[recipe.mealType].veg).toContain(recipe.name);
+    });
   });
 });

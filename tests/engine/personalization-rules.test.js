@@ -61,4 +61,21 @@ describe('applyRules', () => {
     expect(() => applyRules({}, recipes)).not.toThrow();
     expect(applyRules({}, recipes).map(r => r.name)).toEqual(['Unknown Recipe', 'Veg Recipe']);
   });
+
+  test('enforces diet and cuisine together for preview candidates', () => {
+    const profile = {
+      dietType: 'vegetarian',
+      cuisinePreference: 'north-indian'
+    };
+    const recipes = [
+      { mealType: 'breakfast', name: 'Aloo Paratha', dietType: ['vegetarian'], cuisine: 'north-indian' },
+      { mealType: 'lunch', name: 'Chicken Curry', dietType: ['non-vegetarian'], cuisine: 'north-indian' },
+      { mealType: 'dinner', name: 'Dosa', dietType: ['vegetarian'], cuisine: 'south-indian' }
+    ];
+
+    const result = applyRules(profile, recipes);
+    expect(result).toEqual([
+      { mealType: 'breakfast', name: 'Aloo Paratha', dietType: ['vegetarian'], cuisine: 'north-indian' }
+    ]);
+  });
 });
