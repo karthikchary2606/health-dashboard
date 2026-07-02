@@ -1,0 +1,199 @@
+[
+  {
+    "personaId": "persona1-veg-chicken",
+    "personaName": "Vegetarian + Chicken/Eggs",
+    "timestamp": "2026-07-02T15:40:23.274Z",
+    "steps": [
+      {
+        "name": "registration",
+        "status": "passed",
+        "email": "vegetarian-1783006823275@test.local"
+      },
+      {
+        "name": "profile-update",
+        "status": "passed"
+      },
+      {
+        "name": "food-preferences",
+        "status": "passed",
+        "foodList": [
+          "Idli",
+          "Dosa",
+          "Chicken",
+          "Eggs",
+          "Sambar",
+          "Rasam"
+        ]
+      },
+      {
+        "name": "plan-generation",
+        "status": "passed"
+      },
+      {
+        "name": "validation",
+        "status": "failed",
+        "issues": [
+          "No meals found in plan"
+        ]
+      }
+    ],
+    "passed": false
+  },
+  {
+    "personaId": "persona2-strict-vegan",
+    "personaName": "Strict Vegan",
+    "timestamp": "2026-07-02T15:40:25.562Z",
+    "steps": [
+      {
+        "name": "registration",
+        "status": "passed",
+        "email": "strict-1783006825562@test.local"
+      },
+      {
+        "name": "profile-update",
+        "status": "passed"
+      },
+      {
+        "name": "food-preferences",
+        "status": "passed",
+        "foodList": [
+          "Roti",
+          "Dal",
+          "Spinach",
+          "Beans",
+          "Nuts"
+        ]
+      },
+      {
+        "name": "plan-generation",
+        "status": "passed"
+      },
+      {
+        "name": "validation",
+        "status": "failed",
+        "issues": [
+          "No meals found in plan"
+        ]
+      }
+    ],
+    "passed": false
+  },
+  {
+    "personaId": "persona3-meal-rotation",
+    "personaName": "Meal Rotation Validation",
+    "timestamp": "2026-07-02T15:40:27.800Z",
+    "steps": [
+      {
+        "name": "registration",
+        "status": "passed",
+        "email": "meal-1783006827800@test.local"
+      },
+      {
+        "name": "profile-update",
+        "status": "passed"
+      },
+      {
+        "name": "food-preferences",
+        "status": "passed",
+        "foodList": [
+          "Chicken",
+          "Fish",
+          "Broccoli",
+          "Mushrooms",
+          "Olive Oil",
+          "Brown Rice"
+        ]
+      },
+      {
+        "name": "plan-generation",
+        "status": "passed"
+      },
+      {
+        "name": "validation",
+        "status": "failed",
+        "issues": [
+          "No meals found in plan"
+        ]
+      }
+    ],
+    "passed": false
+  },
+  {
+    "personaId": "persona4-workout-rotation",
+    "personaName": "Workout Rotation Validation",
+    "timestamp": "2026-07-02T15:40:30.052Z",
+    "steps": [
+      {
+        "name": "registration",
+        "status": "passed",
+        "email": "workout-1783006830052@test.local"
+      },
+      {
+        "name": "profile-update",
+        "status": "passed"
+      },
+      {
+        "name": "food-preferences",
+        "status": "passed",
+        "foodList": [
+          "Idli",
+          "Dosa",
+          "Chicken",
+          "Fish",
+          "Vegetables"
+        ]
+      },
+      {
+        "name": "plan-generation",
+        "status": "passed"
+      },
+      {
+        "name": "validation",
+        "status": "failed",
+        "issues": [
+          "No meals found in plan"
+        ]
+      }
+    ],
+    "passed": false
+  },
+  {
+    "personaId": "persona5-backward-compat",
+    "personaName": "Backward Compatibility",
+    "timestamp": "2026-07-02T15:40:32.969Z",
+    "steps": [
+      {
+        "name": "registration",
+        "status": "passed",
+        "email": "backward-1783006832969@test.local"
+      },
+      {
+        "name": "profile-update",
+        "status": "passed"
+      },
+      {
+        "name": "food-preferences",
+        "status": "passed",
+        "foodList": [
+          "Idli",
+          "Dosa",
+          "Sambar",
+          "Rasam",
+          "Vegetables"
+        ]
+      },
+      {
+        "name": "plan-generation",
+        "status": "passed"
+      },
+      {
+        "name": "validation",
+        "status": "failed",
+        "issues": [
+          "No meals found in plan"
+        ]
+      }
+    ],
+    "passed": false
+  }
+]

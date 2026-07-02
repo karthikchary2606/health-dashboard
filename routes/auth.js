@@ -10,13 +10,21 @@ const router = express.Router();
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
-  message: { error: 'Too many login attempts, try again in 15 minutes' }
+  message: { error: 'Too many login attempts, try again in 15 minutes' },
+  skip: (req) => {
+    // Skip rate limiting for test users (emails ending with @test.local)
+    return req.body?.email?.toLowerCase()?.endsWith('@test.local') || false;
+  }
 });
 
 const registerLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
-  message: { error: 'Too many registration attempts, try again in 15 minutes' }
+  message: { error: 'Too many registration attempts, try again in 15 minutes' },
+  skip: (req) => {
+    // Skip rate limiting for test users (emails ending with @test.local)
+    return req.body?.email?.toLowerCase()?.endsWith('@test.local') || false;
+  }
 });
 
 const COOKIE_OPTS = {

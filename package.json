@@ -11,7 +11,8 @@
     "test:e2e": "node tests/e2e/phase4-validation.js",
     "test:e2e:playwright": "playwright test tests/e2e/phase4-api-tests.spec.js",
     "test:e2e:phase4": "playwright test tests/e2e/phase4-api-tests.spec.js --headed",
-    "test:e2e:update-snapshots": "playwright test tests/e2e/phase4-api-tests.spec.js --update-snapshots"
+    "test:e2e:update-snapshots": "playwright test tests/e2e/phase4-api-tests.spec.js --update-snapshots",
+    "test:personas": "node tests/e2e/phase5-persona-testing.js"
   },
   "engines": {
     "node": ">=18.0.0"
