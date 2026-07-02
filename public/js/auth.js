@@ -27,20 +27,18 @@ async function initAuth() {
     logoP.textContent = `${currentUser.name}${age}${height}`;
   }
   // Add logout button to sidebar footer
-  const footer = document.querySelector('.sidebar-footer');
+  const footer = document.querySelector('.sidebar-nav__footer');
   if (footer) {
-    footer.innerHTML = `
-      <div style="margin-bottom:8px;font-size:.78rem;color:rgba(255,255,255,.5)">
-        Signed in as ${currentUser.email}
-      </div>
-      <button onclick="logout()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.78rem;width:100%">
-        🚪 Sign Out
-      </button>
-    `;
+    const logoutBtn = document.createElement('button');
+    logoutBtn.onclick = logout;
+    logoutBtn.className = 'nav-item';
+    logoutBtn.style.cssText = 'color:#ff6b6b;width:100%;margin-top:8px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px';
+    logoutBtn.innerHTML = `<span class="nav-item__icon">🚪</span><span class="nav-item__label">Sign Out</span>`;
+    footer.appendChild(logoutBtn);
   }
   // Add admin link if admin
   if (currentUser.role === 'admin') {
-    const footer = document.querySelector('.sidebar-footer');
+    const footer = document.querySelector('.sidebar-nav__footer');
     if (footer) {
       const adminLink = document.createElement('a');
       adminLink.href = '/admin.html';
@@ -48,6 +46,12 @@ async function initAuth() {
       adminLink.style.cssText = 'display:block;margin-top:8px;color:rgba(255,255,255,.6);font-size:.75rem;text-decoration:none;text-align:center;padding:4px;border-radius:4px;border:1px solid rgba(255,255,255,.15)';
       footer.appendChild(adminLink);
     }
+  }
+  // Seed the weight input with profile's current weight so it never shows a
+  // hardcoded default. loadDateData() will override this with today's log if one exists.
+  const weightInput = document.getElementById('currentWeight');
+  if (weightInput && currentUser.profile && currentUser.profile.currentWeightKg) {
+    weightInput.value = currentUser.profile.currentWeightKg;
   }
   document.body.style.visibility = 'visible';
   return currentUser;

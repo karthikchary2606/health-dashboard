@@ -75,7 +75,8 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 @media(max-width:1100px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr 1fr}}
 /* BOTTOM NAV */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);z-index:200;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-top:1px solid var(--border);box-shadow:0 -4px 20px rgba(0,0,0,.4)}
+.bottom-nav{display:flex;justify-content:space-around;align-items:center;position:fixed;bottom:0;left:0;right:0;background:var(--card);z-index:200;padding:6px 0 calc(6px + env(safe-area-inset-bottom));border-top:1px solid var(--border);box-shadow:0 -4px 20px rgba(0,0,0,.4)}
+@media(min-width:769px){.bottom-nav{display:none !important}}
 .bottom-nav-items{display:flex;justify-content:space-around;align-items:center}
 .bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;cursor:pointer;border-radius:10px;transition:all .2s;min-width:0;color:rgba(255,255,255,.55);border:none;background:none;flex:1}
 .bn-item.active{color:#fff;background:rgba(255,255,255,.12)}
@@ -88,7 +89,7 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
   .main{margin-left:0}
   .hamburger{display:block}
   #sidebar-overlay.show{display:block !important}
-  .bottom-nav{display:block}
+  .bottom-nav{display:flex !important;justify-content:space-around;align-items:center}
   .content{padding:14px 14px calc(80px + env(safe-area-inset-bottom));overflow-x:hidden}
   .topbar{padding:10px 14px;gap:8px;flex-wrap:nowrap}
   .topbar-left{gap:10px;flex:1;min-width:0}
@@ -441,7 +442,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       </div>
       <div class="weight-input-wrap">
         <label>⚖️</label>
-        <input type="number" id="currentWeight" value="95" step="0.1" min="50" max="200" onchange="syncData()">
+        <input type="number" id="currentWeight" placeholder="kg" step="0.1" min="30" max="300" onchange="syncData()">
         <label style="font-size:.72rem;color:var(--text-med)">kg</label>
       </div>
     </div>
