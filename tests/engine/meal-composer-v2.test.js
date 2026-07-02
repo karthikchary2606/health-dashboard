@@ -73,6 +73,22 @@ describe('deriveEffectiveDiet', () => {
     };
     expect(deriveEffectiveDiet(profile)).toBe('non-vegetarian');
   });
+
+  test('vegetarian + "vegetable stew" foodList does NOT upgrade to non-vegetarian', () => {
+    const profile = {
+      dietType: 'vegetarian',
+      foodList: [{ name: 'Vegetable Stew' }],
+    };
+    expect(deriveEffectiveDiet(profile)).toBe('vegetarian');
+  });
+
+  test('vegetarian + "eggplant curry" foodList does NOT upgrade to eggetarian', () => {
+    const profile = {
+      dietType: 'vegetarian',
+      foodList: [{ name: 'Eggplant Curry' }],
+    };
+    expect(deriveEffectiveDiet(profile)).toBe('vegetarian');
+  });
 });
 
 test('getMeals excludes meals matching culturalFoodAvoidances', () => {

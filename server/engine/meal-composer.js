@@ -86,9 +86,32 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
 const NON_VEG_TERMS = [
   'chicken', 'mutton', 'lamb', 'goat', 'pork', 'beef',
   'fish', 'prawn', 'shrimp', 'crab', 'salmon', 'tuna',
-  'keema', 'meat', 'bacon', 'ham', 'sausage', 'stew',
+  'keema', 'meat', 'bacon', 'ham', 'sausage',
 ];
 const EGG_TERMS = ['egg', 'eggs'];
+
+/**
+ * Escapes regex special characters in a literal string.
+ * @param {string} str
+ * @returns {string}
+ */
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Checks whether any of the given terms appears as a whole word in the
+ * token string, using word-boundary matching instead of loose substring
+ * matching. This prevents false positives such as 'vegetable stew'
+ * matching 'stew' or 'eggplant' matching 'egg'.
+ *
+ * @param {string} token
+ * @param {string[]} terms
+ * @returns {boolean}
+ */
+function matchesAnyTerm(token, terms) {
+  return terms.some(term => new RegExp(`\\b${escapeRegExp(term)}\\b`).test(token));
+}
 
 /**
  * Normalizes a foodList (array of strings and/or {name} objects) into an
@@ -133,12 +156,12 @@ function deriveEffectiveDiet(profile) {
   const tokens = normalizeFoodTokens(profile.foodList);
   if (tokens.length === 0) return baseDiet;
 
-  const hasNonVeg = tokens.some(token => NON_VEG_TERMS.some(term => token.includes(term)));
+  const hasNonVeg = tokens.some(token => matchesAnyTerm(token, NON_VEG_TERMS));
   if (hasNonVeg) return 'non-vegetarian';
 
   if (baseDiet === 'non-vegetarian') return 'non-vegetarian';
 
-  const hasEgg = tokens.some(token => EGG_TERMS.some(term => token.includes(term)));
+  const hasEgg = tokens.some(token => matchesAnyTerm(token, EGG_TERMS));
   if (hasEgg) return 'eggetarian';
 
   return baseDiet;
