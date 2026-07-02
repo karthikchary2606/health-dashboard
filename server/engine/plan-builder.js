@@ -185,11 +185,11 @@ const YOGA_SLOTS = {
 // Strength days within hybrid schedule — subset of YOGA_SLOTS[n] to use for strength training.
 // Remaining active days (YOGA_SLOTS[n] minus these) become yoga days.
 const HYBRID_STRENGTH_DAYS = {
-  3: new Set(['Monday', 'Wednesday']),                             // 2 strength + 1 yoga
-  4: new Set(['Monday', 'Thursday']),                              // 2 strength + 2 yoga
-  5: new Set(['Monday', 'Wednesday', 'Friday']),                   // 3 strength + 2 yoga
-  6: new Set(['Monday', 'Wednesday', 'Friday']),                   // 3 strength + 3 yoga
-  7: new Set(['Monday', 'Wednesday', 'Friday', 'Sunday']),         // 4 strength + 3 yoga
+  3: new Set(['Monday', 'Wednesday']),                              // 2 strength + 1 yoga (Fri)
+  4: new Set(['Monday', 'Thursday']),                              // 2 strength + 2 yoga (Tue, Fri)
+  5: new Set(['Monday', 'Wednesday', 'Thursday']),                 // 3 strength + 2 yoga (Tue, Fri)
+  6: new Set(['Monday', 'Wednesday', 'Thursday']),                 // 3 strength + 3 yoga (Tue, Fri, Sat)
+  7: new Set(['Monday', 'Wednesday', 'Thursday', 'Saturday']),     // 4 strength + 3 yoga (Tue, Fri, Sun)
 };
 
 function detectWorkoutMode(profile) {
@@ -299,7 +299,7 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
       return {
         day,
         focus:     slotFocus,
-        type:      'Strength',
+        type:      muscleGroup ? 'Strength' : 'Cardio',
         duration:  '45 min',
         exercises
       };
