@@ -42,20 +42,20 @@ test('getMeals active conditions filter excludes resolved conditions', () => {
 // ─── deriveEffectiveDiet ───────────────────────────────────────────────────
 
 describe('deriveEffectiveDiet', () => {
-  test('vegetarian + egg foodList upgrades to eggetarian', () => {
+  test('vegetarian + egg foodList stays vegetarian (strict preference respected)', () => {
     const profile = {
       dietType: 'vegetarian',
       foodList: [{ name: 'Egg Bhurji' }, { name: 'Boiled Egg' }],
     };
-    expect(deriveEffectiveDiet(profile)).toBe('eggetarian');
+    expect(deriveEffectiveDiet(profile)).toBe('vegetarian');
   });
 
-  test('vegetarian + chicken foodList upgrades to non-vegetarian', () => {
+  test('vegetarian + chicken foodList stays vegetarian (strict preference never overridden)', () => {
     const profile = {
       dietType: 'vegetarian',
       foodList: [{ name: 'Chicken Curry' }],
     };
-    expect(deriveEffectiveDiet(profile)).toBe('non-vegetarian');
+    expect(deriveEffectiveDiet(profile)).toBe('vegetarian');
   });
 
   test('vegan never upgrades even if foodList contains chicken token', () => {
@@ -66,15 +66,15 @@ describe('deriveEffectiveDiet', () => {
     expect(deriveEffectiveDiet(profile)).toBe('vegan');
   });
 
-  test('vegetarian + mixed object-style foodList (egg + non-veg) upgrades to non-vegetarian', () => {
+  test('vegetarian + mixed object-style foodList (egg + non-veg) stays vegetarian', () => {
     const profile = {
       dietType: 'vegetarian',
       foodList: [{ name: 'boiled egg' }, { name: 'chicken stew' }],
     };
-    expect(deriveEffectiveDiet(profile)).toBe('non-vegetarian');
+    expect(deriveEffectiveDiet(profile)).toBe('vegetarian');
   });
 
-  test('vegetarian + "vegetable stew" foodList does NOT upgrade to non-vegetarian', () => {
+  test('vegetarian + "vegetable stew" foodList stays vegetarian', () => {
     const profile = {
       dietType: 'vegetarian',
       foodList: [{ name: 'Vegetable Stew' }],
@@ -88,6 +88,22 @@ describe('deriveEffectiveDiet', () => {
       foodList: [{ name: 'Eggplant Curry' }],
     };
     expect(deriveEffectiveDiet(profile)).toBe('vegetarian');
+  });
+
+  test('eggetarian + chicken foodList upgrades to non-vegetarian', () => {
+    const profile = {
+      dietType: 'eggetarian',
+      foodList: [{ name: 'Chicken Curry' }],
+    };
+    expect(deriveEffectiveDiet(profile)).toBe('non-vegetarian');
+  });
+
+  test('non-vegetarian stays non-vegetarian regardless of foodList', () => {
+    const profile = {
+      dietType: 'non-vegetarian',
+      foodList: [],
+    };
+    expect(deriveEffectiveDiet(profile)).toBe('non-vegetarian');
   });
 });
 

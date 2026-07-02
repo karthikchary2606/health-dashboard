@@ -386,7 +386,31 @@ router.get('/food-checklist', authenticate, (req, res) => {
   try {
     const { getChecklist } = require('../server/data/food-checklist');
     const p = req.user.profile;
-    res.json(getChecklist(p.languageCommunity, p.culturalFoodAvoidances));
+    let checklist = getChecklist(p.languageCommunity, p.culturalFoodAvoidances);
+
+    // Filter non-veg items out for vegetarian/vegan users so they can't
+    // accidentally save meat/fish into their foodList and corrupt meal generation.
+    const strictVeg = p.dietType === 'vegetarian' || p.dietType === 'vegan';
+    const eggsOnly  = p.dietType === 'eggetarian';
+    if (strictVeg || eggsOnly) {
+      const NON_VEG = ['chicken', 'mutton', 'lamb', 'goat', 'pork', 'beef',
+                       'fish', 'prawn', 'shrimp', 'crab', 'salmon', 'tuna',
+                       'keema', 'meat', 'bacon', 'ham', 'sausage'];
+      checklist = checklist.map(group => ({
+        ...group,
+        items: group.items.filter(item => {
+          const lower = item.name.toLowerCase();
+          const isNonVeg = NON_VEG.some(t => new RegExp(`\\b${t}\\b`).test(lower));
+          const isEgg    = /\beggs?\b/.test(lower);
+          if (strictVeg && p.dietType === 'vegan') return !isNonVeg && !isEgg;
+          if (strictVeg) return !isNonVeg && !isEgg; // vegetarian: no meat, no eggs
+          if (eggsOnly)  return !isNonVeg;           // eggetarian: eggs ok, no meat
+          return true;
+        }),
+      }));
+    }
+
+    res.json(checklist);
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 

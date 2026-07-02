@@ -199,7 +199,10 @@ function deriveEffectiveDiet(profile) {
   if (!profile) return undefined;
 
   const baseDiet = profile.dietType || 'vegetarian';
-  if (baseDiet === 'vegan') return 'vegan';
+
+  // Strict dietary preferences are never overridden by food history.
+  // If a user explicitly chose vegetarian or vegan, respect that unconditionally.
+  if (baseDiet === 'vegan' || baseDiet === 'vegetarian') return baseDiet;
 
   const tokens = normalizeFoodTokens(profile.foodList);
   if (tokens.length === 0) return baseDiet;

@@ -462,7 +462,7 @@ describe('buildWorkoutPlan — personalized', () => {
 // ─── Effective diet impacts generated meals ──────────────────────────────────
 
 describe('effective diet inference impacts generated meals', () => {
-  test('vegetarian profile with chicken in foodList generates non-vegetarian meals', () => {
+  test('vegetarian profile with chicken in foodList still generates vegetarian meals', () => {
     const vegProfileWithChicken = {
       dietType: 'vegetarian',
       cuisinePreference: 'north-indian',
@@ -472,22 +472,19 @@ describe('effective diet inference impacts generated meals', () => {
       foodList: [{ name: 'Chicken Curry' }],
     };
 
-    const strictVegPlan = buildDietPlan(vegProfile, goal);
-    const upgradedPlan  = buildDietPlan(vegProfileWithChicken, goal);
-
-    const strictBreakfasts   = strictVegPlan[0].weeks[0].weekdays.map(d => d.breakfast);
-    const upgradedBreakfasts = upgradedPlan[0].weeks[0].weekdays.map(d => d.breakfast);
+    const strictVegPlan  = buildDietPlan(vegProfile, goal);
+    const withChickenPlan = buildDietPlan(vegProfileWithChicken, goal);
 
     const NON_VEG_OR_EGG_PATTERN = /chicken|mutton|prawn|keema|fish|egg/i;
 
-    // Strict vegetarian plan must never surface non-veg/egg items.
-    strictBreakfasts.forEach(meal => {
-      expect(meal).not.toMatch(NON_VEG_OR_EGG_PATTERN);
+    // Both plans must never surface non-veg/egg items — dietType: vegetarian
+    // is a strict constraint that foodList cannot override.
+    strictVegPlan[0].weeks[0].weekdays.forEach(d => {
+      expect(d.breakfast).not.toMatch(NON_VEG_OR_EGG_PATTERN);
     });
-
-    // Upgraded plan (vegetarian + chicken in foodList) must actually include
-    // at least one non-veg/egg meal — not just "some array difference".
-    expect(upgradedBreakfasts.some(meal => NON_VEG_OR_EGG_PATTERN.test(meal))).toBe(true);
+    withChickenPlan[0].weeks[0].weekdays.forEach(d => {
+      expect(d.breakfast).not.toMatch(NON_VEG_OR_EGG_PATTERN);
+    });
   });
 });
 
