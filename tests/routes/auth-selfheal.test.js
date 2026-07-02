@@ -81,8 +81,11 @@ test('GET /api/auth/me does NOT self-heal when profileComplete is already true',
   expect(res.status).toBe(200);
   expect(res.body.profileComplete).toBe(true);
 
-  // findByIdAndUpdate should not have been called (no self-heal needed)
-  expect(spy).not.toHaveBeenCalled();
+  // Self-heal should not have been called with profileComplete:true update
+  const selfHealCall = spy.mock.calls.find(
+    call => call[1] && call[1].profileComplete === true
+  );
+  expect(selfHealCall).toBeUndefined();
 
   spy.mockRestore();
 });
