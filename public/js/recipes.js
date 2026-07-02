@@ -2429,14 +2429,13 @@ const RECIPES = [
       "4 cloves garlic, thinly sliced",
       "3 tbsp good-quality olive oil",
       "1 tsp red chilli flakes",
-      "Fresh parsley, salt",
-      "Parmesan for serving (optional)"
+      "Fresh parsley and salt"
     ],
     steps:[
       "Cook spaghetti in heavily salted water until al dente. Reserve 1 cup pasta water before draining.",
-      "Meanwhile, gently heat olive oil over low heat. Add garlic and cook slowly until pale golden — not brown. Add chilli flakes.",
+      "Gently heat olive oil over low heat. Add garlic and cook slowly until pale golden — not brown. Add chilli flakes.",
       "Add drained pasta to the pan. Toss with a splash of pasta water to emulsify into a light sauce.",
-      "Toss with fresh parsley, adjust salt, and serve immediately with optional Parmesan."
+      "Toss with fresh parsley, adjust salt, and serve immediately."
     ],
     mealType: ['lunch'],
     nutrition: { caloriesPer100g:133, proteinG:4, carbsG:17.3, fatG:5.3, servingSizeG:300 }
@@ -2465,7 +2464,7 @@ const RECIPES = [
   { id:97, icon:"🫔", cat:"lunch", name:"Chicken Fajita Bowl", time:"25 min", cal:440, p:36, f:14, c:44,
     cuisine:'continental',
     dietType:['non-vegetarian'],
-    tags:['continental','non-vegetarian','lunch','high-protein','tex-mex'],
+    tags:['continental','non-vegetarian','lunch','high-protein'],
     ingredients:[
       "250g chicken breast, sliced into strips",
       "1 tsp fajita spice mix (cumin, smoked paprika, garlic powder, chilli)",
@@ -2587,26 +2586,25 @@ const RECIPES = [
     mealType: ['dinner'],
     nutrition: { caloriesPer100g:147, proteinG:5.3, carbsG:17.3, fatG:6, servingSizeG:300 }
   },
-  { id:103, icon:"🥩", cat:"dinner", name:"Beef Stir Fry with Noodles", time:"25 min", cal:480, p:34, f:16, c:52,
+  { id:103, icon:"🍗", cat:"dinner", name:"Herb Roasted Chicken with Vegetables", time:"40 min", cal:480, p:38, f:22, c:28,
     cuisine:'continental',
     dietType:['non-vegetarian'],
-    tags:['continental','non-vegetarian','dinner','high-protein','quick'],
+    tags:['continental','non-vegetarian','dinner','high-protein','meal-prep'],
     ingredients:[
-      "250g beef sirloin, thinly sliced against the grain",
-      "150g egg noodles or udon, cooked",
-      "1 cup mixed vegetables (broccoli, snap peas, bell pepper)",
-      "2 tbsp soy sauce, 1 tbsp oyster sauce, 1 tsp sesame oil",
-      "3 garlic cloves, 1 tsp fresh ginger — minced",
-      "1 tbsp vegetable oil"
+      "2 chicken thighs (bone-in, skin-on, ~350g total)",
+      "1 tbsp olive oil, 1 tsp each dried thyme and rosemary",
+      "2 medium potatoes, cubed",
+      "1 cup broccoli florets, 1 medium carrot, sliced",
+      "3 garlic cloves, salt and pepper"
     ],
     steps:[
-      "Mix soy sauce, oyster sauce, and sesame oil in a small bowl. Set aside.",
-      "Heat a wok or large pan until very hot. Sear beef in a single layer for 1 minute per side — do not crowd. Remove.",
-      "Add oil; stir-fry garlic and ginger 30 seconds. Add vegetables and cook on high heat 3–4 minutes.",
-      "Return beef to wok. Add noodles and sauce. Toss everything over high heat for 2 minutes until combined."
+      "Preheat oven to 200°C. Rub chicken with olive oil, herbs, garlic, salt, and pepper.",
+      "Toss vegetables with olive oil, salt, and pepper on a roasting tray. Nestle chicken on top.",
+      "Roast for 35–40 minutes until chicken skin is crispy and juices run clear (internal temp 74°C).",
+      "Rest 5 minutes before serving — allows juices to redistribute into the meat."
     ],
     mealType: ['dinner'],
-    nutrition: { caloriesPer100g:160, proteinG:11.3, carbsG:17.3, fatG:5.3, servingSizeG:300 }
+    nutrition: { caloriesPer100g:160, proteinG:12.7, carbsG:9.3, fatG:7.3, servingSizeG:300 }
   },
   { id:104, icon:"🥤", cat:"snack", name:"Protein Banana Smoothie", time:"5 min", cal:280, p:18, f:6, c:42,
     cuisine:'continental',
