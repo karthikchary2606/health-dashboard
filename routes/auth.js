@@ -76,10 +76,25 @@ router.post('/logout', (req, res) => {
   res.json({ message: 'Logged out' });
 });
 
+const TIER1 = ['primaryGoal', 'age', 'currentWeightKg', 'heightCm', 'dietType'];
+
 router.get('/me', authenticate, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select('-passwordHash');
+    let user = await User.findById(req.user._id).select('-passwordHash').lean();
     if (!user || !user.isApproved) return res.status(401).json({ error: 'Not authenticated' });
+
+    // Self-heal: if Tier 1 fields are present but profileComplete is false, fix it
+    if (!user.profileComplete && user.profile) {
+      const isTier1Done = TIER1.every(f => {
+        const v = user.profile[f];
+        return v !== null && v !== undefined && v !== '' && !(typeof v === 'number' && isNaN(v));
+      });
+      if (isTier1Done) {
+        await User.findByIdAndUpdate(user._id, { profileComplete: true });
+        user = { ...user, profileComplete: true };
+      }
+    }
+
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });

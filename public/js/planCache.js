@@ -46,6 +46,12 @@ window.planCache = (() => {
       const p = apiFetch('/api/profile/plan?v=' + Date.now()).then(({ ok, data }) => {
         if (!ok) {
           if (_promise === p) _promise = null;
+          if (window._profileIncomplete) {
+            // Profile incomplete — expected 403, not an error
+            console.info('[planCache] Plan unavailable: profile incomplete');
+          } else {
+            console.warn('[planCache] Plan fetch failed');
+          }
           return null;
         }
         _cachedPlanVersion = readPlanVersion(data);
