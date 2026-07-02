@@ -63,6 +63,7 @@ window.planCache = (() => {
   function invalidate() {
     _promise = null;
     _cachedPlanVersion = null;
+    _expectedPlanVersion = null;
   }
 
   function getCachedPlanVersion() {
