@@ -257,7 +257,7 @@ function updateCheckStat() {
     const c = document.getElementById("chk-"+i);
     if(c && c.checked) done++;
   }
-  document.getElementById("checkStat").textContent = done + "/" + total;
+  document.getElementById("checkStat") && (document.getElementById("checkStat").textContent = done + "/" + total);
 }
 
 function buildChecklistPayload() {
