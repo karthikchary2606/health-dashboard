@@ -3,25 +3,28 @@
 (function () {
   'use strict';
 
-  const NAV_SCREENS = {
-    dashboard: '/index.html',
-    diet: '/diet.html',
-    workouts: '/workouts.html',
-    progress: '/progress.html',
+  // Pages that require full navigation (separate .html files)
+  const PAGE_NAV = {
     settings: '/settings.html',
+  };
+
+  // Sections within index.html (use showSection)
+  const SECTION_MAP = {
+    dashboard: 'dashboard',
+    diet:      'diet',
+    workouts:  'workout',
+    progress:  'progress',
   };
 
   function getActiveScreen() {
     const path = window.location.pathname;
-    if (path.includes('diet')) return 'diet';
-    if (path.includes('workout')) return 'workouts';
-    if (path.includes('progress')) return 'progress';
     if (path.includes('settings')) return 'settings';
+    if (path.includes('index') || path === '/' || path.endsWith('.html') === false) return 'dashboard';
     return 'dashboard';
   }
 
   function setActiveNavItem(screenKey) {
-    document.querySelectorAll('.nav-item').forEach(function (el) {
+    document.querySelectorAll('.nav-item[data-nav]').forEach(function (el) {
       el.classList.remove('nav-item--active');
       el.setAttribute('aria-current', 'false');
     });
@@ -33,18 +36,30 @@
   }
 
   function initNav() {
-    const active = getActiveScreen();
-    setActiveNavItem(active);
+    setActiveNavItem(getActiveScreen());
 
     document.querySelectorAll('.nav-item[data-nav]').forEach(function (el) {
-      el.addEventListener('click', function (e) {
+      el.addEventListener('click', function () {
         const key = el.getAttribute('data-nav');
-        if (NAV_SCREENS[key]) {
-          window.location.href = NAV_SCREENS[key];
+
+        // Full-page navigation for separate pages
+        if (PAGE_NAV[key]) {
+          window.location.href = PAGE_NAV[key];
+          return;
+        }
+
+        // In-page section switch
+        const sectionId = SECTION_MAP[key];
+        if (sectionId && typeof window.showSection === 'function') {
+          window.showSection(sectionId, null);
+          setActiveNavItem(key);
         }
       });
     });
   }
+
+  // Expose so showSection can update active nav state
+  window.setActiveNavItem = setActiveNavItem;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initNav);
