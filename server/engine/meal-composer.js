@@ -82,4 +82,11 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
   return usePool[index];
 }
 
-module.exports = { getMeals, activeConditions };
+// TODO(Phase 4 / Task 2): stub only — currently returns profile.dietType unchanged.
+// Real foodList-based upgrade logic (vegetarian -> eggetarian/non-vegetarian) is
+// implemented in a later task. This wiring exists so tests can import the symbol now.
+function deriveEffectiveDiet(profile) {
+  return profile.dietType;
+}
+
+module.exports = { getMeals, activeConditions, deriveEffectiveDiet };

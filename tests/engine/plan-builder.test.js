@@ -459,6 +459,29 @@ describe('buildWorkoutPlan — personalized', () => {
 
 // ─── Diet guidelines ──────────────────────────────────────────────────────────
 
+// ─── Effective diet impacts generated meals ──────────────────────────────────
+
+describe('effective diet inference impacts generated meals', () => {
+  test('vegetarian profile with chicken in foodList generates non-vegetarian meals', () => {
+    const vegProfileWithChicken = {
+      dietType: 'vegetarian',
+      cuisinePreference: 'north-indian',
+      fitnessLevel: 'lightly-active',
+      equipmentAvailable: [],
+      healthConditions: [],
+      foodList: [{ name: 'Chicken Curry' }],
+    };
+
+    const strictVegPlan = buildDietPlan(vegProfile, goal);
+    const upgradedPlan  = buildDietPlan(vegProfileWithChicken, goal);
+
+    const strictBreakfasts   = strictVegPlan[0].weeks[0].weekdays.map(d => d.breakfast);
+    const upgradedBreakfasts = upgradedPlan[0].weeks[0].weekdays.map(d => d.breakfast);
+
+    expect(upgradedBreakfasts).not.toEqual(strictBreakfasts);
+  });
+});
+
 describe('buildDietPlan guidelines', () => {
   test('each month has a non-empty guidelines array', () => {
    const plan = buildDietPlan(vegProfile, 'weight-loss');
