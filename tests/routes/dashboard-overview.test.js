@@ -52,6 +52,9 @@ describe('GET /api/dashboard/overview', () => {
     expect(res.body).toHaveProperty('recipePreview');
     expect(res.body).toHaveProperty('stats');
     expect(res.body).toHaveProperty('profileCompleteness');
+    expect(res.body).toHaveProperty('profileUpdatedAt');
+    expect(res.body).toHaveProperty('planVersion');
+    expect(res.body.planVersion).toBe(res.body.profileUpdatedAt);
   });
 
   test('sets cache-control no-store', async () => {
@@ -251,5 +254,24 @@ describe('GET /api/dashboard/overview', () => {
     } finally {
       weightLossTemplate.getDietPlan = originalGetDietPlan;
     }
+  });
+
+  test('refreshes overview freshness metadata when profile changes', async () => {
+    const user = await createUser({ email: 'overview-freshness@test.com' });
+
+    const firstRes = await request(app)
+      .get('/api/dashboard/overview')
+      .set(authHeader(user._id));
+    expect(firstRes.status).toBe(200);
+
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    await User.findByIdAndUpdate(user._id, { 'profile.dietType': 'eggetarian' });
+
+    const secondRes = await request(app)
+      .get('/api/dashboard/overview')
+      .set(authHeader(user._id));
+    expect(secondRes.status).toBe(200);
+    expect(secondRes.body.profileUpdatedAt).not.toBe(firstRes.body.profileUpdatedAt);
+    expect(secondRes.body.planVersion).toBe(secondRes.body.profileUpdatedAt);
   });
 });

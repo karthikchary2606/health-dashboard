@@ -11,11 +11,45 @@
  */
 window.planCache = (() => {
   let _promise = null;
+  let _cachedPlanVersion = null;
+  let _expectedPlanVersion = null;
 
-  function getPlan() {
+  function normalizeVersion(version) {
+    if (version === undefined || version === null || version === '') return null;
+    return String(version);
+  }
+
+  function readPlanVersion(plan) {
+    if (!plan) return null;
+    return normalizeVersion(
+      (plan.meta && plan.meta.planVersion) || plan.planVersion
+    );
+  }
+
+  function setExpectedPlanVersion(version) {
+    const normalized = normalizeVersion(version);
+    if (!normalized) return;
+    _expectedPlanVersion = normalized;
+    if (_cachedPlanVersion && _cachedPlanVersion !== normalized) {
+      invalidate();
+    }
+  }
+
+  function getPlan(options = {}) {
+    if (Object.prototype.hasOwnProperty.call(options, 'planVersion')) {
+      setExpectedPlanVersion(options.planVersion);
+    } else if (Object.prototype.hasOwnProperty.call(options, 'expectedPlanVersion')) {
+      setExpectedPlanVersion(options.expectedPlanVersion);
+    }
+
     if (!_promise) {
       const p = apiFetch('/api/profile/plan?v=' + Date.now()).then(({ ok, data }) => {
         if (!ok) {
+          if (_promise === p) _promise = null;
+          return null;
+        }
+        _cachedPlanVersion = readPlanVersion(data);
+        if (_expectedPlanVersion && _cachedPlanVersion && _expectedPlanVersion !== _cachedPlanVersion) {
           if (_promise === p) _promise = null;
           return null;
         }
@@ -28,7 +62,12 @@ window.planCache = (() => {
 
   function invalidate() {
     _promise = null;
+    _cachedPlanVersion = null;
   }
 
-  return { getPlan, invalidate };
+  function getCachedPlanVersion() {
+    return _cachedPlanVersion;
+  }
+
+  return { getPlan, invalidate, setExpectedPlanVersion, getCachedPlanVersion };
 })();

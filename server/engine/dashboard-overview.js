@@ -35,6 +35,14 @@ const CUISINE_MEALS = {
   continental: continentalMeals
 };
 
+function buildFreshnessMetadata(user = {}) {
+  const profileUpdatedAt = user.updatedAt ? new Date(user.updatedAt).toISOString() : null;
+  return {
+    profileUpdatedAt,
+    planVersion: profileUpdatedAt
+  };
+}
+
 function getTemplate(profile = {}) {
   const key = profile.planTemplate || profile.primaryGoal || 'weight-loss';
   return TEMPLATES[key] || TEMPLATES['weight-loss'];
@@ -163,8 +171,11 @@ async function buildOverview(user) {
   const todayMeals = pickTodayMeals(dietPlan);
   const personalizedPreview = personalizeMealPreview(profile, todayMeals);
   const latestLog = await HealthLog.findOne({ userId: user._id }).sort({ date: -1 }).lean();
+  const freshness = buildFreshnessMetadata(user);
 
   return {
+    profileUpdatedAt: freshness.profileUpdatedAt,
+    planVersion: freshness.planVersion,
     timeline: buildTimeline(todayMeals, latestLog),
     dietPreview: {
       dailyCalorieTarget: profile.dailyCalorieTarget || null,
