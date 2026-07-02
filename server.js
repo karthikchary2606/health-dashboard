@@ -40,8 +40,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', db: connected ? 'connected' : 'offline', port: PORT });
 });
 
-// Reject API requests if DB is not connected
+// Reject API requests if DB is not connected (except feedback which uses JSONL)
 app.use('/api', (req, res, next) => {
+  if (req.path.startsWith('/feedback')) {
+    return next();
+  }
   if (mongoose.connection.readyState !== 1) {
     return res.status(503).json({ error: 'Database not connected. Please try again in a moment.' });
   }

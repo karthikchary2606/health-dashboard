@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Dashboard - Feedback Survey</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .rating-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rating-btn {
+      flex: 1;
+      min-width: 60px;
+      padding: 12px;
+      border: 2px solid #ddd;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .rating-btn:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .rating-btn.selected {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn {
+      background: #667eea;
+      color: white;
+    }
+
+    .submit-btn:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    }
+
+    .cancel-btn {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .cancel-btn:hover {
+      background: #e0e0e0;
+    }
+
+    .success-message {
+      display: none;
+      background: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error-message {
+      display: none;
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #f5c6cb;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #667eea;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="success-message" id="successMessage">
+      ✅ Thank you! Your feedback has been recorded.
+    </div>
+    <div class="error-message" id="errorMessage"></div>
+
+    <h1>We'd love your feedback!</h1>
+    <p class="subtitle">Help us improve your personalized health plan</p>
+
+    <form id="feedbackForm">
+      <!-- Question 1: Meal Variety Satisfaction -->
+      <div class="form-group">
+        <label for="mealSatisfaction">How satisfied are you with the variety of meals in your plan?</label>
+        <div class="rating-group">
+          <button type="button" class="rating-btn" data-question="mealSatisfaction" data-value="1">
+            1<br><small>Not Satisfied</small>
+          </button>
+          <button type="button" class="rating-btn" data-question="mealSatisfaction" data-value="2">
+            2<br><small>Somewhat</small>
+          </button>
+          <button type="button" class="rating-btn" data-question="mealSatisfaction" data-value="3">
+            3<br><small>Satisfied</small>
+          </button>
+          <button type="button" class="rating-btn" data-question="mealSatisfaction" data-value="4">
+            4<br><small>Very Satisfied</small>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 2: Personalization Match -->
+      <div class="form-group">
+        <label for="personalizationMatch">How well does your plan match your preferences?</label>
+        <div class="rating-group">
+          <button type="button" class="rating-btn" data-question="personalizationMatch" data-value="1">
+            1<br><small>Poor Match</small>
+          </button>
+          <button type="button" class="rating-btn" data-question="personalizationMatch" data-value="2">
+            2<br><small>Fair Match</small>
+          </button>
+          <button type="button" class="rating-btn" data-question="personalizationMatch" data-value="3">
+            3<br><small>Good Match</small>
+          </button>
+          <button type="button" class="rating-btn" data-question="personalizationMatch" data-value="4">
+            4<br><small>Perfect Match</small>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question 3: Open Feedback -->
+      <div class="form-group">
+        <label for="additionalFeedback">Any additional comments? (optional)</label>
+        <textarea id="additionalFeedback" name="additionalFeedback" placeholder="Tell us what you think..."></textarea>
+      </div>
+
+      <div class="loading" id="loading">Submitting your feedback...</div>
+
+      <div class="button-group">
+        <button type="button" class="cancel-btn" onclick="window.history.back()">Cancel</button>
+        <button type="submit" class="submit-btn">Submit Feedback</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="/js/feedback-survey.js"></script>
+</body>
+</html>
