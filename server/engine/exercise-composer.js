@@ -96,14 +96,14 @@ const YOGA_EXERCISES = {
   ],
   vinyasa: [
     { name: 'Chaturanga → Up Dog → Down Dog Flow',  sets: 3, reps: '5 rounds',          note: 'Core and upper body — maintain straight spine',    cat: 'yoga' },
-    { name: 'Warrior I → II → Reverse Warrior',     sets: 3, reps: 'per side',          note: 'Full-body flow — synchronise breath with movement', cat: 'yoga' },
+    { name: 'Warrior I → II → Reverse Warrior',     sets: 3, reps: '45s per side',      note: 'Full-body flow — synchronise breath with movement', cat: 'yoga' },
     { name: 'Utkatasana (Chair Pose)',               sets: 3, reps: '45s hold',          note: 'Thigh and glute strength',                         cat: 'yoga' },
     { name: 'Phalakasana → Vasisthasana (Plank → Side Plank)', sets: 3, reps: '30s each side', note: 'Core stability', cat: 'yoga' },
     { name: 'Shavasana',                            sets: 1, reps: '3 min',             note: 'Recovery — let heart rate settle',                  cat: 'yoga' },
   ],
   'pranayama-only': [
-    { name: 'Anulom Vilom (Alternate Nostril)',      sets: 1, reps: '5 min',            note: 'Balance left/right hemisphere. Close right nostril inhale, close left exhale', cat: 'yoga' },
-    { name: 'Bhramari (Humming Bee Breath)',         sets: 1, reps: '5 min',            note: 'Index fingers on ears, hum on exhale — reduces anxiety', cat: 'yoga' },
+    { name: 'Anulom Vilom (Alternate Nostril)',      sets: 1, reps: '5 min',            note: 'Inhale left (thumb closes right) → exhale right (ring finger closes left) → inhale right → exhale left. One round = 4 breaths', cat: 'yoga' },
+    { name: 'Bhramari (Humming Bee Breath)',         sets: 1, reps: '5 min',            note: 'Thumbs on ear tragus (to close ears), fingers resting on face — hum on exhale, reduces anxiety', cat: 'yoga' },
     { name: 'Kapalbhati (Skull-Shining Breath)',     sets: 3, reps: '30 cycles',        note: 'Forceful exhale through nose, passive inhale — energising', cat: 'yoga' },
     { name: 'Uddiyana Bandha (Abdominal Lock)',      sets: 3, reps: '10 contractions',  note: 'Exhale fully, suck abdomen in and up — empty stomach only', cat: 'yoga' },
     { name: 'Shavasana',                            sets: 1, reps: '10 min',            note: 'Deep relaxation — close eyes, no movement',         cat: 'yoga' },
@@ -118,7 +118,7 @@ const YOGA_EXERCISES = {
  * @returns {Array<{name, sets, reps, note, cat}>}
  */
 function getYogaExercises(yogaType) {
-  return YOGA_EXERCISES[yogaType] || YOGA_EXERCISES.hatha;
+  return [...(YOGA_EXERCISES[yogaType] || YOGA_EXERCISES.hatha)];
 }
 
 /**

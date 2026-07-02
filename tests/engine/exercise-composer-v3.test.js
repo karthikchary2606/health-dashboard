@@ -28,9 +28,7 @@ describe('getYogaExercises', () => {
   });
 
   test('falls back to hatha for unknown type', () => {
-    const result = getYogaExercises('unknown-style');
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
+    expect(getYogaExercises('unknown-style')).toEqual(getYogaExercises('hatha'));
   });
 
   test('each exercise has name (string), sets (number), reps (string), note (string), cat (string)', () => {
