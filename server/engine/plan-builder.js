@@ -137,10 +137,6 @@ const PHASE_LABELS = {
 // ─── Day slot templates by workoutDaysPerWeek ─────────────────────────────────
 
 const GYM_HOME_SLOTS = {
-  2: [
-    { day: 'Monday',    muscleGroup: 'full-body', focus: 'Full Body',  duration: '45 min' },
-    { day: 'Wednesday', muscleGroup: 'chest',     focus: 'Upper Body', duration: '45 min' },
-  ],
   3: [
     { day: 'Monday',    muscleGroup: 'full-body', focus: 'Full Body',   duration: '45 min' },
     { day: 'Wednesday', muscleGroup: 'chest',     focus: 'Upper Body',  duration: '45 min' },
@@ -184,6 +180,16 @@ const YOGA_SLOTS = {
   5: ['Monday','Tuesday','Wednesday','Thursday','Friday'],
   6: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
   7: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+};
+
+// Strength days within hybrid schedule — subset of YOGA_SLOTS[n] to use for strength training.
+// Remaining active days (YOGA_SLOTS[n] minus these) become yoga days.
+const HYBRID_STRENGTH_DAYS = {
+  3: new Set(['Monday', 'Wednesday']),                             // 2 strength + 1 yoga
+  4: new Set(['Monday', 'Thursday']),                              // 2 strength + 2 yoga
+  5: new Set(['Monday', 'Wednesday', 'Friday']),                   // 3 strength + 2 yoga
+  6: new Set(['Monday', 'Wednesday', 'Friday']),                   // 3 strength + 3 yoga
+  7: new Set(['Monday', 'Wednesday', 'Friday', 'Sunday']),         // 4 strength + 3 yoga
 };
 
 function detectWorkoutMode(profile) {
@@ -271,10 +277,7 @@ function buildYogaSchedule(profile, daysPerWeek) {
 function buildHybridSchedule(profile, goal, daysPerWeek) {
   const activeDaysArr = YOGA_SLOTS[daysPerWeek] || YOGA_SLOTS[4];
   const activeSet     = new Set(activeDaysArr);
-  const strengthCount = Math.ceil(activeDaysArr.length / 2);
-  const clampedStrength = Math.max(2, Math.min(strengthCount, 7));
-  const strengthSlotTemplate = GYM_HOME_SLOTS[clampedStrength] || GYM_HOME_SLOTS[2];
-  const strengthDaySet = new Set(strengthSlotTemplate.map(s => s.day));
+  const strengthDaySet = HYBRID_STRENGTH_DAYS[daysPerWeek] || HYBRID_STRENGTH_DAYS[4];
   let yogaDayIndex = 0;
 
   return DAYS.map(day => {
@@ -285,13 +288,17 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
       };
     }
     if (strengthDaySet.has(day)) {
-      const slot = strengthSlotTemplate.find(s => s.day === day);
-      const exercises = slot && slot.muscleGroup
-        ? [suryaEntry(profile, false), ...getExercises(profile, slot.muscleGroup, goal)]
+      // Get muscle group for this strength day from the full slot template
+      const allStrengthSlots = GYM_HOME_SLOTS[daysPerWeek] || GYM_HOME_SLOTS[4];
+      const slot = allStrengthSlots.find(s => s.day === day);
+      const muscleGroup = slot ? slot.muscleGroup : 'full-body';
+      const slotFocus   = slot ? slot.focus       : 'Full Body';
+      const exercises = muscleGroup
+        ? [suryaEntry(profile, false), ...getExercises(profile, muscleGroup, goal)]
         : [suryaEntry(profile, false)];
       return {
         day,
-        focus:     slot ? slot.focus : 'Strength',
+        focus:     slotFocus,
         type:      'Strength',
         duration:  '45 min',
         exercises
