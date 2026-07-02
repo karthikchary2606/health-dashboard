@@ -1,0 +1,85 @@
+'use strict';
+const request = require('supertest');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const app = require('../../server');
+const User = require('../../models/User');
+
+beforeAll(async () => { await mongoose.connect(process.env.MONGODB_URI); });
+afterEach(async () => { await User.deleteMany({}); });
+afterAll(async () => { await mongoose.disconnect(); });
+
+function authHeader(userId) {
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET);
+  return { Authorization: `Bearer ${token}` };
+}
+
+async function createUser(overrides = {}) {
+  return User.create({
+    name: 'Dashboard User',
+    email: 'dashboard@test.com',
+    passwordHash: 'hashed',
+    isApproved: true,
+    profileComplete: true,
+    profile: {
+      primaryGoal: 'weight-loss',
+      currentWeightKg: 80,
+      goalWeightKg: 70,
+      heightCm: 175,
+      age: 30,
+      dietType: 'vegetarian',
+      cuisinePreference: 'south-indian',
+      fitnessLevel: 'lightly-active',
+      waterGoalL: 2.5,
+      ...((overrides && overrides.profile) || {})
+    },
+    ...overrides
+  });
+}
+
+describe('GET /api/dashboard/overview', () => {
+  test('returns contract payload keys', async () => {
+    const user = await createUser();
+
+    const res = await request(app)
+      .get('/api/dashboard/overview')
+      .set(authHeader(user._id));
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('timeline');
+    expect(res.body).toHaveProperty('dietPreview');
+    expect(res.body).toHaveProperty('recipePreview');
+    expect(res.body).toHaveProperty('stats');
+    expect(res.body).toHaveProperty('profileCompleteness');
+  });
+
+  test('sets cache-control no-store', async () => {
+    const user = await createUser({ email: 'cache@test.com' });
+
+    const res = await request(app)
+      .get('/api/dashboard/overview')
+      .set(authHeader(user._id));
+
+    expect(res.status).toBe(200);
+    expect(res.headers['cache-control']).toContain('no-store');
+  });
+
+  test('requires authentication', async () => {
+    const res = await request(app).get('/api/dashboard/overview');
+    expect(res.status).toBe(401);
+  });
+
+  test('requires profile completion', async () => {
+    const user = await createUser({
+      email: 'incomplete@test.com',
+      profileComplete: false
+    });
+
+    const res = await request(app)
+      .get('/api/dashboard/overview')
+      .set(authHeader(user._id));
+
+    expect(res.status).toBe(403);
+    expect(res.body.error).toMatch(/Profile incomplete/);
+  });
+});

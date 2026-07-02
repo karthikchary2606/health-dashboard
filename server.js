@@ -53,6 +53,7 @@ app.use('/api/checklist', require('./routes/checklist'));
 app.use('/api/profile',   require('./routes/profile'));
 app.use('/api/sleep',     require('./routes/sleep'));
 app.use('/api/grocery',  require('./routes/grocery'));
+app.use('/api/dashboard', require('./routes/dashboard'));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
