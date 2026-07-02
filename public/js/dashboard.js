@@ -351,7 +351,23 @@ function setGreeting() {
   const greet = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
   const day = new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"});
   const name = (currentUser && currentUser.name) ? currentUser.name.split(" ")[0] : "there";
-  document.getElementById("dashGreeting").textContent = `${greet}, ${name}! · ${day}`;
+
+  // Legacy element (old HTML)
+  const legacyEl = document.getElementById("dashGreeting");
+  if (legacyEl) legacyEl.textContent = `${greet}, ${name}! · ${day}`;
+
+  // New CRED design elements
+  const nameEl = document.getElementById("dashboard-user-name");
+  if (nameEl) nameEl.textContent = `${greet}, ${name}!`;
+
+  const greetLabelEl = document.querySelector(".dashboard-header__greeting");
+  if (greetLabelEl && !legacyEl) greetLabelEl.textContent = greet;
+
+  // Sidebar user display
+  const sidebarUserEl = document.getElementById("sidebar-user");
+  if (sidebarUserEl && currentUser) {
+    sidebarUserEl.textContent = currentUser.name || currentUser.email || 'User';
+  }
 }
 
 async function loadSleepSummary() {

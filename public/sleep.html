@@ -226,5 +226,63 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 <script src="/js/api.js"></script>
 <script src="/js/auth.js"></script>
 <script src="/js/sleep.js"></script>
+
+<!-- Bottom Navigation (mobile) -->
+<nav class="bottom-nav" role="navigation" aria-label="Main navigation" style="display:none">
+  <button class="nav-item" data-nav="dashboard" aria-label="Dashboard">
+    <span class="nav-item__icon">⊞</span>
+    <span class="nav-item__label">Home</span>
+  </button>
+  <button class="nav-item" data-nav="diet" aria-label="Diet">
+    <span class="nav-item__icon">🥗</span>
+    <span class="nav-item__label">Diet</span>
+  </button>
+  <button class="nav-item" data-nav="workouts" aria-label="Workouts">
+    <span class="nav-item__icon">💪</span>
+    <span class="nav-item__label">Workouts</span>
+  </button>
+  <button class="nav-item" data-nav="progress" aria-label="Progress">
+    <span class="nav-item__icon">📈</span>
+    <span class="nav-item__label">Progress</span>
+  </button>
+  <button class="nav-item" data-nav="settings" aria-label="Settings">
+    <span class="nav-item__icon">⚙</span>
+    <span class="nav-item__label">Settings</span>
+  </button>
+</nav>
+
+<!-- Sidebar Navigation (tablet/desktop) -->
+<nav class="sidebar-nav" role="navigation" aria-label="Main navigation" style="display:none">
+  <a href="/index.html" class="sidebar-nav__logo">
+    <div class="sidebar-nav__logo-mark">H</div>
+    <span class="sidebar-nav__app-name">HealthPulse</span>
+  </a>
+  <div class="sidebar-nav__section">
+    <p class="sidebar-nav__section-label">Main</p>
+    <button class="nav-item" data-nav="dashboard">
+      <span class="nav-item__icon">⊞</span>
+      <span class="nav-item__label">Dashboard</span>
+    </button>
+    <button class="nav-item" data-nav="diet">
+      <span class="nav-item__icon">🥗</span>
+      <span class="nav-item__label">Diet</span>
+    </button>
+    <button class="nav-item" data-nav="workouts">
+      <span class="nav-item__icon">💪</span>
+      <span class="nav-item__label">Workouts</span>
+    </button>
+    <button class="nav-item" data-nav="progress">
+      <span class="nav-item__icon">📈</span>
+      <span class="nav-item__label">Progress</span>
+    </button>
+  </div>
+  <div class="sidebar-nav__footer">
+    <button class="nav-item" data-nav="settings">
+      <span class="nav-item__icon">⚙</span>
+      <span class="nav-item__label">Settings</span>
+    </button>
+  </div>
+</nav>
+<script src="/js/bottom-nav.js"></script>
 </body>
 </html>
