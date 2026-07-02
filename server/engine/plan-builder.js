@@ -1,9 +1,49 @@
 'use strict';
 
-const { getMeals, deriveEffectiveDiet } = require('./meal-composer');
+const { getMeals, deriveEffectiveDiet, hashSeed } = require('./meal-composer');
 const { getExercises, getSuryaNamaskarRounds, getYogaExercises } = require('./exercise-composer');
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+// ─── Workout block rotation (4-week / per-month blocks) ───────────────────────
+
+/**
+ * Computes a deterministic variation offset for a given profile at a given
+ * workout month/block. Each `monthLabel` in the 6-month plan already spans a
+ * 4-week block, so monthIndex doubles as the block index. The seed folds in
+ * user/profile traits (userId, workoutPreferences, yogaStyle) plus the block
+ * index, so the same profile within the same month is always deterministic,
+ * while moving to a new month/block shifts the rotation pattern (varying
+ * slot ordering, yoga style progression, and cardio session order) without
+ * any randomness.
+ *
+ * @param {object} profile    - { userId, workoutPreferences, yogaStyle, ... }
+ * @param {number} monthIndex - 0-based month/block index (0..5)
+ * @returns {number} rotation offset (non-negative integer)
+ */
+function workoutVariantOffset(profile, monthIndex) {
+  const seedParts = [
+    profile.userId || profile.id || 'anon',
+    (profile.workoutPreferences || []).join(','),
+    profile.yogaStyle || '',
+    'workout-block',
+    monthIndex,
+  ];
+  return hashSeed(seedParts.join('|'));
+}
+
+/**
+ * Left-rotates an array by `offset` positions (deterministic, no mutation).
+ * @param {Array} arr
+ * @param {number} offset
+ * @returns {Array}
+ */
+function rotateArray(arr, offset) {
+  const n = arr.length;
+  if (n === 0) return arr;
+  const k = ((offset % n) + n) % n;
+  return arr.slice(k).concat(arr.slice(0, k));
+}
 
 // ─── Cardio phases ────────────────────────────────────────────────────────────
 
@@ -330,8 +370,35 @@ function suryaEntry(profile, gentle) {
   };
 }
 
-function buildStrengthSchedule(profile, goal, daysPerWeek) {
-  const slots    = GYM_HOME_SLOTS[daysPerWeek] || GYM_HOME_SLOTS[4];
+// Rotates the (muscleGroup, focus, duration) tuples across "true" strength
+// slots — i.e. slots that carry a real muscleGroup and aren't a
+// Cardio/Flexibility/Active-Recovery placeholder — while leaving those
+// placeholder slots untouched. Days themselves never move, so schedule
+// shape (which days are active, rest, cardio, etc.) stays identical; only
+// which muscle-group focus lands on which strength day shifts per block.
+function rotateStrengthSlots(slots, offset) {
+  const idxs = slots
+    .map((s, i) => i)
+    .filter(i => slots[i].muscleGroup && !/flexibility|active recovery/i.test(slots[i].focus || ''));
+  if (idxs.length < 2) return slots;
+
+  const tuples  = idxs.map(i => ({
+    muscleGroup: slots[i].muscleGroup,
+    focus:       slots[i].focus,
+    duration:    slots[i].duration,
+  }));
+  const rotated = rotateArray(tuples, offset);
+
+  return slots.map((s, i) => {
+    const pos = idxs.indexOf(i);
+    return pos === -1 ? s : { ...s, ...rotated[pos] };
+  });
+}
+
+function buildStrengthSchedule(profile, goal, daysPerWeek, monthIndex = 0) {
+  const baseSlots = GYM_HOME_SLOTS[daysPerWeek] || GYM_HOME_SLOTS[4];
+  const offset    = workoutVariantOffset(profile, monthIndex);
+  const slots     = rotateStrengthSlots(baseSlots, offset);
   const activeSet = new Set(slots.map(s => s.day));
 
   return DAYS.map(day => {
@@ -355,8 +422,9 @@ function buildStrengthSchedule(profile, goal, daysPerWeek) {
   });
 }
 
-function buildYogaSchedule(profile, daysPerWeek) {
-  const activeDays = new Set(YOGA_SLOTS[daysPerWeek] || YOGA_SLOTS[4]);
+function buildYogaSchedule(profile, daysPerWeek, monthIndex = 0) {
+  const activeDays  = new Set(YOGA_SLOTS[daysPerWeek] || YOGA_SLOTS[4]);
+  const styleOffset = workoutVariantOffset(profile, monthIndex);
   let yogaDayIndex = 0;
 
   return DAYS.map(day => {
@@ -366,11 +434,13 @@ function buildYogaSchedule(profile, daysPerWeek) {
         exercises: [suryaEntry(profile, true)].filter(Boolean)
       };
     }
-    // If yogaStyle is explicitly set and valid, use it for ALL yoga days
+    // If yogaStyle is explicitly set and valid, use it for ALL yoga days.
+    // Otherwise, cycle hatha/vinyasa/pranayama-only, shifted by the
+    // per-block styleOffset so the progression differs across months.
     const style = profile.yogaStyle;
     const yogaType = (style && style !== 'none' && ['hatha','vinyasa','pranayama-only'].includes(style))
       ? style
-      : ['hatha','vinyasa','pranayama-only'][yogaDayIndex % 3];
+      : ['hatha','vinyasa','pranayama-only'][(yogaDayIndex + styleOffset) % 3];
     yogaDayIndex++;
     return {
       day,
@@ -382,10 +452,12 @@ function buildYogaSchedule(profile, daysPerWeek) {
   });
 }
 
-function buildHybridSchedule(profile, goal, daysPerWeek) {
+function buildHybridSchedule(profile, goal, daysPerWeek, monthIndex = 0) {
   const activeDaysArr = YOGA_SLOTS[daysPerWeek] || YOGA_SLOTS[4];
   const activeSet     = new Set(activeDaysArr);
   const strengthDaySet = HYBRID_STRENGTH_DAYS[daysPerWeek] || HYBRID_STRENGTH_DAYS[4];
+  const offset      = workoutVariantOffset(profile, monthIndex);
+  const styleOffset = offset;
   let yogaDayIndex = 0;
 
   return DAYS.map(day => {
@@ -396,8 +468,13 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
       };
     }
     if (strengthDaySet.has(day)) {
-      // Get muscle group for this strength day from the full slot template
-      const allStrengthSlots = GYM_HOME_SLOTS[daysPerWeek] || GYM_HOME_SLOTS[4];
+      // Get muscle group for this strength day from the rotated slot template
+      // — rotation shifts which muscle-group focus lands on which strength
+      // day per month/block, without changing which days are strength days.
+      const allStrengthSlots = rotateStrengthSlots(
+        GYM_HOME_SLOTS[daysPerWeek] || GYM_HOME_SLOTS[4],
+        offset
+      );
       const slot = allStrengthSlots.find(s => s.day === day);
       const muscleGroup = slot ? slot.muscleGroup : 'full-body';
       const slotFocus   = slot ? slot.focus       : 'Full Body';
@@ -415,7 +492,7 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
     const style = profile.yogaStyle;
     const yogaType = (style && style !== 'none' && ['hatha','vinyasa','pranayama-only'].includes(style))
       ? style
-      : ['hatha','vinyasa','pranayama-only'][yogaDayIndex % 3];
+      : ['hatha','vinyasa','pranayama-only'][(yogaDayIndex + styleOffset) % 3];
     yogaDayIndex++;
     return {
       day,
@@ -427,9 +504,23 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
   });
 }
 
+// Rotates the (session, duration, intensity, note) content across a phase's
+// session days, keeping the same set of active days but shifting which
+// session lands on which day per month/block.
+function rotateCardioSessions(sessions, offset) {
+  if (sessions.length < 2) return sessions;
+  const tuples = sessions.map(s => ({
+    session: s.session, duration: s.duration, intensity: s.intensity, note: s.note,
+  }));
+  const rotated = rotateArray(tuples, offset);
+  return sessions.map((s, i) => ({ ...s, ...rotated[i] }));
+}
+
 function buildCardioSchedule(profile, monthIndex) {
   const phase = CARDIO_PHASES[Math.min(monthIndex, CARDIO_PHASES.length - 1)];
-  const activeSet = new Set(phase.sessions.map(s => s.day));
+  const offset = workoutVariantOffset(profile, monthIndex);
+  const sessions = rotateCardioSessions(phase.sessions, offset);
+  const activeSet = new Set(sessions.map(s => s.day));
   const suryaRounds = getSuryaNamaskarRounds(profile);
 
   return DAYS.map(day => {
@@ -443,7 +534,7 @@ function buildCardioSchedule(profile, monthIndex) {
         session: null
       };
     }
-    const phaseSession = phase.sessions.find(s => s.day === shortDay);
+    const phaseSession = sessions.find(s => s.day === shortDay);
     return {
       day,
       focus: phaseSession.session,
@@ -529,11 +620,11 @@ function buildWorkoutPlan(profile, goal) {
     } else {
       ({ phaseLabel, focus, note } = phaseLabels[monthIndex] || phaseLabels[0]);
       if (mode === 'yoga') {
-        schedule = buildYogaSchedule(profile, daysPerWeek);
+        schedule = buildYogaSchedule(profile, daysPerWeek, monthIndex);
       } else if (mode === 'hybrid') {
-        schedule = buildHybridSchedule(profile, goal, daysPerWeek);
+        schedule = buildHybridSchedule(profile, goal, daysPerWeek, monthIndex);
       } else {
-        schedule = buildStrengthSchedule(profile, goal, daysPerWeek);
+        schedule = buildStrengthSchedule(profile, goal, daysPerWeek, monthIndex);
       }
     }
     return { monthLabel: `Month ${monthIndex + 1}`, phaseLabel, focus, note, schedule };
@@ -573,4 +664,11 @@ function buildPlan(profile) {
   };
 }
 
-module.exports = { buildDietPlan, buildWorkoutPlan, buildCardioPlan, buildGroceryList, buildPlan };
+module.exports = {
+  buildDietPlan,
+  buildWorkoutPlan,
+  buildCardioPlan,
+  buildGroceryList,
+  buildPlan,
+  workoutVariantOffset,
+};
