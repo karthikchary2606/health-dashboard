@@ -278,6 +278,62 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     </div>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(2)">← Back</button>
+      <button class="btn-next" onclick="goTo(4)">Next →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: Workout Preferences ── -->
+  <div class="step" id="step-4" style="display:none;">
+    <div class="step-title">Workout Preferences</div>
+    <div class="step-subtitle">We'll build your weekly schedule around these. You can change them later.</div>
+
+    <div class="form-group">
+      <label>What type of workouts do you prefer? <span class="hint">(select all that apply)</span></label>
+      <div class="checkbox-group" id="cg-workoutPref">
+        <label class="check-option" onclick="toggleCheck(this); onWorkoutPrefChange()"><input type="checkbox" name="workoutPref" value="gym"> 🏋️ Gym workouts</label>
+        <label class="check-option" onclick="toggleCheck(this); onWorkoutPrefChange()"><input type="checkbox" name="workoutPref" value="home-workout"> 🏠 Home / bodyweight</label>
+        <label class="check-option" onclick="toggleCheck(this); onWorkoutPrefChange()"><input type="checkbox" name="workoutPref" value="yoga"> 🧘 Yoga &amp; mindfulness</label>
+        <label class="check-option" onclick="toggleCheck(this); onWorkoutPrefChange()"><input type="checkbox" name="workoutPref" value="cardio"> 🏃 Cardio (running, cycling)</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="f-workoutDays">Days per week</label>
+        <select id="f-workoutDays">
+          <option value="">Select…</option>
+          <option value="2">2 days</option>
+          <option value="3">3 days</option>
+          <option value="4" selected>4 days (recommended)</option>
+          <option value="5">5 days</option>
+          <option value="6">6 days</option>
+          <option value="7">7 days</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="f-workoutTime">Preferred time</label>
+        <select id="f-workoutTime">
+          <option value="">Select…</option>
+          <option value="morning">Morning</option>
+          <option value="afternoon">Afternoon</option>
+          <option value="evening">Evening</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" id="yogaStyleGroup" style="display:none">
+      <label for="f-yogaStyle">Yoga style preference</label>
+      <select id="f-yogaStyle">
+        <option value="">Select…</option>
+        <option value="hatha">Hatha — slow, foundational poses</option>
+        <option value="vinyasa">Vinyasa — flowing sequences</option>
+        <option value="pranayama-only">Pranayama only — breathing focus</option>
+        <option value="none">No preference (I'll rotate)</option>
+      </select>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(3)">← Back</button>
       <button class="btn-next" onclick="goTo(5)">Next →</button>
     </div>
   </div>
@@ -312,7 +368,7 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     </div>
 
     <div class="step-actions">
-      <button type="button" onclick="goTo(3)">← Back</button>
+      <button type="button" onclick="goTo(4)">← Back</button>
       <button type="button" onclick="goTo(6)" class="btn-primary">Next →</button>
     </div>
   </div>
@@ -406,7 +462,7 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
 
 <script>
 const DRAFT_KEY = 'onboarding_draft';
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 9;
 let currentStep = 1;
 let _customAvoidances = [];
 
@@ -453,8 +509,11 @@ function saveDraft() {
     medications: getMedications(),
     cuisinePreference: document.querySelector('input[name="cuisinePreference"]:checked')?.value || 'mixed',
     equipmentAvailable: Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value),
+    workoutPreferences: Array.from(document.querySelectorAll('input[name="workoutPref"]:checked')).map(cb => cb.value),
+    workoutDaysPerWeek: val('f-workoutDays'),
+    workoutTime:       val('f-workoutTime'),
+    yogaStyle:         val('f-yogaStyle'),
     startDate: val('f-startdate'),
-    religion:               checkedRadio('religion'),
     languageCommunity:      checkedRadio('languageCommunity'),
     culturalFoodAvoidances: [
       ...Array.from(document.querySelectorAll('#cg-avoidances .check-option.selected input')).map(i => i.value),
@@ -482,6 +541,13 @@ function loadDraft() {
     if (d.dietType) setRadio('rg-diet', d.dietType);
     if (d.cuisinePreference) setRadio('rg-cuisinePreference', d.cuisinePreference);
     if (d.equipmentAvailable && d.equipmentAvailable.length) setCheckboxes('cg-equipment', d.equipmentAvailable);
+    if (d.workoutPreferences && d.workoutPreferences.length) {
+      setCheckboxes('cg-workoutPref', d.workoutPreferences);
+      onWorkoutPrefChange();
+    }
+    if (d.workoutDaysPerWeek) setVal('f-workoutDays', d.workoutDaysPerWeek);
+    if (d.workoutTime)        setVal('f-workoutTime', d.workoutTime);
+    if (d.yogaStyle)          setVal('f-yogaStyle', d.yogaStyle);
     if (d.medications && d.medications.length) {
       d.medications.forEach(m => addMed(m));
     }
@@ -555,6 +621,13 @@ function selectRadio(groupId, value, el) {
   document.getElementById(groupId).querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
   saveDraft();
+}
+
+function onWorkoutPrefChange() {
+  const yogaChecked = Array.from(document.querySelectorAll('input[name="workoutPref"]:checked'))
+    .some(cb => cb.value === 'yoga');
+  const yogaGroup = document.getElementById('yogaStyleGroup');
+  if (yogaGroup) yogaGroup.style.display = yogaChecked ? 'block' : 'none';
 }
 
 function toggleCheck(el) {
@@ -758,6 +831,11 @@ async function submitProfile() {
     dietType:        checkedRadio('diet') || undefined,
     cuisinePreference: document.querySelector('input[name="cuisinePreference"]:checked')?.value || 'mixed',
     equipmentAvailable: Array.from(document.querySelectorAll('input[name="equipment"]:checked')).map(cb => cb.value),
+    sex:               val('f-sex') || undefined,
+    workoutPreferences: Array.from(document.querySelectorAll('input[name="workoutPref"]:checked')).map(cb => cb.value),
+    workoutDaysPerWeek: val('f-workoutDays') !== '' ? parseInt(val('f-workoutDays'), 10) : undefined,
+    workoutTime:       val('f-workoutTime') || undefined,
+    yogaStyle:         val('f-yogaStyle') || undefined,
     medications:     meds,
     religion:               checkedRadio('religion') || undefined,
     languageCommunity:      checkedRadio('languageCommunity') || undefined,
