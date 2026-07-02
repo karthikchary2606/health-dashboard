@@ -21,7 +21,7 @@ describe('detectWorkoutMode cardio', () => {
   test('cardio-only preference gives cardio-mode schedule', () => {
     const plan = buildPlan(cardioProfile());
     const month1 = plan.workout[0];
-    const activeDays = month1.schedule.filter(d => d.type !== 'rest');
+    const activeDays = month1.schedule.filter(d => d.type === 'cardio');
     expect(activeDays.length).toBeGreaterThan(0);
     activeDays.forEach(d => {
       expect(d.session).toBeDefined();

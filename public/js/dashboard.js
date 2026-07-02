@@ -4,6 +4,14 @@ let currentEnergyScore = 3;
 let waterLevel = 0;
 let weightChartInstance = null;
 
+function getISTDateString() {
+  const ms = Date.now() + (5.5 * 60 * 60 * 1000);
+  const d = new Date(ms);
+  return d.getUTCFullYear() + '-'
+    + String(d.getUTCMonth() + 1).padStart(2, '0') + '-'
+    + String(d.getUTCDate()).padStart(2, '0');
+}
+
 // Plan data cached after first buildTimeline fetch
 let _phaseTasks = [];  // checklist items from plan.checklist
 let _phaseIdx   = 0;   // 0-based phase index (meta.currentPhase - 1)
@@ -461,7 +469,7 @@ async function logWeight() {
   var input = document.getElementById('qlWeight');
   var w = parseFloat(input.value);
   if (!w || w < 20 || w > 300) { showQLMsg('Enter a valid weight (20–300 kg)', 'error'); return; }
-  var today = new Date().toISOString().slice(0, 10);
+  var today = getISTDateString();
   var res = await apiFetch('/api/logs/' + today, {
     method: 'PATCH',
     body: JSON.stringify({ weight: w })
@@ -471,7 +479,7 @@ async function logWeight() {
 }
 
 async function logWater(litres) {
-  var today = new Date().toISOString().slice(0, 10);
+  var today = getISTDateString();
   var logRes = await apiFetch('/api/logs/' + today);
   var current = (logRes.ok && logRes.data) ? (logRes.data.waterIntake || 0) : 0;
   var res = await apiFetch('/api/logs/' + today, {
@@ -485,7 +493,7 @@ async function logWater(litres) {
 async function toggleWorkoutLog() {
   var detail = document.getElementById('exerciseDetail');
   var btn = document.getElementById('workoutLogBtn');
-  var today = new Date().toISOString().slice(0, 10);
+  var today = getISTDateString();
   await apiFetch('/api/logs/' + today, {
     method: 'PATCH',
     body: JSON.stringify({ completedWorkout: true })
@@ -523,7 +531,7 @@ async function saveExerciseLog() {
   }).filter(function(e) { return e.exerciseName; });
 
   if (!exerciseLog.length) { showQLMsg('No exercises to save', 'error'); return; }
-  var today = new Date().toISOString().slice(0, 10);
+  var today = getISTDateString();
   var res = await apiFetch('/api/logs/' + today, {
     method: 'PATCH',
     body: JSON.stringify({ exerciseLog: exerciseLog })

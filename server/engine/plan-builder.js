@@ -365,7 +365,7 @@ function buildCardioSchedule(profile, monthIndex) {
     return {
       day,
       focus: phaseSession.session,
-      type: 'Cardio',
+      type: 'cardio',
       duration: phaseSession.duration,
       session: phaseSession.session,
       intensity: phaseSession.intensity,

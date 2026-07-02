@@ -108,10 +108,26 @@ function renderWorkoutDay(day) {
   const dayObj = schedule.find(s => s.day === day);
   if (!dayObj) return;
   const icon = DAY_ICONS[day] || "💪";
+  const exercises = Array.isArray(dayObj.exercises) ? dayObj.exercises : [];
   let wHtml = '<div class="card"><div class="card-title">' + icon + ' ' + day + ': ' + dayObj.focus +
     '<span style="margin-left:auto;font-size:.72rem;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;padding:3px 8px;border-radius:8px;font-weight:600">⏱️ ' + dayObj.duration + '</span>' +
     '<span class="spine-badge" style="margin-left:8px">🦴 Spine-Safe</span></div><div class="exercise-list">';
-  dayObj.exercises.forEach(ex => {
+  if (dayObj.session) {
+    const hrZonesHtml = dayObj.hrZones
+      ? Object.entries(dayObj.hrZones).map(([zone, bpm]) =>
+          '<span style="margin-right:8px"><strong>' + zone + ':</strong> ' + bpm + '</span>'
+        ).join('')
+      : '';
+    wHtml += '<div class="exercise-item">' +
+      '<div style="width:100%">' +
+      '<div class="exercise-name">🏃 ' + dayObj.session + '</div>' +
+      (dayObj.intensity ? '<div class="exercise-detail">⚡ Intensity: ' + dayObj.intensity + '</div>' : '') +
+      (dayObj.note ? '<div class="exercise-note">' + dayObj.note + '</div>' : '') +
+      (dayObj.suryaNamaskarWarmup ? '<div class="exercise-note">🧘 Warm-up: Surya Namaskar × ' + dayObj.suryaNamaskarWarmup + '</div>' : '') +
+      (hrZonesHtml ? '<div class="exercise-detail" style="margin-top:4px">❤️ HR Zones: ' + hrZonesHtml + '</div>' : '') +
+      '</div></div>';
+  }
+  exercises.forEach(ex => {
     const cat = ex.cat || "";
     wHtml += '<div class="exercise-item ' + cat + '"><span class="exercise-cat">' + cat + '</span><div>' +
       '<div class="exercise-name">' + ex.name + '</div>' +

@@ -966,7 +966,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (wSub) wSub.textContent = 'kg · Goal: ' + (p.goalWeightKg ? p.goalWeightKg + 'kg' : '—');
   }
 
-  const today = new Date().toISOString().split("T")[0];
+  const _nowMs = Date.now() + (5.5 * 60 * 60 * 1000);
+  const _istDate = new Date(_nowMs);
+  const today = _istDate.getUTCFullYear() + '-'
+    + String(_istDate.getUTCMonth() + 1).padStart(2, '0') + '-'
+    + String(_istDate.getUTCDate()).padStart(2, '0');
   document.getElementById("logDate").value = today;
   if (!overview) {
     updateCheckStat();
