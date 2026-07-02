@@ -75,6 +75,9 @@ const profileSchema = new mongoose.Schema({
   reviewReminderDays: { type: Number, enum: [30, 60, 90], default: 60 },
   lastReviewedAt:     Date,
 
+  // Gender — used for BMR calculation
+  sex: { type: String, enum: ['male', 'female', 'other'] },
+
   // Computed macro targets (set on plan generation)
   dailyCalorieTarget: Number,
   dailyProteinG:      Number,

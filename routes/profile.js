@@ -19,11 +19,47 @@ function computeWaterGoal(weightKg) {
   return Math.round((weightKg * 30) / 1000 * 10) / 10;
 }
 
+// Activity multipliers (Mifflin-St Jeor)
+const ACTIVITY_MULTIPLIERS = {
+  'sedentary':          1.2,
+  'lightly-active':     1.375,
+  'moderately-active':  1.55,
+  'very-active':        1.725,
+};
+
+// Goal caloric adjustments
+const GOAL_ADJUSTMENTS = {
+  'weight-loss':     -300,
+  'muscle-gain':     +300,
+  'maintenance':      0,
+  'general-fitness':  0,
+};
+
 function computeMacroTargets(profile) {
-  if (!profile.age || !profile.heightCm || !profile.currentWeightKg) return {};
-  // Gender not captured yet — return empty rather than apply wrong constant
-  // TODO: add gender field to onboarding to enable accurate BMR
-  return {};
+  const { sex, age, heightCm, currentWeightKg, fitnessLevel, primaryGoal } = profile;
+  if (!sex || !age || !heightCm || !currentWeightKg) return {};
+
+  // Mifflin-St Jeor BMR
+  const base = 10 * currentWeightKg + 6.25 * heightCm - 5 * age;
+  const bmr  = sex === 'female' ? base - 161 : base + 5; // male/other use +5
+
+  const multiplier = ACTIVITY_MULTIPLIERS[fitnessLevel] || 1.375;
+  const tdee       = Math.round(bmr * multiplier);
+  const adjustment = GOAL_ADJUSTMENTS[primaryGoal] || 0;
+  const calories   = tdee + adjustment;
+
+  // Macro split: 30% protein, 45% carbs, 25% fat (weight-loss / general)
+  // muscle-gain: 35% protein, 45% carbs, 20% fat
+  const proteinPct = primaryGoal === 'muscle-gain' ? 0.35 : 0.30;
+  const carbsPct   = 0.45;
+  const fatPct     = 1 - proteinPct - carbsPct;
+
+  return {
+    dailyCalorieTarget: calories,
+    dailyProteinG:      Math.round((calories * proteinPct) / 4),  // 4 kcal/g
+    dailyCarbsG:        Math.round((calories * carbsPct)   / 4),
+    dailyFatG:          Math.round((calories * fatPct)     / 9),  // 9 kcal/g
+  };
 }
 
 const PHASE2_FIELDS = [
@@ -69,7 +105,7 @@ router.post('/onboarding', authenticate, async (req, res) => {
       fitnessLevel, religion, languageCommunity, culturalFoodAvoidances,
       healthConditions, medications, secondaryGoals,
       workoutPreferences, workoutDaysPerWeek, workoutTime, yogaStyle,
-      foodAllergies, dietType, cuisinePreference, equipmentAvailable
+      foodAllergies, dietType, cuisinePreference, equipmentAvailable, sex
     } = req.body;
 
     const VALID = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
@@ -91,7 +127,7 @@ router.post('/onboarding', authenticate, async (req, res) => {
       cuisinePreference:  cuisinePreference  || 'mixed',
       equipmentAvailable: equipmentAvailable || [],
       workoutPreferences: workoutPreferences || [],
-      workoutDaysPerWeek, workoutTime, yogaStyle,
+      workoutDaysPerWeek, workoutTime, yogaStyle, sex,
       startDate: new Date()
     };
 
@@ -200,7 +236,7 @@ router.patch('/', authenticate, async (req, res) => {
       'healthConditions', 'medications', 'secondaryGoals', 'waterGoalL', 'planTemplate',
       'primaryGoal', 'religion', 'languageCommunity', 'culturalFoodAvoidances', 'foodList',
       'workoutPreferences', 'workoutDaysPerWeek', 'workoutTime', 'yogaStyle',
-      'reviewReminderDays'
+      'reviewReminderDays', 'sex'
     ];
 
     const updates = {};
