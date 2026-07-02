@@ -1,6 +1,6 @@
 'use strict';
 
-const { getMeals }          = require('./meal-composer');
+const { getMeals, deriveEffectiveDiet } = require('./meal-composer');
 const { getExercises, getSuryaNamaskarRounds, getYogaExercises } = require('./exercise-composer');
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
@@ -558,7 +558,7 @@ function getGroceryCategories(dietType) {
 }
 
 function buildGroceryList(profile, goal) {
-  const dietType = profile.dietType || 'non-vegetarian';
+  const dietType = deriveEffectiveDiet({ ...profile, dietType: profile.dietType || 'non-vegetarian' });
   const cuisinePreference = profile.cuisinePreference || 'mixed';
   const categories = getCuisineGrocery(dietType, cuisinePreference);
   return filterOutAvoidances(categories, profile.foodAllergies, profile.culturalFoodAvoidances);

@@ -65,6 +65,14 @@ describe('deriveEffectiveDiet', () => {
     };
     expect(deriveEffectiveDiet(profile)).toBe('vegan');
   });
+
+  test('vegetarian + mixed object-style foodList (egg + non-veg) upgrades to non-vegetarian', () => {
+    const profile = {
+      dietType: 'vegetarian',
+      foodList: [{ name: 'boiled egg' }, { name: 'chicken stew' }],
+    };
+    expect(deriveEffectiveDiet(profile)).toBe('non-vegetarian');
+  });
 });
 
 test('getMeals excludes meals matching culturalFoodAvoidances', () => {

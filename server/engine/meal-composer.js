@@ -57,8 +57,9 @@ function isVeganFriendly(meal) {
  * @returns {string}
  */
 function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
+  const effectiveDiet = deriveEffectiveDiet(profile);
   const cuisine  = resolveCuisine(profile, weekIndex);
-  const poolKey  = resolvePool(profile.dietType);
+  const poolKey  = resolvePool(effectiveDiet);
   const pool     = cuisine[mealType][poolKey];
 
   const avoidances = (profile.culturalFoodAvoidances || []).map(a => a.toLowerCase());
@@ -68,7 +69,7 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
   if (filteredPool.length === 0) filteredPool = pool;
 
   // Strip dairy items for vegan users
-  if (profile.dietType === 'vegan') {
+  if (effectiveDiet === 'vegan') {
     const veganPool = filteredPool.filter(isVeganFriendly);
     if (veganPool.length > 0) filteredPool = veganPool;
   }
@@ -82,11 +83,65 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
   return usePool[index];
 }
 
-// TODO(Phase 4 / Task 2): stub only — currently returns profile.dietType unchanged.
-// Real foodList-based upgrade logic (vegetarian -> eggetarian/non-vegetarian) is
-// implemented in a later task. This wiring exists so tests can import the symbol now.
-function deriveEffectiveDiet(profile) {
-  return profile ? profile.dietType : undefined;
+const NON_VEG_TERMS = [
+  'chicken', 'mutton', 'lamb', 'goat', 'pork', 'beef',
+  'fish', 'prawn', 'shrimp', 'crab', 'salmon', 'tuna',
+  'keema', 'meat', 'bacon', 'ham', 'sausage', 'stew',
+];
+const EGG_TERMS = ['egg', 'eggs'];
+
+/**
+ * Normalizes a foodList (array of strings and/or {name} objects) into an
+ * array of lowercase string tokens for keyword matching.
+ *
+ * @param {Array<string|{name:string}>} foodList
+ * @returns {string[]}
+ */
+function normalizeFoodTokens(foodList) {
+  if (!Array.isArray(foodList)) return [];
+  return foodList
+    .map(item => {
+      if (typeof item === 'string') return item;
+      if (item && typeof item.name === 'string') return item.name;
+      return '';
+    })
+    .map(token => token.toLowerCase().trim())
+    .filter(token => token.length > 0);
 }
 
-module.exports = { getMeals, activeConditions, deriveEffectiveDiet };
+/**
+ * Derives the effective diet type for a profile by cross-referencing the
+ * declared dietType with any non-veg/egg terms present in the user's
+ * foodList (e.g. a "vegetarian" who has logged chicken stew is treated as
+ * non-vegetarian for meal generation purposes).
+ *
+ * Rules:
+ *  - vegan is a strict, non-negotiable preference and never upgrades.
+ *  - Presence of any non-veg term upgrades vegetarian/eggetarian -> non-vegetarian.
+ *  - Presence of an egg term (with no non-veg term) upgrades vegetarian -> eggetarian.
+ *  - non-vegetarian stays non-vegetarian.
+ *
+ * @param {object} profile - { dietType, foodList }
+ * @returns {string} effective diet type
+ */
+function deriveEffectiveDiet(profile) {
+  if (!profile) return undefined;
+
+  const baseDiet = profile.dietType || 'vegetarian';
+  if (baseDiet === 'vegan') return 'vegan';
+
+  const tokens = normalizeFoodTokens(profile.foodList);
+  if (tokens.length === 0) return baseDiet;
+
+  const hasNonVeg = tokens.some(token => NON_VEG_TERMS.some(term => token.includes(term)));
+  if (hasNonVeg) return 'non-vegetarian';
+
+  if (baseDiet === 'non-vegetarian') return 'non-vegetarian';
+
+  const hasEgg = tokens.some(token => EGG_TERMS.some(term => token.includes(term)));
+  if (hasEgg) return 'eggetarian';
+
+  return baseDiet;
+}
+
+module.exports = { getMeals, activeConditions, deriveEffectiveDiet, normalizeFoodTokens };
