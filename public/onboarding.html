@@ -290,10 +290,10 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     <div class="form-group">
       <label>What type of workouts do you prefer? <span class="hint">(select all that apply)</span></label>
       <div class="checkbox-group" id="cg-workoutPref">
-        <label class="check-option" onclick="toggleCheck(this); onWorkoutPrefChange()"><input type="checkbox" name="workoutPref" value="gym"> 🏋️ Gym workouts</label>
-        <label class="check-option" onclick="toggleCheck(this); onWorkoutPrefChange()"><input type="checkbox" name="workoutPref" value="home-workout"> 🏠 Home / bodyweight</label>
-        <label class="check-option" onclick="toggleCheck(this); onWorkoutPrefChange()"><input type="checkbox" name="workoutPref" value="yoga"> 🧘 Yoga &amp; mindfulness</label>
-        <label class="check-option" onclick="toggleCheck(this); onWorkoutPrefChange()"><input type="checkbox" name="workoutPref" value="cardio"> 🏃 Cardio (running, cycling)</label>
+        <label class="check-option" onclick="toggleCheck(this); setTimeout(onWorkoutPrefChange, 0)"><input type="checkbox" name="workoutPref" value="gym"> 🏋️ Gym workouts</label>
+        <label class="check-option" onclick="toggleCheck(this); setTimeout(onWorkoutPrefChange, 0)"><input type="checkbox" name="workoutPref" value="home-workout"> 🏠 Home / bodyweight</label>
+        <label class="check-option" onclick="toggleCheck(this); setTimeout(onWorkoutPrefChange, 0)"><input type="checkbox" name="workoutPref" value="yoga"> 🧘 Yoga &amp; mindfulness</label>
+        <label class="check-option" onclick="toggleCheck(this); setTimeout(onWorkoutPrefChange, 0)"><input type="checkbox" name="workoutPref" value="cardio"> 🏃 Cardio (running, cycling)</label>
       </div>
     </div>
 
@@ -462,7 +462,7 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
 
 <script>
 const DRAFT_KEY = 'onboarding_draft';
-const TOTAL_STEPS = 9;
+const TOTAL_STEPS = 8;
 let currentStep = 1;
 let _customAvoidances = [];
 
@@ -514,6 +514,7 @@ function saveDraft() {
     workoutTime:       val('f-workoutTime'),
     yogaStyle:         val('f-yogaStyle'),
     startDate: val('f-startdate'),
+    religion:               checkedRadio('religion'),
     languageCommunity:      checkedRadio('languageCommunity'),
     culturalFoodAvoidances: [
       ...Array.from(document.querySelectorAll('#cg-avoidances .check-option.selected input')).map(i => i.value),
