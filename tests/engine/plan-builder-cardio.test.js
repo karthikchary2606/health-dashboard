@@ -25,7 +25,9 @@ describe('detectWorkoutMode cardio', () => {
     expect(activeDays.length).toBeGreaterThan(0);
     activeDays.forEach(d => {
       expect(d.session).toBeDefined();
+      expect(d.hrZones).toBeDefined();  // only set on cardio path
     });
+    expect(month1.phaseLabel).toBe('Phase 1 - Foundation');  // from CARDIO_PHASES, not PHASE_LABELS
   });
 
   test('gym + cardio preference keeps gym mode (gym wins)', () => {
@@ -47,5 +49,17 @@ describe('detectWorkoutMode cardio', () => {
     plan.workout.forEach(month => {
       expect(month.schedule).toHaveLength(7);
     });
+  });
+
+  test('cardio schedule progresses through distinct phases across 6 months', () => {
+    const plan = buildPlan(cardioProfile());
+    const phaseLabels = plan.workout.map(m => m.phaseLabel);
+    // All 6 labels should come from CARDIO_PHASES (start with 'Phase')
+    phaseLabels.forEach(label => {
+      expect(label).toMatch(/^Phase \d/);
+    });
+    // Phases 1-5 are distinct; Phase 6 may repeat Phase 5 if CARDIO_PHASES has only 6 entries
+    const unique = new Set(phaseLabels);
+    expect(unique.size).toBe(6);
   });
 });

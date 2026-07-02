@@ -10,6 +10,8 @@ const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sun
 const CARDIO_PHASES = [
   {
     phaseLabel: 'Phase 1 - Foundation',
+    focus: 'Build aerobic base with easy effort',
+    note: 'Zone 2 only — you should be able to hold a conversation throughout.',
     sessions: [
       { day: 'Mon', session: 'Brisk Walk', duration: '20 min', intensity: 'Low',  note: 'Zone 2 effort'  },
       { day: 'Wed', session: 'Cycling',    duration: '20 min', intensity: 'Low',  note: 'Steady pace'    },
@@ -19,6 +21,8 @@ const CARDIO_PHASES = [
   },
   {
     phaseLabel: 'Phase 2 - Build',
+    focus: 'Introduce continuous jogging',
+    note: 'Aim for 20 min non-stop jog by end of month.',
     sessions: [
       { day: 'Mon', session: 'Jog/Walk', duration: '25 min', intensity: 'Moderate', note: 'Alternate 1 min jog 2 min walk' },
       { day: 'Wed', session: 'Cycling',  duration: '30 min', intensity: 'Moderate', note: ''                               },
@@ -28,6 +32,8 @@ const CARDIO_PHASES = [
   },
   {
     phaseLabel: 'Phase 3 - Intensity',
+    focus: 'Add HIIT to raise VO2 max',
+    note: 'Maximum effort sprints — full recovery between intervals.',
     sessions: [
       { day: 'Mon', session: 'HIIT Walk-Sprint', duration: '25 min', intensity: 'High',     note: '30s sprint 90s walk x8' },
       { day: 'Wed', session: 'Steady Run',       duration: '30 min', intensity: 'Moderate', note: ''                       },
@@ -37,6 +43,8 @@ const CARDIO_PHASES = [
   },
   {
     phaseLabel: 'Phase 4 - Performance',
+    focus: 'Tempo and interval work for speed',
+    note: 'Hard effort should feel "comfortably hard" — controlled, not all-out.',
     sessions: [
       { day: 'Mon', session: 'Interval Run',   duration: '30 min', intensity: 'High', note: '1 min hard 1 min easy' },
       { day: 'Wed', session: 'Tempo Run',      duration: '30 min', intensity: 'High', note: 'Comfortably hard pace' },
@@ -46,6 +54,8 @@ const CARDIO_PHASES = [
   },
   {
     phaseLabel: 'Phase 5 - Peak',
+    focus: 'Race-pace efforts and long runs',
+    note: 'Prioritise sleep and nutrition — recovery drives peak performance.',
     sessions: [
       { day: 'Mon', session: 'Race Pace Run', duration: '35 min', intensity: 'High',     note: '' },
       { day: 'Thu', session: 'Tempo Run',     duration: '30 min', intensity: 'High',     note: '' },
@@ -55,6 +65,8 @@ const CARDIO_PHASES = [
   },
   {
     phaseLabel: 'Phase 6 - Maintenance',
+    focus: 'Sustain fitness with enjoyable running',
+    note: 'You have built a solid base — protect it with consistent easy miles.',
     sessions: [
       { day: 'Mon', session: 'Steady Run',    duration: '30 min', intensity: 'Moderate', note: '' },
       { day: 'Wed', session: 'Easy Run',      duration: '25 min', intensity: 'Low',      note: '' },
@@ -425,16 +437,22 @@ function buildWorkoutPlan(profile, goal) {
   const phaseLabels = PHASE_LABELS[goal] || PHASE_LABELS['general-fitness'];
 
   return Array.from({ length: 6 }, (_, monthIndex) => {
-    const { phaseLabel, focus, note } = phaseLabels[monthIndex] || phaseLabels[0];
-    let schedule;
-    if (mode === 'yoga') {
-      schedule = buildYogaSchedule(profile, daysPerWeek);
-    } else if (mode === 'hybrid') {
-      schedule = buildHybridSchedule(profile, goal, daysPerWeek);
-    } else if (mode === 'cardio') {
-      schedule = buildCardioSchedule(profile, monthIndex);
+    let phaseLabel, focus, note, schedule;
+    if (mode === 'cardio') {
+      const cardioPhase = CARDIO_PHASES[Math.min(monthIndex, CARDIO_PHASES.length - 1)];
+      phaseLabel = cardioPhase.phaseLabel;
+      focus      = cardioPhase.focus;
+      note       = cardioPhase.note;
+      schedule   = buildCardioSchedule(profile, monthIndex);
     } else {
-      schedule = buildStrengthSchedule(profile, goal, daysPerWeek);
+      ({ phaseLabel, focus, note } = phaseLabels[monthIndex] || phaseLabels[0]);
+      if (mode === 'yoga') {
+        schedule = buildYogaSchedule(profile, daysPerWeek);
+      } else if (mode === 'hybrid') {
+        schedule = buildHybridSchedule(profile, goal, daysPerWeek);
+      } else {
+        schedule = buildStrengthSchedule(profile, goal, daysPerWeek);
+      }
     }
     return { monthLabel: `Month ${monthIndex + 1}`, phaseLabel, focus, note, schedule };
   });
