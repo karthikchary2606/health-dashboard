@@ -5,6 +5,7 @@ const southIndianMeals = require('../meals/south-indian');
 const northIndianMeals = require('../meals/north-indian');
 const continentalMeals = require('../meals/continental');
 const { applyRules } = require('./personalization-rules');
+const { todayIST } = require('../utils/time');
 
 const TEMPLATES = {
   'weight-loss': require('../templates/weight-loss'),
@@ -22,7 +23,6 @@ const COMPLETENESS_FIELDS = [
   'fitnessLevel'
 ];
 
-const DAY_NAMES = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 const MEAL_TYPES = ['breakfast', 'lunch', 'snack', 'dinner'];
 const POOL_TO_DIET = {
   veg: ['vegetarian'],
@@ -64,7 +64,7 @@ function pickTodayMeals(dietPlan = []) {
   const monthOne = dietPlan[0];
   const weekOne = monthOne && monthOne.weeks && monthOne.weeks[0];
   const weekdays = (weekOne && weekOne.weekdays) || [];
-  const today = DAY_NAMES[new Date().getDay()];
+  const today = todayIST().day;
   return weekdays.find((entry) => String(entry.day || '').toLowerCase() === today) || weekdays[0] || null;
 }
 
