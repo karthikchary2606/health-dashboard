@@ -1,0 +1,38 @@
+name: Seed Admin User
+
+on:
+  workflow_dispatch:
+    inputs:
+      admin_email:
+        description: 'Admin email address'
+        required: true
+        default: 'admin@kaha.online'
+      admin_name:
+        description: 'Admin display name'
+        required: true
+        default: 'Admin'
+      admin_password:
+        description: 'Admin password (min 8 chars)'
+        required: true
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - run: npm ci --omit=dev
+
+      - name: Create admin user in production DB
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          ADMIN_EMAIL: ${{ github.event.inputs.admin_email }}
+          ADMIN_NAME: ${{ github.event.inputs.admin_name }}
+          ADMIN_PASSWORD: ${{ github.event.inputs.admin_password }}
+        run: node scripts/seed-admin.js
