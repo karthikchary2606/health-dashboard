@@ -197,9 +197,11 @@ function detectWorkoutMode(profile) {
   const hasGym  = prefs.includes('gym') ||
                   (profile.equipmentAvailable || []).includes('gym-access');
   const hasYoga = prefs.includes('yoga');
+  const hasCardio = prefs.includes('cardio');
   if (hasGym && hasYoga) return 'hybrid';
   if (hasYoga)           return 'yoga';
   if (hasGym)            return 'gym';
+  if (hasCardio)         return 'cardio';
   return 'home';
 }
 
@@ -331,6 +333,39 @@ function buildHybridSchedule(profile, goal, daysPerWeek) {
   });
 }
 
+function buildCardioSchedule(profile, monthIndex) {
+  const phase = CARDIO_PHASES[Math.min(monthIndex, CARDIO_PHASES.length - 1)];
+  const activeSet = new Set(phase.sessions.map(s => s.day));
+  const suryaRounds = getSuryaNamaskarRounds(profile);
+
+  return DAYS.map(day => {
+    const shortDay = day.slice(0, 3); // 'Monday' → 'Mon'
+    if (!activeSet.has(shortDay)) {
+      return {
+        day,
+        focus: 'Rest / Easy Walk',
+        type: 'rest',
+        duration: '-',
+        session: null
+      };
+    }
+    const phaseSession = phase.sessions.find(s => s.day === shortDay);
+    return {
+      day,
+      focus: phaseSession.session,
+      type: 'Cardio',
+      duration: phaseSession.duration,
+      session: phaseSession.session,
+      intensity: phaseSession.intensity,
+      note: phaseSession.note,
+      suryaNamaskarWarmup: suryaRounds > 0
+        ? `${suryaRounds} rounds Surya Namaskar warm-up before cardio`
+        : null,
+      hrZones: phase.hrZones
+    };
+  });
+}
+
 // ─── Diet phase guidelines ────────────────────────────────────────────────────
 
 const DIET_GUIDELINES = {
@@ -396,6 +431,8 @@ function buildWorkoutPlan(profile, goal) {
       schedule = buildYogaSchedule(profile, daysPerWeek);
     } else if (mode === 'hybrid') {
       schedule = buildHybridSchedule(profile, goal, daysPerWeek);
+    } else if (mode === 'cardio') {
+      schedule = buildCardioSchedule(profile, monthIndex);
     } else {
       schedule = buildStrengthSchedule(profile, goal, daysPerWeek);
     }
@@ -431,4 +468,13 @@ function buildGroceryList(profile, goal) {
   }));
 }
 
-module.exports = { buildDietPlan, buildWorkoutPlan, buildCardioPlan, buildGroceryList };
+function buildPlan(profile) {
+  const goal = profile.primaryGoal || 'general-fitness';
+  return {
+    workout: buildWorkoutPlan(profile, goal),
+    diet:    buildDietPlan(profile, goal),
+    grocery: buildGroceryList(profile, goal),
+  };
+}
+
+module.exports = { buildDietPlan, buildWorkoutPlan, buildCardioPlan, buildGroceryList, buildPlan };
