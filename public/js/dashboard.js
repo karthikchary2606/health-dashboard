@@ -104,11 +104,26 @@ function renderTimelineFromOverviewItems(items) {
 
 function applyOverviewStats(overview) {
   if (!overview || !overview.dietPreview) return;
+  const target = overview.dietPreview.dailyCalorieTarget;
+  const macros = overview.dietPreview.macros || {};
+
+  // Legacy elements
   const calEl = document.getElementById("calorieStat");
   const subEl = document.getElementById("calorieStatSub");
-  const target = overview.dietPreview.dailyCalorieTarget;
   if (calEl) calEl.textContent = target ? target.toLocaleString('en-IN') : '—';
   if (subEl) subEl.textContent = 'kcal/day';
+
+  // New CRED hero elements
+  const goalEl = document.getElementById("calories-goal");
+  if (goalEl && target) goalEl.textContent = target.toLocaleString('en-IN');
+
+  const remainEl = document.getElementById("calories-remaining");
+  if (remainEl && target) {
+    const macroStr = macros.proteinG
+      ? `P ${macros.proteinG}g · C ${macros.carbsG}g · F ${macros.fatG}g`
+      : `${target.toLocaleString('en-IN')} kcal goal`;
+    remainEl.textContent = macroStr;
+  }
 }
 
 function applyOverviewProfileCompleteness(overview) {
