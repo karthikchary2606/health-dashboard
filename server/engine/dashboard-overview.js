@@ -103,10 +103,7 @@ function resolvePreviewMetadata(mealType, mealName, profile = {}) {
     }
   }
 
-  return {
-    cuisine: preferredCuisine && preferredCuisine !== 'mixed' ? preferredCuisine : 'mixed',
-    dietType: profile.dietType ? [String(profile.dietType).toLowerCase()] : []
-  };
+  return null;
 }
 
 function personalizeMealPreview(profile, todayMeals) {
@@ -117,6 +114,7 @@ function personalizeMealPreview(profile, todayMeals) {
       const mealName = todayMeals[mealType];
       if (!mealName) return null;
       const metadata = resolvePreviewMetadata(mealType, mealName, profile);
+      if (!metadata) return null;
       return {
         mealType,
         name: mealName,

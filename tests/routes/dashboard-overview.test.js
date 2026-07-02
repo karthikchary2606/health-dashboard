@@ -204,4 +204,52 @@ describe('GET /api/dashboard/overview', () => {
       expect(northIndianMeals[recipe.mealType].veg).toContain(recipe.name);
     });
   });
+
+  test('fails closed when meal metadata cannot be resolved for preview meals', async () => {
+    const weightLossTemplate = require('../../server/templates/weight-loss');
+    const originalGetDietPlan = weightLossTemplate.getDietPlan;
+    weightLossTemplate.getDietPlan = () => [{
+      weeks: [{
+        weekdays: [{
+          day: 'monday',
+          breakfast: 'Unknown Breakfast',
+          lunch: 'Unknown Lunch',
+          snack: 'Unknown Snack',
+          dinner: 'Unknown Dinner'
+        }]
+      }]
+    }];
+
+    try {
+      const user = await createUser({
+        email: 'unmatched-cuisine@test.com',
+        profile: {
+          primaryGoal: 'weight-loss',
+          currentWeightKg: 80,
+          goalWeightKg: 70,
+          heightCm: 175,
+          age: 30,
+          cuisinePreference: 'north-indian',
+          dietType: 'vegetarian',
+          fitnessLevel: 'lightly-active',
+          waterGoalL: 2.5
+        }
+      });
+
+      const res = await request(app)
+        .get('/api/dashboard/overview')
+        .set(authHeader(user._id));
+
+      expect(res.status).toBe(200);
+      expect(res.body.recipePreview).toEqual([]);
+      expect(res.body.dietPreview.meals).toEqual({
+        breakfast: null,
+        lunch: null,
+        snack: null,
+        dinner: null
+      });
+    } finally {
+      weightLossTemplate.getDietPlan = originalGetDietPlan;
+    }
+  });
 });
