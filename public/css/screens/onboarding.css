@@ -1,0 +1,164 @@
+/* =============================================
+   ONBOARDING WIZARD
+   ============================================= */
+
+.onboarding-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-dark);
+  padding: var(--space-6) var(--space-4);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+/* --- Step Progress Indicator --- */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-border);
+  transition: all var(--transition-base);
+  cursor: default;
+}
+
+.step-dot--completed {
+  background-color: var(--color-accent-teal);
+  width: 24px;
+  border-radius: 4px;
+}
+
+.step-dot--active {
+  background-color: var(--color-accent-teal);
+  width: 16px;
+  border-radius: 4px;
+  box-shadow: var(--shadow-glow-teal);
+}
+
+.step-counter {
+  font-size: var(--font-size-label);
+  color: var(--color-text-muted);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+  display: block;
+}
+
+/* --- Wizard Content --- */
+.wizard-heading {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-h1);
+  letter-spacing: var(--letter-spacing-heading);
+  margin-bottom: var(--space-2);
+}
+
+.wizard-subheading {
+  font-size: var(--font-size-body);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-body);
+  margin-bottom: var(--space-8);
+}
+
+.wizard-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* --- Option Cards (for selections like goals, diet type) --- */
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.option-card {
+  padding: var(--space-4);
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option-card:hover {
+  border-color: var(--color-accent-teal);
+  background-color: rgba(78, 204, 163, 0.04);
+}
+
+.option-card--selected {
+  border-color: var(--color-accent-teal);
+  background-color: rgba(78, 204, 163, 0.08);
+}
+
+.option-card__icon {
+  font-size: 28px;
+}
+
+.option-card__label {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+/* --- Step Navigation Buttons --- */
+.wizard-nav {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+}
+
+.wizard-nav .btn--back {
+  flex-shrink: 0;
+}
+
+.wizard-nav .btn--next {
+  flex: 1;
+}
+
+/* --- Dietary Exception Toggle Row --- */
+.diet-exception-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.diet-exception-row__info {
+  flex: 1;
+}
+
+.diet-exception-row__label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.diet-exception-row__desc {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
