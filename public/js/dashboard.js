@@ -51,10 +51,6 @@ function renderDashboardPrompt(blockKind, state) {
   return "<div class='dashboard-state-callout'><p class='dashboard-state-title'>" + entry.title + "</p><p class='dashboard-state-detail'>" + entry.detail + "</p>" + entry.action + "</div>";
 }
 
-function applyDashboardVariant() {
-  document.body.classList.add('dashboard-v2-enabled');
-}
-
 function setDashboardBlockState(blockId, state, options) {
   const block = document.getElementById(blockId);
   if (!block) return;
