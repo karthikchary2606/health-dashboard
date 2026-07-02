@@ -873,7 +873,7 @@ async function submitProfile() {
     sucEl.textContent = 'Profile saved! Redirecting…';
     sucEl.style.display = 'block';
     btn.textContent = '✓ Done';
-    setTimeout(() => { window.location.href = '/index.html'; }, 1200);
+    setTimeout(() => { window.location.href = '/profile-complete.html'; }, 1200);
   } catch (e) {
     errEl.textContent = 'Connection error. Please check your network and try again.';
     errEl.style.display = 'block';

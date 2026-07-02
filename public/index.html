@@ -520,7 +520,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       <div class="stat-chip" style="border-left-color:#f59e0b"><div class="label">Target Calories</div><div class="value" id="calorieStat">—</div><div class="sub" id="calorieStatSub">kcal/day</div></div>
       <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div><span id="waterGoalDisplay" style="font-weight:700;color:#0284c7"></span><div id="waterGoalHint" style="font-size:.72rem;color:#6b7280;margin-top:2px"></div></div>
       <div class="stat-chip" style="border-left-color:#10b981"><div class="label">Checklist</div><div class="value" id="checkStat">0/—</div><div class="sub">Daily tasks done</div></div>
-      <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">95</div><div class="sub">kg · Goal: 75kg</div></div>
+      <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">—</div><div class="sub" id="weightStatSub">kg · Goal: —</div></div>
     </div>
 
     <div class="grid-2">
@@ -941,6 +941,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   setGreeting();    // runs immediately after auth so greeting never stays "Loading..."
   updateWaterGoalDisplay(); // requires currentUser — must run after initAuth
   checkReviewBanner();      // requires currentUser — must run after initAuth
+
+  // Initialise stats chips from profile so they never show stale/hardcoded values
+  if (currentUser && currentUser.profile) {
+    const p = currentUser.profile;
+    const wEl = document.getElementById("weightStat");
+    const wSub = document.getElementById("weightStatSub");
+    if (wEl) wEl.textContent = p.currentWeightKg || p.startWeightKg || '—';
+    if (wSub) wSub.textContent = 'kg · Goal: ' + (p.goalWeightKg ? p.goalWeightKg + 'kg' : '—');
+  }
+
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("logDate").value = today;
   await buildTimeline(); // sets _phaseTasks from planCache

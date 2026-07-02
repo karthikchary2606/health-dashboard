@@ -81,7 +81,8 @@ test('macro targets not set when sex is missing', async () => {
     });
   expect(res.status).toBe(200);
   const updated = await User.findById(user._id);
-  expect(updated.profile.dailyCalorieTarget).toBeUndefined();
+  // sex defaults to 'other' now so dailyCalorieTarget is always computed when age/height/weight present
+  expect(updated.profile.dailyCalorieTarget).toBeDefined();
 });
 
 test('PATCH /api/profile accepts sex field', async () => {

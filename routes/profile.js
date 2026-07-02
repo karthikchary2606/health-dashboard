@@ -36,8 +36,9 @@ const GOAL_ADJUSTMENTS = {
 };
 
 function computeMacroTargets(profile) {
-  const { sex, age, heightCm, currentWeightKg, fitnessLevel, primaryGoal } = profile;
-  if (!sex || !age || !heightCm || !currentWeightKg) return {};
+  const { age, heightCm, currentWeightKg, fitnessLevel, primaryGoal } = profile;
+  const sex = profile.sex || 'other'; // default to 'other' so calories are always computed
+  if (!age || !heightCm || !currentWeightKg) return {};
 
   // Mifflin-St Jeor BMR
   const base = 10 * currentWeightKg + 6.25 * heightCm - 5 * age;
@@ -238,6 +239,19 @@ router.get('/plan', authenticate, requireProfile, async (req, res) => {
     const templateKey = profile.planTemplate || profile.primaryGoal || 'weight-loss';
     const template = TEMPLATES[templateKey];
     if (!template) return res.status(400).json({ error: `Unknown template: ${templateKey}` });
+
+    // Self-heal: recompute macros if dailyCalorieTarget is missing (e.g. user registered before sex field added)
+    if (!profile.dailyCalorieTarget) {
+      const macros = computeMacroTargets(profile);
+      if (macros.dailyCalorieTarget) {
+        Object.assign(profile, macros);
+        // Persist the fix silently so future requests don't need recomputing
+        const macroUpdates = {};
+        Object.entries(macros).forEach(([k, v]) => { macroUpdates[`profile.${k}`] = v; });
+        User.findByIdAndUpdate(req.user._id, macroUpdates).catch(() => {});
+      }
+    }
+
     res.set('Cache-Control', 'no-store');
     res.json({
       meta:      template.getPlanMeta(profile),

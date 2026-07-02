@@ -119,8 +119,24 @@ async function doRegister() {
     });
     const data = await res.json();
     if (!res.ok) { errEl.textContent = data.error; errEl.style.display = 'block'; return; }
-    sucEl.textContent = data.message;
+    sucEl.textContent = '✅ Account created! Signing you in…';
     sucEl.style.display = 'block';
+    // Auto-login after registration
+    setTimeout(async () => {
+      const loginRes = await fetch('/api/auth/login', {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      if (loginRes.ok) {
+        window.location.href = '/index.html';
+      } else {
+        // Fallback: switch to login tab with email pre-filled
+        switchTab('login');
+        document.getElementById('login-email').value = email;
+        document.getElementById('login-password').focus();
+      }
+    }, 800);
   } catch (e) {
     errEl.textContent = 'Connection error. Please try again.';
     errEl.style.display = 'block';

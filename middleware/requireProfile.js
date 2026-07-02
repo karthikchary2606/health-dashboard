@@ -41,7 +41,7 @@ function requireProfile(req, res, next) {
       profileComplete: true,
       missingFields,
       message: `Please complete these fields: ${missingFields.join(', ')}`,
-      redirect: '/profile'
+      redirect: '/profile-complete.html'
     });
   }
   

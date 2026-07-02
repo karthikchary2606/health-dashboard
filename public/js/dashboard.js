@@ -172,10 +172,13 @@ async function updateCalorieStat() {
   const md = plan.diet && plan.diet[monthIdx];
   const calEl = document.getElementById("calorieStat");
   const subEl = document.getElementById("calorieStatSub");
-  if (calEl && md) {
-    calEl.textContent = "—";
-    const phasePart = (md.monthLabel || "").split("—")[1];
-    if (subEl) subEl.textContent = "kcal/day · " + (phasePart ? phasePart.trim() : "Month " + (monthIdx + 1));
+  if (calEl) {
+    const calorieTarget = currentUser && currentUser.profile && currentUser.profile.dailyCalorieTarget;
+    calEl.textContent = calorieTarget ? calorieTarget.toLocaleString('en-IN') : '—';
+    if (subEl) {
+      const phasePart = md && (md.monthLabel || "").split("—")[1];
+      subEl.textContent = "kcal/day · " + (phasePart ? phasePart.trim() : "Month " + (monthIdx + 1));
+    }
   }
 }
 
