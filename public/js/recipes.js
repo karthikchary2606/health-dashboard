@@ -1963,7 +1963,7 @@ function getFilteredRecipes(profile, options) {
     if (cuisine !== 'mixed' && r.cuisine !== cuisine && r.cuisine !== 'mixed') return false;
 
     // 4. Meal type filter
-    if (mealType && r.mealType && r.mealType.length > 0 && !r.mealType.includes(mealType)) return false;
+    if (mealType && r.cat && r.cat !== mealType) return false;
 
     return true;
   });
@@ -2004,6 +2004,7 @@ function buildRecipes() {
 
   var cats = ['all','breakfast','lunch','dinner','snack','chutney'];
   var filtersEl = document.getElementById('recipeFilters');
+  if (!filtersEl) return;
   filtersEl.innerHTML = cats.map(function(c) {
     return '<button class="filter-pill' + (c === 'all' ? ' active' : '') + '" onclick="filterRecipes(\'' + c + '\',this)">' +
       c.charAt(0).toUpperCase() + c.slice(1) +

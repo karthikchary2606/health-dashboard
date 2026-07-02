@@ -17,7 +17,12 @@ async function loadProfile() {
   populateMedicationReview();
   populateReviewPrefs();
 
-  if (checklistRes.ok) renderFoodChecklist(checklistRes.data);
+  if (checklistRes.ok) {
+    renderFoodChecklist(checklistRes.data);
+  } else {
+    const container = document.getElementById('foodChecklist');
+    if (container) container.innerHTML = '<p style="color:#6b7280;font-size:.85rem">Could not load food list. <a href="" onclick="location.reload();return false;">Retry</a></p>';
+  }
   updateCompletionBar();
 }
 

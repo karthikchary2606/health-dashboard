@@ -938,6 +938,7 @@ function toggleMoreMenu() { openSidebar(); }
 document.addEventListener("DOMContentLoaded", async () => {
   try {
   await initAuth(); // auth check + sidebar personalisation
+  setGreeting();    // runs immediately after auth so greeting never stays "Loading..."
   updateWaterGoalDisplay(); // requires currentUser — must run after initAuth
   checkReviewBanner();      // requires currentUser — must run after initAuth
   const today = new Date().toISOString().split("T")[0];
@@ -946,7 +947,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateCalorieStat();
   buildRecipes();
   buildBreathingSection();
-  setGreeting();
   loadProgress();
   loadSleepSummary();
   updateBMI(currentUser && currentUser.profile && (currentUser.profile.currentWeightKg || currentUser.profile.startWeightKg) || 0);
@@ -954,6 +954,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   } catch(e) {
     console.error('Dashboard init error:', e);
+    setGreeting(); // fallback: ensure greeting is never stuck if an exception fires above
   }
 });
 </script>
