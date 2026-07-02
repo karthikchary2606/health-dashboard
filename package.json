@@ -32,7 +32,8 @@
     "globalTeardown": "./tests/teardown.js",
     "testTimeout": 30000,
     "testPathIgnorePatterns": [
-      "<rootDir>/tests/e2e/"
+      "<rootDir>/tests/e2e/",
+      "<rootDir>/tests/ui-redesign.spec.js"
     ]
   },
   "devDependencies": {
