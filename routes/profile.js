@@ -239,6 +239,8 @@ router.get('/plan', authenticate, requireProfile, async (req, res) => {
     const templateKey = profile.planTemplate || profile.primaryGoal || 'weight-loss';
     const template = TEMPLATES[templateKey];
     if (!template) return res.status(400).json({ error: `Unknown template: ${templateKey}` });
+    const profileUpdatedAt = req.user.updatedAt ? new Date(req.user.updatedAt).toISOString() : null;
+    const planVersion = profileUpdatedAt;
 
     // Self-heal: recompute macros if dailyCalorieTarget is missing (e.g. user registered before sex field added)
     if (!profile.dailyCalorieTarget) {
@@ -253,8 +255,11 @@ router.get('/plan', authenticate, requireProfile, async (req, res) => {
     }
 
     res.set('Cache-Control', 'no-store');
+    const planMeta = template.getPlanMeta(profile);
     res.json({
-      meta:      template.getPlanMeta(profile),
+      profileUpdatedAt,
+      planVersion,
+      meta:      { ...planMeta, profileUpdatedAt, planVersion },
       diet:      template.getDietPlan(profile),
       workout:   template.getWorkoutPlan(profile),
       cardio:    template.getCardioPlan(profile),

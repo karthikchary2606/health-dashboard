@@ -12,9 +12,177 @@ let _weekIdx    = 0;   // 0-based week index within month (meta.currentWeek - 1)
 let _workoutPlan = []; // plan.workout array
 let _dashDietPlan = []; // plan.diet array (prefixed to avoid conflict with diet.js's _dietPlan)
 
+const DASHBOARD_BLOCK_STATE = {
+  READY: 'ready',
+  EMPTY: 'empty',
+  ERROR: 'error'
+};
+
+function isDashboardV2Enabled() {
+  try {
+    const raw = new URLSearchParams(window.location.search).get('dashboard_v2');
+    return raw === '1' || raw === 'true' || raw === 'on';
+  } catch (e) {
+    return false;
+  }
+}
+
+const DASHBOARD_V2_ENABLED = isDashboardV2Enabled();
+
+function renderDashboardPrompt(blockKind, state, options) {
+  const next = options || {};
+  if (!DASHBOARD_V2_ENABLED) return next.v1 || '';
+
+  const config = {
+    timeline: {
+      empty: {
+        title: 'No timeline updates yet',
+        detail: 'Complete today’s log or refresh your plan to populate this card.',
+        action: '<a class="dashboard-state-action" href="#sec-diet" onclick="showSection(\'diet\');return false;">Open Diet Plan</a>'
+      },
+      error: {
+        title: 'Couldn’t load today’s timeline',
+        detail: 'We could not fetch the overview contract. Retry once network stabilizes.',
+        action: '<button type="button" class="dashboard-state-action" onclick="loadDashboardOverview()">Retry</button>'
+      }
+    },
+    sleep: {
+      empty: {
+        title: 'No sleep entry found',
+        detail: 'Log last night’s sleep to unlock duration and quality trends.',
+        action: '<a class="dashboard-state-action" href="/sleep.html">Log sleep</a>'
+      },
+      error: {
+        title: 'Sleep summary unavailable',
+        detail: 'The sleep service did not respond. Try again in a moment.',
+        action: '<button type="button" class="dashboard-state-action" onclick="loadSleepSummary()">Retry</button>'
+      }
+    }
+  };
+
+  const entry = (config[blockKind] || {})[state];
+  if (!entry) return next.v1 || '';
+  return "<div class='dashboard-state-callout'><p class='dashboard-state-title'>" + entry.title + "</p><p class='dashboard-state-detail'>" + entry.detail + "</p>" + entry.action + "</div>";
+}
+
+function applyDashboardVariant() {
+  if (!DASHBOARD_V2_ENABLED) return;
+  document.body.classList.add('dashboard-v2-enabled');
+  const badge = document.getElementById('dashboardV2Badge');
+  if (badge) badge.style.display = 'inline-flex';
+}
+
+function setDashboardBlockState(blockId, state, options) {
+  const block = document.getElementById(blockId);
+  if (!block) return;
+  block.dataset.state = state;
+
+  const next = options || {};
+  if (Object.prototype.hasOwnProperty.call(next, 'html')) {
+    block.innerHTML = next.html;
+  } else if (Object.prototype.hasOwnProperty.call(next, 'text')) {
+    block.textContent = next.text;
+  }
+}
+
+function renderTimelineFromOverviewItems(items) {
+  const timelineItems = Array.isArray(items) ? items : [];
+  if (timelineItems.length === 0) {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY, {
+        v1: "<p style='color:var(--text-light);font-size:.85rem'>No timeline updates yet.</p>"
+      })
+    });
+    return;
+  }
+
+  let html = '';
+  timelineItems.forEach((item) => {
+    if (item.type === 'meal') {
+      html += "<div class='timeline-item'><span class='t-time'>🍽️ " + item.label + "</span><span class='t-text'>" + (item.value || '—') + "</span></div>";
+      return;
+    }
+    if (item.type === 'habit') {
+      html += "<div class='timeline-item" + (item.completed ? " done" : "") + "'><span class='t-time'>✅ Habit</span><span class='t-text'>" + item.label + "</span><input type='checkbox' " + (item.completed ? "checked" : "") + " disabled></div>";
+    }
+  });
+
+  if (!html) {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY, {
+        v1: "<p style='color:var(--text-light);font-size:.85rem'>No timeline updates yet.</p>"
+      })
+    });
+    return;
+  }
+
+  setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.READY, { html });
+}
+
+function applyOverviewStats(overview) {
+  if (!overview || !overview.dietPreview) return;
+  const calEl = document.getElementById("calorieStat");
+  const subEl = document.getElementById("calorieStatSub");
+  const target = overview.dietPreview.dailyCalorieTarget;
+  if (calEl) calEl.textContent = target ? target.toLocaleString('en-IN') : '—';
+  if (subEl) subEl.textContent = 'kcal/day';
+}
+
+function applyOverviewProfileCompleteness(overview) {
+  if (!overview || !overview.profileCompleteness) return;
+  const pct = overview.profileCompleteness.percentage;
+  const card = document.getElementById('profileCompletionCard');
+  const pctEl = document.getElementById('completionPctDash');
+  if (!card) return;
+  if (pct < 100) {
+    card.style.display = 'flex';
+    if (pctEl) pctEl.textContent = pct;
+  } else {
+    card.style.display = 'none';
+  }
+}
+
+async function loadDashboardOverview() {
+  try {
+    const { ok, data } = await apiFetch('/api/dashboard/overview');
+    if (!ok || !data) {
+      setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, {
+        html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.ERROR, {
+          v1: "<p style='color:#b91c1c;font-size:.85rem'>Could not load timeline. Please refresh.</p>"
+        })
+      });
+      return null;
+    }
+
+    renderTimelineFromOverviewItems(data.timeline);
+    applyOverviewStats(data);
+    applyOverviewProfileCompleteness(data);
+    if (!data.profileCompleteness) {
+      await backfillProfileCompletion();
+    }
+    return data;
+  } catch (e) {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, {
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.ERROR, {
+        v1: "<p style='color:#b91c1c;font-size:.85rem'>Could not load timeline. Please refresh.</p>"
+      })
+    });
+    return null;
+  }
+}
+
 async function buildTimeline() {
   const plan = await window.planCache.getPlan();
-  if (!plan) return;
+  if (!plan) {
+    _phaseTasks = [];
+    updateCheckStat();
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY, {
+        v1: "<p style='color:var(--text-light);font-size:.85rem'>No timeline available yet.</p>"
+      })
+    });
+    return;
+  }
 
   const { meta } = plan;
   _phaseIdx   = Math.max(0, (meta.currentPhase || 1) - 1);
@@ -74,6 +242,15 @@ async function buildTimeline() {
     container.appendChild(div);
   });
   updateCheckStat();
+  if (_phaseTasks.length === 0) {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY, {
+        v1: "<p style='color:var(--text-light);font-size:.85rem'>No checklist tasks for today.</p>"
+      })
+    });
+  } else {
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.READY);
+  }
 }
 
 function onCheckChange(i) {
@@ -91,6 +268,17 @@ function updateCheckStat() {
     if(c && c.checked) done++;
   }
   document.getElementById("checkStat").textContent = done + "/" + total;
+}
+
+function buildChecklistPayload() {
+  if (!Array.isArray(_phaseTasks) || _phaseTasks.length === 0) return null;
+  const checklist = _phaseTasks.map((_, i) => {
+    const c = document.getElementById("chk-" + i);
+    if (!c) return null;
+    return { done: Boolean(c.checked) };
+  });
+  if (checklist.some((entry) => entry === null)) return null;
+  return checklist;
 }
 
 function toggleWater(l) {
@@ -157,8 +345,9 @@ async function syncData() {
   const notes = document.getElementById("workoutNotes").value;
   document.getElementById("weightStat").textContent = weight;
   updateBMI(weight);
-  const checklist = _phaseTasks.map((_, i) => { const c = document.getElementById("chk-"+i); return { done: c ? c.checked : false }; });
-  const payload = { date, checklist, waterIntake: waterLevel, weight, completedWorkout: document.getElementById("workoutToggle").checked, moodScore: currentMoodScore, energyScore: currentEnergyScore, notes };
+  const checklist = buildChecklistPayload();
+  const payload = { date, waterIntake: waterLevel, weight, completedWorkout: document.getElementById("workoutToggle").checked, moodScore: currentMoodScore, energyScore: currentEnergyScore, notes };
+  if (checklist) payload.checklist = checklist;
   try {
     const { ok } = await apiFetch("/api/logs", { method:"POST", body: payload });
     if (!ok) return;
@@ -196,8 +385,21 @@ async function loadSleepSummary() {
     const el = document.getElementById('sleepSummaryContent');
     if (!el) return;
 
-    if (!res.ok || !res.data || res.data.length === 0) {
-      el.innerHTML = '<a href="/sleep.html" style="color:#6366f1;">Log last night\'s sleep →</a>';
+    if (!res.ok) {
+      setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.ERROR, {
+        html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.ERROR, {
+          v1: '<span style="color:#b91c1c;">Unable to load sleep summary right now.</span>'
+        })
+      });
+      return;
+    }
+
+    if (!res.data || res.data.length === 0) {
+      setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.EMPTY, {
+        html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.EMPTY, {
+          v1: '<a href="/sleep.html" style="color:#6366f1;">Log last night\'s sleep →</a>'
+        })
+      });
       return;
     }
 
@@ -210,26 +412,36 @@ async function loadSleepSummary() {
     const [ey, em, ed] = entry.date.split('-').map(Number);
     const dateLabel = new Date(ey, em - 1, ed).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 
-    el.innerHTML = `
+    setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.READY, { html: `
       <div style="font-size:1.4rem;font-weight:700;color:#1e293b;">${dur} ${qual}</div>
       <div style="font-size:.8rem;color:#94a3b8;margin-top:2px;">${dateLabel} · <a href="/sleep.html" style="color:#6366f1;">View all →</a></div>
-    `;
+    ` });
   } catch (e) {
     console.warn('Sleep summary load failed:', e);
+    setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.ERROR, {
+      html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.ERROR, {
+        v1: '<span style="color:#b91c1c;">Unable to load sleep summary right now.</span>'
+      })
+    });
   }
 }
 
-// Profile completion card
-apiFetch('/api/profile/completion').then(res => {
-  if (!res.ok) return;
-  const pct = res.data.percentage;
+async function backfillProfileCompletion() {
   const card = document.getElementById('profileCompletionCard');
-  const pctEl = document.getElementById('completionPctDash');
-  if (card && pct < 100) {
-    card.style.display = 'flex';
-    if (pctEl) pctEl.textContent = pct;
+  if (!card) return;
+  try {
+    const res = await apiFetch('/api/profile/completion');
+    if (!res.ok || !res.data) return;
+    const pct = res.data.percentage;
+    const pctEl = document.getElementById('completionPctDash');
+    if (pct < 100) {
+      card.style.display = 'flex';
+      if (pctEl) pctEl.textContent = pct;
+    }
+  } catch (e) {
+    // best-effort fallback only
   }
-});
+}
 
 // Show auto-calculated water goal based on weight — called after initAuth sets currentUser
 function updateWaterGoalDisplay() {

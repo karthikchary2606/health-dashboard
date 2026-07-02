@@ -1953,61 +1953,79 @@ if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
 function getFilteredRecipes(profile, options) {
   options = options || {};
   var mealType  = options.mealType;
-  var goal      = options.goal;
   var limit     = options.limit || 20;
 
-  var avoidances    = (profile.culturalFoodAvoidances || []).map(function(a){ return a.toLowerCase(); });
-  var userFoodNames = (profile.foodList || []).map(function(f){ return f.name.toLowerCase(); });
-  var hasFoodList   = userFoodNames.length >= 10;
-  var cuisine       = profile.cuisinePreference || 'mixed';
-
-  var results = RECIPES.filter(function(r) {
-    // 1. Hard-exclude if recipe name OR any ingredient matches an avoidance
-    if (avoidances.length > 0) {
-      var ingredLower = (r.ingredients || []).map(function(i){ return i.toLowerCase(); });
-      var inName = r.name.toLowerCase();
-      if (avoidances.some(function(a){ return inName.includes(a) || ingredLower.some(function(i){ return i.includes(a); }); })) return false;
-    }
-
-    // 1b. Diet type filter
-    if (profile.dietType && r.dietType && r.dietType.length > 0) {
-      var userDiet = profile.dietType;
-      // For vegan: only accept vegan recipes
-      if (userDiet === 'vegan' && !r.dietType.includes('vegan')) return false;
-      // For vegetarian: accept vegetarian or vegan; reject non-vegetarian
-      if (userDiet === 'vegetarian' && !r.dietType.some(function(d){ return d === 'vegetarian' || d === 'vegan'; })) return false;
-      // For eggetarian: accept eggetarian, vegetarian, vegan; reject non-vegetarian
-      if (userDiet === 'eggetarian' && !r.dietType.some(function(d){ return d === 'eggetarian' || d === 'vegetarian' || d === 'vegan'; })) return false;
-      // non-vegetarian: no restriction
-    }
-
-    // 2. Food list filter (only when >= 10 items in user's list)
-    if (hasFoodList && r.ingredients && r.ingredients.length > 0) {
-      var allInList = r.ingredients.every(function(ing) {
-        return userFoodNames.some(function(fn){ return ing.toLowerCase().includes(fn) || fn.includes(ing.toLowerCase()); });
-      });
-      if (!allInList) return false;
-    }
-
-    // 3. Cuisine filter
-    if (cuisine !== 'mixed' && r.cuisine !== cuisine && r.cuisine !== 'mixed') return false;
-
-    // 4. Meal type filter
-    if (mealType && r.cat && r.cat !== mealType) return false;
-
-    return true;
-  });
-
-  // 5. Goal-based sort boost
-  if (goal === 'weight-loss') {
-    results.sort(function(a, b) {
-      return ((a.nutrition && a.nutrition.caloriesPer100g) || 9999) - ((b.nutrition && b.nutrition.caloriesPer100g) || 9999);
-    });
-  } else if (goal === 'muscle-gain') {
-    results.sort(function(a, b) {
-      return ((b.nutrition && b.nutrition.proteinG) || 0) - ((a.nutrition && a.nutrition.proteinG) || 0);
-    });
+  function toLowerArray(values) {
+    if (!Array.isArray(values)) return [];
+    return values
+      .map(function(v) { return String(v || '').toLowerCase().trim(); })
+      .filter(Boolean);
   }
+
+  function normalizeFoodList(foodList) {
+    if (!Array.isArray(foodList)) return [];
+    return foodList
+      .map(function(item) { return typeof item === 'string' ? item : (item && item.name); })
+      .map(function(v) { return String(v || '').toLowerCase().trim(); })
+      .filter(Boolean);
+  }
+
+  function normalizeDietTypes(value) {
+    if (Array.isArray(value)) return value.map(function(v) { return String(v || '').toLowerCase(); });
+    if (!value) return [];
+    return [String(value).toLowerCase()];
+  }
+
+  function matchesDiet(profileDietType, recipeDietTypes) {
+    if (!profileDietType) return true;
+    if (recipeDietTypes.length === 0) return false;
+    if (profileDietType === 'vegetarian') {
+      return recipeDietTypes.includes('vegetarian') || recipeDietTypes.includes('vegan');
+    }
+    return recipeDietTypes.includes(profileDietType);
+  }
+
+  function affinityScore(recipe, foodList) {
+    if (foodList.length === 0) return 0;
+    var ingredients = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
+    return ingredients.reduce(function(score, ingredient) {
+      var ing = String(ingredient || '').toLowerCase();
+      if (!ing) return score;
+      var hasMatch = foodList.some(function(food) { return ing.includes(food) || food.includes(ing); });
+      return hasMatch ? score + 1 : score;
+    }, 0);
+  }
+
+  var dietType = String((profile && profile.dietType) || '').toLowerCase() || null;
+  var avoidTerms = toLowerArray((profile && profile.foodAllergies) || [])
+    .concat(toLowerArray((profile && profile.culturalFoodAvoidances) || []));
+  var cuisinePreference = String((profile && profile.cuisinePreference) || '').toLowerCase();
+  var foodList = normalizeFoodList((profile && profile.foodList) || []);
+
+  var results = RECIPES
+    .filter(function(recipe) {
+      return !mealType || !recipe.cat || recipe.cat === mealType;
+    })
+    .filter(function(recipe) {
+      return matchesDiet(dietType, normalizeDietTypes(recipe && recipe.dietType));
+    })
+    .filter(function(recipe) {
+      if (avoidTerms.length === 0) return true;
+      var haystack = (String((recipe && recipe.name) || '') + ' ' + ((recipe && Array.isArray(recipe.ingredients)) ? recipe.ingredients.join(' ') : '')).toLowerCase();
+      return avoidTerms.every(function(term) { return !haystack.includes(term); });
+    })
+    .filter(function(recipe) {
+      if (!cuisinePreference || cuisinePreference === 'mixed') return true;
+      return String((recipe && recipe.cuisine) || '').toLowerCase() === cuisinePreference;
+    })
+    .map(function(recipe, index) {
+      return { recipe: recipe, index: index, affinity: affinityScore(recipe, foodList) };
+    })
+    .sort(function(a, b) {
+      if (b.affinity !== a.affinity) return b.affinity - a.affinity;
+      return a.index - b.index;
+    })
+    .map(function(entry) { return entry.recipe; });
 
   return results.slice(0, limit);
 }
@@ -2022,7 +2040,7 @@ function buildRecipes() {
       vegan:            'Vegan recipes',
       eggetarian:       'Egg-friendly recipes',
       'gluten-free':    'Gluten-free recipes',
-      'non-vegetarian': 'All recipes'
+      'non-vegetarian': 'Non-vegetarian recipes'
     };
     var diet    = currentUser && currentUser.profile && currentUser.profile.dietType;
     var cuisine = currentUser && currentUser.profile && currentUser.profile.cuisinePreference;

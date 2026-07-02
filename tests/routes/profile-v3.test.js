@@ -23,6 +23,23 @@ async function createUser(overrides = {}) {
   });
 }
 
+async function createPlanReadyUser(overrides = {}) {
+  return createUser({
+    email: 'plan-ready@test.com',
+    profile: {
+      primaryGoal: 'weight-loss',
+      planTemplate: 'weight-loss',
+      currentWeightKg: 80,
+      goalWeightKg: 70,
+      heightCm: 175,
+      age: 30,
+      dietType: 'vegetarian',
+      fitnessLevel: 'lightly-active'
+    },
+    ...overrides
+  });
+}
+
 test('onboarding saves sex field', async () => {
   const user = await createUser({ profileComplete: false });
   const res = await request(app)
@@ -93,4 +110,40 @@ test('PATCH /api/profile accepts sex field', async () => {
     .send({ sex: 'female' });
   expect(res.status).toBe(200);
   expect(res.body.sex).toBe('female');
+});
+
+test('GET /api/profile/plan includes freshness metadata fields', async () => {
+  const user = await createPlanReadyUser({ email: 'plan-meta@test.com' });
+  const res = await request(app)
+    .get('/api/profile/plan')
+    .set(authHeader(user._id));
+
+  expect(res.status).toBe(200);
+  expect(res.body).toHaveProperty('profileUpdatedAt');
+  expect(res.body).toHaveProperty('planVersion');
+  expect(res.body).toHaveProperty('meta.profileUpdatedAt');
+  expect(res.body).toHaveProperty('meta.planVersion');
+  expect(res.body.planVersion).toBe(res.body.profileUpdatedAt);
+  expect(res.body.meta.planVersion).toBe(res.body.planVersion);
+});
+
+test('GET /api/profile/plan updates planVersion after profile patch', async () => {
+  const user = await createPlanReadyUser({ email: 'plan-version-bump@test.com' });
+  const firstRes = await request(app)
+    .get('/api/profile/plan')
+    .set(authHeader(user._id));
+  expect(firstRes.status).toBe(200);
+
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  const patchRes = await request(app)
+    .patch('/api/profile')
+    .set(authHeader(user._id))
+    .send({ cuisinePreference: 'north-indian' });
+  expect(patchRes.status).toBe(200);
+
+  const secondRes = await request(app)
+    .get('/api/profile/plan')
+    .set(authHeader(user._id));
+  expect(secondRes.status).toBe(200);
+  expect(secondRes.body.planVersion).not.toBe(firstRes.body.planVersion);
 });

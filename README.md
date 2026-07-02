@@ -78,6 +78,12 @@ The **Quick Log** panel on the dashboard lets you log:
 - **Water** — tap +250ml or +500ml buttons
 - **Workout** — tap "Mark Done ✓", then optionally expand to log individual exercises (name, sets, reps, weight)
 
+### Dashboard v2 incremental rollout (`dashboard_v2`)
+- Default experience remains **v1** for compatibility.
+- Opt in to v2 UX with `/?dashboard_v2=1`.
+- v2 keeps the same stable `GET /api/dashboard/overview` contract and only backfills profile completion when needed.
+- Timeline and sleep cards now show explicit empty/error prompts with retry/CTA actions in v2.
+
 ---
 
 ## 🕉️ Pranayama (Breathing Tab)
@@ -141,7 +147,26 @@ Enter your registered email — it promotes the account to admin with full acces
 ```bash
 npm test
 ```
-Expected: 291 tests passing, 25 test suites, 0 failures
+Expected: 308 tests passing, 28 test suites, 0 failures
+
+### Dashboard Reliability Release Gate (Required Before Deploy)
+Run the full reliability matrix against the **candidate release** and block release on any failure:
+
+```bash
+export CANDIDATE_URL="https://staging.health.kaha.online"  # or preview URL for this release
+npm test
+npm run test:e2e
+curl --fail --silent --show-error "$CANDIDATE_URL/api/health"
+curl --fail --silent --show-error "$CANDIDATE_URL/api/health"   | jq -e '.status == "ok" and .db == "connected"' >/dev/null
+```
+
+If `jq` is unavailable, install it or manually verify the JSON contains `"status":"ok"` and `"db":"connected"` before approving release.
+
+Release criteria:
+- All Jest suites pass.
+- All persona E2E scenarios pass.
+- Candidate health check returns HTTP 2xx and valid JSON with `status=ok` and `db=connected`.
+- **Deploy is blocked unless every gate above passes.**
 
 ### Module-by-Module Testing Guide
 
