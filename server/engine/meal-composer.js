@@ -47,6 +47,53 @@ function isVeganFriendly(meal) {
 }
 
 /**
+ * Deterministically hashes an arbitrary string into a non-negative 32-bit
+ * integer. Uses a simple, stable multiplicative (djb2-style) hash — no
+ * randomness, no platform-dependent behavior.
+ *
+ * @param {string|number} input
+ * @returns {number} non-negative integer hash
+ */
+function hashSeed(input) {
+  const str = String(input);
+  let hash = 5381;
+  for (let i = 0; i < str.length; i++) {
+    // hash * 33 + charCode, kept within unsigned 32-bit range
+    hash = ((hash * 33) ^ str.charCodeAt(i)) >>> 0;
+  }
+  return hash >>> 0;
+}
+
+/**
+ * Computes a deterministic rotation offset for a given profile/mealType at
+ * the current 4-week rotation block. The block advances every 4 weeks
+ * (blockIndex = floor(weekIndex / 4)), so all weeks within the same block
+ * share the same offset (stable pattern), while a new block yields a new
+ * seed — and therefore a new offset — shifting the meal-selection cycle.
+ *
+ * The seed incorporates user/profile traits (userId, dietType,
+ * cuisinePreference) plus mealType and blockIndex, so the same profile in
+ * the same block is always deterministic, and different profiles/blocks
+ * diverge.
+ *
+ * @param {object} profile   - { userId, dietType, cuisinePreference, ... }
+ * @param {number} weekIndex - 0-based global week number
+ * @param {string} mealType  - 'breakfast' | 'lunch' | 'snack' | 'dinner'
+ * @returns {number} rotation offset (non-negative integer)
+ */
+function getRotationOffset(profile, weekIndex, mealType) {
+  const blockIndex = Math.floor(weekIndex / 4);
+  const seedParts = [
+    profile.userId || profile.id || 'anon',
+    profile.dietType || '',
+    profile.cuisinePreference || '',
+    mealType,
+    blockIndex,
+  ];
+  return hashSeed(seedParts.join('|'));
+}
+
+/**
  * Returns a deterministic meal string for the given inputs.
  *
  * @param {object} profile        - { cuisinePreference, dietType, healthConditions }
@@ -79,7 +126,8 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
   // activeConditions available for future goal/condition-based filtering
   const _active = activeConditions(profile); // eslint-disable-line no-unused-vars
 
-  const index = (weekIndex * 7 + dayIndex) % usePool.length;
+  const offset = getRotationOffset(profile, weekIndex, mealType);
+  const index = (weekIndex * 7 + dayIndex + offset) % usePool.length;
   return usePool[index];
 }
 
@@ -167,4 +215,11 @@ function deriveEffectiveDiet(profile) {
   return baseDiet;
 }
 
-module.exports = { getMeals, activeConditions, deriveEffectiveDiet, normalizeFoodTokens };
+module.exports = {
+  getMeals,
+  activeConditions,
+  deriveEffectiveDiet,
+  normalizeFoodTokens,
+  hashSeed,
+  getRotationOffset,
+};
