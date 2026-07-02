@@ -1,4 +1,5 @@
 'use strict';
+const { todayIST }   = require('../server/utils/time');
 const express        = require('express');
 const router         = express.Router();
 const authenticate   = require('../middleware/authenticate');
@@ -112,13 +113,13 @@ function resolveMeta(name) {
 }
 
 function getISOWeek() {
-  // ISO 8601: week containing the first Thursday of the year is week 1.
-  const d = new Date();
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayOfWeek = date.getUTCDay() || 7; // convert Sunday 0 → 7
-  date.setUTCDate(date.getUTCDate() + 4 - dayOfWeek); // shift to nearest Thursday
+  const { isoDate } = todayIST();
+  // Parse the IST date string into a UTC-midnight anchor for ISO week math
+  const [yyyy, mm, dd] = isoDate.split('-').map(Number);
+  const date = new Date(Date.UTC(yyyy, mm - 1, dd));
+  date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
   const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil(((date - yearStart) / 86400000 + 1) / 7);
+  const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
   return `${date.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
 }
 
