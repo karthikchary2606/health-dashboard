@@ -8,7 +8,8 @@
     "test": "NODE_ENV=test jest --runInBand --forceExit",
     "seed:admin": "node scripts/seed-admin.js",
     "migrate:logs": "node scripts/migrate-logs.js",
-    "test:e2e": "playwright test tests/e2e/phase4-api-tests.spec.js",
+    "test:e2e": "node tests/e2e/phase4-validation.js",
+    "test:e2e:playwright": "playwright test tests/e2e/phase4-api-tests.spec.js",
     "test:e2e:phase4": "playwright test tests/e2e/phase4-api-tests.spec.js --headed",
     "test:e2e:update-snapshots": "playwright test tests/e2e/phase4-api-tests.spec.js --update-snapshots"
   },

@@ -21,12 +21,13 @@ export default defineConfig({
     },
   ],
 
-  webServer: process.env.BASE_URL
-    ? undefined
-    : {
-        command: 'node server.js',
-        url: 'http://localhost:3000',
-        reuseExistingServer: !process.env.CI,
-        timeout: 120000,
-      },
+  webServer:
+    process.env.BASE_URL || process.env.CI
+      ? undefined
+      : {
+          command: 'node server.js',
+          url: 'http://localhost:3000',
+          reuseExistingServer: true,
+          timeout: 120000,
+        },
 });
