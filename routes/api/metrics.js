@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
         cacheHitRate: monitoring.caching.cacheHitRate,
         effectiveDietCacheHits: monitoring.caching.effectiveDietCacheHits,
         effectiveDietCacheMisses: monitoring.caching.effectiveDietCacheMisses,
-        status: parseFloat(monitoring.caching.cacheHitRate) > 90 ? 'excellent' : 'needs-attention'
+        status: parseFloat(monitoring.caching.cacheHitRate) > 90 ? 'excellent' : 'warning'
       },
       feedback: {
         totalResponses: feedback.totalResponses,

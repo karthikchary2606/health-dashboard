@@ -53,7 +53,7 @@ describe('Metrics Dashboard', () => {
       .get('/api/metrics');
 
     expect(response.status).toBe(200);
-    const validStatuses = ['healthy', 'warning', 'excellent', 'strong', 'insufficient-data', 'needs-attention'];
+    const validStatuses = ['healthy', 'warning', 'excellent', 'strong', 'insufficient-data'];
     
     expect(validStatuses).toContain(response.body.personalization.status);
     expect(validStatuses).toContain(response.body.caching.status);
@@ -94,7 +94,7 @@ describe('Metrics Dashboard', () => {
     }
   });
 
-  test('Cache status is needs-attention when hit rate <= 90%', async () => {
+  test('Cache status is warning when hit rate <= 90%', async () => {
     const response = await request(app)
       .get('/api/metrics');
 
@@ -102,7 +102,7 @@ describe('Metrics Dashboard', () => {
     const hitRate = parseFloat(response.body.caching.cacheHitRate);
     
     if (hitRate <= 90) {
-      expect(response.body.caching.status).toBe('needs-attention');
+      expect(response.body.caching.status).toBe('warning');
     }
   });
 
