@@ -1,5 +1,13 @@
 let currentRecipeFilter = 'all';
 
+window._recipeShowAll = false;
+
+function toggleCuisineFilter(btn) {
+  window._recipeShowAll = !window._recipeShowAll;
+  btn.textContent = window._recipeShowAll ? '🍛 My Cuisine Only' : '🌍 Show All Cuisines';
+  renderRecipes(currentRecipeFilter);
+}
+
 const RECIPES = [
   // ── BREAKFAST ──────────────────────────────────────────────────────────────
   { id:0, icon:"🥞", cat:"breakfast", name:"Pesarattu (Moong Dal Crepes)", time:"25 min", cal:240, p:12, f:4, c:38,
@@ -1964,27 +1972,34 @@ function getFilteredRecipes(profile, options) {
 if (typeof window !== 'undefined') window.getFilteredRecipes = getFilteredRecipes;
 
 function buildRecipes() {
-  // Update subtitle based on user diet profile
-  const subtitle = document.getElementById('recipeSectionSubtitle');
+  var subtitle = document.getElementById('recipeSectionSubtitle');
   if (subtitle) {
-    const dietLabel = {
-      standard:      'All recipes',
-      vegetarian:    'Vegetarian recipes',
-      vegan:         'Vegan recipes',
-      eggetarian:    'Egg-friendly recipes',
-      'gluten-free': 'Gluten-free recipes',
+    var dietLabel = {
+      standard:         'All recipes',
+      vegetarian:       'Vegetarian recipes',
+      vegan:            'Vegan recipes',
+      eggetarian:       'Egg-friendly recipes',
+      'gluten-free':    'Gluten-free recipes',
       'non-vegetarian': 'All recipes'
     };
-    const diet = currentUser && currentUser.profile && currentUser.profile.dietType;
-    subtitle.textContent = (dietLabel[diet] || 'All recipes') + ' · Filtered for your health profile';
+    var diet    = currentUser && currentUser.profile && currentUser.profile.dietType;
+    var cuisine = currentUser && currentUser.profile && currentUser.profile.cuisinePreference;
+    var cuisineLabel = (cuisine && cuisine !== 'mixed')
+      ? ' · ' + cuisine.replace('-', ' ') + ' cuisine'
+      : '';
+    subtitle.textContent = (dietLabel[diet] || 'All recipes') + cuisineLabel + ' · Filtered for your profile';
   }
 
-  const cats = ["all","breakfast","lunch","dinner","snack","chutney"];
-  const filtersEl = document.getElementById("recipeFilters");
-  filtersEl.innerHTML = cats.map(c =>
-    `<button class="filter-pill${c==="all"?" active":""}" onclick="filterRecipes('${c}',this)">${c.charAt(0).toUpperCase()+c.slice(1)}</button>`
-  ).join("");
-  renderRecipes("all");
+  var cats = ['all','breakfast','lunch','dinner','snack','chutney'];
+  var filtersEl = document.getElementById('recipeFilters');
+  filtersEl.innerHTML = cats.map(function(c) {
+    return '<button class="filter-pill' + (c === 'all' ? ' active' : '') + '" onclick="filterRecipes(\'' + c + '\',this)">' +
+      c.charAt(0).toUpperCase() + c.slice(1) +
+    '</button>';
+  }).join('') +
+  '<button id="cuisineToggleBtn" class="filter-pill" style="margin-left:8px;background:#f0fdf4;color:#166534;border-color:#bbf7d0" onclick="toggleCuisineFilter(this)">🌍 Show All Cuisines</button>';
+
+  renderRecipes('all');
 }
 
 function filterRecipes(cat, btn) {
@@ -1995,61 +2010,59 @@ function filterRecipes(cat, btn) {
 }
 
 function renderRecipes(cat) {
-  let recs = cat === "all" ? RECIPES : RECIPES.filter(r => r.cat === cat);
+  var profile = (currentUser && currentUser.profile) || {};
+  var overrideProfile = window._recipeShowAll
+    ? Object.assign({}, profile, { cuisinePreference: 'mixed' })
+    : profile;
 
-  // Filter by dietary preference when user profile is available
-  if (currentUser && currentUser.profile) {
-    const diet = currentUser.profile.dietType;
-
-    // Eggetarian, vegetarian, vegan: remove meat/fish (eggs are OK for eggetarian)
-    if (diet === 'vegetarian' || diet === 'vegan' || diet === 'eggetarian') {
-      recs = recs.filter(r =>
-        !r.tags.some(t => ['chicken', 'meat', 'fish', 'non-veg', 'mutton'].includes(t)) &&
-        !r.name.toLowerCase().includes('chicken') &&
-        !r.name.toLowerCase().match(/\b(fish|mutton|prawn|shrimp)\b/)
-      );
-    }
-
-    // Vegan: additionally remove eggs and dairy
-    if (diet === 'vegan') {
-      recs = recs.filter(r =>
-        !r.tags.some(t => t.includes('egg')) &&
-        !r.name.toLowerCase().match(/\b(egg|omelet|omelette|paneer|ghee|dairy)\b/)
-      );
-    }
+  var goal = profile.primaryGoal;
+  var recs;
+  if (typeof getFilteredRecipes === 'function') {
+    recs = getFilteredRecipes(overrideProfile, {
+      limit: 200,
+      goal: goal,
+      mealType: (cat && cat !== 'all') ? cat : undefined
+    });
+  } else {
+    recs = (cat === 'all') ? RECIPES : RECIPES.filter(function(r) { return r.cat === cat; });
   }
 
-  const grid = document.getElementById("recipeGrid");
-  grid.innerHTML = recs.map(r => `
-    <div class="recipe-card">
-      <div class="recipe-header">
-        <div class="r-icon">${r.icon}</div>
-        <div class="r-name">${r.name}</div>
-        <div class="r-time">⏱️ ${r.time} · ${r.cal} kcal</div>
-      </div>
-      <div class="recipe-body">
-        <div class="recipe-macros">
-          <span class="macro-pill p">P ${r.p}g</span>
-          <span class="macro-pill f">F ${r.f}g</span>
-          <span class="macro-pill c">C ${r.c}g</span>
-          <span class="macro-pill cal">${r.cal} kcal</span>
-        </div>
-        <div class="recipe-tags">
-          ${r.tags.map(t => `<span class="tag${t.includes("ban")?" red":""}">${t}</span>`).join("")}
-        </div>
-      </div>
-      <div class="recipe-expand" id="rx-${r.id}">
-        <h4>🛒 Ingredients</h4>
-        <ul>${r.ingredients.map(i=>`<li>${i}</li>`).join("")}</ul>
-        <h4>👨‍🍳 Method</h4>
-        <ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
-        ${r.tip ? `<div class="recipe-tip">💡 ${r.tip}</div>` : ""}
-      </div>
-      <div style="padding:10px 16px;border-top:1px solid var(--border)">
-        <button class="btn btn-primary btn-sm" onclick="toggleRecipe(${r.id})">View Recipe ▼</button>
-      </div>
-    </div>
-  `).join("");
+  var grid = document.getElementById('recipeGrid');
+  if (!recs || recs.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text-light);padding:20px;text-align:center">No recipes match your profile preferences. <button onclick="toggleCuisineFilter(document.getElementById(\'cuisineToggleBtn\'))" style="color:#1b4332;background:none;border:none;cursor:pointer;text-decoration:underline">Show all cuisines</button></p>';
+    return;
+  }
+
+  grid.innerHTML = recs.map(function(r) { return (
+    '<div class="recipe-card">' +
+      '<div class="recipe-header">' +
+        '<div class="r-icon">' + r.icon + '</div>' +
+        '<div class="r-name">' + r.name + '</div>' +
+        '<div class="r-time">⏱️ ' + r.time + ' · ' + r.cal + ' kcal</div>' +
+      '</div>' +
+      '<div class="recipe-body">' +
+        '<div class="recipe-macros">' +
+          '<span class="macro-pill p">P ' + r.p + 'g</span>' +
+          '<span class="macro-pill f">F ' + r.f + 'g</span>' +
+          '<span class="macro-pill c">C ' + r.c + 'g</span>' +
+          '<span class="macro-pill cal">' + r.cal + ' kcal</span>' +
+        '</div>' +
+        '<div class="recipe-tags">' +
+          r.tags.map(function(t) { return '<span class="tag' + (t.includes('ban') ? ' red' : '') + '">' + t + '</span>'; }).join('') +
+        '</div>' +
+      '</div>' +
+      '<div class="recipe-expand" id="rx-' + r.id + '">' +
+        '<h4>🛒 Ingredients</h4>' +
+        '<ul>' + r.ingredients.map(function(i) { return '<li>' + i + '</li>'; }).join('') + '</ul>' +
+        '<h4>👨‍🍳 Method</h4>' +
+        '<ol>' + r.steps.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ol>' +
+        (r.tip ? '<div class="recipe-tip">💡 ' + r.tip + '</div>' : '') +
+      '</div>' +
+      '<div style="padding:10px 16px;border-top:1px solid var(--border)">' +
+        '<button class="btn btn-primary btn-sm" onclick="toggleRecipe(' + r.id + ')">View Recipe ▼</button>' +
+      '</div>' +
+    '</div>'
+  ); }).join('');
 }
 
 function toggleRecipe(id) {
