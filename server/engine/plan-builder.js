@@ -1,21 +1,9 @@
 'use strict';
 
-const { getMeals }     = require('./meal-composer');
-const { getExercises } = require('./exercise-composer');
+const { getMeals }          = require('./meal-composer');
+const { getExercises, getSuryaNamaskarRounds, getYogaExercises } = require('./exercise-composer');
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-
-// ─── Weekly workout schedule ──────────────────────────────────────────────────
-
-const WEEKLY_SCHEDULE = [
-  { day: 'Monday',    focus: 'Lower Body',    type: 'Strength',    duration: '45 min', muscleGroup: 'legs'       },
-  { day: 'Tuesday',   focus: 'Upper Body',    type: 'Strength',    duration: '45 min', muscleGroup: 'chest'      },
-  { day: 'Wednesday', focus: 'Cardio',        type: 'Cardio',      duration: '30 min', muscleGroup: null         },
-  { day: 'Thursday',  focus: 'Back & Core',   type: 'Strength',    duration: '45 min', muscleGroup: 'back'       },
-  { day: 'Friday',    focus: 'Full Body',     type: 'Strength',    duration: '45 min', muscleGroup: 'full-body'  },
-  { day: 'Saturday',  focus: 'Flexibility',   type: 'Flexibility', duration: '30 min', muscleGroup: 'back'       },
-  { day: 'Sunday',    focus: 'Rest',          type: 'Rest',        duration: '-',      muscleGroup: null         },
-];
 
 // ─── Cardio phases ────────────────────────────────────────────────────────────
 
@@ -109,6 +97,245 @@ const GROCERY_CATEGORIES = {
   ],
 };
 
+// ─── Phase labels per goal ────────────────────────────────────────────────────
+
+const PHASE_LABELS = {
+  'weight-loss': [
+    { phaseLabel: 'Foundation Phase',  focus: 'Build habits, establish routine',      note: 'Form over speed. Surya Namaskar every session.' },
+    { phaseLabel: 'Foundation Phase',  focus: 'Increase consistency',                  note: 'Track energy and recovery daily.' },
+    { phaseLabel: 'Progression Phase', focus: 'Progressive overload begins',           note: 'Add one rep or 0.5kg each week.' },
+    { phaseLabel: 'Progression Phase', focus: 'Push intensity moderately',             note: 'Pre-workout snack on training days.' },
+    { phaseLabel: 'Peak Phase',        focus: 'Maximum effort, peak performance',      note: 'Protein within 45 min post-workout.' },
+    { phaseLabel: 'Peak Phase',        focus: 'Maintain and consolidate gains',        note: 'Reduce refined carbs. Hold the discipline.' },
+  ],
+  'muscle-gain': [
+    { phaseLabel: 'Hypertrophy Foundation', focus: 'Build muscle-mind connection',    note: 'Slow negatives, controlled reps.' },
+    { phaseLabel: 'Hypertrophy Foundation', focus: 'Volume accumulation',              note: 'Hit protein target every day.' },
+    { phaseLabel: 'Progressive Overload',   focus: 'Increase load weekly',             note: 'Log every lift. Linear progression.' },
+    { phaseLabel: 'Progressive Overload',   focus: 'Peak volume block',                note: 'Sleep 8h — muscle grows during recovery.' },
+    { phaseLabel: 'Strength Peak',          focus: 'Intensity over volume',            note: 'Lower reps, heavier weight.' },
+    { phaseLabel: 'Strength Peak',          focus: 'Test maxes and consolidate',       note: 'Deload week at end of month 6.' },
+  ],
+  'maintenance': [
+    { phaseLabel: 'Stabilize',  focus: 'Re-establish consistent routine',     note: 'Consistency beats perfection.' },
+    { phaseLabel: 'Stabilize',  focus: 'Fine-tune habits',                    note: 'Track energy weekly.' },
+    { phaseLabel: 'Optimize',   focus: 'Improve weak areas',                  note: 'Add one new challenge per week.' },
+    { phaseLabel: 'Optimize',   focus: 'Sustain without burn-out',            note: 'Rest is part of the programme.' },
+    { phaseLabel: 'Sustain',    focus: 'Long-term sustainable movement',      note: 'Enjoy the process.' },
+    { phaseLabel: 'Sustain',    focus: 'Lifestyle integration',               note: 'Make this permanent.' },
+  ],
+  'general-fitness': [
+    { phaseLabel: 'Establish Routine',    focus: 'Build the habit first',            note: 'Show up even when motivation is low.' },
+    { phaseLabel: 'Establish Routine',    focus: 'Add structure',                    note: 'Hydration and sleep matter as much as reps.' },
+    { phaseLabel: 'Build Consistency',    focus: 'Progressive challenge',            note: 'Small improvements compound fast.' },
+    { phaseLabel: 'Build Consistency',    focus: 'Push past plateaus',               note: 'Try one new exercise per week.' },
+    { phaseLabel: 'Advance & Maintain',   focus: 'Higher intensity sessions',        note: 'Form check — video yourself once a month.' },
+    { phaseLabel: 'Advance & Maintain',   focus: 'Lifelong fitness foundation',      note: 'You have built something real.' },
+  ],
+};
+
+// ─── Day slot templates by workoutDaysPerWeek ─────────────────────────────────
+
+const GYM_HOME_SLOTS = {
+  3: [
+    { day: 'Monday',    muscleGroup: 'full-body', focus: 'Full Body',   duration: '45 min' },
+    { day: 'Wednesday', muscleGroup: 'chest',     focus: 'Upper Body',  duration: '45 min' },
+    { day: 'Friday',    muscleGroup: 'legs',      focus: 'Lower Body',  duration: '45 min' },
+  ],
+  4: [
+    { day: 'Monday',   muscleGroup: 'legs',      focus: 'Lower Body',   duration: '45 min' },
+    { day: 'Tuesday',  muscleGroup: 'chest',     focus: 'Upper Body',   duration: '45 min' },
+    { day: 'Thursday', muscleGroup: 'back',      focus: 'Back & Core',  duration: '45 min' },
+    { day: 'Friday',   muscleGroup: 'full-body', focus: 'Full Body',    duration: '45 min' },
+  ],
+  5: [
+    { day: 'Monday',    muscleGroup: 'legs',      focus: 'Lower Body',   duration: '45 min' },
+    { day: 'Tuesday',   muscleGroup: 'chest',     focus: 'Upper Body',   duration: '45 min' },
+    { day: 'Wednesday', muscleGroup: 'back',      focus: 'Back & Core',  duration: '30 min' },
+    { day: 'Thursday',  muscleGroup: 'full-body', focus: 'Full Body',    duration: '45 min' },
+    { day: 'Friday',    muscleGroup: null,         focus: 'Cardio',      duration: '30 min' },
+  ],
+  6: [
+    { day: 'Monday',    muscleGroup: 'legs',      focus: 'Lower Body',    duration: '45 min' },
+    { day: 'Tuesday',   muscleGroup: 'chest',     focus: 'Upper Body',    duration: '45 min' },
+    { day: 'Wednesday', muscleGroup: 'back',      focus: 'Back & Core',   duration: '45 min' },
+    { day: 'Thursday',  muscleGroup: 'full-body', focus: 'Full Body',     duration: '45 min' },
+    { day: 'Friday',    muscleGroup: null,         focus: 'Cardio',       duration: '30 min' },
+    { day: 'Saturday',  muscleGroup: 'back',      focus: 'Flexibility',   duration: '30 min' },
+  ],
+  7: [
+    { day: 'Monday',    muscleGroup: 'legs',      focus: 'Lower Body',    duration: '45 min' },
+    { day: 'Tuesday',   muscleGroup: 'chest',     focus: 'Upper Body',    duration: '45 min' },
+    { day: 'Wednesday', muscleGroup: 'back',      focus: 'Back & Core',   duration: '45 min' },
+    { day: 'Thursday',  muscleGroup: 'full-body', focus: 'Full Body',     duration: '45 min' },
+    { day: 'Friday',    muscleGroup: null,         focus: 'Cardio',       duration: '30 min' },
+    { day: 'Saturday',  muscleGroup: 'back',      focus: 'Flexibility',   duration: '30 min' },
+    { day: 'Sunday',    muscleGroup: 'back',      focus: 'Active Recovery', duration: '20 min' },
+  ],
+};
+
+const YOGA_SLOTS = {
+  3: ['Monday','Wednesday','Friday'],
+  4: ['Monday','Tuesday','Thursday','Friday'],
+  5: ['Monday','Tuesday','Wednesday','Thursday','Friday'],
+  6: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  7: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+};
+
+function detectWorkoutMode(profile) {
+  const prefs = profile.workoutPreferences || [];
+  const hasGym  = prefs.includes('gym') ||
+                  (profile.equipmentAvailable || []).includes('gym-access');
+  const hasYoga = prefs.includes('yoga');
+  if (hasGym && hasYoga) return 'hybrid';
+  if (hasYoga)           return 'yoga';
+  if (hasGym)            return 'gym';
+  return 'home';
+}
+
+function suryaEntry(profile, gentle) {
+  const rounds = getSuryaNamaskarRounds(profile);
+  if (gentle) {
+    return {
+      name: 'Gentle Surya Namaskar (optional)',
+      sets: 3,
+      reps: '12 poses per round',
+      note: 'Active recovery — slow gentle pace only',
+      cat: 'yoga'
+    };
+  }
+  return {
+    name: `Surya Namaskar — ${rounds} rounds`,
+    sets: rounds,
+    reps: '12 poses per round',
+    note: 'Age/fitness-adjusted warm-up. Full-body activation before training.',
+    cat: 'yoga'
+  };
+}
+
+function buildStrengthSchedule(profile, goal, daysPerWeek) {
+  const slots    = GYM_HOME_SLOTS[daysPerWeek] || GYM_HOME_SLOTS[4];
+  const activeSet = new Set(slots.map(s => s.day));
+
+  return DAYS.map(day => {
+    if (!activeSet.has(day)) {
+      return {
+        day, focus: 'Rest', type: 'rest', duration: '-',
+        exercises: [suryaEntry(profile, true)]
+      };
+    }
+    const slot = slots.find(s => s.day === day);
+    const exercises = slot.muscleGroup
+      ? [suryaEntry(profile, false), ...getExercises(profile, slot.muscleGroup, goal)]
+      : [suryaEntry(profile, false)];
+    return {
+      day,
+      focus:     slot.focus,
+      type:      slot.muscleGroup ? 'Strength' : 'Cardio',
+      duration:  slot.duration,
+      exercises
+    };
+  });
+}
+
+function buildYogaSchedule(profile, daysPerWeek) {
+  const activeDays = new Set(YOGA_SLOTS[daysPerWeek] || YOGA_SLOTS[4]);
+  let yogaDayIndex = 0;
+
+  return DAYS.map(day => {
+    if (!activeDays.has(day)) {
+      return {
+        day, focus: 'Rest', type: 'rest', duration: '-',
+        exercises: [suryaEntry(profile, true)]
+      };
+    }
+    const style = profile.yogaStyle;
+    const yogaType = (style && style !== 'none' && ['hatha','vinyasa','pranayama-only'].includes(style))
+      ? style
+      : ['hatha','vinyasa','pranayama-only'][yogaDayIndex % 3];
+    yogaDayIndex++;
+    return {
+      day,
+      focus:     `Yoga — ${yogaType.charAt(0).toUpperCase() + yogaType.slice(1)}`,
+      type:      'Yoga',
+      duration:  '45 min',
+      exercises: [suryaEntry(profile, false), ...getYogaExercises(yogaType)]
+    };
+  });
+}
+
+function buildHybridSchedule(profile, goal, daysPerWeek) {
+  const activeDaysArr = YOGA_SLOTS[daysPerWeek] || YOGA_SLOTS[4];
+  const activeSet     = new Set(activeDaysArr);
+  const strengthCount = Math.ceil(activeDaysArr.length / 2);
+  const strengthSlotTemplate = GYM_HOME_SLOTS[strengthCount] || GYM_HOME_SLOTS[3];
+  const strengthDaySet = new Set(strengthSlotTemplate.map(s => s.day));
+  let yogaDayIndex = 0;
+
+  return DAYS.map(day => {
+    if (!activeSet.has(day)) {
+      return {
+        day, focus: 'Rest', type: 'rest', duration: '-',
+        exercises: [suryaEntry(profile, true)]
+      };
+    }
+    if (strengthDaySet.has(day)) {
+      const slot = strengthSlotTemplate.find(s => s.day === day);
+      const exercises = slot && slot.muscleGroup
+        ? [suryaEntry(profile, false), ...getExercises(profile, slot.muscleGroup, goal)]
+        : [suryaEntry(profile, false)];
+      return {
+        day,
+        focus:     slot ? slot.focus : 'Strength',
+        type:      'Strength',
+        duration:  '45 min',
+        exercises
+      };
+    }
+    const style = profile.yogaStyle;
+    const yogaType = (style && style !== 'none' && ['hatha','vinyasa','pranayama-only'].includes(style))
+      ? style
+      : ['hatha','vinyasa','pranayama-only'][yogaDayIndex % 3];
+    yogaDayIndex++;
+    return {
+      day,
+      focus:     `Yoga — ${yogaType.charAt(0).toUpperCase() + yogaType.slice(1)}`,
+      type:      'Yoga',
+      duration:  '45 min',
+      exercises: [suryaEntry(profile, false), ...getYogaExercises(yogaType)]
+    };
+  });
+}
+
+// ─── Diet phase guidelines ────────────────────────────────────────────────────
+
+const DIET_GUIDELINES = {
+  foundation: [
+    'Establish 3 balanced meals + 1 snack per day',
+    'Caloric target: −300 kcal deficit (weight-loss) / +300 surplus (muscle-gain) / maintenance (other goals)',
+    'Hydration: drink 2.5–3L water daily',
+    'Avoid processed foods and sugar-sweetened beverages this month',
+  ],
+  progression: [
+    'Increase protein to support higher training volume (aim for 1.6–2g per kg body weight)',
+    'Add a pre-workout snack on training days: banana + tablespoon of nut butter',
+    'If energy is low, slightly increase complex carbs (oats, brown rice, sweet potato)',
+    'Continue hydration: 3L water on training days',
+  ],
+  peak: [
+    'Protein within 45 minutes post-workout for optimal muscle repair',
+    'Reduce refined carbs; prioritise complex carbs and dark leafy greens',
+    'If goal weight is reached, shift to maintenance calories',
+    'Monitor sleep — inadequate sleep undermines nutrition and performance',
+  ],
+};
+
+function getMonthGuidelines(monthIndex) {
+  if (monthIndex <= 1) return DIET_GUIDELINES.foundation;
+  if (monthIndex <= 3) return DIET_GUIDELINES.progression;
+  return DIET_GUIDELINES.peak;
+}
+
 // ─── buildDietPlan ────────────────────────────────────────────────────────────
 
 function buildDietPlan(profile, goal) {
@@ -127,25 +354,29 @@ function buildDietPlan(profile, goal) {
         })),
       };
     }),
-    guidelines: [],
+    guidelines: getMonthGuidelines(monthIndex),
   }));
 }
 
 // ─── buildWorkoutPlan ─────────────────────────────────────────────────────────
 
 function buildWorkoutPlan(profile, goal) {
-  return Array.from({ length: 6 }, (_, monthIndex) => ({
-    monthLabel: `Month ${monthIndex + 1}`,
-    schedule: WEEKLY_SCHEDULE.map(slot => ({
-      day:       slot.day,
-      focus:     slot.focus,
-      type:      slot.type,
-      duration:  slot.duration,
-      exercises: slot.muscleGroup
-        ? getExercises(profile, slot.muscleGroup, goal)
-        : [],
-    })),
-  }));
+  const mode        = detectWorkoutMode(profile);
+  const daysPerWeek = Math.min(7, Math.max(3, profile.workoutDaysPerWeek || 4));
+  const phaseLabels = PHASE_LABELS[goal] || PHASE_LABELS['general-fitness'];
+
+  return Array.from({ length: 6 }, (_, monthIndex) => {
+    const { phaseLabel, focus, note } = phaseLabels[monthIndex] || phaseLabels[0];
+    let schedule;
+    if (mode === 'yoga') {
+      schedule = buildYogaSchedule(profile, daysPerWeek);
+    } else if (mode === 'hybrid') {
+      schedule = buildHybridSchedule(profile, goal, daysPerWeek);
+    } else {
+      schedule = buildStrengthSchedule(profile, goal, daysPerWeek);
+    }
+    return { monthLabel: `Month ${monthIndex + 1}`, phaseLabel, focus, note, schedule };
+  });
 }
 
 // ─── buildCardioPlan ──────────────────────────────────────────────────────────

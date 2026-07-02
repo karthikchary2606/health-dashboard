@@ -241,3 +241,129 @@ describe('buildGroceryList', () => {
     });
   });
 });
+
+// ─── Personalized buildWorkoutPlan ─────────────────────────────────────────
+
+const yogaProfile = {
+  dietType: 'vegetarian',
+  cuisinePreference: 'south-indian',
+  fitnessLevel: 'moderately-active',
+  equipmentAvailable: [],
+  healthConditions: [],
+  workoutPreferences: ['yoga'],
+  workoutDaysPerWeek: 4,
+  yogaStyle: 'hatha',
+  age: 30,
+};
+
+const gymProfile3Day = {
+  dietType: 'non-vegetarian',
+  cuisinePreference: 'north-indian',
+  fitnessLevel: 'very-active',
+  equipmentAvailable: ['dumbbells', 'barbell'],
+  healthConditions: [],
+  workoutPreferences: ['gym'],
+  workoutDaysPerWeek: 3,
+  age: 28,
+};
+
+const hybridProfile = {
+  dietType: 'eggetarian',
+  cuisinePreference: 'mixed',
+  fitnessLevel: 'moderately-active',
+  equipmentAvailable: ['dumbbells'],
+  healthConditions: [],
+  workoutPreferences: ['gym', 'yoga'],
+  workoutDaysPerWeek: 5,
+  yogaStyle: 'vinyasa',
+  age: 35,
+};
+
+describe('buildWorkoutPlan — personalized', () => {
+  test('yoga profile: active days have yoga cat exercises', () => {
+   const plan = buildWorkoutPlan(yogaProfile, 'weight-loss');
+   const activeDays = plan[0].schedule.filter(d => d.type !== 'rest');
+   expect(activeDays.length).toBe(4);
+   activeDays.forEach(day => {
+     const hasYogaCat = day.exercises.some(ex => ex.cat === 'yoga');
+     expect(hasYogaCat).toBe(true);
+   });
+  });
+
+  test('yoga profile: Surya Namaskar is always first exercise on active days', () => {
+   const plan = buildWorkoutPlan(yogaProfile, 'weight-loss');
+   plan[0].schedule
+     .filter(d => d.type !== 'rest' && d.exercises.length > 0)
+     .forEach(day => {
+       expect(day.exercises[0].name).toMatch(/Surya Namaskar/i);
+     });
+  });
+
+  test('gym profile 3 days: exactly 3 active days and 4 rest days per week', () => {
+   const plan = buildWorkoutPlan(gymProfile3Day, 'muscle-gain');
+   const activeDays = plan[0].schedule.filter(d => d.type !== 'rest');
+   const restDays   = plan[0].schedule.filter(d => d.type === 'rest');
+   expect(activeDays.length).toBe(3);
+   expect(restDays.length).toBe(4);
+  });
+
+  test('gym profile 3 days: Surya Namaskar first on all active days', () => {
+   const plan = buildWorkoutPlan(gymProfile3Day, 'muscle-gain');
+   plan[0].schedule
+     .filter(d => d.type !== 'rest' && d.exercises.length > 0)
+     .forEach(day => {
+       expect(day.exercises[0].name).toMatch(/Surya Namaskar/i);
+     });
+  });
+
+  test('each month has phaseLabel, focus, note', () => {
+   const plan = buildWorkoutPlan(yogaProfile, 'weight-loss');
+   plan.forEach(month => {
+     expect(typeof month.phaseLabel).toBe('string');
+     expect(month.phaseLabel.length).toBeGreaterThan(0);
+     expect(typeof month.focus).toBe('string');
+     expect(month.focus.length).toBeGreaterThan(0);
+     expect(typeof month.note).toBe('string');
+     expect(month.note.length).toBeGreaterThan(0);
+   });
+  });
+
+  test('rest days include optional Surya Namaskar entry', () => {
+   const plan = buildWorkoutPlan(gymProfile3Day, 'weight-loss');
+   const restDays = plan[0].schedule.filter(d => d.type === 'rest');
+   expect(restDays.length).toBeGreaterThan(0);
+   restDays.forEach(day => {
+     expect(day.exercises.length).toBe(1);
+     expect(day.exercises[0].name).toMatch(/Surya Namaskar/i);
+   });
+  });
+
+  test('hybrid profile: schedule has both strength and yoga days', () => {
+   const plan = buildWorkoutPlan(hybridProfile, 'general-fitness');
+   const activeDays = plan[0].schedule.filter(d => d.type !== 'rest');
+   const yogaDays     = activeDays.filter(d => d.focus && d.focus.toLowerCase().includes('yoga'));
+   const strengthDays = activeDays.filter(d => d.focus && !d.focus.toLowerCase().includes('yoga'));
+   expect(yogaDays.length).toBeGreaterThan(0);
+   expect(strengthDays.length).toBeGreaterThan(0);
+  });
+});
+
+// ─── Diet guidelines ──────────────────────────────────────────────────────────
+
+describe('buildDietPlan guidelines', () => {
+  test('each month has a non-empty guidelines array', () => {
+   const plan = buildDietPlan(vegProfile, 'weight-loss');
+   plan.forEach((month) => {
+     expect(Array.isArray(month.guidelines)).toBe(true);
+     expect(month.guidelines.length).toBeGreaterThan(0);
+     month.guidelines.forEach(g => expect(typeof g).toBe('string'));
+   });
+  });
+
+  test('guidelines differ between foundation and peak months', () => {
+   const plan = buildDietPlan(vegProfile, 'weight-loss');
+   const foundationGuidelines = plan[0].guidelines; // Month 1
+   const peakGuidelines       = plan[4].guidelines; // Month 5
+   expect(foundationGuidelines).not.toEqual(peakGuidelines);
+  });
+});
