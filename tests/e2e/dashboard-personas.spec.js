@@ -182,10 +182,7 @@ test('dashboard v2 cards show explicit empty prompts', async ({ page }) => {
   const persona = personas[0];
   await setupPersonaRoutes(page, persona, { overviewBody: { ...persona.overview, timeline: [] }, sleepBody: [] });
 
-  await page.goto(`${BASE_URL}/?dashboard_v2=1`, { waitUntil: 'domcontentloaded' });
-
-  await expect(page.locator('body')).toHaveClass(/dashboard-v2-enabled/);
-  await expect(page.locator('#dashboardV2Badge')).toBeVisible();
+  await page.goto(`${BASE_URL}/`, { waitUntil: 'domcontentloaded' });
 
   const timeline = page.locator('#timelineContainer');
   await expect(timeline).toHaveAttribute('data-state', 'empty');

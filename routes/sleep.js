@@ -1,5 +1,6 @@
 // routes/sleep.js
 'use strict';
+const { todayIST } = require('../server/utils/time');
 const express = require('express');
 const HealthLog = require('../models/HealthLog');
 const authenticate = require('../middleware/authenticate');
@@ -30,7 +31,7 @@ router.post('/', async (req, res, next) => {
     let { date, durationMinutes } = req.body;
 
     // Default date to today
-    if (!date) date = new Date().toISOString().slice(0, 10);
+    if (!date) date = todayIST().isoDate;
 
     // Validate date format
     if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
