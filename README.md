@@ -78,6 +78,12 @@ The **Quick Log** panel on the dashboard lets you log:
 - **Water** — tap +250ml or +500ml buttons
 - **Workout** — tap "Mark Done ✓", then optionally expand to log individual exercises (name, sets, reps, weight)
 
+### Dashboard v2 incremental rollout (`dashboard_v2`)
+- Default experience remains **v1** for compatibility.
+- Opt in to v2 UX with `/?dashboard_v2=1`.
+- v2 keeps the same stable `GET /api/dashboard/overview` contract and only backfills profile completion when needed.
+- Timeline and sleep cards now show explicit empty/error prompts with retry/CTA actions in v2.
+
 ---
 
 ## 🕉️ Pranayama (Breathing Tab)

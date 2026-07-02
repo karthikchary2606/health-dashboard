@@ -173,6 +173,14 @@ body{font-family:"Inter",system-ui,sans-serif;background:var(--bg);color:var(--t
 .timeline-item .t-time{font-size:.78rem;font-weight:700;color:var(--primary);min-width:72px}
 .timeline-item .t-text{flex:1;font-size:.83rem;color:var(--text-med)}
 .timeline-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--success);cursor:pointer;flex-shrink:0}
+.dashboard-state-callout{border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:#f8fafc}
+.dashboard-state-title{font-size:.84rem;font-weight:700;color:var(--primary);margin:0}
+.dashboard-state-detail{font-size:.78rem;color:var(--text-light);margin:5px 0 10px}
+.dashboard-state-action{display:inline-flex;align-items:center;justify-content:center;border:1px solid #bbf7d0;background:#f0fdf4;color:#166534;border-radius:999px;padding:5px 12px;font-size:.76rem;font-weight:600;text-decoration:none;cursor:pointer}
+button.dashboard-state-action{font-family:inherit}
+body.dashboard-v2-enabled #sec-dashboard .card{border-top-width:4px}
+body.dashboard-v2-enabled #sec-dashboard .card-title{justify-content:space-between}
+body.dashboard-v2-enabled #sec-dashboard .stat-chip{box-shadow:0 6px 18px rgba(27,67,50,.09)}
 /* WATER */
 .water-row{display:flex;gap:10px;margin-top:12px}
 .water-btn{flex:1;padding:14px 0;border:2px solid #93c5fd;border-radius:var(--radius-sm);background:#eff6ff;color:#1d4ed8;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;text-align:center}
@@ -493,7 +501,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   <!-- ===== DASHBOARD ===== -->
   <div id="sec-dashboard" class="section active">
     <div class="section-header">
-      <div><h2>Daily Overview</h2><p id="dashGreeting">Loading...</p></div>
+      <div><h2>Daily Overview <span id="dashboardV2Badge" style="display:none;font-size:.68rem;background:#dcfce7;color:#166534;border:1px solid #bbf7d0;padding:3px 8px;border-radius:999px;vertical-align:middle">V2 preview</span></h2><p id="dashGreeting">Loading...</p></div>
       <button class="btn btn-primary btn-sm" onclick="syncData()">💾 Save Log</button>
     </div>
 
@@ -525,7 +533,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 
     <div class="grid-2">
       <!-- Timeline -->
-      <div class="card">
+      <div class="card" id="timelineCard">
         <div class="card-title">📅 Daily Timeline</div>
         <div id="timelineContainer" data-state="loading"><p style="color:var(--text-light);font-size:.85rem">Loading...</p></div>
       </div>
@@ -937,6 +945,7 @@ function toggleMoreMenu() { openSidebar(); }
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+  applyDashboardVariant();
   await initAuth(); // auth check + sidebar personalisation
   setGreeting();    // runs immediately after auth so greeting never stays "Loading..."
   updateWaterGoalDisplay(); // requires currentUser — must run after initAuth
@@ -955,7 +964,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("logDate").value = today;
   if (!overview) {
-    await buildTimeline(); // fallback when overview API is unavailable
+    if (DASHBOARD_V2_ENABLED) {
+      updateCheckStat();
+    } else {
+      await buildTimeline(); // fallback when overview API is unavailable
+      await backfillProfileCompletion();
+    }
   } else {
     updateCheckStat();
   }
@@ -970,12 +984,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch(e) {
     console.error('Dashboard init error:', e);
     setGreeting(); // fallback: ensure greeting is never stuck if an exception fires above
-    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, { html: "<p style='color:#b91c1c;font-size:.85rem'>Unable to load dashboard timeline.</p>" });
-    setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.ERROR, { html: "<span style='color:#b91c1c;'>Unable to load sleep summary right now.</span>" });
+    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.ERROR, {
+      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.ERROR, {
+        v1: "<p style='color:#b91c1c;font-size:.85rem'>Unable to load dashboard timeline.</p>"
+      })
+    });
+    setDashboardBlockState('sleepSummaryContent', DASHBOARD_BLOCK_STATE.ERROR, {
+      html: renderDashboardPrompt('sleep', DASHBOARD_BLOCK_STATE.ERROR, {
+        v1: "<span style='color:#b91c1c;'>Unable to load sleep summary right now.</span>"
+      })
+    });
   }
 });
 </script>
 </body>
 </html>
-
-

@@ -76,8 +76,9 @@ function normalize(value) {
   return String(value || '').toLowerCase();
 }
 
-async function setupPersonaRoutes(page, persona) {
+async function setupPersonaRoutes(page, persona, opts = {}) {
   const fallbackCompletion = { percentage: 100, missingFields: [] };
+  const options = opts || {};
 
   await page.route('**/api/**', async (route) => {
     const url = new URL(route.request().url());
@@ -89,7 +90,11 @@ async function setupPersonaRoutes(page, persona) {
     }
 
     if (pathname === '/api/dashboard/overview') {
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(persona.overview) });
+      if (options.overviewStatus && options.overviewStatus !== 200) {
+        await route.fulfill({ status: options.overviewStatus, contentType: 'application/json', body: JSON.stringify(options.overviewBody || {}) });
+      } else {
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(options.overviewBody || persona.overview) });
+      }
       return;
     }
 
@@ -108,7 +113,11 @@ async function setupPersonaRoutes(page, persona) {
     }
 
     if (pathname === '/api/sleep/history') {
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([]) });
+      if (options.sleepStatus && options.sleepStatus !== 200) {
+        await route.fulfill({ status: options.sleepStatus, contentType: 'application/json', body: JSON.stringify(options.sleepBody || {}) });
+      } else {
+        await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(options.sleepBody || []) });
+      }
       return;
     }
 
@@ -159,3 +168,44 @@ for (const persona of personas) {
     expect(calorieTarget).toMatch(/[0-9]/);
   });
 }
+
+test('dashboard v2 cards show explicit empty prompts', async ({ page }) => {
+  const persona = personas[0];
+  await setupPersonaRoutes(page, persona, { overviewBody: { ...persona.overview, timeline: [] }, sleepBody: [] });
+
+  await page.goto(`${BASE_URL}/?dashboard_v2=1`, { waitUntil: 'domcontentloaded' });
+
+  await expect(page.locator('body')).toHaveClass(/dashboard-v2-enabled/);
+  await expect(page.locator('#dashboardV2Badge')).toBeVisible();
+
+  const timeline = page.locator('#timelineContainer');
+  await expect(timeline).toHaveAttribute('data-state', 'empty');
+  await expect(timeline).toContainText('No timeline updates yet');
+  await expect(timeline).toContainText('Open Diet Plan');
+  await expect(timeline).toHaveScreenshot('dashboard-v2-timeline-empty.png');
+
+  const sleepSummary = page.locator('#sleepSummaryContent');
+  await expect(sleepSummary).toHaveAttribute('data-state', 'empty');
+  await expect(sleepSummary).toContainText('No sleep entry found');
+  await expect(sleepSummary).toContainText('Log sleep');
+  await expect(sleepSummary).toHaveScreenshot('dashboard-v2-sleep-empty.png');
+});
+
+test('dashboard v2 cards show explicit error prompts', async ({ page }) => {
+  const persona = personas[0];
+  await setupPersonaRoutes(page, persona, { overviewStatus: 500, overviewBody: { error: 'boom' }, sleepStatus: 500, sleepBody: { error: 'boom' } });
+
+  await page.goto(`${BASE_URL}/?dashboard_v2=1`, { waitUntil: 'domcontentloaded' });
+
+  const timeline = page.locator('#timelineContainer');
+  await expect(timeline).toHaveAttribute('data-state', 'error');
+  await expect(timeline).toContainText('Couldn’t load today’s timeline');
+  await expect(timeline).toContainText('Retry');
+  await expect(timeline).toHaveScreenshot('dashboard-v2-timeline-error.png');
+
+  const sleepSummary = page.locator('#sleepSummaryContent');
+  await expect(sleepSummary).toHaveAttribute('data-state', 'error');
+  await expect(sleepSummary).toContainText('Sleep summary unavailable');
+  await expect(sleepSummary).toContainText('Retry');
+  await expect(sleepSummary).toHaveScreenshot('dashboard-v2-sleep-error.png');
+});
