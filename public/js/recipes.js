@@ -1947,7 +1947,7 @@ function getFilteredRecipes(profile, options) {
       // For vegetarian: accept vegetarian or vegan; reject non-vegetarian
       if (userDiet === 'vegetarian' && !r.dietType.some(function(d){ return d === 'vegetarian' || d === 'vegan'; })) return false;
       // For eggetarian: accept eggetarian, vegetarian, vegan; reject non-vegetarian
-      if (userDiet === 'eggetarian' && r.dietType.every(function(d){ return d === 'non-vegetarian'; })) return false;
+      if (userDiet === 'eggetarian' && !r.dietType.some(function(d){ return d === 'eggetarian' || d === 'vegetarian' || d === 'vegan'; })) return false;
       // non-vegetarian: no restriction
     }
 
