@@ -5,7 +5,7 @@ async function initAuth() {
   const { ok, data } = await apiFetch('/api/auth/me');
   if (!ok) return; // apiFetch handles redirect on 401
   currentUser = data;
-  if (currentUser.profileComplete === false) {
+  if (currentUser && currentUser.profileComplete === false) {
     window._profileIncomplete = true;
     // Show a banner at the top of the page
     const banner = document.createElement('div');
