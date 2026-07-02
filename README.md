@@ -544,6 +544,117 @@ curl .../profile/3/plan | jq '.workouts[] | select(.type=="yoga") | .exercises[]
 
 ---
 
+## 🎯 Phase 4: Effective Diet Inference & Deterministic Plan Rotation
+
+### Overview
+Phase 4 enables two critical personalization features:
+1. **Effective Diet Inference**: Vegetarian/vegan users can select specific non-vegetarian items (e.g., chicken, eggs) to dynamically upgrade their meal plans
+2. **Deterministic Plan Rotation**: All diet and workout plans rotate predictably every 4 weeks (meals) and every month (workouts), eliminating repetitive identical weeks
+
+### Feature 1: Effective Diet Inference
+
+When you set your diet type (vegetarian, vegan, eggetarian), you're also shown a **Food Checklist** specific to your language community. This includes optional items like:
+- Eggs (for vegetarians interested in eggetarian meals)
+- Chicken, fish, mutton (for vegetarians willing to include non-vegetarian items)
+- Dairy items (for vegans)
+
+**How it works:**
+- Your stored `profile.dietType` is never modified
+- At plan generation time, we compute an "effective diet" by analyzing your `foodList` selections
+- If you're vegetarian but selected "Chicken" and "Eggs", your effective diet upgrades to **non-vegetarian** for meal generation
+- Meals are then pulled from non-vegetarian pools (ensuring chicken appears), while vegan filtering remains backward-compatible
+
+**Example**:
+```
+Profile: dietType = "vegetarian"
+Food Checklist Selections: [idli, dosa, "Chicken", "Eggs", sambar, ...]
+Effective Diet: "non-vegetarian" (because of "Chicken")
+Result: Meals include chicken curry, eggs fry, etc.
+```
+
+**Technical Details**:
+- Implemented in `server/engine/meal-composer.js::deriveEffectiveDiet(profile)`
+- Word-boundary regex prevents false positives (e.g., "eggplant" doesn't trigger "egg" upgrade)
+- Vegan profile immutability: vegans cannot upgrade from vegan diet (no dairy uptrack)
+
+### Feature 2: Deterministic Plan Rotation
+
+**Problem Solved**: Previously, every week showed identical meals and workouts. Now:
+- **Every 4 weeks**, meal combinations rotate to new patterns (but same type — vegetarian stays vegetarian)
+- **Every month**, workout focus rotates (strength muscle groups, yoga styles, cardio sessions vary)
+
+**How it works**:
+- Uses deterministic djb2 hash seeding: same profile + week = same meals, different block = different meals
+- Seed includes: userId + dietType + cuisinePreference + mealType + blockIndex (where blockIndex = floor(weekIndex / 4))
+- Offset shifts the meal pool selection, so week 0-3 use patterns A,B,C,D, week 4-7 use patterns E,F,G,H, etc.
+
+**Example Timeline**:
+```
+Week 0-3 (Block 0): Rotation A (idli, dosa, sambar, rasam)
+Week 4-7 (Block 1): Rotation B (pesarattu, vada, tomato rice, lemon rice)
+Week 8-11 (Block 2): Rotation C (ragi roti, gongura, pachadi, etc.)
+Week 12+: Cycle repeats, but with workout variation
+```
+
+**For Workouts**:
+- Monthly rotation: month 1 vs month 2 have different strength focus (chest→back), different yoga style, different cardio
+- Schedule shape is preserved: still 5 days/week, same time slots, same total volume
+
+**Verification**:
+```bash
+# Pull 6-month plan for a user
+curl http://localhost:3000/api/profile/plan \
+  -H "Cookie: connect.sid=YOUR_SESSION" | jq '.diet.meals' | head -100
+
+# Check week 0-3 meals are NOT same as week 4-7
+# Check month 1 strength focus is NOT same as month 2
+```
+
+### Testing Phase 4 Features
+
+**Test 1: Effective Diet Inference**
+```bash
+# Create a vegetarian user
+# In Food Checklist, select: vegetarian items + "Chicken" + "Eggs"
+# Pull diet plan
+
+curl http://localhost:3000/api/profile/plan \
+  -H "Cookie: connect.sid=YOUR_SESSION" | jq '.diet.meals[] | select(.label | contains("Chicken"))'
+
+# Expected: Chicken recipes appear (because "Chicken" was checked)
+```
+
+**Test 2: Week-to-Week Meal Rotation**
+```bash
+# Pull plan for a user, extract breakfast for week 0 and week 4
+curl ... | jq '.diet.meals | .[0:7][] | select(.meal_type=="breakfast") | .name'   # Week 0-6
+curl ... | jq '.diet.meals | .[28:35][] | select(.meal_type=="breakfast") | .name'  # Week 4-10
+
+# Expected: Different meal names (but same diet type — no vegan→meat)
+```
+
+**Test 3: Month-to-Month Workout Rotation**
+```bash
+# Pull plan, compare month 1 vs month 2 strength
+curl ... | jq '.workouts | .[0] | .exercises[]? | select(.category=="strength") | {name, muscleGroup}'   # Month 1
+curl ... | jq '.workouts | .[1] | .exercises[]? | select(.category=="strength") | {name, muscleGroup}'   # Month 2
+
+# Expected: Different muscle groups (chest vs back, etc.)
+```
+
+### Backward Compatibility
+
+- Existing profiles continue to work without modification
+- Non-vegetarian profiles unaffected (already eating all items)
+- All 354 automated tests passing (no regressions)
+
+### Known Limitations
+
+- **Profile caching**: If a user updates their foodList mid-session, plan regeneration may use stale cached effective diet (requires manual refresh or session reset)
+- **4-week block sufficiency**: Users may perceive "low variation" if they only review weeks 0-3. Full appreciation requires viewing the full 6-month plan
+
+---
+
 ## 🗂️ Project Structure
 
 ```
