@@ -6,6 +6,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const metricsMiddleware = require('./server/middleware/metrics');
+const monitoringService = require('./server/services/monitoring');
 
 if (!process.env.JWT_SECRET) {
   console.error('❌ JWT_SECRET not set — refusing to start');
@@ -19,6 +21,7 @@ const HOST = '0.0.0.0';
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(metricsMiddleware);
 
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/healthDB';
 
@@ -54,6 +57,12 @@ app.use('/api/profile',   require('./routes/profile'));
 app.use('/api/sleep',     require('./routes/sleep'));
 app.use('/api/grocery',  require('./routes/grocery'));
 app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api/feedback',  require('./routes/api/feedback'));
+app.use('/api/metrics',   require('./routes/api/metrics'));
+
+app.get('/api/monitoring/metrics', (req, res) => {
+  res.json(monitoringService.getMetrics());
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
