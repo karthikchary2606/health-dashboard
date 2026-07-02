@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="/css/design-system.css">
 <link rel="stylesheet" href="/css/components.css">
 <link rel="stylesheet" href="/css/navigation.css">
+<link rel="stylesheet" href="/css/screens/dashboard.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -436,7 +437,74 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 </head>
 <body>
 
-<!-- SIDEBAR -->
+<main class="screen" id="dashboard-screen" role="main" aria-label="Dashboard">
+  <div class="screen__content">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div>
+        <p class="dashboard-header__greeting">Good morning</p>
+        <h1 class="dashboard-header__name" id="dashboard-user-name">Loading…</h1>
+      </div>
+      <div class="dashboard-header__actions">
+        <button class="btn btn--icon btn--ghost" aria-label="View notifications">🔔</button>
+        <div class="avatar" id="dashboard-avatar">K</div>
+      </div>
+    </header>
+
+    <!-- Hero: Daily Calories -->
+    <section class="dashboard-hero" aria-label="Daily calorie goal">
+      <p class="dashboard-hero__label">Today's Calories</p>
+      <div>
+        <span class="dashboard-hero__value" id="calories-consumed">0</span>
+        <span class="dashboard-hero__unit">/ <span id="calories-goal">2000</span> kcal</span>
+      </div>
+      <p class="dashboard-hero__subtitle" id="calories-remaining">Loading your plan…</p>
+      <div class="dashboard-hero__progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div class="dashboard-hero__progress-fill" id="calories-progress" style="width: 0%"></div>
+      </div>
+    </section>
+
+    <!-- Metrics Grid -->
+    <section class="metrics-section" aria-label="Today's metrics">
+      <p class="metrics-section__title">Today's Stats</p>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-card__icon">💧</span>
+          <p class="metric-card__value" id="metric-water">0</p>
+          <p class="metric-card__label">Water (L)</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-card__icon">🏃</span>
+          <p class="metric-card__value" id="metric-steps">0</p>
+          <p class="metric-card__label">Steps</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-card__icon">😴</span>
+          <p class="metric-card__value" id="metric-sleep">0h</p>
+          <p class="metric-card__label">Sleep</p>
+        </div>
+        <div class="metric-card">
+          <span class="metric-card__icon">🔥</span>
+          <p class="metric-card__value" id="metric-burned">0</p>
+          <p class="metric-card__label">Burned</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Today's Plan -->
+    <section class="today-section" aria-label="Today's plan">
+      <div class="section-header">
+        <h2 class="section-title">Today's Plan</h2>
+        <a href="/diet.html" class="section-link">See all</a>
+      </div>
+      <div id="today-plan-container">
+        <!-- Populated by dashboard.js -->
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- SIDEBAR (legacy) -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <h2>⚡ HEALTH ENGINE</h2>
@@ -457,453 +525,9 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
   </ul>
   <div class="sidebar-footer" id="sidebar-footer"></div>
 </aside>
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-
-<!-- BOTTOM NAV (mobile) -->
-<nav class="bottom-nav" id="bottomNav">
-  <div class="bottom-nav-items">
-    <button class="bn-item active" id="bn-dashboard" onclick="showSection('dashboard',null)">
-      <span class="bn-icon">🏠</span><span class="bn-label">Home</span>
-    </button>
-    <button class="bn-item" id="bn-diet" onclick="showSection('diet',null)">
-      <span class="bn-icon">🥗</span><span class="bn-label">Diet</span>
-    </button>
-    <button class="bn-item" id="bn-workout" onclick="showSection('workout',null)">
-      <span class="bn-icon">💪</span><span class="bn-label">Workout</span>
-    </button>
-    <button class="bn-item" id="bn-breathing" onclick="showSection('breathing',null)">
-      <span class="bn-icon">🌬️</span><span class="bn-label">Breathe</span>
-    </button>
-    <button class="bn-item" id="bn-progress" onclick="showSection('progress',null)">
-      <span class="bn-icon">📈</span><span class="bn-label">Progress</span>
-    </button>
-    <button class="bn-item" id="bn-more" onclick="toggleMoreMenu()">
-      <span class="bn-icon">⋯</span><span class="bn-label">More</span>
-    </button>
-  </div>
-</nav>
-
-<!-- MAIN CONTENT -->
-<div class="main">
-  <div class="topbar">
-    <div class="topbar-left">
-      <button class="hamburger" onclick="openSidebar()">☰</button>
-      <div>
-        <div class="page-title" id="pageTitle">🏠 Dashboard</div>
-      </div>
-    </div>
-    <div class="topbar-right">
-      <a id="admin-link" href="/admin.html" style="display:none;font-size:.75rem;font-weight:600;color:var(--primary);text-decoration:none;background:#f0fdf4;border:1px solid #bbf7d0;padding:5px 10px;border-radius:20px">⚙️</a>
-      <div class="date-badge">
-        <input type="date" id="logDate" style="border:none;background:transparent;font-size:.82rem;font-weight:600;color:#1b4332;outline:none;cursor:pointer" onchange="loadDateData()">
-      </div>
-      <div class="weight-input-wrap">
-        <label>⚖️</label>
-        <input type="number" id="currentWeight" value="95" step="0.1" min="50" max="200" onchange="syncData()">
-        <label style="font-size:.72rem;color:#718096">kg</label>
-      </div>
-    </div>
-  </div>
-
-  <div class="content">
-
-  <!-- ===== DASHBOARD ===== -->
-  <div id="sec-dashboard" class="section active">
-    <div class="section-header">
-      <div><h2>Daily Overview</h2><p id="dashGreeting">Loading...</p></div>
-      <button class="btn btn-primary btn-sm" onclick="syncData()">💾 Save Log</button>
-    </div>
-
-    <!-- Profile completion card (shown when < 100%) -->
-    <div id="profileCompletionCard" style="display:none;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;margin-bottom:16px;justify-content:space-between;align-items:center;background:#fffbeb">
-      <div>
-        <div style="font-weight:700;font-size:.9rem">Your profile is <span id="completionPctDash">—</span>% complete</div>
-        <div style="font-size:.8rem;color:#92400e;margin-top:2px">Finish setup to get a fully personalised plan</div>
-      </div>
-      <a href="/profile-complete.html" style="background:#d97706;color:#fff;padding:6px 14px;border-radius:8px;font-size:.82rem;text-decoration:none">Complete →</a>
-    </div>
-
-    <!-- Review reminder banner (shown when overdue) -->
-    <div id="reviewBanner" style="display:none;border:1px solid #bfdbfe;border-radius:12px;padding:12px 16px;margin-bottom:16px;justify-content:space-between;align-items:center;background:#eff6ff">
-      <div style="font-size:.85rem;color:#1e40af">
-        🔔 It's been a while since you reviewed your health conditions.
-        <a href="/profile-complete.html#conditions" style="color:#1e40af;font-weight:700"> Review now →</a>
-      </div>
-      <button onclick="dismissReviewBanner()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:#6b7280">×</button>
-    </div>
-
-    <!-- Stats Row -->
-    <div class="grid-4" style="margin-bottom:20px" id="statsRow">
-      <div class="stat-chip" style="border-left-color:#f59e0b"><div class="label">Target Calories</div><div class="value" id="calorieStat">—</div><div class="sub" id="calorieStatSub">kcal/day</div></div>
-      <div class="stat-chip" style="border-left-color:#3b82f6"><div class="label">Water Target</div><div class="value" id="waterStat">0/4L</div><div class="sub">Daily hydration goal</div><span id="waterGoalDisplay" style="font-weight:700;color:#0284c7"></span><div id="waterGoalHint" style="font-size:.72rem;color:#6b7280;margin-top:2px"></div></div>
-      <div class="stat-chip" style="border-left-color:#10b981"><div class="label">Checklist</div><div class="value" id="checkStat">0/—</div><div class="sub">Daily tasks done</div></div>
-      <div class="stat-chip" style="border-left-color:#8b5cf6"><div class="label">Current Weight</div><div class="value" id="weightStat">—</div><div class="sub" id="weightStatSub">kg · Goal: —</div></div>
-    </div>
-
-    <div class="grid-2">
-      <!-- Timeline -->
-      <div class="card" id="timelineCard">
-        <div class="card-title">📅 Daily Timeline</div>
-        <div id="timelineContainer" data-state="loading"><p style="color:var(--text-light);font-size:.85rem">Loading...</p></div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:16px">
-        <!-- Water -->
-        <div class="card info">
-          <div class="card-title">💧 Hydration Tracker</div>
-          <p style="font-size:.78rem;color:var(--text-light);margin-bottom:4px">Click to log cumulative water intake</p>
-          <div class="water-row">
-            <div class="water-btn" id="w1" onclick="toggleWater(1)">1L</div>
-            <div class="water-btn" id="w2" onclick="toggleWater(2)">2L</div>
-            <div class="water-btn" id="w3" onclick="toggleWater(3)">3L</div>
-            <div class="water-btn" id="w4" onclick="toggleWater(4)">4L</div>
-          </div>
-        </div>
-
-        <!-- Sleep Summary Card -->
-        <div class="card" id="sleepSummaryCard">
-          <div class="card-title">😴 Last Night's Sleep</div>
-          <div id="sleepSummaryContent" data-state="loading" style="color:#64748b;font-size:.9rem;">Loading...</div>
-        </div>
-
-        <!-- Workout Log -->
-        <div class="card success">
-          <div class="card-title">💪 Workout Completed Today?</div>
-          <div class="workout-log-row" style="box-shadow:none;background:#f0fdf4;padding:10px 12px">
-            <label class="workout-toggle">
-              <input type="checkbox" id="workoutToggle" onchange="syncData()">
-              <span class="wt-slider"></span>
-            </label>
-            <span style="font-size:.88rem;font-weight:600;color:var(--text)">Mark workout as done</span>
-          </div>
-          <div style="margin-top:10px">
-            <label style="font-size:.78rem;font-weight:600;color:var(--text-med)">Notes (optional):</label>
-            <textarea id="workoutNotes" class="notes-area" placeholder="e.g. Completed upper push day, increased DB press weight..." style="margin-top:6px" onchange="syncData()"></textarea>
-          </div>
-        </div>
-
-        <!-- Mood & Energy -->
-        <div class="card warning">
-          <div class="card-title">🧠 Mood & Energy Check-in</div>
-          <label style="font-size:.8rem;font-weight:600;color:var(--text-med)">Mood (1=Low, 5=Great)</label>
-          <div class="score-row" id="moodRow">
-            <button class="score-btn" onclick="setScore('mood',1,this)">😔 1</button>
-            <button class="score-btn" onclick="setScore('mood',2,this)">😕 2</button>
-            <button class="score-btn sel" onclick="setScore('mood',3,this)">😐 3</button>
-            <button class="score-btn" onclick="setScore('mood',4,this)">🙂 4</button>
-            <button class="score-btn" onclick="setScore('mood',5,this)">😄 5</button>
-          </div>
-          <label style="font-size:.8rem;font-weight:600;color:var(--text-med);margin-top:10px;display:block">Energy Level</label>
-          <div class="score-row" id="energyRow">
-            <button class="score-btn" onclick="setScore('energy',1,this)">🔋 1</button>
-            <button class="score-btn" onclick="setScore('energy',2,this)">🔋 2</button>
-            <button class="score-btn sel" onclick="setScore('energy',3,this)">⚡ 3</button>
-            <button class="score-btn" onclick="setScore('energy',4,this)">⚡ 4</button>
-            <button class="score-btn" onclick="setScore('energy',5,this)">🔥 5</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Log Panel -->
-    <div class="card" id="quickLogPanel" style="margin-bottom:16px">
-      <div class="card-header">⚡ Quick Log</div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;padding:12px 0">
-
-        <div style="flex:1;min-width:140px">
-          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Weight</div>
-          <div style="display:flex;gap:6px">
-            <input type="number" id="qlWeight" step="0.1" placeholder="kg" style="width:70px;padding:5px 8px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem">
-            <button onclick="logWeight()" style="background:#1b4332;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:.82rem">Log</button>
-          </div>
-        </div>
-
-        <div style="flex:1;min-width:140px">
-          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Water</div>
-          <div style="display:flex;gap:6px">
-            <button onclick="logWater(0.25)" style="background:#e0f2fe;color:#0284c7;border:1px solid #bae6fd;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.82rem">+250ml</button>
-            <button onclick="logWater(0.5)" style="background:#e0f2fe;color:#0284c7;border:1px solid #bae6fd;padding:5px 8px;border-radius:6px;cursor:pointer;font-size:.82rem">+500ml</button>
-          </div>
-        </div>
-
-        <div style="flex:1;min-width:140px">
-          <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Workout</div>
-          <button onclick="toggleWorkoutLog()" id="workoutLogBtn" style="background:#f0fdf4;color:#1b4332;border:1px solid #bbf7d0;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.82rem">Mark Done ✓</button>
-        </div>
-
-      </div>
-
-      <div id="exerciseDetail" style="display:none;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:10px">
-        <div style="font-size:.82rem;font-weight:600;margin-bottom:6px">Today's exercises (optional)</div>
-        <div id="exerciseRows"></div>
-        <button onclick="addExerciseRow()" style="font-size:.78rem;color:#1b4332;background:none;border:none;cursor:pointer;margin-top:4px">+ Add exercise</button>
-        <button onclick="saveExerciseLog()" style="margin-left:12px;background:#1b4332;color:#fff;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem">Save Log</button>
-      </div>
-
-      <div id="qlMsg" style="font-size:.8rem;margin-top:6px;color:#16a34a"></div>
-    </div>
-  </div>
-
-  <!-- ===== DIET PLAN ===== -->
-  <div id="sec-diet" class="section">
-    <div class="section-header">
-      <div><h2>6-Month Diet Plan</h2><p>Phase-based · Adapted to your diet type · Your health journey</p></div>
-    </div>
-    <div class="month-selector" id="dietMonthSelector"></div>
-    <div class="week-selector" id="dietWeekSelector"></div>
-    <div id="dietPhaseBanner"></div>
-    <div id="dietWeekNote"></div>
-    <div class="day-tabs" id="dayTabs"></div>
-    <div id="dietDayContent"></div>
-  </div>
-
-  <!-- ===== RECIPES ===== -->
-  <div id="sec-recipes" class="section">
-    <div class="section-header">
-      <div><h2>Recipe Collection</h2><p id="recipeSectionSubtitle">Curated recipes for your plan</p></div>
-    </div>
-    <div class="filter-row" id="recipeFilters"></div>
-    <div class="recipe-grid" id="recipeGrid"></div>
-  </div>
-
-  <!-- ===== WORKOUT ===== -->
-  <div id="sec-workout" class="section">
-    <div class="section-header">
-      <div><h2>6-Month Workout Plan</h2><p>Progressive overload · Your equipment · Your fitness level</p></div>
-    </div>
-    <div id="workoutSafetyNote"></div>
-    <div class="month-selector" id="workoutMonthSelector"></div>
-    <div id="workoutPhaseBanner"></div>
-    <div class="hscroll"><div class="workout-day-grid" id="workoutDayGrid"></div></div>
-    <div id="workoutDayContent"></div>
-  </div>
-
-  <!-- ===== CARDIO ===== -->
-  <div id="sec-cardio" class="section">
-    <div class="section-header">
-      <div><h2>Cardio Plan</h2><p>Progressive cardio · Adapted to your goal and fitness level</p></div>
-    </div>
-
-    <div id="cardioCurrentPhase"></div>
-
-    <div class="grid-2" style="margin-bottom:20px">
-      <div class="card">
-        <div class="card-title">📅 Weekly Cardio Schedule</div>
-        <table class="cardio-table">
-          <thead><tr><th>Day</th><th>Session</th><th>Duration</th><th>Intensity</th></tr></thead>
-          <tbody id="cardioTableBody"></tbody>
-        </table>
-      </div>
-      <div>
-        <div class="card" style="margin-bottom:14px">
-          <div class="card-title">📈 Phase Progression</div>
-          <div id="cardioPhases"></div>
-        </div>
-        <div class="card success">
-          <div class="card-title">🎯 Heart Rate Zones</div>
-          <div id="hrZones"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== PROGRESS ===== -->
-  <div id="sec-progress" class="section">
-    <div class="section-header">
-      <div><h2>Progress Tracker</h2><p id="progressSubtitle">Your health journey · 6-month program</p></div>
-      <button class="btn btn-primary btn-sm" onclick="loadProgress()">🔄 Refresh</button>
-    </div>
-
-    <div class="streak-row" id="streakRow">
-      <div class="streak-chip"><span class="s-icon">🔥</span><div><div class="s-val" id="workoutStreakVal">-</div><div class="s-lbl">Workout Streak</div></div></div>
-      <div class="streak-chip" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)"><span class="s-icon">💧</span><div><div class="s-val" id="waterStreakVal">-</div><div class="s-lbl">Water Streak</div></div></div>
-      <div class="streak-chip" style="background:linear-gradient(135deg,#10b981,#065f46)"><span class="s-icon">📋</span><div><div class="s-val" id="completionVal">-%</div><div class="s-lbl">Avg Checklist Done</div></div></div>
-      <div class="streak-chip" style="background:linear-gradient(135deg,#8b5cf6,#4c1d95)"><span class="s-icon">⚖️</span><div><div class="s-val" id="weightLostVal">-kg</div><div class="s-lbl">Weight Change</div></div></div>
-    </div>
-
-    <div class="grid-2">
-      <div>
-        <div class="chart-wrap">
-          <div class="card-title" style="margin-bottom:14px">📉 Weight Chart</div>
-          <canvas id="weightChart"></canvas>
-          <p id="chartTargetNote" style="font-size:.72rem;color:var(--text-light);text-align:center;margin-top:8px"></p>
-        </div>
-        <div class="card">
-          <div class="card-title">🏆 Milestones</div>
-          <div class="milestone-grid" id="milestoneGrid"></div>
-        </div>
-      </div>
-      <div>
-        <div class="card" style="margin-bottom:14px">
-          <div class="card-title">⚖️ BMI Tracker</div>
-          <div class="bmi-display">
-            <div class="bmi-value" id="bmiVal">—</div>
-            <div class="bmi-category" id="bmiCat">—</div>
-          </div>
-          <div id="bmiDetails" style="font-size:.78rem;color:var(--text-light);text-align:center"></div>
-          <div style="margin-top:12px">
-            <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-light);margin-bottom:4px"><span>Obese &gt;30</span><span>Overweight 25–30</span><span>Normal &lt;25</span></div>
-            <div style="height:10px;background:linear-gradient(to right,#ef4444 0%,#f59e0b 40%,#22c55e 100%);border-radius:5px;position:relative">
-              <div id="bmiMarker" style="position:absolute;top:-4px;width:3px;height:18px;background:#1b4332;border-radius:2px;transition:left .5s"></div>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title">📊 Last 30-Day Stats</div>
-          <div id="statDetails"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Macro tracking chart -->
-    <div id="macroSection" style="display:none;margin-top:16px">
-      <h3 style="font-size:.95rem;font-weight:700;margin:0 0 8px">📊 Daily Nutrition (avg)</h3>
-      <canvas id="macroChart" height="120"></canvas>
-      <div id="macroSummary" style="display:flex;gap:16px;margin-top:8px;font-size:.82rem;flex-wrap:wrap"></div>
-    </div>
-
-    <!-- Sleep trend chart -->
-    <div id="sleepSection" style="display:none;margin-top:16px">
-      <h3 style="font-size:.95rem;font-weight:700;margin:0 0 8px">😴 Sleep Trend (30 days)</h3>
-      <canvas id="sleepChart" height="100"></canvas>
-    </div>
-
-    <!-- Mood + Energy trend -->
-    <div id="moodSection" style="display:none;margin-top:16px">
-      <h3 style="font-size:.95rem;font-weight:700;margin:0 0 8px">🧠 Mood &amp; Energy (30 days)</h3>
-      <canvas id="moodChart" height="100"></canvas>
-    </div>
-  </div>
-
-  <!-- ===== GUIDELINES ===== -->
-  <div id="sec-guidelines" class="section">
-    <div class="section-header">
-      <div><h2>Medical Guidelines</h2><p id="guidelinesSubtitle">Clinical guardrails · Your personal health protocols</p></div>
-    </div>
-    <div id="goalGuidelines" style="margin-bottom:16px"></div>
-    <div class="grid-2">
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div id="communityNotes" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 16px;margin-bottom:16px;display:none"></div>
-        <div id="conditionCards"></div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="card success">
-          <div class="card-title">🌱 Daily Seed &amp; Nut Allocation (30g MAX)</div>
-          <p style="font-size:.78rem;color:var(--text-light);margin-bottom:14px">250g stock each. 30g combined daily cap to prevent caloric surplus.</p>
-          <div id="seedTracker"></div>
-          <div style="margin-top:14px;padding:10px;background:#f0fdf4;border-radius:8px;font-size:.78rem;color:#166534">
-            <strong>💡 Tip:</strong> Weigh daily on a kitchen scale. Mix all 8 seeds in a jar = custom trail mix.
-          </div>
-        </div>
-
-        <div class="card accent">
-          <div class="card-title">⏰ Daily Medication &amp; Supplement Timing</div>
-          <div id="suppTiming"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">🍽️ Foods Recommended vs Avoided</div>
-          <div id="foodGuidelines"></div>
-        </div>
-      </div>
-    </div>
-  </div>
 
 
-  <!-- ===== GROCERY ===== -->
-  <div id="sec-grocery" class="section">
-    <div class="section-header">
-      <div><h2>Monthly Grocery List</h2><p>Telugu kitchen essentials · Budget ₹5,000–6,000/month · Thyroid-safe</p></div>
-    </div>
-    <div class="month-selector" id="groceryMonthSelector"></div>
-    <div id="groceryBudgetBar"></div>
-    <div class="hscroll"><div id="groceryContent"></div></div>
-    <div id="groceryNote"></div>
-    <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-      <input id="customItemInput" type="text" placeholder="Item name" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.88rem;flex:1;min-width:140px">
-      <input id="customItemQty" type="text" placeholder="Qty (e.g. 500g)" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.88rem;width:130px">
-      <input id="customItemCategory" type="text" placeholder="Category" style="padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:.88rem;width:120px">
-      <button id="customItemAddBtn" class="btn btn-primary" style="padding:7px 16px;font-size:.88rem">+ Add Item</button>
-    </div>
-  </div>
 
-  <!-- ===== BREATHING ===== -->
-  <div id="sec-breathing" class="section">
-    <div class="section-header">
-      <div><h2>Breathing Exercises</h2><p>Guided sessions · Timer · Session history</p></div>
-    </div>
-
-    <!-- Technique selection -->
-    <div id="breathing-select">
-      <div class="grid-2" style="margin-bottom:20px" id="technique-cards"></div>
-      <div class="card" id="breathing-config" style="display:none">
-        <div class="card-title" id="config-title">🌬️ Configure Session</div>
-        <div style="margin-bottom:16px">
-          <label style="font-size:.82rem;font-weight:600;color:var(--text-med)">Cycles</label>
-          <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
-            <button onclick="adjustCycles(-1)" class="btn btn-primary btn-sm">−</button>
-            <span id="cycle-count" style="font-size:1.2rem;font-weight:800;min-width:32px;text-align:center">5</span>
-            <button onclick="adjustCycles(1)" class="btn btn-primary btn-sm">+</button>
-          </div>
-        </div>
-        <div style="margin-bottom:16px">
-          <label style="font-size:.82rem;font-weight:600;color:var(--text-med)">How do you feel right now?</label>
-          <div class="score-row" id="mood-before-row" style="margin-top:8px">
-            <button class="score-btn" onclick="setMoodBefore(1,this)">😔 1</button>
-            <button class="score-btn" onclick="setMoodBefore(2,this)">😕 2</button>
-            <button class="score-btn sel" onclick="setMoodBefore(3,this)">😐 3</button>
-            <button class="score-btn" onclick="setMoodBefore(4,this)">🙂 4</button>
-            <button class="score-btn" onclick="setMoodBefore(5,this)">😄 5</button>
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="startBreathingSession()">▶ Start Session</button>
-        <button class="btn btn-sm" onclick="cancelBreathingConfig()" style="margin-left:10px;background:#f8f9fa;border:1px solid var(--border)">Cancel</button>
-      </div>
-    </div>
-
-    <!-- Active session view -->
-    <div id="breathing-session" style="display:none;text-align:center;padding:40px 20px">
-      <div id="breath-circle" style="width:200px;height:200px;border-radius:50%;background:var(--primary);margin:0 auto 24px;display:flex;align-items:center;justify-content:center;transition:transform 0.5s ease;transform:scale(1)">
-        <span id="breath-phase" style="color:#fff;font-size:1.1rem;font-weight:700">Ready</span>
-      </div>
-      <div id="breath-countdown" style="font-size:3rem;font-weight:800;color:var(--primary);margin-bottom:8px">—</div>
-      <div id="breath-cycle-info" style="font-size:.9rem;color:var(--text-med);margin-bottom:24px">Round — of —</div>
-      <button class="btn btn-sm" onclick="stopBreathingSession()" style="background:#fff5f5;border:1px solid #fecaca;color:#991b1b">Stop Session</button>
-    </div>
-
-    <!-- Completion view -->
-    <div id="breathing-complete" style="display:none;text-align:center;padding:40px 20px">
-      <div style="font-size:3rem;margin-bottom:16px">✅</div>
-      <h3 style="color:var(--primary);margin-bottom:8px">Session Complete!</h3>
-      <p id="complete-summary" style="color:var(--text-med);font-size:.88rem;margin-bottom:20px"></p>
-      <label style="font-size:.82rem;font-weight:600;color:var(--text-med)">How do you feel now?</label>
-      <div class="score-row" id="mood-after-row" style="justify-content:center;margin:10px 0 20px">
-        <button class="score-btn" onclick="setMoodAfter(1,this)">😔 1</button>
-        <button class="score-btn" onclick="setMoodAfter(2,this)">😕 2</button>
-        <button class="score-btn sel" onclick="setMoodAfter(3,this)">😐 3</button>
-        <button class="score-btn" onclick="setMoodAfter(4,this)">🙂 4</button>
-        <button class="score-btn" onclick="setMoodAfter(5,this)">😄 5</button>
-      </div>
-      <button class="btn btn-primary" onclick="saveBreathingSession()">💾 Save Session</button>
-      <button class="btn btn-sm" onclick="resetBreathing()" style="margin-left:10px;background:#f8f9fa;border:1px solid var(--border)">New Session</button>
-    </div>
-
-    <!-- Session history -->
-    <div class="card" style="margin-top:24px">
-      <div class="card-title">📜 Recent Sessions</div>
-      <div id="breathing-history"><p style="color:var(--text-light);font-size:.85rem">Loading...</p></div>
-    </div>
-
-    <!-- Pranayama section -->
-    <div id="pranayamaSection" style="margin-top:24px">
-      <h3 style="font-size:1rem;font-weight:700;color:#1b4332;margin-bottom:4px">🕉️ Indian Pranayama</h3>
-      <p style="font-size:.82rem;color:#6b7280;margin-bottom:12px">Personalised for your age and health conditions</p>
-    </div>
-  </div>
-
-  </div><!-- end .content -->
-</div><!-- end .main -->
 <script src="/js/api.js"></script>
 <script src="/js/planCache.js"></script>
 <script src="/js/auth.js"></script>
