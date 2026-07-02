@@ -12,7 +12,7 @@ const RECIPES = [
   // ── BREAKFAST ──────────────────────────────────────────────────────────────
   { id:0, icon:"🥞", cat:"breakfast", name:"Pesarattu (Moong Dal Crepes)", time:"25 min", cal:240, p:12, f:4, c:38,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","high-protein","Telugu-traditional"],
     ingredients:[
       "1 cup whole green moong dal (soaked 6-8 hrs)",
@@ -93,7 +93,7 @@ const RECIPES = [
   },
   { id:3, icon:"🥣", cat:"breakfast", name:"Oats Upma (Oat Rava Upma)", time:"15 min", cal:220, p:8, f:5, c:35,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","fiber-rich","weight-loss"],
     ingredients:[
       "40g (½ cup) rolled oats",
@@ -126,7 +126,7 @@ const RECIPES = [
   },
   { id:4, icon:"🥣", cat:"breakfast", name:"Rava Upma (Semolina Upma)", time:"20 min", cal:210, p:6, f:5, c:36,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","Telugu-traditional","light"],
     ingredients:[
       "½ cup (60g) fine semolina (rava/sooji)",
@@ -179,7 +179,7 @@ const RECIPES = [
   },
   { id:6, icon:"🧀", cat:"breakfast", name:"Paneer Bhurji (Scrambled Cottage Cheese)", time:"15 min", cal:235, p:14, f:17, c:6,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","vegetarian","high-protein"],
     ingredients:[
       "100g paneer, crumbled",
@@ -208,7 +208,7 @@ const RECIPES = [
   // ── DAL & VEGETARIAN CURRIES ──────────────────────────────────────────────
   { id:7, icon:"🍲", cat:"lunch", name:"Kandi Pappu (Andhra Toor Dal)", time:"25 min", cal:185, p:11, f:5, c:26,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","Telugu-traditional","high-protein","daily-staple"],
     ingredients:[
       "½ cup toor dal (pigeon pea lentil)",
@@ -231,7 +231,7 @@ const RECIPES = [
   },
   { id:8, icon:"🥬", cat:"lunch", name:"Palakura Pappu (Spinach Dal)", time:"30 min", cal:165, p:11, f:4, c:22,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","iron-rich","Telugu-traditional"],
     ingredients:[
       "½ cup toor dal or moong dal",
@@ -256,7 +256,7 @@ const RECIPES = [
   },
   { id:9, icon:"🍲", cat:"lunch", name:"Sorakaya Pappu (Bottle Gourd Dal)", time:"30 min", cal:145, p:8, f:3, c:20,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","Telugu-traditional","cooling","weight-loss"],
     ingredients:[
       "½ cup toor dal",
@@ -308,7 +308,7 @@ const RECIPES = [
   },
   { id:11, icon:"🫘", cat:"lunch", name:"Senagapappu Curry (Chana Dal Curry)", time:"30 min", cal:205, p:10, f:5, c:30,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","Telugu-traditional","high-fiber"],
     ingredients:[
       "½ cup chana dal (split Bengal gram)",
@@ -456,7 +456,7 @@ const RECIPES = [
   },
   { id:16, icon:"🧀", cat:"lunch", name:"Tawa Paneer Tikka (No-Oven)", time:"20 min", cal:225, p:15, f:17, c:5,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","high-protein","vegetarian","no-oven"],
     ingredients:[
       "100g paneer, cut in 1-inch cubes",
@@ -754,7 +754,7 @@ const RECIPES = [
   },
   { id:27, icon:"🫙", cat:"chutney", name:"Pudina Chutney (Mint Green Chutney)", time:"5 min", cal:30, p:1, f:1, c:4,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","cooling","digestive"],
     ingredients:[
       "1 cup fresh mint leaves (pudina)",
@@ -779,7 +779,7 @@ const RECIPES = [
   // ── SIDES & OTHERS ────────────────────────────────────────────────────────────
   { id:28, icon:"🫓", cat:"breakfast", name:"Phulka / Whole Wheat Roti", time:"20 min", cal:70, p:3, f:1, c:14,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","whole-grain","daily-staple"],
     ingredients:[
       "1 cup whole wheat atta",
@@ -801,7 +801,7 @@ const RECIPES = [
   },
   { id:29, icon:"🥛", cat:"snack", name:"Chaas / Majjiga (Spiced Buttermilk)", time:"3 min", cal:45, p:3, f:2, c:4,
     cuisine: 'south-indian',
-    dietType: ['vegetarian','vegan','eggetarian','non-vegetarian'],
+    dietType: ['vegetarian','eggetarian','non-vegetarian'],
     tags:["thyroid-safe","probiotic","cooling","post-meal"],
     ingredients:[
       "200ml low-fat yogurt/curd",
@@ -848,7 +848,7 @@ const RECIPES = [
   },
   // ── NORTH INDIAN – BREAKFAST ─────────────────────────────────────────────
   { id:31, icon:"🫓", cat:"breakfast", name:"Aloo Paratha with Curd", time:"30 min", cal:380, p:10, f:12, c:58,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','filling','vegetarian'],
     ingredients:[
       "1 cup whole wheat atta",
@@ -873,7 +873,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:190, proteinG:10, carbsG:58, fatG:12, servingSizeG:200 }
   },
   { id:32, icon:"🫓", cat:"breakfast", name:"Dal Paratha (Chana Dal Stuffed)", time:"35 min", cal:340, p:13, f:9, c:52,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','high-protein','vegetarian'],
     ingredients:[
       "1 cup whole wheat atta",
@@ -898,7 +898,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:189, proteinG:13, carbsG:52, fatG:9, servingSizeG:180 }
   },
   { id:33, icon:"🧀", cat:"breakfast", name:"Paneer Bhurji with Paratha", time:"20 min", cal:410, p:20, f:22, c:35,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','high-protein','vegetarian','quick'],
     ingredients:[
       "100g paneer, crumbled",
@@ -952,7 +952,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:160, proteinG:22, carbsG:20, fatG:18, servingSizeG:200 }
   },
   { id:35, icon:"🥞", cat:"breakfast", name:"Besan Chilla (Gram Flour Pancake)", time:"20 min", cal:250, p:12, f:8, c:32,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','high-protein','vegetarian','gluten-free'],
     ingredients:[
       "½ cup besan (chickpea flour)",
@@ -979,7 +979,7 @@ const RECIPES = [
   },
   // ── NORTH INDIAN – LUNCH ─────────────────────────────────────────────────
   { id:36, icon:"🫘", cat:"lunch", name:"Dal Makhani", time:"50 min", cal:310, p:14, f:12, c:38,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','high-protein','vegetarian','rich'],
     ingredients:[
       "½ cup whole black urad dal (sabut urad), soaked overnight",
@@ -1007,7 +1007,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:124, proteinG:14, carbsG:38, fatG:12, servingSizeG:250 }
   },
   { id:37, icon:"🍚", cat:"lunch", name:"Rajma Chawal (NI Style)", time:"45 min", cal:390, p:16, f:7, c:68,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','comfort-food','vegetarian','high-fiber'],
     ingredients:[
       "½ cup red kidney beans, soaked overnight",
@@ -1037,7 +1037,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:111, proteinG:16, carbsG:68, fatG:7, servingSizeG:350 }
   },
   { id:38, icon:"🥙", cat:"lunch", name:"Chole Bhature", time:"50 min", cal:520, p:16, f:18, c:75,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','festive','vegetarian','indulgent'],
     ingredients:[
       "1 cup white chickpeas (kabuli chana), soaked overnight",
@@ -1064,7 +1064,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:149, proteinG:16, carbsG:75, fatG:18, servingSizeG:350 }
   },
   { id:39, icon:"🧀", cat:"lunch", name:"Paneer Butter Masala with Roti", time:"30 min", cal:430, p:18, f:24, c:38,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','vegetarian','high-protein','creamy'],
     ingredients:[
       "150g paneer, cubed",
@@ -1152,7 +1152,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:149, proteinG:30, carbsG:58, fatG:20, servingSizeG:350 }
   },
   { id:42, icon:"🍲", cat:"lunch", name:"Kadhi Chawal", time:"40 min", cal:320, p:10, f:10, c:48,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','vegetarian','comfort-food','probiotic'],
     ingredients:[
       "1 cup sour curd (or plain + 1 tsp lemon)",
@@ -1177,7 +1177,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:91, proteinG:10, carbsG:48, fatG:10, servingSizeG:350 }
   },
   { id:43, icon:"🥬", cat:"lunch", name:"Sarson Da Saag with Makki Roti", time:"60 min", cal:340, p:10, f:14, c:44,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','vegetarian','seasonal','Punjabi'],
     ingredients:[
       "2 cups mustard leaves (sarson), washed and roughly chopped",
@@ -1207,7 +1207,7 @@ const RECIPES = [
   },
   // ── NORTH INDIAN – DINNER ────────────────────────────────────────────────
   { id:44, icon:"🍲", cat:"dinner", name:"Dal Tadka with Roti", time:"30 min", cal:280, p:14, f:8, c:40,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','vegetarian','daily-staple','high-protein'],
     ingredients:[
       "½ cup toor dal (pigeon pea) or arhar dal",
@@ -1233,7 +1233,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:93, proteinG:14, carbsG:40, fatG:8, servingSizeG:300 }
   },
   { id:45, icon:"🥬", cat:"dinner", name:"Palak Paneer", time:"30 min", cal:295, p:16, f:20, c:14,
-    cuisine:'north-indian', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'north-indian', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['north-indian','vegetarian','high-protein','iron-rich'],
     ingredients:[
       "200g fresh spinach leaves",
@@ -1538,7 +1538,7 @@ const RECIPES = [
   },
   // ── CONTINENTAL – BREAKFAST ──────────────────────────────────────────────
   { id:56, icon:"🫙", cat:"breakfast", name:"Overnight Oats with Berries", time:"5 min (prep) + overnight", cal:310, p:12, f:8, c:48,
-    cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'continental', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['continental','vegetarian','high-fiber','meal-prep','no-cook'],
     ingredients:[
       "½ cup rolled oats",
@@ -1587,7 +1587,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:155, proteinG:16, carbsG:28, fatG:20, servingSizeG:220 }
   },
   { id:58, icon:"🥛", cat:"breakfast", name:"Greek Yogurt Granola Bowl", time:"5 min", cal:290, p:14, f:8, c:42,
-    cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'continental', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['continental','vegetarian','high-protein','quick','probiotic'],
     ingredients:[
       "200g thick Greek yogurt",
@@ -1686,8 +1686,8 @@ const RECIPES = [
     nutrition: { caloriesPer100g:140, proteinG:30, carbsG:34, fatG:10, servingSizeG:250 }
   },
   { id:62, icon:"🥗", cat:"lunch", name:"Greek Salad with Hummus", time:"10 min", cal:280, p:10, f:16, c:26,
-    cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
-    tags:['continental','vegetarian','vegan','quick','mediterranean'],
+    cuisine:'continental', dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['continental','vegetarian','quick','mediterranean'],
     ingredients:[
       "1 cup romaine lettuce, chopped",
       "1 medium cucumber, diced",
@@ -1744,7 +1744,7 @@ const RECIPES = [
   },
   // ── CONTINENTAL – DINNER ─────────────────────────────────────────────────
   { id:64, icon:"🍝", cat:"dinner", name:"Pasta Primavera", time:"25 min", cal:360, p:12, f:10, c:56,
-    cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'continental', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['continental','vegetarian','fiber-rich','quick'],
     ingredients:[
       "100g whole wheat penne or fusilli",
@@ -1826,7 +1826,7 @@ const RECIPES = [
     nutrition: { caloriesPer100g:111, proteinG:30, carbsG:46, fatG:10, servingSizeG:350 }
   },
   { id:67, icon:"🍄", cat:"dinner", name:"Mushroom Risotto", time:"35 min", cal:360, p:12, f:12, c:52,
-    cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
+    cuisine:'continental', dietType:['vegetarian','eggetarian','non-vegetarian'],
     tags:['continental','vegetarian','creamy','comfort-food'],
     ingredients:[
       "¾ cup arborio rice",
@@ -1897,8 +1897,8 @@ const RECIPES = [
     nutrition: { caloriesPer100g:155, proteinG:13, carbsG:1, fatG:11, servingSizeG:100 }
   },
   { id:70, icon:"🥙", cat:"snack", name:"Hummus with Veggies", time:"5 min (store-bought) / 10 min (homemade)", cal:185, p:7, f:9, c:20,
-    cuisine:'continental', dietType:['vegetarian','vegan','eggetarian','non-vegetarian'],
-    tags:['continental','vegetarian','vegan','high-fiber','mediterranean'],
+    cuisine:'continental', dietType:['vegetarian','eggetarian','non-vegetarian'],
+    tags:['continental','vegetarian','high-fiber','mediterranean'],
     ingredients:[
       "4 tbsp hummus (store-bought or homemade)",
       "1 medium carrot, cut in sticks",
@@ -1919,6 +1919,36 @@ const RECIPES = [
     nutrition: { caloriesPer100g:93, proteinG:7, carbsG:20, fatG:9, servingSizeG:200 }
   }
 ];
+
+// ─── Vegan Recipe Validation ──────────────────────────────────────────────────
+// Documentation: Vegan recipes must not contain dairy products.
+// Dairy keywords to avoid: ghee, butter, curd, paneer, milk, cream, yogurt, cheese, dahi, malai
+function validateVeganRecipe(recipe) {
+  if (!recipe.dietType.includes('vegan')) {
+    return true; // Not a vegan recipe, no need to validate
+  }
+  
+  const dairyKeywords = ['ghee', 'butter', 'curd', 'paneer', 'milk', 'cream', 'yogurt', 'cheese', 'dahi', 'malai'];
+  const ingredientsLower = (recipe.ingredients || []).join(' ').toLowerCase();
+  
+  const foundDairy = dairyKeywords.filter(kw => ingredientsLower.includes(kw));
+  if (foundDairy.length > 0) {
+    console.warn(`[VEGAN RECIPE VALIDATION] "${recipe.name}" is marked as vegan but contains: ${foundDairy.join(', ')}`);
+    return false;
+  }
+  
+  return true;
+}
+
+// Run validation on all recipes on page load (development only)
+if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+  window.addEventListener('DOMContentLoaded', () => {
+    const invalidVegan = RECIPES.filter(r => !validateVeganRecipe(r));
+    if (invalidVegan.length > 0) {
+      console.error(`[VEGAN RECIPE VALIDATION] Found ${invalidVegan.length} invalid vegan recipes`);
+    }
+  });
+}
 
 function getFilteredRecipes(profile, options) {
   options = options || {};

@@ -1,0 +1,328 @@
+================================================================================
+HEALTH DASHBOARD - BUG HUNT SUMMARY
+Generated: 2026-07-02
+================================================================================
+
+TOTAL ISSUES: 11
+├─ CRITICAL (Blocks workflow): 3
+├─ HIGH (Breaks feature): 5  
+├─ MEDIUM (UX issue): 2
+└─ LOW (Edge case): 1
+
+================================================================================
+CRITICAL ISSUES
+================================================================================
+
+[CRITICAL-1] BreathingSession Technique Enum Mismatch
+────────────────────────────────────────────────────────────────────────────
+Category: Data Model Integrity | Module: Breathing
+Status: UNFIXED
+
+Problem:
+  • /api/breathing/techniques returns: Nadi Shodhana, Anulom Vilom, Bhramari, etc.
+  • BreathingSession.technique enum only allows: box, 4-7-8, wim-hof, diaphragmatic
+  • Users retrieve Pranayama techniques from API but cannot save them
+
+Reproducible Steps:
+  1. GET /api/breathing/techniques
+     Response: ["Nadi Shodhana", "Anulom Vilom", "Bhramari", ...]
+  
+  2. POST /api/breathing/sessions
+     Body: { "technique": "Anulom Vilom", "moodBefore": 4, "moodAfter": 5 }
+     Response: 500 Error "Anulom Vilom is not a valid enum value"
+
+Impact: Users cannot complete breathing session workflow with UI-suggested techniques
+
+Fix Strategy:
+  • Option A: Expand BreathingSession enum to include Pranayama names
+  • Option B: Consolidate breathing & pranayama into unified data model
+  • Option C: Create separate Pranayama vs BreathingSession endpoints
+
+
+[CRITICAL-2] HealthLog Stats Calculation Broken
+────────────────────────────────────────────────────────────────────────────
+Category: Data Model | Module: Logs/Dashboard
+Status: UNFIXED
+
+Problem:
+  • HealthLog stores meals in nested structure: meals[].calories
+  • computeStats() expects this structure but falls back to non-existent top-level fields
+  • Dashboard shows avgCalories: 0, avgWater: 0 even with logged meals
+
+Data Structure Mismatch:
+  Correct structure:
+    { meals: [{ mealType: "breakfast", calories: 500, proteinG: 25 }], waterIntake: 2.5 }
+  
+  What naive clients send:
+    { calories: 500, water: 2.5 }  ← Gets ignored
+
+Reproducible Steps:
+  1. Create HealthLog without nested meals structure
+  2. GET /api/logs/data/stats
+     Response: { avgCalories: 0, avgWater: 0 }  ← Expected: avgCalories: 500+
+
+Impact: Dashboard stats completely non-functional for majority of users
+
+Fix Strategy:
+  • Add API validation in logs endpoint to enforce nested structure
+  • Document required structure in API spec with examples
+  • Create data migration for existing logs with flat structure
+  • Add middleware to normalize incoming log data
+
+
+[CRITICAL-3] Sleep Duration API Confusion
+────────────────────────────────────────────────────────────────────────────
+Category: API Design | Module: Sleep/Logs
+Status: UNFIXED
+
+Problem:
+  • Sleep stored in nested structure: sleepEntry.durationMinutes
+  • Generic /api/logs endpoint doesn't validate or enforce this
+  • Users expect top-level durationMinutes (intuitive but wrong)
+
+Reproducible Steps:
+  1. POST /api/logs/2024-07-01
+     Body: { "durationMinutes": 480 }
+     Result: SILENTLY IGNORED (no error, no data saved)
+  
+  2. POST /api/sleep
+     Body: { "durationMinutes": 480 }
+     Result: ✓ Works (correct endpoint)
+
+Impact: Users cannot log sleep through intuitive API path
+
+Fix Strategy:
+  • Add validation in logs endpoint to reject top-level sleep fields
+  • Return helpful error: "Use POST /api/sleep for sleep data"
+  • Document sleep vs logs endpoints clearly
+  • Consider consolidated endpoint with smart routing
+
+================================================================================
+HIGH SEVERITY ISSUES
+================================================================================
+
+[HIGH-1] Yoga Style Not Applied to Workout Plans
+────────────────────────────────────────────────────────────────────────────
+Category: Feature Completeness | Module: Workouts/Exercises
+Status: UNFIXED
+
+Problem:
+  • yogaStyle collected in onboarding but not used in plan generation
+  • All yoga users get identical exercises regardless of preference
+
+Reproducible Steps:
+  1. Onboard with: { yogaStyle: "hatha", workoutPreferences: ["yoga"] }
+  2. GET /api/profile/plan
+  3. Returns same workout as user with yogaStyle: "vinyasa"
+  4. No distinction between hatha/vinyasa/pranayama-only
+
+Fix Strategy:
+  • Modify plan-builder to pass yogaStyle to exercise-composer
+  • Call getYogaExercises(profile.yogaStyle) to filter by style
+  • Add validation: if yoga in workoutPreferences, require yogaStyle
+
+
+[HIGH-2] Missing Profile Field Validation
+────────────────────────────────────────────────────────────────────────────
+Category: Data Integrity | Module: Profile/Onboarding
+Status: UNFIXED
+
+Problem:
+  • Onboarding accepts invalid values with no validation
+  • Examples: age: -5, weight: 500kg, primaryGoal: "invalid"
+
+Reproducible Steps:
+  POST /api/profile/onboarding
+  {
+    "age": -5,
+    "startWeightKg": 500,
+    "goalWeightKg": -100,
+    "primaryGoal": "invalid-goal",
+    "dietType": "unknown"
+  }
+  Response: 200 OK (should be 400 Bad Request)
+
+Impact: Corrupted profile data breaks stats calculations
+
+Fix Strategy:
+  • Add enum validators: primaryGoal, dietType, fitnessLevel, cuisinePreference
+  • Add range validators: age (1-120), weight (20-300kg)
+  • Validate consistency: goalWeightKg vs startWeightKg vs primaryGoal
+
+
+[HIGH-3] Recipe Filtering Edge Case
+────────────────────────────────────────────────────────────────────────────
+Category: Feature Logic | Module: Meals
+Status: UNFIXED
+
+Problem:
+  • Vegan dietary requirement not fully implemented
+  • Veg recipes may contain dairy/ghee despite vegan selection
+  • culturalFoodAvoidances filter uses basic text matching
+
+Impact: Vegan users see inappropriate meal suggestions
+
+Fix Strategy:
+  • Audit meal files for vegan compliance
+  • Create separate vegan pool from vegetarian pool
+  • Enhance filter with ingredient taxonomy
+
+
+[HIGH-4] Date Format Inconsistency
+────────────────────────────────────────────────────────────────────────────
+Category: API Design | Module: Logs
+Status: UNFIXED
+
+Problem:
+  • HealthLog.date is String type (YYYY-MM-DD)
+  • Some endpoints accept Date objects, others strings
+  • Queries mix Date/String comparisons causing timezone bugs
+
+Fix Strategy:
+  • Standardize on ISO string format
+  • Add date normalization middleware
+  • Document format in API specification
+
+
+[HIGH-5] Breathing Session Mood Range Mismatch
+────────────────────────────────────────────────────────────────────────────
+Category: Data Validation | Module: Breathing
+Status: UNFIXED
+
+Problem:
+  • moodBefore/moodAfter limited to 1-5 range
+  • Other mood fields (moodScore, energyScore) use 1-5 differently
+  • UI might expect 0-10 scale
+
+Reproducible Steps:
+  POST /api/breathing/sessions
+  { "technique": "box", "moodBefore": 0, "moodAfter": 10 }
+  Response: 400 Bad Request "moodBefore must be between 1 and 5"
+
+Fix Strategy:
+  • Document mood range constraints in API errors
+  • Align UI validation with backend (1-5 scale)
+  • Consider 0-10 scale for consistency
+
+================================================================================
+MEDIUM SEVERITY ISSUES
+================================================================================
+
+[MEDIUM-1] Surya Namaskar Not Personalized by Yoga Style
+────────────────────────────────────────────────────────────────────────────
+Category: UX Completeness | Module: Yoga
+Status: UNFIXED
+
+Problem:
+  • Surya Namaskar rounds vary only by age/fitness
+  • Yoga style preference ignored in calculation
+
+Fix Strategy:
+  • Add style-specific multipliers to SURYA_ROUNDS
+  • Apply adjustments for hatha (easier) vs vinyasa (harder)
+
+
+[MEDIUM-2] Incomplete Profile Doesn't Block Dashboard
+────────────────────────────────────────────────────────────────────────────
+Category: Error Handling | Module: Dashboard
+Status: UNFIXED
+
+Problem:
+  • profileComplete=true with minimal required fields only
+  • Missing dietType, cuisinePreference doesn't prevent dashboard load
+  • Users see broken meal plans with no guidance
+
+Fix Strategy:
+  • Define required fields per tier (MVP vs Complete)
+  • Return 302 redirect to /profile/complete if incomplete
+  • Show profile progress indicator
+
+================================================================================
+LOW SEVERITY ISSUES
+================================================================================
+
+[LOW-1] Vitals Not Validated for Consistency
+────────────────────────────────────────────────────────────────────────────
+Category: Data Quality | Module: Logs
+Status: UNFIXED
+
+Problem:
+  • Weight logged as 300kg, then 70kg next day (230kg loss in 1 day)
+  • Extreme calorie values (10,000+ kcal) recorded without warning
+  • No outlier detection or anomaly flagging
+
+Fix Strategy:
+  • Add delta validation (5kg between consecutive days)
+  • Flag extreme outliers with confidence score
+  • Allow user override with confirmation checkbox
+
+================================================================================
+VALIDATION RESULTS BY FEATURE
+================================================================================
+
+Recipe Data:
+  ✅ All 3 cuisines have all 3 diet options
+  ✅ Diet filtering prevents wrong diet recipes
+  ⚠️  Vegan avoidances not exhaustive
+
+Yoga Styles:
+  ✅ All styles return exercises (hatha, vinyasa, pranayama-only)
+  ✅ Surya Namaskar rounds vary by age/fitness
+  ❌ Yoga style not applied to plan
+  ⚠️  Surya rounds not adjusted for style
+
+Dashboard:
+  ✅ Loads for onboarded users
+  ✅ Handles empty logs gracefully
+  ❌ Stats calculation fails (avgCalories: 0)
+  ⚠️  Incomplete profiles not blocked
+
+Sleep Module:
+  ❌ Top-level durationMinutes ignored
+  ✅ Bedtime/wakeTime calculation works
+  ✅ Stats calculated from nested structure
+  ⚠️  Timezone handling not tested
+
+Breathing Techniques:
+  ❌ Technique enum mismatch (Pranayama vs BreathingSession)
+  ✅ Techniques filtered by age/conditions
+  ⚠️  Mood range (1-5) may be too strict
+
+Grocery Module:
+  ✅ INR pricing calculations correct
+  ✅ Currency formatting works
+
+Profile System:
+  ✅ profileComplete flag works
+  ✅ Onboarding flow completes
+  ❌ Missing field validation
+  ⚠️  Yoga style not required for yoga workouts
+
+API Error Handling:
+  ⚠️  Invalid date formats not rejected
+  ⚠️  Out-of-range values not validated
+  ⚠️  Missing required fields not enforced
+
+================================================================================
+FIX PRIORITY TIMELINE
+================================================================================
+
+WEEK 1 - CRITICAL (Blocks Production):
+  1. Fix BreathingSession technique enum (#CRITICAL-1)
+  2. Fix HealthLog stats calculation (#CRITICAL-2)
+  3. Fix sleep duration API routing (#CRITICAL-3)
+
+WEEK 2 - HIGH (Breaks Features):
+  4. Add profile field validation (#HIGH-2)
+  5. Apply yoga style to workouts (#HIGH-1)
+  6. Fix date format consistency (#HIGH-4)
+  7. Fix recipe vegan filtering (#HIGH-3)
+  8. Document breathing mood range (#HIGH-5)
+
+WEEK 3 - MEDIUM/LOW (Polish):
+  9. Personalize Surya rounds by style (#MEDIUM-1)
+  10. Block incomplete profiles (#MEDIUM-2)
+  11. Add vitals outlier detection (#LOW-1)
+  12. Test coverage improvements
+
+================================================================================

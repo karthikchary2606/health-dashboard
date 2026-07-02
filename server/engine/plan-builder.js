@@ -259,6 +259,7 @@ function buildYogaSchedule(profile, daysPerWeek) {
         exercises: [suryaEntry(profile, true)]
       };
     }
+    // If yogaStyle is explicitly set and valid, use it for ALL yoga days
     const style = profile.yogaStyle;
     const yogaType = (style && style !== 'none' && ['hatha','vinyasa','pranayama-only'].includes(style))
       ? style

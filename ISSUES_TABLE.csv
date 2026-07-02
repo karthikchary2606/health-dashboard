@@ -1,0 +1,12 @@
+ID,Issue Title,Severity,Category,Module,Status,Impact,Test Steps
+CRITICAL-1,BreathingSession Technique Enum Mismatch,CRITICAL,Data Model,Breathing,UNFIXED,Users cannot save breathing sessions with Pranayama techniques,GET /api/breathing/techniques returns Pranayama; POST /api/breathing/sessions with same technique returns 500 error
+CRITICAL-2,HealthLog Stats Calculation Broken,CRITICAL,Data Model,Logs/Dashboard,UNFIXED,Dashboard shows avgCalories: 0 despite logged meals,Create HealthLog with flat structure; GET /api/logs/data/stats shows zeros instead of values
+CRITICAL-3,Sleep Duration API Confusion,CRITICAL,API Design,Sleep/Logs,UNFIXED,Users cannot log sleep through intuitive API path,POST /api/logs/2024-07-01 with durationMinutes: 480 silently fails; use POST /api/sleep instead
+HIGH-1,Yoga Style Not Applied to Workout Plans,HIGH,Feature Logic,Workouts,UNFIXED,All yoga users get identical exercises regardless of style preference,Onboard with yogaStyle: hatha and yogaStyle: vinyasa; both get same plan
+HIGH-2,Missing Profile Field Validation,HIGH,Data Integrity,Profile,UNFIXED,Corrupted profile data breaks stats calculations,POST /api/profile/onboarding with age: -5; gets accepted instead of rejected
+HIGH-3,Recipe Filtering Edge Case,HIGH,Feature Logic,Meals,UNFIXED,Vegan users see recipes with dairy/ghee,getMeals() with dietType: vegan may return non-vegan options
+HIGH-4,Date Format Inconsistency,HIGH,API Design,Logs,UNFIXED,Client timezone bugs from mixing Date/String formats,Some endpoints accept Date objects; others expect YYYY-MM-DD strings
+HIGH-5,Breathing Session Mood Range Mismatch,HIGH,Data Validation,Breathing,UNFIXED,UI validation mismatches backend; silent failures,POST /api/breathing/sessions with moodBefore: 0 or moodAfter: 10 rejected
+MEDIUM-1,Surya Namaskar Not Personalized by Yoga Style,MEDIUM,UX,Yoga,UNFIXED,Advanced Vinyasa users under-challenged,getSuryaNamaskarRounds() ignores yogaStyle parameter
+MEDIUM-2,Incomplete Profile Doesn't Block Dashboard,MEDIUM,Error Handling,Dashboard,UNFIXED,Users see broken meal plans with no guidance,Dashboard loads even with missing cuisinePreference/dietType
+LOW-1,Vitals Not Validated for Consistency,LOW,Data Quality,Logs,UNFIXED,Stats calculations produce unrealistic trends,Weight: 300kg then 70kg next day recorded without warning

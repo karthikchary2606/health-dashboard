@@ -16,10 +16,18 @@ const healthConditionSchema = new mongoose.Schema({
 
 const profileSchema = new mongoose.Schema({
   // Existing fields (keep as-is)
-  age: Number,
+  age: {
+    type: Number,
+    min: [1, 'Age must be at least 1'],
+    max: [120, 'Age must be at most 120']
+  },
   heightCm: Number,
   startWeightKg: Number,
-  goalWeightKg: Number,
+  goalWeightKg: {
+    type: Number,
+    min: [20, 'Goal weight must be at least 20 kg'],
+    max: [300, 'Goal weight must be at most 300 kg']
+  },
   startDate: Date,
   dietaryPreferences: [String],
   // New fields
@@ -28,10 +36,15 @@ const profileSchema = new mongoose.Schema({
     enum: ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness']
   },
   secondaryGoals: [String],
-  currentWeightKg: Number,
+  currentWeightKg: {
+    type: Number,
+    min: [20, 'Current weight must be at least 20 kg'],
+    max: [300, 'Current weight must be at most 300 kg']
+  },
   dietType: {
     type: String,
-    enum: ['vegetarian', 'non-vegetarian', 'vegan', 'eggetarian']
+    enum: ['vegetarian', 'non-vegetarian', 'vegan', 'eggetarian'],
+    required: false
   },
   cuisinePreference: {
     type: String,

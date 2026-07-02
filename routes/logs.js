@@ -7,6 +7,29 @@ const computeStats = require('../lib/computeStats');
 const router = express.Router();
 router.use(authenticate, requireProfile);
 
+// Date normalization utility
+// Converts Date objects or ISO strings to YYYY-MM-DD format
+function normalizeDate(dateInput) {
+  if (!dateInput) return null;
+  
+  // If it's already a string in YYYY-MM-DD format, return it
+  if (typeof dateInput === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateInput)) {
+    return dateInput;
+  }
+  
+  // Convert Date object or ISO string to YYYY-MM-DD
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  if (!(date instanceof Date) || isNaN(date)) {
+    return null;
+  }
+  
+  // Use UTC date to avoid timezone issues
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 router.get('/data/weight-history', async (req, res) => {
   try {
     const logs = await HealthLog.find({ userId: req.user._id, weight: { $gt: 0 } })
@@ -29,9 +52,11 @@ router.get('/data/weekly-summary', async (req, res) => {
   try {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const dateThreshold = normalizeDate(sevenDaysAgo);
+    
     const logs = await HealthLog.find({
       userId: req.user._id,
-      date: { $gte: sevenDaysAgo }
+      date: { $gte: dateThreshold }
     }).lean();
     const stats = computeStats(logs, req.user.profile);
     res.json({ period: 'last-7-days', ...stats });
@@ -44,9 +69,11 @@ router.get('/data/sleep-trend', async (req, res) => {
   try {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const dateThreshold = normalizeDate(thirtyDaysAgo);
+    
     const logs = await HealthLog.find({
       userId: req.user._id,
-      date: { $gte: thirtyDaysAgo.toISOString().slice(0, 10) },
+      date: { $gte: dateThreshold },
       'sleepEntry.durationMinutes': { $gt: 0 }
     }).select('date sleepEntry -_id').sort({ date: 1 }).lean();
     res.json(logs.map(l => ({
@@ -61,9 +88,11 @@ router.get('/data/mood-trend', async (req, res) => {
   try {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const dateThreshold = normalizeDate(thirtyDaysAgo);
+    
     const logs = await HealthLog.find({
       userId: req.user._id,
-      date: { $gte: thirtyDaysAgo.toISOString().slice(0, 10) }
+      date: { $gte: dateThreshold }
     }).select('date moodScore energyScore -_id').sort({ date: 1 }).lean();
     res.json(logs.filter(l => l.moodScore > 0 || l.energyScore > 0));
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -73,7 +102,7 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 router.get('/:date', async (req, res) => {
   if (!DATE_RE.test(req.params.date)) {
-    return res.status(400).json({ error: 'date must be in YYYY-MM-DD format' });
+    return res.status(400).json({ error: 'date must be in YYYY-MM-DD format (no timezone)' });
   }
   try {
     let log = await HealthLog.findOne({ userId: req.user._id, date: req.params.date });
@@ -87,7 +116,7 @@ router.get('/:date', async (req, res) => {
 
 router.patch('/:date', async (req, res) => {
   if (!DATE_RE.test(req.params.date)) {
-    return res.status(400).json({ error: 'date must be in YYYY-MM-DD format' });
+    return res.status(400).json({ error: 'date must be in YYYY-MM-DD format (no timezone)' });
   }
   
   // Validate meals structure if present
@@ -110,7 +139,7 @@ router.patch('/:date', async (req, res) => {
   if ('durationMinutes' in req.body) {
     return res.status(400).json({ error: 'Sleep duration must be logged via nested sleepEntry.durationMinutes or use POST /api/sleep. See API docs for format.' });
   }
-  
+
   const allowed = ['weight', 'waterIntake', 'completedWorkout', 'moodScore', 'energyScore', 'notes', 'meals', 'exerciseLog', 'sleepEntry'];
   const update = {};
   for (const key of allowed) {
@@ -128,10 +157,17 @@ router.patch('/:date', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { date, checklist, waterIntake, weight, completedWorkout, moodScore, energyScore, notes } = req.body;
+  let { date, checklist, waterIntake, weight, completedWorkout, moodScore, energyScore, notes } = req.body;
+  
+  // Normalize date to YYYY-MM-DD format
+  const normalizedDate = normalizeDate(date);
+  if (!normalizedDate || !DATE_RE.test(normalizedDate)) {
+    return res.status(400).json({ error: 'date must be in YYYY-MM-DD format (no timezone). Documentation: All dates are stored as YYYY-MM-DD strings with no timezone conversion.' });
+  }
+  
   try {
     const log = await HealthLog.findOneAndUpdate(
-      { userId: req.user._id, date },
+      { userId: req.user._id, date: normalizedDate },
       { checklist, waterIntake, weight, completedWorkout, moodScore, energyScore, notes },
       { new: true, upsert: true, runValidators: true }
     );

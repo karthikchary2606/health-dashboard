@@ -97,9 +97,83 @@ function normaliseMeds(arr) {
 
 // ── routes ────────────────────────────────────────────────────────────────────
 
+// Validation helper
+function validateOnboardingInput(req) {
+  const {
+    primaryGoal, currentWeightKg, goalWeightKg, heightCm, age,
+    fitnessLevel, dietType, yogaStyle, workoutDaysPerWeek
+  } = req.body;
+
+  const errors = [];
+
+  // Validate age
+  if (age !== undefined && (age < 1 || age > 120)) {
+    errors.push('age must be between 1 and 120');
+  }
+
+  // Validate weights
+  if (currentWeightKg !== undefined && (currentWeightKg < 20 || currentWeightKg > 300)) {
+    errors.push('currentWeightKg must be between 20 and 300 kg');
+  }
+  if (goalWeightKg !== undefined && (goalWeightKg < 20 || goalWeightKg > 300)) {
+    errors.push('goalWeightKg must be between 20 and 300 kg');
+  }
+
+  // Validate weight-loss goal consistency
+  if (primaryGoal === 'weight-loss' && currentWeightKg && goalWeightKg) {
+    if (goalWeightKg >= currentWeightKg) {
+      errors.push('For weight-loss goal, goalWeightKg must be less than currentWeightKg');
+    }
+  }
+
+  // Validate muscle-gain goal consistency
+  if (primaryGoal === 'muscle-gain' && currentWeightKg && goalWeightKg) {
+    if (goalWeightKg <= currentWeightKg) {
+      errors.push('For muscle-gain goal, goalWeightKg must be greater than currentWeightKg');
+    }
+  }
+
+  // Validate primaryGoal
+  const VALID_GOALS = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
+  if (primaryGoal && !VALID_GOALS.includes(primaryGoal)) {
+    errors.push(`primaryGoal must be one of: ${VALID_GOALS.join(', ')}`);
+  }
+
+  // Validate dietType
+  const VALID_DIET_TYPES = ['vegetarian', 'non-vegetarian', 'vegan', 'eggetarian'];
+  if (dietType && !VALID_DIET_TYPES.includes(dietType)) {
+    errors.push(`dietType must be one of: ${VALID_DIET_TYPES.join(', ')}`);
+  }
+
+  // Validate fitnessLevel
+  const VALID_FITNESS = ['sedentary', 'lightly-active', 'moderately-active', 'very-active'];
+  if (fitnessLevel && !VALID_FITNESS.includes(fitnessLevel)) {
+    errors.push(`fitnessLevel must be one of: ${VALID_FITNESS.join(', ')}`);
+  }
+
+  // Validate yogaStyle
+  const VALID_YOGA = ['hatha', 'vinyasa', 'pranayama-only', 'none'];
+  if (yogaStyle && !VALID_YOGA.includes(yogaStyle)) {
+    errors.push(`yogaStyle must be one of: ${VALID_YOGA.join(', ')}`);
+  }
+
+  // Validate workoutDaysPerWeek
+  if (workoutDaysPerWeek !== undefined && (workoutDaysPerWeek < 1 || workoutDaysPerWeek > 7)) {
+    errors.push('workoutDaysPerWeek must be between 1 and 7');
+  }
+
+  return errors.length > 0 ? errors : null;
+}
+
 // Onboarding — no existing profile required
 router.post('/onboarding', authenticate, async (req, res) => {
   try {
+    // Validate input
+    const validationErrors = validateOnboardingInput(req);
+    if (validationErrors) {
+      return res.status(400).json({ error: 'Validation failed', details: validationErrors });
+    }
+
     const {
       primaryGoal, currentWeightKg, goalWeightKg, heightCm, age,
       fitnessLevel, religion, languageCommunity, culturalFoodAvoidances,
@@ -127,7 +201,9 @@ router.post('/onboarding', authenticate, async (req, res) => {
       cuisinePreference:  cuisinePreference  || 'mixed',
       equipmentAvailable: equipmentAvailable || [],
       workoutPreferences: workoutPreferences || [],
-      workoutDaysPerWeek, workoutTime, yogaStyle, sex,
+      workoutDaysPerWeek, workoutTime, sex,
+      // Default yogaStyle to 'hatha' if user does yoga/hybrid but doesn't specify style
+      yogaStyle: yogaStyle || (workoutPreferences && (workoutPreferences.includes('yoga') || workoutPreferences.includes('hybrid')) ? 'hatha' : 'none'),
       startDate: new Date()
     };
 
