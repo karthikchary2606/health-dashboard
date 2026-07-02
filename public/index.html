@@ -601,7 +601,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
           <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Weight</div>
           <div style="display:flex;gap:6px">
             <input type="number" id="qlWeight" step="0.1" placeholder="kg" style="width:70px;padding:5px 8px;border:1px solid #d1d5db;border-radius:6px;font-size:.85rem">
-            <button onclick="logWeight()" style="background:#1b4332;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:.82rem">Log</button>
+            <button onclick="logWeight()" style="background:var(--primary);color:#0f0f0f;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:.82rem">Log</button>
           </div>
         </div>
 
@@ -615,7 +615,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
 
         <div style="flex:1;min-width:140px">
           <div style="font-size:.78rem;font-weight:600;color:#374151;margin-bottom:4px">Workout</div>
-          <button onclick="toggleWorkoutLog()" id="workoutLogBtn" style="background:#f0fdf4;color:#1b4332;border:1px solid #bbf7d0;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.82rem">Mark Done ✓</button>
+          <button onclick="toggleWorkoutLog()" id="workoutLogBtn" style="background:rgba(78,204,163,.1);color:#4ecca3;border:1px solid rgba(78,204,163,.3);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:.82rem">Mark Done ✓</button>
         </div>
 
       </div>
@@ -623,8 +623,8 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
       <div id="exerciseDetail" style="display:none;margin-top:8px;border-top:1px solid #f3f4f6;padding-top:10px">
         <div style="font-size:.82rem;font-weight:600;margin-bottom:6px">Today's exercises (optional)</div>
         <div id="exerciseRows"></div>
-        <button onclick="addExerciseRow()" style="font-size:.78rem;color:#1b4332;background:none;border:none;cursor:pointer;margin-top:4px">+ Add exercise</button>
-        <button onclick="saveExerciseLog()" style="margin-left:12px;background:#1b4332;color:#fff;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem">Save Log</button>
+        <button onclick="addExerciseRow()" style="font-size:.78rem;color:#4ecca3;background:none;border:none;cursor:pointer;margin-top:4px">+ Add exercise</button>
+        <button onclick="saveExerciseLog()" style="margin-left:12px;background:var(--primary);color:#0f0f0f;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem">Save Log</button>
       </div>
 
       <div id="qlMsg" style="font-size:.8rem;margin-top:6px;color:#16a34a"></div>
@@ -731,7 +731,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
           <div style="margin-top:12px">
             <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-light);margin-bottom:4px"><span>Obese &gt;30</span><span>Overweight 25–30</span><span>Normal &lt;25</span></div>
             <div style="height:10px;background:linear-gradient(to right,#ef4444 0%,#f59e0b 40%,#22c55e 100%);border-radius:5px;position:relative">
-              <div id="bmiMarker" style="position:absolute;top:-4px;width:3px;height:18px;background:#1b4332;border-radius:2px;transition:left .5s"></div>
+              <div id="bmiMarker" style="position:absolute;top:-4px;width:3px;height:18px;background:var(--primary);border-radius:2px;transition:left .5s"></div>
             </div>
           </div>
         </div>
@@ -770,7 +770,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
     <div id="goalGuidelines" style="margin-bottom:16px"></div>
     <div class="grid-2">
       <div style="display:flex;flex-direction:column;gap:14px">
-        <div id="communityNotes" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 16px;margin-bottom:16px;display:none"></div>
+        <div id="communityNotes" style="background:rgba(78,204,163,.08);border:1px solid rgba(78,204,163,.3);border-radius:10px;padding:14px 16px;margin-bottom:16px;display:none"></div>
         <div id="conditionCards"></div>
       </div>
 
@@ -779,7 +779,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
           <div class="card-title">🌱 Daily Seed &amp; Nut Allocation (30g MAX)</div>
           <p style="font-size:.78rem;color:var(--text-light);margin-bottom:14px">250g stock each. 30g combined daily cap to prevent caloric surplus.</p>
           <div id="seedTracker"></div>
-          <div style="margin-top:14px;padding:10px;background:#f0fdf4;border-radius:8px;font-size:.78rem;color:#166534">
+          <div style="margin-top:14px;padding:10px;background:rgba(78,204,163,.08);border-radius:8px;font-size:.78rem;color:#166534">
             <strong>💡 Tip:</strong> Weigh daily on a kitchen scale. Mix all 8 seeds in a jar = custom trail mix.
           </div>
         </div>
@@ -845,7 +845,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
           </div>
         </div>
         <button class="btn btn-primary" onclick="startBreathingSession()">▶ Start Session</button>
-        <button class="btn btn-sm" onclick="cancelBreathingConfig()" style="margin-left:10px;background:#f8f9fa;border:1px solid var(--border)">Cancel</button>
+        <button class="btn btn-sm" onclick="cancelBreathingConfig()" style="margin-left:10px;background:var(--card-elevated);border:1px solid var(--border)">Cancel</button>
       </div>
     </div>
 
@@ -873,7 +873,7 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
         <button class="score-btn" onclick="setMoodAfter(5,this)">😄 5</button>
       </div>
       <button class="btn btn-primary" onclick="saveBreathingSession()">💾 Save Session</button>
-      <button class="btn btn-sm" onclick="resetBreathing()" style="margin-left:10px;background:#f8f9fa;border:1px solid var(--border)">New Session</button>
+      <button class="btn btn-sm" onclick="resetBreathing()" style="margin-left:10px;background:var(--card-elevated);border:1px solid var(--border)">New Session</button>
     </div>
 
     <!-- Session history -->
