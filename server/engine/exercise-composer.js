@@ -118,7 +118,7 @@ const YOGA_EXERCISES = {
  * @returns {Array<{name, sets, reps, note, cat}>}
  */
 function getYogaExercises(yogaType) {
-  return [...(YOGA_EXERCISES[yogaType] || YOGA_EXERCISES.hatha)];
+  return (YOGA_EXERCISES[yogaType] || YOGA_EXERCISES.hatha).map(ex => ({ ...ex }));
 }
 
 /**
