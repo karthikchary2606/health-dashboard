@@ -228,8 +228,8 @@ apiFetch('/api/profile/completion').then(res => {
   }
 });
 
-// Show auto-calculated water goal based on weight
-(function updateWaterGoalDisplay() {
+// Show auto-calculated water goal based on weight — called after initAuth sets currentUser
+function updateWaterGoalDisplay() {
   var p = (window.currentUser && window.currentUser.profile) || {};
   var goalEl = document.getElementById('waterGoalDisplay');
   if (goalEl && p.waterGoalL) {
@@ -239,10 +239,10 @@ apiFetch('/api/profile/completion').then(res => {
   if (hint && p.currentWeightKg) {
     hint.textContent = 'Based on your weight (' + p.currentWeightKg + 'kg × 30ml)';
   }
-})();
+}
 
-// Review reminder banner — use currentUser.profile instead of extra API call
-(function checkReviewBanner() {
+// Review reminder banner — called after initAuth sets currentUser
+function checkReviewBanner() {
   const p = (window.currentUser || {}).profile;
   if (!p || !p.lastReviewedAt || !p.reviewReminderDays) return;
   const daysSince = Math.floor((Date.now() - new Date(p.lastReviewedAt)) / 86400000);
@@ -267,7 +267,7 @@ apiFetch('/api/profile/completion').then(res => {
       banner.appendChild(hint);
     }
   }
-})();
+}
 
 function dismissReviewBanner() {
   const banner = document.getElementById('reviewBanner');

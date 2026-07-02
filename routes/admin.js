@@ -4,6 +4,7 @@ const User = require('../models/User');
 const HealthLog = require('../models/HealthLog');
 const ChecklistItem = require('../models/ChecklistItem');
 const BreathingSession = require('../models/BreathingSession');
+const ProfileSnapshot = require('../models/ProfileSnapshot');
 const authenticate = require('../middleware/authenticate');
 const { requireAdmin } = require('../middleware/requireAdmin');
 
@@ -66,6 +67,7 @@ router.delete('/users/:id', async (req, res) => {
     await HealthLog.deleteMany({ userId: req.params.id });
     await ChecklistItem.deleteMany({ userId: req.params.id });
     await BreathingSession.deleteMany({ userId: req.params.id });
+    await ProfileSnapshot.deleteMany({ userId: req.params.id });
     res.json({ message: 'User and their data deleted' });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });

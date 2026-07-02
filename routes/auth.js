@@ -68,7 +68,11 @@ router.post('/login', loginLimiter, async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  res.clearCookie('health_token', { httpOnly: true, sameSite: 'strict' });
+  res.clearCookie('health_token', {
+    httpOnly: true,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production'
+  });
   res.json({ message: 'Logged out' });
 });
 

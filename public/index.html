@@ -938,6 +938,8 @@ function toggleMoreMenu() { openSidebar(); }
 document.addEventListener("DOMContentLoaded", async () => {
   try {
   await initAuth(); // auth check + sidebar personalisation
+  updateWaterGoalDisplay(); // requires currentUser — must run after initAuth
+  checkReviewBanner();      // requires currentUser — must run after initAuth
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("logDate").value = today;
   await buildTimeline(); // sets _phaseTasks from planCache

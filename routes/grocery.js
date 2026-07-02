@@ -112,10 +112,14 @@ function resolveMeta(name) {
 }
 
 function getISOWeek() {
+  // ISO 8601: week containing the first Thursday of the year is week 1.
   const d = new Date();
-  const startOfYear = new Date(d.getFullYear(), 0, 1);
-  const week = Math.ceil(((d - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
-  return `${d.getFullYear()}-W${week}`;
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayOfWeek = date.getUTCDay() || 7; // convert Sunday 0 → 7
+  date.setUTCDate(date.getUTCDate() + 4 - dayOfWeek); // shift to nearest Thursday
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(((date - yearStart) / 86400000 + 1) / 7);
+  return `${date.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
 }
 
 // Derive grocery list from template using first week's categories

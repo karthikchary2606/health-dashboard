@@ -15,7 +15,7 @@ router.get('/data/weight-history', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-router.get('/data/stats', authenticate, requireProfile, async (req, res) => {
+router.get('/data/stats', async (req, res) => {
   try {
     const logs = await HealthLog.find({ userId: req.user._id }).lean();
     const stats = computeStats(logs, req.user.profile);
@@ -25,7 +25,7 @@ router.get('/data/stats', authenticate, requireProfile, async (req, res) => {
   }
 });
 
-router.get('/data/weekly-summary', authenticate, requireProfile, async (req, res) => {
+router.get('/data/weekly-summary', async (req, res) => {
   try {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -40,7 +40,7 @@ router.get('/data/weekly-summary', authenticate, requireProfile, async (req, res
   }
 });
 
-router.get('/data/sleep-trend', authenticate, requireProfile, async (req, res) => {
+router.get('/data/sleep-trend', async (req, res) => {
   try {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -57,7 +57,7 @@ router.get('/data/sleep-trend', authenticate, requireProfile, async (req, res) =
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-router.get('/data/mood-trend', authenticate, requireProfile, async (req, res) => {
+router.get('/data/mood-trend', async (req, res) => {
   try {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -69,7 +69,12 @@ router.get('/data/mood-trend', authenticate, requireProfile, async (req, res) =>
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 router.get('/:date', async (req, res) => {
+  if (!DATE_RE.test(req.params.date)) {
+    return res.status(400).json({ error: 'date must be in YYYY-MM-DD format' });
+  }
   try {
     let log = await HealthLog.findOne({ userId: req.user._id, date: req.params.date });
     if (!log) {
@@ -81,6 +86,9 @@ router.get('/:date', async (req, res) => {
 });
 
 router.patch('/:date', async (req, res) => {
+  if (!DATE_RE.test(req.params.date)) {
+    return res.status(400).json({ error: 'date must be in YYYY-MM-DD format' });
+  }
   const allowed = ['weight', 'waterIntake', 'completedWorkout', 'moodScore', 'energyScore', 'notes', 'meals', 'exerciseLog'];
   const update = {};
   for (const key of allowed) {
