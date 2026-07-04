@@ -556,6 +556,33 @@
     body.loaded {
       visibility: visible;
     }
+
+    /* ── TOAST NOTIFICATIONS ── */
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+
+    .toast-notification {
+      animation: slideIn 0.3s ease;
+    }
   </style>
 </head>
 <body>

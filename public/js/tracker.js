@@ -15,6 +15,49 @@
     remaining: CALORIE_TARGET
   };
 
+  // ========== UTILITIES ==========
+  function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return String(text).replace(/[&<>"']/g, (char) => map[char]);
+  }
+
+  function showToast(message, type = 'info') {
+    // Remove existing toast if any
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `toast-notification toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: ${type === 'error' ? '#e63946' : type === 'success' ? '#52b788' : '#1b4332'};
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.animation = 'slideOut 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
   // ========== INITIALIZATION ==========
   async function initTracker() {
     setupEventListeners();
@@ -86,20 +129,50 @@
       return;
     }
 
-    mealList.innerHTML = meals
-      .map(
-        (meal) => `
-      <div class="meal-item">
-        <div class="meal-info">
-          <div class="meal-type">${meal.mealType || 'Meal'}</div>
-          <div class="meal-name">${meal.recipeName || 'Unknown'}</div>
-          <div class="meal-calories">${(meal.calories || 0).toLocaleString()} cal</div>
-        </div>
-        <button class="meal-delete" onclick="deleteMeal('${meal._id}')">Delete</button>
-      </div>
-    `
-      )
-      .join('');
+    // Clear existing content
+    mealList.innerHTML = '';
+
+    // Create meal items with proper event listeners (no inline onclick)
+    meals.forEach((meal) => {
+      const mealEl = document.createElement('div');
+      mealEl.className = 'meal-item';
+
+      const infoEl = document.createElement('div');
+      infoEl.className = 'meal-info';
+
+      const typeEl = document.createElement('div');
+      typeEl.className = 'meal-type';
+      typeEl.textContent = meal.mealType || 'Meal';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'meal-name';
+      nameEl.textContent = meal.recipeName || 'Unknown';
+
+      const caloriesEl = document.createElement('div');
+      caloriesEl.className = 'meal-calories';
+      caloriesEl.textContent = `${(meal.calories || 0).toLocaleString()} cal`;
+
+      infoEl.appendChild(typeEl);
+      infoEl.appendChild(nameEl);
+      infoEl.appendChild(caloriesEl);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'meal-delete';
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.dataset.mealId = meal._id;
+      deleteBtn.addEventListener('click', function () {
+        handleMealDelete(meal._id);
+      });
+
+      mealEl.appendChild(infoEl);
+      mealEl.appendChild(deleteBtn);
+      mealList.appendChild(mealEl);
+    });
+  }
+
+  function handleMealDelete(mealId) {
+    if (!confirm('Delete this meal?')) return;
+    deleteMeal(mealId);
   }
 
   function updateNutritionStats() {
@@ -161,16 +234,15 @@
       await fetchTrackerData();
       renderCalories();
       closeMealForm();
+      showToast('Meal added successfully', 'success');
     } catch (error) {
       console.error('Error adding meal:', error);
-      alert('Failed to add meal. Please try again.');
+      showToast('Failed to add meal. Please try again.', 'error');
     }
   }
 
   // ========== DELETE MEAL ==========
   async function deleteMeal(mealId) {
-    if (!confirm('Delete this meal?')) return;
-
     try {
       const response = await fetch(`${API_BASE}/meal/${mealId}`, {
         method: 'DELETE',
@@ -183,9 +255,10 @@
 
       await fetchTrackerData();
       renderCalories();
+      showToast('Meal deleted successfully', 'success');
     } catch (error) {
       console.error('Error deleting meal:', error);
-      alert('Failed to delete meal. Please try again.');
+      showToast('Failed to delete meal. Please try again.', 'error');
     }
   }
 
@@ -215,9 +288,10 @@
       await fetchTrackerData();
       renderSteps();
       closeStepsForm();
+      showToast('Steps added successfully', 'success');
     } catch (error) {
       console.error('Error adding steps:', error);
-      alert('Failed to add steps. Please try again.');
+      showToast('Failed to add steps. Please try again.', 'error');
     }
   }
 
@@ -321,6 +395,16 @@
     document.getElementById('stepsForm').reset();
   }
 
+  // ========== AUTH HELPERS ==========
+  function logout() {
+    if (window.logout) {
+      window.logout();
+    } else {
+      // Fallback: direct logout call
+      window.location.href = '/logout';
+    }
+  }
+
   // ========== GLOBAL EXPORTS ==========
   window.deleteMeal = deleteMeal;
   window.addSteps = addSteps;
@@ -329,6 +413,7 @@
   window.closeStepsForm = closeStepsForm;
   window.initTracker = initTracker;
   window.fetchTrackerData = fetchTrackerData;
+  window.logout = logout;
 
   // ========== INITIALIZATION ON DOM READY ==========
   if (document.readyState === 'loading') {
