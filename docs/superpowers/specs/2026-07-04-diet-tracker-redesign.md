@@ -63,36 +63,36 @@ Beyond the original scope, these features will be included because market resear
 `dietType` is a single enum. Non-veg and eggetarian users get a uniform diet plan for all 7 days — no concept of mixed weekly patterns (e.g., 3 days non-veg + 2 egg + 2 veg).
 
 ### Data Model — `User.js` (profile schema)
-Add four fields:
+Replace the numeric day-count approach with specific day arrays:
 
 ```js
-nonVegDaysPerWeek: { type: Number, min: 0, max: 7, default: 0 },
-eggDaysPerWeek:    { type: Number, min: 0, max: 7, default: 0 },
-// vegDaysPerWeek is derived: 7 - nonVegDaysPerWeek - eggDaysPerWeek
-// Validated server-side: nonVegDaysPerWeek + eggDaysPerWeek <= 7
+nonVegDays: { type: [String], enum: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], default: [] },
+eggDays:    { type: [String], enum: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], default: [] },
+// vegDays derived: all days not in nonVegDays or eggDays
+// Validated server-side: no day can appear in both nonVegDays and eggDays
 stepGoal: { type: Number, default: 10000, min: 1000, max: 50000 },
 ```
 
 `stepGoal` defaults to 10,000 for all existing users — no migration needed, Mongoose handles the default. It is editable in profile settings.
 
-These diet-day fields are only relevant when `dietType` is `'non-vegetarian'` or `'eggetarian'`. Vegetarian and vegan profiles ignore them.
+These diet-day fields are only relevant when `dietType` is `'non-vegetarian'` or `'eggetarian'`. Vegetarian and vegan profiles: both arrays remain empty, plan output is unchanged.
 
 ### Onboarding — Step 3 (Diet)
 After the user selects their diet type, conditional follow-ups appear:
 
 - **Non-Vegetarian selected:**
-  1. "How many days a week do you eat non-veg?" → number picker (1–7), stored as `nonVegDaysPerWeek`
-  2. "Of the remaining days, how many include eggs?" → number picker (0 to 7−nonVegDays), stored as `eggDaysPerWeek`
-  3. Remaining days (7 − nonVeg − egg) auto-display as vegetarian days (read-only label)
+  1. A day-picker shows Mon–Sun as 7 toggleable chips. User taps which days they eat non-veg. Stored as `nonVegDays` (e.g., `['Saturday','Sunday']`).
+  2. A second day-picker (with non-veg days greyed out) lets user pick egg days from remaining days. Stored as `eggDays`.
+  3. Remaining unticked days auto-label as "Vegetarian" in a read-only summary row.
   
 - **Eggetarian selected:**
-  1. "How many days a week do you eat eggs?" → number picker (1–7), stored as `eggDaysPerWeek`
-  2. `nonVegDaysPerWeek` stays 0
-  3. Remaining days auto-display as vegetarian (read-only label)
+  1. Day-picker: user picks which days they eat eggs → stored as `eggDays`.
+  2. `nonVegDays` stays `[]`.
+  3. Remaining days auto-label as "Vegetarian".
 
-- **Vegetarian / Vegan selected:** No follow-up. Both day fields remain 0.
+- **Vegetarian / Vegan selected:** No follow-up. Both arrays remain `[]`.
 
-Validation: `nonVegDaysPerWeek + eggDaysPerWeek` must be ≤ 7. If the sum equals 7 exactly, no pure veg days remain — this is valid.
+Validation: no day can appear in both `nonVegDays` and `eggDays`. At least 1 day must be selected if non-veg/eggetarian diet type is chosen.
 
 Both onboarding and Settings (profile edit page) expose these pickers so users can change their split after initial setup.
 
@@ -105,23 +105,65 @@ Both onboarding and Settings (profile edit page) expose these pickers so users c
 // → ['non-veg','non-veg','non-veg','egg','egg','veg','veg']
 ```
 
-Distribution logic:
-1. Fill the first `nonVegDaysPerWeek` slots with `'non-veg'`
-2. Fill the next `eggDaysPerWeek` slots with `'egg'`
-3. Fill remaining slots with `'veg'`
+**`deriveEffectiveDiet(profile)`** is extended to return a `weeklyDietPattern` — a 7-element object keyed by day name:
 
-The array maps index 0 → Monday through index 6 → Sunday. This is deterministic — no randomness.
+```js
+// Example: nonVegDays=['Saturday','Sunday'], eggDays=['Wednesday']
+// → { Monday:'veg', Tuesday:'veg', Wednesday:'egg', Thursday:'veg', Friday:'veg', Saturday:'non-veg', Sunday:'non-veg' }
+weeklyDietPattern[day] = profile.nonVegDays.includes(day) ? 'non-veg'
+                        : profile.eggDays.includes(day)   ? 'egg'
+                        : 'veg';
+```
 
-**Plan builder** uses `weeklyDietPattern[dayIndex]` instead of a single `effectiveDiet` to select the food pool for each day's meal generation. Each day in the weekly plan is generated with its own pool:
-- `'non-veg'` → non-veg meal pool
-- `'egg'` → eggetarian meal pool  
-- `'veg'` → vegetarian meal pool
+**Plan builder** uses `weeklyDietPattern[dayName]` to select the food pool for each day. Day names are the DAYS array already in `plan-builder.js` (`['Monday','Tuesday',...,'Sunday']`).
 
-**Backward compatibility:** Pure vegetarian and vegan profiles have `nonVegDaysPerWeek = 0` and `eggDaysPerWeek = 0`, so `weeklyDietPattern` = `['veg','veg','veg','veg','veg','veg','veg']`. Existing plan output is unchanged.
+**Diet tab day indicators** — each day tab in the diet UI gets a small color-coded dot: 🟢 veg, 🟠 egg, 🔴 non-veg. Pattern sourced from the plan's `weeklyDietPattern`.
+
+**Backward compatibility:** Vegetarian and vegan profiles have `nonVegDays = []` and `eggDays = []`, so `weeklyDietPattern` is all `'veg'`. Existing plan output is unchanged.
 
 ---
 
-## 2. Today Dashboard (replaces current dashboard)
+## 1b. Meal Data — Calories Added to Plan Meals
+
+### Problem
+Plan meals are plain strings (`'Idli with Sambar'`). The tracker's plan-meal pre-fill feature requires calorie + macro data on each meal.
+
+### Solution
+Convert all meal entries in `server/meals/south-indian.js`, `north-indian.js`, and `continental.js` from strings to objects:
+
+```js
+// Before
+'Idli with Sambar'
+
+// After
+{ name: 'Idli with Sambar', calories: 280, proteinG: 9, carbsG: 52, fatG: 3, estimated: true }
+```
+
+- `estimated: true` flags all entries as best-effort ICMR data. The UI shows a small "~" or "est." label next to pre-filled calorie values.
+- Calorie values sourced from ICMR *Indian Food Composition Tables* and NIN data. ~150+ meals across 3 cuisine files.
+- Plan builder and `planCache` pass meal objects through unchanged. All existing rendering logic that previously accessed a string now accesses `meal.name`.
+- Any code that does string comparison on meal names (e.g., `weekdays[0].breakfast === 'Idli with Sambar'`) must be updated to use `.name`.
+
+---
+
+## 1c. Client-Side Date Bug Fix
+
+### Problem
+Several client JS files use `new Date().toISOString().slice(0,10)` which returns UTC date. For IST users at 12:30 AM on July 5, this returns `2026-07-04` — the wrong day. Streak calculations and meal logging break silently for late-night users.
+
+### Fix
+Replace all occurrences with a local-date helper added to `public/js/api.js`:
+
+```js
+function localDateString() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+```
+
+All files that reference `toISOString().slice(0,10)` for date-keying (not for ISO timestamps) are updated to use `localDateString()`. This is a pre-existing bug that tracker streak logic would surface; fixing it now is correct.
+
+---
 
 ### Files Changed
 | File | Action |
@@ -221,7 +263,25 @@ All existing HealthLog fields (water, weight, workout, mood, notes, checklist) a
 All routes use the existing `authenticate` middleware. All writes create or update today's HealthLog document (upsert by `userId + date`).
 
 ### Calorie Target Computation
-`profile.dailyCalorieTarget` is already computed on plan generation. If it's missing (legacy profiles), the tracker falls back to a BMR-based estimate using existing profile fields (age, weight, height, sex, fitnessLevel). No new computation logic needed — uses what's already there.
+`profile.dailyCalorieTarget` is already computed on plan generation. If it is `null` (new users or legacy profiles that haven't generated a plan), the tracker computes a **BMR-based estimate** at request time using Mifflin-St Jeor formula from profile fields (age, currentWeightKg, heightCm, sex, fitnessLevel). This estimate is returned with `estimated: true` in the API response, and the UI labels the ring target with "~" (e.g., "~2,050 kcal"). The estimate is never stored — it is computed on-the-fly until the user generates a proper plan.
+
+### Streak Definition
+A day counts toward the streak if `healthLog.meals.length >= 1` for that date. Streak is the count of consecutive calendar days (using local date string, not UTC) ending on today where this condition is true. If today has no meals yet, the streak is still valid from yesterday. A single missed day resets the streak to 0.
+
+### "Repeat Yesterday" Behaviour
+- Finds yesterday's HealthLog by `localDateString() - 1 day`.
+- If no log exists or `meals.length === 0`: returns a 404-equivalent and the client shows a toast: **"No meals logged yesterday — nothing to repeat."**
+- If meals exist: copies the `meals` array into today's HealthLog (upsert). Existing today meals are **not overwritten** — yesterday's meals are appended. User can then remove any they didn't eat today.
+
+### Micronutrient Flag Logic
+Flags are computed on the server in `GET /api/tracker/today`, using string-matching on logged meal names (same `DAIRY_TERMS` array already in `meal-composer.js`). Maximum 2 flags shown per day. Conditions:
+
+| Flag | Condition | Message |
+|------|-----------|---------|
+| B12/Calcium | No meal name contains any of: `curd, raita, paneer, ghee, dahi, milk, cheese, yogurt, egg, chicken, fish, mutton` | "⚠️ No dairy or protein source logged yet — add curd, paneer, or eggs" |
+| Vegetables | No meal name contains any of: `sabzi, curry, dal, sambar, rasam, salad, vegetable, spinach, tomato, brinjal` by 6 PM local time | "⚠️ No vegetables logged yet today" |
+
+Flags are suppressed if the user has already logged ≥ 3 meals (reasonable to assume coverage). They are informational only — no blocking or red-warning treatment.
 
 ---
 
