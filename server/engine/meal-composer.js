@@ -242,10 +242,10 @@ function deriveWeeklyDietPattern(user) {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const pattern = {};
 
-  // Strict vegetarian preference is never overridden
-  if (dietType === 'vegetarian') {
+  // Strict preferences (vegetarian/vegan) are never overridden
+  if (dietType === 'vegetarian' || dietType === 'vegan') {
     days.forEach(day => {
-      pattern[day] = 'vegetarian';
+      pattern[day] = dietType;
     });
     return pattern;
   }

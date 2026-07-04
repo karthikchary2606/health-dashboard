@@ -177,4 +177,49 @@ describe('deriveWeeklyDietPattern', () => {
       expect(pattern[day]).toBe('non-vegetarian');
     });
   });
+
+  test('vegan user with nonVegDays: all days stay vegan (strict preference enforced)', () => {
+    const user = {
+      profile: {
+        dietType: 'vegan',
+        nonVegDays: ['Saturday', 'Sunday'],
+        eggDays: ['Wednesday'],
+      }
+    };
+    const pattern = deriveWeeklyDietPattern(user);
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    // vegan is strict and cannot be overridden
+    days.forEach(day => {
+      expect(pattern[day]).toBe('vegan');
+    });
+  });
+
+  test('eggetarian with eggDays and nonVegDays: nonVegDays takes final priority', () => {
+    const user = {
+      profile: {
+        dietType: 'eggetarian',
+        nonVegDays: ['Wednesday', 'Saturday'], // Wednesday and Saturday want non-veg
+        eggDays: ['Wednesday'], // But Wednesday is also eggDays
+      }
+    };
+    const pattern = deriveWeeklyDietPattern(user);
+    
+    // nonVegDays overrides eggDays when both apply (last-in-wins)
+    expect(pattern['Wednesday']).toBe('non-vegetarian');
+    expect(pattern['Saturday']).toBe('non-vegetarian');
+  });
+
+  test('day in both eggDays and nonVegDays: nonVegDays takes final priority', () => {
+    const user = {
+      profile: {
+        dietType: 'non-vegetarian',
+        eggDays: ['Monday'], // Monday wants egg
+        nonVegDays: ['Monday'], // But Monday also in nonVegDays
+      }
+    };
+    const pattern = deriveWeeklyDietPattern(user);
+    
+    // nonVegDays overrides eggDays when both apply to same day
+    expect(pattern['Monday']).toBe('non-vegetarian');
+  });
 });
