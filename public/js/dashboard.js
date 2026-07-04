@@ -599,7 +599,7 @@ async function initLiveData() {
     if (calorieAmount && calorieRing && typeof data.consumed === 'number' && typeof data.calorieTarget === 'number') {
       calorieAmount.textContent = data.consumed.toLocaleString('en-IN') + ' / ' + data.calorieTarget.toLocaleString('en-IN') + ' kcal';
       
-      const percentage = Math.min(100, (data.consumed / data.calorieTarget) * 100);
+      const percentage = data.calorieTarget > 0 ? Math.min(100, Math.round((data.consumed / data.calorieTarget) * 100)) : 0;
       calorieRing.style.background = `conic-gradient(${getCalorieRingColor(percentage)} 0% ${percentage}%, rgba(255,255,255,0.1) ${percentage}% 100%)`;
     }
 
@@ -620,17 +620,26 @@ async function initLiveData() {
       if (data.meals.length === 0) {
         mealLogList.innerHTML = '<div style="color:#a0a0a0;text-align:center;padding:16px;">No meals logged yet</div>';
       } else {
-        let mealHtml = '';
+        mealLogList.innerHTML = '';
         data.meals.forEach(function(meal) {
           const mealType = meal.mealType || 'meal';
           const mealName = meal.description || meal.name || mealType.charAt(0).toUpperCase() + mealType.slice(1);
           const calories = meal.calories || 0;
-          mealHtml += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);">';
-          mealHtml += '<span>' + mealName + '</span>';
-          mealHtml += '<span style="color:#4ecca3;">' + calories + ' kcal</span>';
-          mealHtml += '</div>';
+          
+          const mealDiv = document.createElement('div');
+          mealDiv.style.cssText = 'display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);';
+          
+          const nameSpan = document.createElement('span');
+          nameSpan.textContent = mealName;
+          
+          const calorieSpan = document.createElement('span');
+          calorieSpan.style.color = '#4ecca3';
+          calorieSpan.textContent = calories + ' kcal';
+          
+          mealDiv.appendChild(nameSpan);
+          mealDiv.appendChild(calorieSpan);
+          mealLogList.appendChild(mealDiv);
         });
-        mealLogList.innerHTML = mealHtml;
       }
     }
   } catch (e) {

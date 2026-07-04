@@ -1,9 +1,1 @@
-{"id":"feedback-1783145719656","timestamp":"2026-07-04T06:15:19.656Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 0","submittedAt":"2026-07-04T06:15:19.656Z"}
-{"id":"feedback-1783145719656","timestamp":"2026-07-04T06:15:19.656Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 1","submittedAt":"2026-07-04T06:15:19.656Z"}
-{"id":"feedback-1783145719657","timestamp":"2026-07-04T06:15:19.657Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 2","submittedAt":"2026-07-04T06:15:19.657Z"}
-{"id":"feedback-1783145719657","timestamp":"2026-07-04T06:15:19.657Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 3","submittedAt":"2026-07-04T06:15:19.657Z"}
-{"id":"feedback-1783145719658","timestamp":"2026-07-04T06:15:19.658Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 4","submittedAt":"2026-07-04T06:15:19.658Z"}
-{"id":"feedback-1783145719659","timestamp":"2026-07-04T06:15:19.659Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 5","submittedAt":"2026-07-04T06:15:19.658Z"}
-{"id":"feedback-1783145719659","timestamp":"2026-07-04T06:15:19.659Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 6","submittedAt":"2026-07-04T06:15:19.659Z"}
-{"id":"feedback-1783145719660","timestamp":"2026-07-04T06:15:19.660Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 7","submittedAt":"2026-07-04T06:15:19.659Z"}
-{"id":"feedback-1783145719660","timestamp":"2026-07-04T06:15:19.660Z","userId":"anonymous","mealSatisfaction":3,"personalizationMatch":3,"additionalFeedback":"Feedback 8","submittedAt":"2026-07-04T06:15:19.660Z"}
+{"id":"feedback-1783145765707","timestamp":"2026-07-04T06:16:05.707Z","userId":"anonymous","mealSatisfaction":4,"personalizationMatch":3,"additionalFeedback":"Test persistence","submittedAt":"2026-07-04T06:16:05.707Z"}
