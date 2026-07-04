@@ -11,16 +11,19 @@
 `dietType` is a single enum. Non-veg and eggetarian users get a uniform diet plan for all 7 days — no concept of mixed weekly patterns (e.g., 3 days non-veg + 2 egg + 2 veg).
 
 ### Data Model — `User.js` (profile schema)
-Add three fields:
+Add four fields:
 
 ```js
 nonVegDaysPerWeek: { type: Number, min: 0, max: 7, default: 0 },
 eggDaysPerWeek:    { type: Number, min: 0, max: 7, default: 0 },
 // vegDaysPerWeek is derived: 7 - nonVegDaysPerWeek - eggDaysPerWeek
 // Validated server-side: nonVegDaysPerWeek + eggDaysPerWeek <= 7
+stepGoal: { type: Number, default: 10000, min: 1000, max: 50000 },
 ```
 
-These fields are only relevant when `dietType` is `'non-vegetarian'` or `'eggetarian'`. Vegetarian and vegan profiles ignore them.
+`stepGoal` defaults to 10,000 for all existing users — no migration needed, Mongoose handles the default. It is editable in profile settings.
+
+These diet-day fields are only relevant when `dietType` is `'non-vegetarian'` or `'eggetarian'`. Vegetarian and vegan profiles ignore them.
 
 ### Onboarding — Step 3 (Diet)
 After the user selects their diet type, conditional follow-ups appear:
@@ -174,6 +177,8 @@ All routes use the existing `authenticate` middleware. All writes create or upda
 | More | ⋯ | opens a sheet with: Breathing, Progress, Recipes, Guidelines, Grocery, Tracker |
 
 Tracker is accessible from the "More" sheet and directly via tap-through from the Today dashboard widgets. This avoids overcrowding the bottom nav while keeping the tracker one tap away from the dashboard.
+
+**"More" sheet mechanic:** Tapping ⋯ slides up a bottom sheet (CSS `transform: translateY`) listing secondary modules as large tappable rows. No new routing needed — these are the same in-page tab switches already handled by `bottom-nav.js`. The sheet is dismissed by tapping outside it or tapping a module link.
 
 ---
 
