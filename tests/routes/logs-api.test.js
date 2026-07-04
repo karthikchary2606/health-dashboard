@@ -108,7 +108,7 @@ describe('GET /api/logs/today', () => {
     expect(res.body).toHaveProperty('activityLevel');
     expect(res.body).toHaveProperty('profileData');
     expect(Array.isArray(res.body.meals)).toBe(true);
-    expect(res.body.calorieTarget).toBe(2100);
+    expect(res.body.calorieTarget).toBeGreaterThan(0); // dynamic TDEE-based target
   });
 
   test('requires authentication', async () => {
@@ -186,7 +186,7 @@ describe('GET /api/logs/today', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.consumed).toBe(1000); // 350 + 650
-    expect(res.body.remaining).toBe(1100); // 2100 - 1000
+    expect(res.body.remaining).toBe(res.body.calorieTarget - 1000); // dynamic target - consumed
   });
 
   test('returns empty meals and 0 steps if no log for today', async () => {
@@ -223,7 +223,7 @@ describe('GET /api/logs/today', () => {
     expect(res.body.meals).toEqual([]);
     expect(res.body.stepCount).toBe(0);
     expect(res.body.consumed).toBe(0);
-    expect(res.body.remaining).toBe(2100);
+    expect(res.body.remaining).toBe(res.body.calorieTarget); // remaining = full target when no meals
   });
 
   test('extracts profile data (dietType, nonVegDays, eggDays)', async () => {

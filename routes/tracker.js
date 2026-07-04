@@ -13,48 +13,35 @@ function localDateString(d = new Date()) {
 }
 
 // POST /api/tracker/meal
-// Body: { fromPlan: Boolean, recipeName: String, calories: Number, mealType: String, date: String }
-// Returns: { mealId, calories, logged }
+// Body: { fromPlan, recipeName, calories, mealType, date, proteinG, carbsG, fatG }
 router.post('/meal', async (req, res) => {
   try {
-    const { fromPlan, recipeName, calories, mealType, date } = req.body;
+    const { fromPlan, recipeName, calories, mealType, date, proteinG, carbsG, fatG } = req.body;
 
-    // Validate required fields
     if (!recipeName || calories === undefined || !mealType || !date) {
       return res.status(400).json({ error: 'Missing required fields: recipeName, calories, mealType, date' });
     }
 
-    // Find or create HealthLog for the given date
     let log = await HealthLog.findOne({ userId: req.user._id, date });
     if (!log) {
-      log = new HealthLog({
-        userId: req.user._id,
-        date,
-        meals: []
-      });
+      log = new HealthLog({ userId: req.user._id, date, meals: [] });
     }
 
-    // Create new meal entry
     const mealEntry = {
       mealType,
       recipeName,
       calories,
       fromPlan: fromPlan || false,
-      proteinG: 0,
-      carbsG: 0,
-      fatG: 0
+      proteinG: proteinG != null ? Number(proteinG) : 0,
+      carbsG:   carbsG   != null ? Number(carbsG)   : 0,
+      fatG:     fatG     != null ? Number(fatG)      : 0
     };
 
     log.meals.push(mealEntry);
     await log.save();
 
-    // Return mealId, calories, logged
     const addedMeal = log.meals[log.meals.length - 1];
-    res.json({
-      mealId: addedMeal._id.toString(),
-      calories,
-      logged: true
-    });
+    res.json({ mealId: addedMeal._id.toString(), calories, logged: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -120,24 +107,21 @@ router.delete('/meal/:mealId', async (req, res) => {
 router.patch('/meal/:mealId', async (req, res) => {
   try {
     const { mealId } = req.params;
-    const { recipeName, calories, mealType } = req.body;
+    const { recipeName, calories, mealType, proteinG, carbsG, fatG } = req.body;
     const today = localDateString();
 
-    // Find the meal in today's log
     const log = await HealthLog.findOne({ userId: req.user._id, date: today });
-    if (!log) {
-      return res.status(404).json({ error: 'No log for today' });
-    }
+    if (!log) return res.status(404).json({ error: 'No log for today' });
 
     const meal = log.meals.find(m => m._id.toString() === mealId);
-    if (!meal) {
-      return res.status(404).json({ error: 'Meal not found' });
-    }
+    if (!meal) return res.status(404).json({ error: 'Meal not found' });
 
-    // Update fields if provided
     if (recipeName !== undefined) meal.recipeName = recipeName;
-    if (calories !== undefined) meal.calories = calories;
-    if (mealType !== undefined) meal.mealType = mealType;
+    if (calories  !== undefined) meal.calories  = calories;
+    if (mealType  !== undefined) meal.mealType  = mealType;
+    if (proteinG  != null)       meal.proteinG  = Number(proteinG);
+    if (carbsG    != null)       meal.carbsG    = Number(carbsG);
+    if (fatG      != null)       meal.fatG      = Number(fatG);
 
     await log.save();
 

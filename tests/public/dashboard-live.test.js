@@ -52,7 +52,7 @@ describe('Dashboard Live Data', () => {
 
   describe('Calorie Ring Updates', () => {
     test('updates calorie ring element from live data', () => {
-      expect(jsContent).toMatch(/calorieRing|calorieAmount/i);
+      expect(jsContent).toMatch(/calories-consumed|calories-progress|calorieRing|calorieAmount/i);
     });
 
     test('displays consumed / target calories', () => {

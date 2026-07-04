@@ -679,76 +679,63 @@ function showQLMsg(text, type) {
 // Live data refresh variables
 let liveDataInterval = null;
 
-// Fetch live data from /api/logs/today and update dashboard
+// Fetch live data from /api/logs/today and update ALL dashboard metric cards
 async function initLiveData() {
   try {
     const res = await apiFetch('/api/logs/today');
-    if (!res.ok || !res.data) {
-      console.warn('Failed to fetch live data:', res);
-      return;
-    }
-
+    if (!res.ok || !res.data) return;
     const data = res.data;
 
-    // Update calorie ring
-    const calorieAmount = document.getElementById('calorieAmount');
-    const calorieRing = document.getElementById('calorieRing');
-    if (calorieAmount && calorieRing && typeof data.consumed === 'number' && typeof data.calorieTarget === 'number') {
-      calorieAmount.textContent = data.consumed.toLocaleString('en-IN') + ' / ' + data.calorieTarget.toLocaleString('en-IN') + ' kcal';
-      
-      const percentage = data.calorieTarget > 0 ? Math.min(100, Math.round((data.consumed / data.calorieTarget) * 100)) : 0;
-      calorieRing.style.background = `conic-gradient(${getCalorieRingColor(percentage)} 0% ${percentage}%, rgba(255,255,255,0.1) ${percentage}% 100%)`;
-    }
+    // ── Calorie hero ──
+    const consumed      = typeof data.consumed      === 'number' ? data.consumed      : 0;
+    const calorieTarget = typeof data.calorieTarget === 'number' ? data.calorieTarget : 2100;
+    const remaining     = calorieTarget - consumed;
+    const pct           = calorieTarget > 0 ? Math.min(100, Math.round((consumed / calorieTarget) * 100)) : 0;
 
-    // Update step count
-    const stepCount = document.getElementById('stepCount');
-    const stepsGoal = document.getElementById('stepsGoal');
-    if (stepCount && stepsGoal && typeof data.stepCount === 'number') {
-      const goal = 10000;
-      stepCount.textContent = data.stepCount.toLocaleString('en-IN') + ' / ' + goal.toLocaleString('en-IN') + ' steps';
-      
-      const stepPercentage = Math.min(100, (data.stepCount / goal) * 100);
-      if (stepsGoal) stepsGoal.style.width = stepPercentage + '%';
-    }
+    const consumedEl  = document.getElementById('calories-consumed');
+    const goalEl      = document.getElementById('calories-goal');
+    const remainingEl = document.getElementById('calories-remaining');
+    const progressEl  = document.getElementById('calories-progress');
+    if (consumedEl)  consumedEl.textContent  = consumed.toLocaleString('en-IN');
+    if (goalEl)      goalEl.textContent      = calorieTarget.toLocaleString('en-IN');
+    if (remainingEl) remainingEl.textContent = remaining > 0
+      ? remaining.toLocaleString('en-IN') + ' kcal remaining'
+      : 'Goal reached! 🎉';
+    if (progressEl)  progressEl.style.width = pct + '%';
 
-    // Update meal log list
+    // ── Metric cards ──
+    const waterEl   = document.getElementById('metric-water');
+    const stepsEl   = document.getElementById('metric-steps');
+    const sleepEl   = document.getElementById('metric-sleep');
+    const burnedEl  = document.getElementById('metric-burned');
+
+    if (waterEl)  waterEl.textContent  = (data.waterIntake  || 0) + 'L';
+    if (stepsEl)  stepsEl.textContent  = (data.stepCount    || 0).toLocaleString('en-IN');
+    if (sleepEl)  sleepEl.textContent  = (data.sleepHours   || 0) + 'h';
+    if (burnedEl) burnedEl.textContent = (data.caloriesBurned || 0).toLocaleString('en-IN');
+
+    // ── Meal log list (dashboard quick-log section) ──
     const mealLogList = document.getElementById('mealLogList');
     if (mealLogList && Array.isArray(data.meals)) {
       if (data.meals.length === 0) {
-        mealLogList.innerHTML = '<div style="color:#a0a0a0;text-align:center;padding:16px;">No meals logged yet</div>';
+        mealLogList.innerHTML = '<div style="color:#a0a0a0;text-align:center;padding:16px;">No meals logged today</div>';
       } else {
-        mealLogList.innerHTML = '';
-        data.meals.forEach(function(meal) {
-          const mealType = meal.mealType || 'meal';
-          const mealName = meal.description || meal.name || mealType.charAt(0).toUpperCase() + mealType.slice(1);
-          const calories = meal.calories || 0;
-          
-          const mealDiv = document.createElement('div');
-          mealDiv.style.cssText = 'display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);';
-          
-          const nameSpan = document.createElement('span');
-          nameSpan.textContent = mealName;
-          
-          const calorieSpan = document.createElement('span');
-          calorieSpan.style.color = '#4ecca3';
-          calorieSpan.textContent = calories + ' kcal';
-          
-          mealDiv.appendChild(nameSpan);
-          mealDiv.appendChild(calorieSpan);
-          mealLogList.appendChild(mealDiv);
-        });
+        mealLogList.innerHTML = data.meals.map(function(m) {
+          const name = m.recipeName || m.description || m.name || m.mealType || 'Meal';
+          const cal  = m.calories || 0;
+          const macros = (m.proteinG || m.carbsG || m.fatG)
+            ? '<span style="font-size:.7rem;color:rgba(255,255,255,.4)">&nbsp;P:' + Math.round(m.proteinG||0) + 'g C:' + Math.round(m.carbsG||0) + 'g F:' + Math.round(m.fatG||0) + 'g</span>'
+            : '';
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)">'
+            + '<span style="font-size:.83rem">' + name + macros + '</span>'
+            + '<span style="color:#4ecca3;font-size:.83rem;white-space:nowrap">' + cal + ' kcal</span>'
+            + '</div>';
+        }).join('');
       }
     }
   } catch (e) {
     console.warn('Live data fetch failed:', e);
   }
-}
-
-// Helper function to get calorie ring color based on percentage
-function getCalorieRingColor(percentage) {
-  if (percentage <= 80) return '#52b788';  // green
-  if (percentage <= 100) return '#f4a261'; // orange
-  return '#e63946';                         // red
 }
 
 // Initialize live data on page load and set up auto-refresh every 30 seconds

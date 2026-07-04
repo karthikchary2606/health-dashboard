@@ -56,6 +56,8 @@ function calculateBMR(profile) {
   return Math.round(bmr);
 }
 
+const ACTIVITY_MULTIPLIER = { sedentary: 1.2, light: 1.375, moderate: 1.55, 'very-active': 1.725 };
+
 // GET /api/logs/today - Returns live snapshot of today's health data
 router.get('/today', async (req, res) => {
   try {
@@ -63,33 +65,50 @@ router.get('/today', async (req, res) => {
     const log = await HealthLog.findOne({ userId: req.user._id, date: today });
 
     const meals = log ? log.meals : [];
-    const stepCount = log ? log.stepCount : 0;
-    const calorieTarget = 2100; // Default as per spec
+    const stepCount = log ? (log.stepCount || 0) : 0;
+    const waterIntake = log ? (log.waterIntake || 0) : 0;
+    const sleepHours = (log && log.sleepEntry && log.sleepEntry.durationMinutes)
+      ? parseFloat((log.sleepEntry.durationMinutes / 60).toFixed(1))
+      : 0;
 
-    // Calculate consumed and remaining calories
-    const consumed = meals.reduce((sum, meal) => sum + (meal.calories || 0), 0);
+    // Calculate consumed calories and macros
+    const consumed = meals.reduce((sum, m) => sum + (m.calories || 0), 0);
+    const proteinG  = meals.reduce((sum, m) => sum + (m.proteinG || 0), 0);
+    const carbsG    = meals.reduce((sum, m) => sum + (m.carbsG || 0), 0);
+    const fatG      = meals.reduce((sum, m) => sum + (m.fatG || 0), 0);
+
+    // BMR + TDEE
+    const bmr = calculateBMR(req.user.profile);
+    const activityLevel = mapActivityLevel(req.user.profile.fitnessLevel);
+    const tdee = bmr ? Math.round(bmr * (ACTIVITY_MULTIPLIER[activityLevel] || 1.55)) : null;
+
+    // Calorie target: goal-adjusted TDEE
+    const primaryGoal = (req.user.profile.primaryGoal || 'maintenance');
+    let calorieTarget = tdee || 2100;
+    if (primaryGoal === 'weight-loss')   calorieTarget = Math.round(calorieTarget * 0.85);
+    if (primaryGoal === 'muscle-gain')   calorieTarget = Math.round(calorieTarget * 1.1);
+
     const remaining = calorieTarget - consumed;
 
-    // Calculate BMR
-    const bmr = calculateBMR(req.user.profile);
-
-    // Map activity level
-    const activityLevel = mapActivityLevel(req.user.profile.fitnessLevel);
-
-    // Extract profile data
     const profileData = {
-      dietType: req.user.profile.dietType || 'non-vegetarian',
+      dietType:   req.user.profile.dietType   || 'non-vegetarian',
       nonVegDays: req.user.profile.nonVegDays || [],
-      eggDays: req.user.profile.eggDays || []
+      eggDays:    req.user.profile.eggDays    || []
     };
 
     res.json({
       date: today,
       meals,
       stepCount,
+      waterIntake,
+      sleepHours,
       calorieTarget,
       consumed,
       remaining,
+      caloriesBurned: tdee || calorieTarget,
+      proteinG:  Math.round(proteinG),
+      carbsG:    Math.round(carbsG),
+      fatG:      Math.round(fatG),
       bmr,
       activityLevel,
       profileData

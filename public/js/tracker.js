@@ -315,17 +315,15 @@
       mealForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        const mealType = document.getElementById('mealType').value;
+        const mealType   = document.getElementById('mealType').value;
         const recipeName = document.getElementById('recipeName').value;
-        const calories = parseInt(document.getElementById('calories').value, 10);
-        const fromPlan = document.getElementById('fromPlan').checked;
+        const calories   = parseInt(document.getElementById('calories').value, 10);
+        const fromPlan   = document.getElementById('fromPlan').checked;
+        const proteinG   = parseFloat(document.getElementById('mealProtein').value) || 0;
+        const carbsG     = parseFloat(document.getElementById('mealCarbs').value)   || 0;
+        const fatG       = parseFloat(document.getElementById('mealFat').value)     || 0;
 
-        addMeal({
-          mealType,
-          recipeName,
-          calories,
-          fromPlan
-        });
+        addMeal({ mealType, recipeName, calories, fromPlan, proteinG, carbsG, fatG });
       });
     }
 
