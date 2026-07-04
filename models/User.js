@@ -48,7 +48,7 @@ const profileSchema = new mongoose.Schema({
   },
   cuisinePreference: {
     type: String,
-    enum: ['south-indian', 'north-indian', 'continental', 'mixed'],
+    enum: ['south-indian', 'north-indian', 'telugu', 'telugu-andhra', 'continental', 'mixed'],
     default: 'mixed'
   },
   foodAllergies: [String],
