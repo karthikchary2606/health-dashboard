@@ -366,7 +366,8 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     <div class="form-group">
       <label>Cuisine Preference</label>
       <div class="radio-group" id="rg-cuisinePreference">
-        <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','south-indian',this)"><input type="radio" name="cuisinePreference" value="south-indian"> South Indian</label>
+        <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','south-indian',this)"><input type="radio" name="cuisinePreference" value="south-indian"> South Indian (Tamil/Kannada)</label>
+        <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','telugu',this)"><input type="radio" name="cuisinePreference" value="telugu"> Telugu / Andhra</label>
         <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','north-indian',this)"><input type="radio" name="cuisinePreference" value="north-indian"> North Indian</label>
         <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','continental',this)"><input type="radio" name="cuisinePreference" value="continental"> Continental</label>
         <label class="radio-option" onclick="selectRadio('rg-cuisinePreference','mixed',this)"><input type="radio" name="cuisinePreference" value="mixed" checked> Mixed (Rotates weekly)</label>
@@ -429,11 +430,11 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
     <div class="form-group">
       <label>Language Community</label>
       <div class="radio-group" id="rg-languageCommunity">
-        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Telugu',this)"><input type="radio" name="languageCommunity" value="Telugu"> Telugu</label>
-        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Tamil',this)"><input type="radio" name="languageCommunity" value="Tamil"> Tamil</label>
-        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Kannada',this)"><input type="radio" name="languageCommunity" value="Kannada"> Kannada</label>
-        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Malayalam',this)"><input type="radio" name="languageCommunity" value="Malayalam"> Malayalam</label>
-        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Hindi',this)"><input type="radio" name="languageCommunity" value="Hindi"> Hindi</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Telugu',this);autoSuggestCuisine('Telugu')"><input type="radio" name="languageCommunity" value="Telugu"> Telugu</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Tamil',this);autoSuggestCuisine('Tamil')"><input type="radio" name="languageCommunity" value="Tamil"> Tamil</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Kannada',this);autoSuggestCuisine('Kannada')"><input type="radio" name="languageCommunity" value="Kannada"> Kannada</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Malayalam',this);autoSuggestCuisine('Malayalam')"><input type="radio" name="languageCommunity" value="Malayalam"> Malayalam</label>
+        <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Hindi',this);autoSuggestCuisine('Hindi')"><input type="radio" name="languageCommunity" value="Hindi"> Hindi</label>
         <label class="radio-option" onclick="selectRadio('rg-languageCommunity','Other',this)"><input type="radio" name="languageCommunity" value="Other"> Other</label>
       </div>
     </div>
@@ -669,6 +670,27 @@ function selectRadio(groupId, value, el) {
   }
   
   saveDraft();
+}
+
+// Auto-suggest cuisine based on language community selection
+const LANGUAGE_CUISINE_SUGGESTION = {
+  'Telugu':    'telugu',
+  'Tamil':     'south-indian',
+  'Kannada':   'south-indian',
+  'Malayalam': 'south-indian',
+  'Hindi':     'north-indian',
+};
+
+function autoSuggestCuisine(language) {
+  const suggested = LANGUAGE_CUISINE_SUGGESTION[language];
+  if (!suggested) return;
+  // Only auto-suggest if user hasn't explicitly picked a cuisine yet
+  const current = checkedRadio('cuisinePreference');
+  if (!current || current === 'mixed') {
+    setRadio('rg-cuisinePreference', suggested);
+    // Visual confirmation toast
+    if (window.showToast) window.showToast(`✓ Cuisine set to ${suggested.replace('-', ' ')} based on your language`);
+  }
 }
 
 function onDietSelect(dietType) {

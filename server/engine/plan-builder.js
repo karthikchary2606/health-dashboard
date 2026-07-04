@@ -159,6 +159,18 @@ const CUISINE_STAPLES = {
     nonVegProteins: ['fish (pomfret/rohu/tilapia)', 'prawns', 'chicken curry cut'],
     vegProteins: ['raw banana', 'drumstick (murungakkai)', 'ash gourd', 'colocasia (arbi)'],
   },
+  'telugu': {
+    grains: ['raw rice (sona masuri)', 'toor dal (kandi pappu)', 'moong dal (pesara pappu)', 'urad dal', 'tamarind', 'rice flour'],
+    aromatics: ['gongura (sorrel leaves)', 'curry leaves', 'mustard seeds', 'dried red chillies', 'fenugreek seeds (methi)', 'asafoetida (hing)', 'kobbari (coconut)', 'palli (peanuts)', 'vamu (ajwain)', 'allam (ginger)', 'vellulli (garlic)'],
+    nonVegProteins: ['chicken curry cut (kodi)', 'fish (rohu/catla)', 'lamb/mutton', 'prawns (royyalu)'],
+    vegProteins: ['vankaya (brinjal/eggplant)', 'tomatoes', 'gutti vankaya', 'raw banana', 'drumstick (munagakaya)'],
+  },
+  'telugu-andhra': {
+    grains: ['raw rice (sona masuri)', 'toor dal (kandi pappu)', 'moong dal (pesara pappu)', 'urad dal', 'tamarind', 'rice flour'],
+    aromatics: ['gongura (sorrel leaves)', 'curry leaves', 'mustard seeds', 'dried red chillies', 'fenugreek seeds', 'asafoetida (hing)', 'coconut', 'peanuts', 'ginger', 'garlic'],
+    nonVegProteins: ['chicken curry cut (kodi)', 'fish (rohu/catla)', 'lamb/mutton', 'prawns (royyalu)'],
+    vegProteins: ['vankaya (brinjal/eggplant)', 'tomatoes', 'raw banana', 'drumstick (munagakaya)'],
+  },
   'north-indian': {
     grains: ['whole wheat atta', 'besan (chickpea flour)', 'rajma', 'chole (chickpeas)', 'moong dal'],
     aromatics: ['ghee', 'garam masala', 'coriander powder', 'jeera (cumin)', 'kasuri methi', 'amchur powder', 'turmeric'],
@@ -654,9 +666,18 @@ function getGroceryCategories(dietType) {
   return GROCERY_CATEGORIES[dietType] || GROCERY_CATEGORIES['vegetarian'];
 }
 
+const LANGUAGE_CUISINE_MAP_PLAN = {
+  'Telugu': 'telugu', 'Tamil': 'south-indian', 'Kannada': 'south-indian',
+  'Malayalam': 'south-indian', 'Hindi': 'north-indian', 'Marathi': 'north-indian',
+};
+
 function buildGroceryList(profile, goal) {
   const dietType = deriveEffectiveDiet({ ...profile, dietType: profile.dietType || 'non-vegetarian' });
-  const cuisinePreference = profile.cuisinePreference || 'mixed';
+  let cuisinePreference = profile.cuisinePreference || 'mixed';
+  // Auto-map from languageCommunity if no explicit cuisine set
+  if ((!cuisinePreference || cuisinePreference === 'mixed') && profile.languageCommunity) {
+    cuisinePreference = LANGUAGE_CUISINE_MAP_PLAN[profile.languageCommunity] || cuisinePreference;
+  }
   const categories = getCuisineGrocery(dietType, cuisinePreference);
   return filterOutAvoidances(categories, profile.foodAllergies, profile.culturalFoodAvoidances);
 }

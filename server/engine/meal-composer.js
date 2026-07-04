@@ -1,17 +1,32 @@
 'use strict';
 
-const southIndian  = require('../meals/south-indian');
-const northIndian  = require('../meals/north-indian');
-const continental  = require('../meals/continental');
+const southIndian    = require('../meals/south-indian');
+const northIndian    = require('../meals/north-indian');
+const continental    = require('../meals/continental');
+const teluguAndhra   = require('../meals/telugu-andhra');
 
 const CUISINE_MAP = {
-  'south-indian': southIndian,
-  'north-indian': northIndian,
-  'continental':  continental,
+  'south-indian':   southIndian,
+  'north-indian':   northIndian,
+  'continental':    continental,
+  'telugu':         teluguAndhra,
+  'telugu-andhra':  teluguAndhra,
 };
 
-// Mixed rotates by weekIndex % 3
+// Mixed rotates by weekIndex % 3 — now includes Telugu
 const MIXED_ROTATION = ['south-indian', 'north-indian', 'continental'];
+
+// Auto-map languageCommunity → cuisinePreference when no explicit preference set
+const LANGUAGE_CUISINE_MAP = {
+  'Telugu':    'telugu',
+  'Tamil':     'south-indian',
+  'Kannada':   'south-indian',
+  'Malayalam': 'south-indian',
+  'Hindi':     'north-indian',
+  'Marathi':   'north-indian',
+  'Punjabi':   'north-indian',
+  'Bengali':   'north-indian',
+};
 
 function activeConditions(profile) {
   const conditions = profile.healthConditions || [];
@@ -21,13 +36,19 @@ function activeConditions(profile) {
 }
 
 function resolveCuisine(profile, weekIndex) {
-  const pref = profile.cuisinePreference;
-  if (!pref || pref === 'mixed') {
-    // mixed: rotate south-indian → north-indian → continental
-    if (pref === 'mixed') return CUISINE_MAP[MIXED_ROTATION[weekIndex % 3]];
-    return CUISINE_MAP['south-indian']; // safe default for undefined/missing
+  let pref = profile.cuisinePreference;
+
+  // If no explicit cuisine or 'mixed', auto-map from languageCommunity
+  if ((!pref || pref === 'mixed') && profile.languageCommunity) {
+    const mapped = LANGUAGE_CUISINE_MAP[profile.languageCommunity];
+    if (mapped && mapped !== 'mixed') pref = mapped;
   }
-  const known = ['south-indian', 'north-indian', 'continental'];
+
+  if (!pref || pref === 'mixed') {
+    if (pref === 'mixed') return CUISINE_MAP[MIXED_ROTATION[weekIndex % 3]];
+    return CUISINE_MAP['south-indian']; // safe default
+  }
+  const known = Object.keys(CUISINE_MAP);
   return CUISINE_MAP[known.includes(pref) ? pref : 'south-indian'];
 }
 
