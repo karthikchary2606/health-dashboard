@@ -120,3 +120,48 @@ test('workoutDaysPerWeek rejects 0', async () => {
     })
   ).rejects.toThrow();
 });
+
+test('nonVegDays stores array of strings', async () => {
+  const u = await User.create({
+    ...BASE, email: 'nvd@x.com',
+    profile: { nonVegDays: ['Saturday', 'Sunday'] }
+  });
+  expect(u.profile.nonVegDays).toEqual(['Saturday', 'Sunday']);
+});
+
+test('nonVegDays defaults to empty array', async () => {
+  const u = await User.create({
+    ...BASE, email: 'nvd-default@x.com'
+  });
+  expect(u.profile.nonVegDays).toEqual([]);
+});
+
+test('eggDays stores array of strings', async () => {
+  const u = await User.create({
+    ...BASE, email: 'ed@x.com',
+    profile: { eggDays: ['Monday', 'Wednesday', 'Friday'] }
+  });
+  expect(u.profile.eggDays).toEqual(['Monday', 'Wednesday', 'Friday']);
+});
+
+test('eggDays defaults to empty array', async () => {
+  const u = await User.create({
+    ...BASE, email: 'ed-default@x.com'
+  });
+  expect(u.profile.eggDays).toEqual([]);
+});
+
+test('stepGoal stores number', async () => {
+  const u = await User.create({
+    ...BASE, email: 'sg@x.com',
+    profile: { stepGoal: 10000 }
+  });
+  expect(u.profile.stepGoal).toBe(10000);
+});
+
+test('stepGoal defaults to 8000', async () => {
+  const u = await User.create({
+    ...BASE, email: 'sg-default@x.com'
+  });
+  expect(u.profile.stepGoal).toBe(8000);
+});

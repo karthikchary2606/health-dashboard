@@ -64,6 +64,9 @@ const profileSchema = new mongoose.Schema({
     enum: ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness']
   },
   waterGoalL: { type: Number, default: 2.5 },
+  nonVegDays: { type: [String], default: [] },
+  eggDays:    { type: [String], default: [] },
+  stepGoal:   { type: Number, default: 8000 },
 
   // Cultural identity
   religion:               { type: String, enum: ['Hindu', 'Muslim', 'Christian', 'Jain', 'Sikh', 'Other'] },
