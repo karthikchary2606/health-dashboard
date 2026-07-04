@@ -60,6 +60,7 @@ app.use('/api/profile',   require('./routes/profile'));
 app.use('/api/sleep',     require('./routes/sleep'));
 app.use('/api/grocery',  require('./routes/grocery'));
 app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api/tracker',   require('./routes/tracker'));
 app.use('/api/feedback',  require('./routes/api/feedback'));
 app.use('/api/metrics',   require('./routes/api/metrics'));
 

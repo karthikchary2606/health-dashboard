@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1b4332">
+  <title>Praana — Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1b4332;
+      --primary-light: #2d6a4f;
+      --accent: #f4a261;
+      --card: #ffffff;
+      --bg: #f0f4f0;
+      --text: #1a1a2e;
+      --text-med: #4a5568;
+      --text-light: #718096;
+      --border: #e2e8f0;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --green: #52b788;
+      --orange: #f4a261;
+      --red: #e63946;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      visibility: hidden;
+    }
+
+    /* ── NAV ── */
+    .topbar {
+      background: var(--primary);
+      color: #fff;
+      padding: 0 24px;
+      display: flex;
+      align-items: stretch;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #95d5b2;
+      text-decoration: none;
+      padding-right: 24px;
+      border-right: 1px solid rgba(255, 255, 255, 0.12);
+      margin-right: 8px;
+    }
+
+    .topbar-brand-name {
+      text-align: left;
+    }
+
+    .topbar-brand-name span {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      display: block;
+    }
+
+    .topbar-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-left: auto;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+      padding-left: 16px;
+    }
+
+    .btn-signout {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .btn-signout:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+
+    /* ── TABS ── */
+    .tab-nav {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 28px;
+    }
+
+    .tab-nav button {
+      background: none;
+      border: none;
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-light);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+      top: 2px;
+    }
+
+    .tab-nav button:hover {
+      color: var(--text);
+    }
+
+    .tab-nav button.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 24px;
+      border-top: 3px solid var(--primary);
+    }
+
+    .card + .card {
+      margin-top: 20px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── CALORIE RING ── */
+    .calorie-ring-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px 0;
+    }
+
+    .ring-visual {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .ring-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .ring-amount {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .ring-label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    #calorieAmount {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* ── MEAL LOG ── */
+    .meal-log {
+      margin-top: 16px;
+    }
+
+    .meal-item {
+      background: #fafbfc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .meal-info {
+      flex: 1;
+    }
+
+    .meal-type {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      font-weight: 600;
+      text-transform: capitalize;
+      margin-bottom: 2px;
+    }
+
+    .meal-name {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .meal-calories {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .meal-delete {
+      background: #fee;
+      color: var(--red);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .meal-delete:hover {
+      background: var(--red);
+      color: #fff;
+    }
+
+    #mealLogList {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .meal-log-empty {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #d8dce2;
+    }
+
+    /* ── FORMS ── */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-med);
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 9px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.88rem;
+      outline: none;
+      transition: 0.2s;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 72px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .checkbox-group input[type='checkbox'] {
+      width: auto;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      margin-bottom: 0;
+    }
+
+    /* ── MODAL ── */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      max-width: 400px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+
+    /* ── STEPS SECTION ── */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .steps-counter {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .steps-goal {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .steps-bar {
+      width: 100%;
+      height: 12px;
+      background: var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .steps-bar-fill {
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .steps-percentage {
+      font-size: 0.9rem;
+      color: var(--text-med);
+      font-weight: 600;
+    }
+
+    /* ── STAT GRID ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      border-left: 4px solid var(--primary);
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .container {
+        padding: 18px 14px 60px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .ring-visual {
+        width: 140px;
+        height: 140px;
+      }
+
+      .ring-amount {
+        font-size: 1.4rem;
+      }
+
+      .steps-counter {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-nav {
+        margin-bottom: 20px;
+      }
+
+      .tab-nav button {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+      }
+    }
+
+    body.loaded {
+      visibility: visible;
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <a href="/" class="topbar-brand">
+      <div class="topbar-brand-name">
+        Praana <span>Health Tracker</span>
+      </div>
+    </a>
+    <div class="topbar-title">Tracker</div>
+    <div class="topbar-right">
+      <button class="btn-signout" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Tabs Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="calories">📊 Calories</button>
+      <button class="tab-btn" data-tab="steps">👟 Steps</button>
+    </div>
+
+    <!-- ========== CALORIES TAB ========== -->
+    <div id="calories" class="tab-content active" data-tab="calories">
+      <!-- Calorie Ring Card -->
+      <div class="card">
+        <div class="card-title">Today's Intake</div>
+        <div class="calorie-ring-container">
+          <div class="ring-visual" id="calorieRing">
+            <svg viewBox="0 0 180 180" style="transform: rotate(-90deg)">
+              <!-- Background ring -->
+              <circle
+                cx="90"
+                cy="90"
+                r="70"
+                fill="none"
+                stroke="#e2e8f0"
+                stroke-width="12"
+              />
+              <!-- Progress ring -->
+              <circle
+                id="calorieProgress"
+                cx="90"
+                cy="90"
+                r="70"
+                fill="none"
+                stroke="#52b788"
+                stroke-width="12"
+                stroke-dasharray="0 439.82"
+                stroke-linecap="round"
+                style="transition: stroke 0.3s ease, stroke-dasharray 0.3s ease"
+              />
+            </svg>
+            <div class="ring-text">
+              <div id="calorieAmount">0 / 0</div>
+              <div class="ring-label">kcal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meal Log Card -->
+      <div class="card">
+        <div class="card-title">Meal Log</div>
+        <div id="mealLogList" class="meal-log">
+          <div class="meal-log-empty">No meals logged today</div>
+        </div>
+        <button id="addMealBtn" class="btn-primary">+ Add Meal</button>
+      </div>
+
+      <!-- Nutrition Stats -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Protein</div>
+          <div class="stat-value" id="proteinStat">0<span style="font-size: 0.6em">g</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Carbs</div>
+          <div class="stat-value" id="carbsStat">0<span style="font-size: 0.6em">g</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Fat</div>
+          <div class="stat-value" id="fatStat">0<span style="font-size: 0.6em">g</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== STEPS TAB ========== -->
+    <div id="steps" class="tab-content" data-tab="steps">
+      <!-- Steps Counter Card -->
+      <div class="card">
+        <div class="card-title">Daily Steps</div>
+        <div class="steps-container">
+          <div class="steps-counter" id="stepCount">0</div>
+          <div class="steps-goal" id="stepsGoal">/ 8,000 steps</div>
+          <div class="steps-bar">
+            <div class="steps-bar-fill" id="stepsBarFill" style="width: 0%"></div>
+          </div>
+          <div class="steps-percentage" id="stepsPercentage">0%</div>
+          <button id="addStepsBtn" class="btn-primary">+ Add Steps</button>
+        </div>
+      </div>
+
+      <!-- Steps Stats -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Today</div>
+          <div class="stat-value" id="stepsTodayStat">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Weekly Avg</div>
+          <div class="stat-value" id="stepsWeeklyAvg">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Streak</div>
+          <div class="stat-value" id="stepsStreak">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MEAL FORM MODAL ========== -->
+  <div id="mealFormModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeMealForm()">✕</button>
+      <div class="modal-header">Add Meal</div>
+      <form id="mealForm">
+        <div class="form-group">
+          <label for="mealType">Meal Type</label>
+          <select id="mealType" name="mealType" required>
+            <option value="">-- Select --</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="recipeName">Meal Name</label>
+          <input
+            id="recipeName"
+            type="text"
+            name="recipeName"
+            placeholder="e.g., Oatmeal with berries"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="calories">Calories</label>
+          <input
+            id="calories"
+            type="number"
+            name="calories"
+            placeholder="e.g., 350"
+            min="0"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input id="fromPlan" type="checkbox" name="fromPlan" />
+            <label for="fromPlan" style="margin: 0">From meal plan</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Meal</button>
+        <button type="button" class="btn-secondary" onclick="closeMealForm()" style="width: 100%; margin-top: 8px">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========== STEPS FORM MODAL ========== -->
+  <div id="stepsFormModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeStepsForm()">✕</button>
+      <div class="modal-header">Add Steps</div>
+      <form id="stepsForm">
+        <div class="form-group">
+          <label for="stepInput">Step Count</label>
+          <input
+            id="stepInput"
+            type="number"
+            name="stepCount"
+            placeholder="e.g., 1000"
+            min="0"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn-primary">Save Steps</button>
+        <button type="button" class="btn-secondary" onclick="closeStepsForm()" style="width: 100%; margin-top: 8px">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/tracker.js"></script>
+</body>
+</html>

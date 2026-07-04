@@ -8,7 +8,7 @@ const mealEntrySchema = new mongoose.Schema({
   carbsG:     { type: Number, default: 0 },
   fatG:       { type: Number, default: 0 },
   fromPlan:   { type: Boolean, default: false }
-}, { _id: false });
+});
 
 const exerciseEntrySchema = new mongoose.Schema({
   exerciseName: { type: String, required: true },
