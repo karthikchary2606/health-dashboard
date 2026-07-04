@@ -5,6 +5,58 @@
 
 ---
 
+## 0. Competitive Positioning
+
+### Market Research Summary
+Ten major apps researched: MyFitnessPal (200M users), HealthifyMe (40M), Cronometer, Noom (50M), Fitbit/Google Health, Apple Health, Lose It! (57M), Lifesum (65M), Yazio, Google Health Connect.
+
+### Universal Design Patterns (must-have, industry standard)
+- **Calorie ring/donut** as the hero metric on the Today view — every top app uses this
+- **4-slot meal log**: Breakfast / Lunch / Snack / Dinner
+- **7-day bar charts** for calorie and steps trends
+- **Streak badges** for consecutive logging days — Noom, Lifesum, MFP all use these
+- **Macro breakdown bars** (Protein / Carbs / Fat vs. daily targets)
+- **"Quick repeat" shortcuts** — Lifesum's "same as yesterday" is widely praised for reducing friction
+
+### The Three Biggest Gaps in Every Existing App
+1. **No plan-driven meal logging.** Every app makes users search a food database from scratch. Not one uses the user's pre-defined diet plan to suggest today's meals and pre-fill calories. This app will.
+2. **No hybrid weekly diet patterns.** No app supports "non-veg 3 days, eggs 2 days, veg 2 days." HealthifyMe handles Indian foods better than anyone but still treats diet type as a single enum.
+3. **Paywalled basics destroy trust.** MFP locked barcode scanning. Lose It! locked photo logging. Users feel cheated. This app gives all core tracking free.
+
+### Where This App Beats the Market
+| Feature | MFP | HealthifyMe | This App |
+|---------|-----|-------------|----------|
+| Plan-driven meal suggestions | ❌ | ❌ | ✅ |
+| Hybrid weekly diet patterns | ❌ | ❌ | ✅ |
+| Indian cuisine meal plans | ❌ | ✅ | ✅ |
+| Calorie targets derived from health plan | ❌ | ❌ | ✅ |
+| Integrated Today view (all modules) | Partial | ✅ | ✅ |
+| Streak + consistency tracking | ✅ | ✅ | ✅ |
+| Free core tracking (no paywalls) | Degraded | Partial | ✅ |
+| Workout plan integration | ❌ | ❌ | ✅ |
+| Breathing / sleep / progress modules | ❌ | ❌ | ✅ |
+
+### UX Principles Derived from Research
+- **Reduce logging friction to zero** — HealthifyMe SNAP, Lifesum "same as yesterday", Noom voice all prove this. Our equivalent: tap plan meals to confirm, calories auto-fill from plan data. No searching required.
+- **One cohesive Today view** — fragmentation kills engagement. Apple Health's Summary tab is the gold standard: one screen surfaces everything relevant for the day.
+- **Streak = retention** — consecutive-day streaks are the single most effective engagement mechanic across all apps studied. Noom, Yazio, MFP, HealthifyMe all use them. Loss aversion ("don't break the streak") drives daily return.
+- **Visual progress over raw numbers** — calorie rings, progress bars, bar charts outperform plain text in every UX study. Numbers support visuals, not the reverse.
+- **Plan adherence score** — inspired by Lifesum's food rating: show users how closely today's logged meals match their plan. A simple 0–100% score. Rewards consistency without moralizing.
+- **Honest free tier** — Cronometer model, not MFP model. Full core tracking free. Charge only for genuinely advanced features. Apps that paywall basics lose users permanently.
+- **Weekly summary ritual** — Apple Health Weekly Summary, Lifesum Life Score: a Sunday/Monday card reviewing the week drives re-engagement more than any other notification type.
+
+### Features Added to This Design Based on Research
+Beyond the original scope, these features will be included because market research shows they are differentiating, low-effort to add, and directly serve the user:
+1. **"Repeat yesterday's meals" shortcut** — one-tap re-logging of previous day's meals (Lifesum pattern, most loved feature in reviews)
+2. **Daily logging streak counter** — prominent fire-icon streak on the Today dashboard (Noom/MFP/Yazio pattern)
+3. **Weekly summary card** — surfaced every Monday showing last week's avg. calories, steps, logged days, and weight change
+4. **Plan adherence percentage** — shows % of plan meals logged vs. custom entries on the calorie detail page
+5. **Micronutrient highlights** — surface India-critical deficiency flags: Vitamin B12 (vegetarians), Vitamin D, Iron (women). Derived from meals logged. Simple callout, not a full 82-nutrient panel.
+6. **Step estimation from activity duration** — for users without wearables: "I walked 30 minutes" → estimated 3,000–3,500 steps based on standard pace. Fills the gap for the majority of Indian users who don't own smartwatches.
+7. **Achievement milestone cards** — pop-up when user hits 7-day streak, 30-day streak, first week goal met, etc.
+
+---
+
 ## 1. Hybrid Diet Days
 
 ### Problem
@@ -82,15 +134,17 @@ The route `GET /` (serving `index.html`) is unchanged.
 
 ### Layout (top → bottom)
 1. **Header:** "Good [morning/afternoon/evening], [Name] 👋" + current date + "Day N of M"
-2. **Calorie Ring Widget** (tappable → `/tracker`) — dynamic calorie arc, consumed/target label, macro pills (P/C/F consumed vs. target). Pulls from today's HealthLog meals.
-3. **Steps Widget** (tappable → `/tracker#steps`) — horizontal progress bar, step count / goal label. Pulls from `healthLog.stepCount`.
-4. **Quick-stat grid (2×2):**
+2. **Logging streak badge** — "🔥 12-day streak" displayed prominently below the header. Clicking shows streak history.
+3. **Calorie Ring Widget** (tappable → `/tracker`) — dynamic calorie arc (green→amber→red), consumed/target label, macro pills (P/C/F consumed vs. target). Pulls from today's HealthLog meals.
+4. **Steps Widget** (tappable → `/tracker#steps`) — horizontal progress bar, step count / goal label. Pulls from `healthLog.stepCount`.
+5. **Quick-stat grid (2×2):**
    - 💧 Water (L logged / goal)
    - 😴 Sleep (hours last night)
    - 💪 Workout (done / pending)
    - 😊 Mood score
    All sourced from today's HealthLog — same fields the existing sleep/mood/water logging already writes.
-5. **Meal log teaser** — 4 rows (Breakfast / Lunch / Snack / Dinner), each showing logged meal name + calorie count or "not logged yet". "+ Log meal" shortcut opens tracker.
+6. **Meal log teaser** — 4 rows (Breakfast / Lunch / Snack / Dinner), each showing logged meal name + calorie count or "not logged yet". "+ Log meal" shortcut opens tracker.
+7. **Weekly summary card** (Mondays only) — appears at the bottom of Today on Monday mornings: last week's avg. calories, total steps, days logged, weight change. Dismissed with a swipe. Sourced from `GET /api/tracker/weekly-summary`.
 
 ### Data Fetch
 Dashboard JS makes a single `GET /api/logs/today` on load. This returns:
@@ -136,27 +190,33 @@ stepCount: { type: Number, default: 0, min: 0 }
 All existing HealthLog fields (water, weight, workout, mood, notes, checklist) are untouched.
 
 ### Tracker Page — Calorie Tab
-- Large calorie ring (consumed / target)
+- Large calorie ring (consumed / target) — color shifts green → amber → red as user approaches limit
 - Macro breakdown bars: Protein, Carbs, Fat — each shows `consumed / target` with a progress bar
+- **Plan adherence score** — "You've followed your plan for 3 of 4 meals today (75%)" — derived from `fromPlan` flag on logged meals
 - 7-day calorie bar chart (last 7 HealthLog entries ordered by date)
+- **"Repeat yesterday" shortcut** — one-tap button to copy all meal entries from yesterday's HealthLog into today. User can remove any entry they didn't eat. Calories carry over automatically.
 - Meal log list — 4 plan slots + "+ Add custom meal" button:
-  - **Plan meal tap:** Shows pre-filled form with today's plan meal name and estimated calories (sourced from plan data via planCache). User confirms or edits before saving.
+  - **Plan meal tap:** Shows pre-filled form with today's plan meal name and estimated calories (sourced from plan data via planCache). User confirms or edits before saving. `fromPlan: true`.
   - **Custom entry:** Name field + calorie field + optional macro fields (protein/carbs/fat). Saves with `fromPlan: false`.
+- **Micronutrient flags** (India-relevant only): If no dairy logged → "⚠️ Low Calcium / B12 today — add curd, milk, or paneer." If no vegetables logged by 6 PM → "⚠️ No vegetables logged yet." Maximum 2 flags per day, non-intrusive.
 - Logging streak badge: consecutive days with at least one meal logged
 
 ### Tracker Page — Steps Tab
-- Large step count display (today)
+- Large step count display (today) with color feedback (green = goal met, amber = 70%+, grey = under)
 - Progress bar vs. daily goal (default 10,000, editable in profile)
 - Edit button → inline number input → saves to `healthLog.stepCount`
+- **"I walked X minutes" estimator** — secondary input: duration (minutes) + pace (slow/moderate/brisk) → converts to estimated step count. Serves users without wearables. Formula: slow = 80 steps/min, moderate = 100, brisk = 120. User can accept the estimate or enter a custom count.
 - 7-day steps bar chart
 
 ### API Routes — `routes/tracker.js`
 | Method | Path | Purpose |
 |--------|------|---------|
-| `GET` | `/api/tracker/today` | Today's meals, stepCount, calorie/macro totals, 7-day history |
+| `GET` | `/api/tracker/today` | Today's meals, stepCount, calorie/macro totals, 7-day history, streak count, plan adherence % |
 | `POST` | `/api/tracker/meals` | Add a meal entry (body: slot, name, calories, proteinG, carbsG, fatG, fromPlan) |
+| `POST` | `/api/tracker/meals/repeat-yesterday` | Copy all meal entries from yesterday's HealthLog into today |
 | `DELETE` | `/api/tracker/meals/:index` | Remove a meal entry by index |
-| `PUT` | `/api/tracker/steps` | Update today's stepCount (body: stepCount) |
+| `PUT` | `/api/tracker/steps` | Update today's stepCount (body: stepCount or {durationMin, pace} for estimation) |
+| `GET` | `/api/tracker/weekly-summary` | Last 7 days: avg calories, total steps, days logged, weight delta — for Monday summary card |
 
 All routes use the existing `authenticate` middleware. All writes create or update today's HealthLog document (upsert by `userId + date`).
 
@@ -196,12 +256,20 @@ Tracker is accessible from the "More" sheet and directly via tap-through from th
 - [ ] Onboarding: day counts validate to ≤ 7 total
 - [ ] Meal composer: Monday–Sunday each get the correct food pool per `weeklyDietPattern`
 - [ ] Vegetarian/vegan profiles: plan output identical to pre-change baseline
-- [ ] Today dashboard: calorie ring reflects logged meals accurately
+- [ ] Today dashboard: calorie ring reflects logged meals accurately and color-shifts correctly
 - [ ] Today dashboard: step widget reflects `stepCount` from HealthLog
+- [ ] Today dashboard: streak badge shows correct consecutive-day count
+- [ ] Today dashboard: weekly summary card appears on Mondays only
 - [ ] Tracker: plan meal tap pre-fills name and calories from planCache
 - [ ] Tracker: custom meal entry saves correctly to HealthLog
+- [ ] Tracker: "Repeat yesterday" copies yesterday's meals and sets them as today's log
 - [ ] Tracker: DELETE meal removes the correct entry
+- [ ] Tracker: plan adherence % calculates correctly (fromPlan meals / total meals)
+- [ ] Tracker: micronutrient flags appear when relevant (B12/calcium, vegetable gap)
 - [ ] Tracker: 7-day charts render with missing days shown as 0
-- [ ] Tracker: logging streak increments on consecutive daily logs
+- [ ] Tracker: logging streak increments on consecutive daily logs and resets on a missed day
+- [ ] Tracker: step estimator correctly converts duration+pace to step count
+- [ ] Tracker: achievement milestone card appears on 7-day and 30-day streak
 - [ ] Settings: diet day split is editable and persists
 - [ ] Legacy profiles (no `nonVegDaysPerWeek`): defaults to 0, plan unaffected
+- [ ] `stepGoal` defaults to 10,000 for users without the field set
