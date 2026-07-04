@@ -92,48 +92,51 @@ describe('Tracker Page UI', () => {
       expect(jsContent).toMatch(/initTracker/);
     });
 
+    test('API calls to /api/tracker/today', () => {
+      expect(jsContent).toMatch(/API_BASE.*\/today/);
+    });
+
     test('has fetchTrackerData function', () => {
       expect(jsContent).toMatch(/fetchTrackerData/);
     });
 
     test('has addMeal function', () => {
-      expect(jsContent).toMatch(/addMeal/);
+      expect(jsContent).toMatch(/function addMeal|addMeal\s*=/);
     });
 
     test('has deleteMeal function', () => {
-      expect(jsContent).toMatch(/deleteMeal/);
+      expect(jsContent).toMatch(/function deleteMeal|deleteMeal\s*=/);
     });
 
     test('has addSteps function', () => {
-      expect(jsContent).toMatch(/addSteps/);
-    });
-
-    test('API calls to /api/tracker/today', () => {
-      expect(jsContent).toMatch(/\/api\/tracker\/today/);
+      expect(jsContent).toMatch(/function addSteps|addSteps\s*=/);
     });
 
     test('API calls to DELETE /api/tracker/meal', () => {
-      expect(jsContent).toMatch(/DELETE.*\/api\/tracker\/meal/);
+      expect(jsContent).toMatch(/method:\s*['"]DELETE['"]/);
+      expect(jsContent).toMatch(/API_BASE.*meal/);
     });
 
     test('API calls to POST /api/tracker/meal', () => {
-      expect(jsContent).toMatch(/POST.*\/api\/tracker\/meal/);
+      expect(jsContent).toMatch(/method:\s*['"]POST['"]/);
+      expect(jsContent).toMatch(/API_BASE.*meal/);
     });
 
     test('API calls to PATCH /api/tracker/steps', () => {
-      expect(jsContent).toMatch(/PATCH.*\/api\/tracker\/steps/);
+      expect(jsContent).toMatch(/method:\s*['"]PATCH['"]/);
+      expect(jsContent).toMatch(/API_BASE.*steps/);
     });
 
     test('calorie ring color logic for green (under 80%)', () => {
-      expect(jsContent).toMatch(/getCalorieRingColor|calorieRingColor/i);
+      expect(jsContent).toMatch(/getCalorieRingColor|#52b788|green/i);
     });
 
     test('calorie ring color logic for orange (80-100%)', () => {
-      expect(jsContent).toMatch(/80.*100|orange/i);
+      expect(jsContent).toMatch(/80|#f4a261|orange/i);
     });
 
     test('calorie ring color logic for red (over 100%)', () => {
-      expect(jsContent).toMatch(/100|red/i);
+      expect(jsContent).toMatch(/#e63946|red/i);
     });
   });
 

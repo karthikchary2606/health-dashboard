@@ -6,6 +6,7 @@
   // Pages that require full navigation (separate .html files)
   const PAGE_NAV = {
     settings: '/settings.html',
+    tracker: '/tracker.html',
   };
 
   // Sections within index.html (use showSection)
@@ -24,6 +25,7 @@
   function getActiveScreen() {
     const path = window.location.pathname;
     if (path.includes('settings')) return 'settings';
+    if (path.includes('tracker')) return 'tracker';
     if (path.includes('index') || path === '/' || path.endsWith('.html') === false) return 'dashboard';
     return 'dashboard';
   }

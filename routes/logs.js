@@ -30,6 +30,75 @@ function normalizeDate(dateInput) {
   return `${year}-${month}-${day}`;
 }
 
+// Helper to get today's date in YYYY-MM-DD format (local date, not UTC)
+function localDateString(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// Map fitnessLevel to activityLevel for API response
+function mapActivityLevel(fitnessLevel) {
+  const mapping = {
+    'sedentary': 'sedentary',
+    'lightly-active': 'light',
+    'moderately-active': 'moderate',
+    'very-active': 'very-active'
+  };
+  return mapping[fitnessLevel] || 'moderate';
+}
+
+// Calculate BMR using Mifflin-St Jeor formula
+function calculateBMR(profile) {
+  const { age, heightCm, currentWeightKg, sex } = profile;
+  if (!age || !heightCm || !currentWeightKg) return null;
+  
+  const base = 10 * currentWeightKg + 6.25 * heightCm - 5 * age;
+  const bmr = sex === 'female' ? base - 161 : base + 5;
+  return Math.round(bmr);
+}
+
+// GET /api/logs/today - Returns live snapshot of today's health data
+router.get('/today', async (req, res) => {
+  try {
+    const today = localDateString();
+    const log = await HealthLog.findOne({ userId: req.user._id, date: today });
+
+    const meals = log ? log.meals : [];
+    const stepCount = log ? log.stepCount : 0;
+    const calorieTarget = 2100; // Default as per spec
+
+    // Calculate consumed and remaining calories
+    const consumed = meals.reduce((sum, meal) => sum + (meal.calories || 0), 0);
+    const remaining = calorieTarget - consumed;
+
+    // Calculate BMR
+    const bmr = calculateBMR(req.user.profile);
+
+    // Map activity level
+    const activityLevel = mapActivityLevel(req.user.profile.fitnessLevel);
+
+    // Extract profile data
+    const profileData = {
+      dietType: req.user.profile.dietType || 'non-vegetarian',
+      nonVegDays: req.user.profile.nonVegDays || [],
+      eggDays: req.user.profile.eggDays || []
+    };
+
+    res.json({
+      date: today,
+      meals,
+      stepCount,
+      calorieTarget,
+      consumed,
+      remaining,
+      bmr,
+      activityLevel,
+      profileData
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.get('/data/weight-history', async (req, res) => {
   try {
     const logs = await HealthLog.find({ userId: req.user._id, weight: { $gt: 0 } })
