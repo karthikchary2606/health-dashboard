@@ -595,6 +595,7 @@ function buildDietPlan(profile, goal) {
           const dayDietType = weeklyPattern[day];
           return {
             day,
+            dietType: dayDietType,
             breakfast: getMeals(profile, 'breakfast', goal, globalWeekIndex, dayIndex, dayDietType).name,
             lunch:     getMeals(profile, 'lunch',     goal, globalWeekIndex, dayIndex, dayDietType).name,
             snack:     getMeals(profile, 'snack',     goal, globalWeekIndex, dayIndex, dayDietType).name,

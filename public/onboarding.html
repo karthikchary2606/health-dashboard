@@ -90,6 +90,12 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
 .done-title{font-size:1.2rem;font-weight:800;color:#1b4332;text-align:center;margin-bottom:8px}
 .done-sub{font-size:.88rem;color:#718096;text-align:center;margin-bottom:28px}
 
+/* Day-picker chips */
+.day-picker-chips{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day-chip{padding:10px 8px;border:1.5px solid #e2e8f0;border-radius:8px;background:#fff;font-size:.85rem;font-weight:600;color:#4a5568;cursor:pointer;transition:.2s;font-family:inherit}
+.day-chip:hover{border-color:#1b4332;background:#f0fdf4}
+.day-chip.selected{border-color:#1b4332;background:#1b4332;color:#fff}
+
 @media(max-width:500px){
   .wizard-card{padding:22px 16px}
   .form-row,.form-row-3{grid-template-columns:1fr}
@@ -98,6 +104,8 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
   .med-headers{display:none}
   .med-item input{grid-column:1}
   .med-item .btn-remove{grid-column:2;grid-row:1 / span 3;align-self:center}
+  .day-picker-chips{grid-template-columns:repeat(7,1fr);gap:4px}
+  .day-chip{padding:8px 4px;font-size:.75rem}
 }
 
 /* ============ MOBILE RESPONSIVE ============ */
@@ -274,6 +282,18 @@ body{font-family:"Inter",sans-serif;background:#f0f4f0;min-height:100vh;display:
         <label class="radio-option" onclick="selectRadio('rg-diet','eggetarian',this)">
           <input type="radio" name="diet" value="eggetarian"> 🥚 Eggetarian
         </label>
+      </div>
+    </div>
+    <div class="form-group" id="day-picker-container" style="display:none">
+      <label>Which days do you eat this?</label>
+      <div class="day-picker-chips">
+        <button type="button" class="day-chip" data-day="Monday" onclick="toggleDayChip(this)">Mon</button>
+        <button type="button" class="day-chip" data-day="Tuesday" onclick="toggleDayChip(this)">Tue</button>
+        <button type="button" class="day-chip" data-day="Wednesday" onclick="toggleDayChip(this)">Wed</button>
+        <button type="button" class="day-chip" data-day="Thursday" onclick="toggleDayChip(this)">Thu</button>
+        <button type="button" class="day-chip" data-day="Friday" onclick="toggleDayChip(this)">Fri</button>
+        <button type="button" class="day-chip" data-day="Saturday" onclick="toggleDayChip(this)">Sat</button>
+        <button type="button" class="day-chip" data-day="Sunday" onclick="toggleDayChip(this)">Sun</button>
       </div>
     </div>
     <div class="btn-row">
@@ -520,6 +540,8 @@ function saveDraft() {
       ...Array.from(document.querySelectorAll('#cg-avoidances .check-option.selected input')).map(i => i.value),
       ..._customAvoidances
     ],
+    nonVegDays: checkedRadio('diet') === 'non-vegetarian' ? getSelectedDays('non-vegetarian') : [],
+    eggDays: checkedRadio('diet') === 'eggetarian' ? getSelectedDays('eggetarian') : [],
     step: currentStep
   };
   localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -540,6 +562,23 @@ function loadDraft() {
     if (d.fitnessLevel) setRadio('rg-fitness', d.fitnessLevel);
     if (d.healthConditions && d.healthConditions.length) setCheckboxes('cg-conditions', d.healthConditions);
     if (d.dietType) setRadio('rg-diet', d.dietType);
+    if (d.dietType) {
+      onDietSelect(d.dietType);
+      // Restore selected days
+      if ((d.dietType === 'non-vegetarian' || d.dietType === 'eggetarian') && 
+          (d.nonVegDays?.length || d.eggDays?.length)) {
+        const selectedDays = d.dietType === 'non-vegetarian' ? d.nonVegDays : d.eggDays;
+        const dayPickerContainer = document.getElementById('day-picker-container');
+        if (dayPickerContainer) {
+          dayPickerContainer.querySelectorAll('.day-chip').forEach(chip => {
+            const day = chip.getAttribute('data-day');
+            if (selectedDays.includes(day)) {
+              chip.classList.add('selected');
+            }
+          });
+        }
+      }
+    }
     if (d.cuisinePreference) setRadio('rg-cuisinePreference', d.cuisinePreference);
     if (d.equipmentAvailable && d.equipmentAvailable.length) setCheckboxes('cg-equipment', d.equipmentAvailable);
     if (d.workoutPreferences && d.workoutPreferences.length) {
@@ -621,7 +660,48 @@ function setCheckboxes(groupId, values) {
 function selectRadio(groupId, value, el) {
   document.getElementById(groupId).querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
+  
+  // Handle day-picker visibility for diet selection
+  if (groupId === 'rg-diet') {
+    onDietSelect(value);
+  }
+  
   saveDraft();
+}
+
+function onDietSelect(dietType) {
+  const dayPickerContainer = document.getElementById('day-picker-container');
+  if (!dayPickerContainer) return;
+  
+  // Show day-picker for non-veg and eggetarian, hide for others
+  if (dietType === 'non-vegetarian' || dietType === 'eggetarian') {
+    dayPickerContainer.style.display = 'block';
+  } else {
+    dayPickerContainer.style.display = 'none';
+    // Clear selected days when switching away
+    clearSelectedDays();
+  }
+}
+
+function toggleDayChip(btn) {
+  btn.classList.toggle('selected');
+  saveDraft();
+}
+
+function getSelectedDays(dietType) {
+  const dayPickerContainer = document.getElementById('day-picker-container');
+  if (!dayPickerContainer) return [];
+  const selectedChips = dayPickerContainer.querySelectorAll('.day-chip.selected');
+  return Array.from(selectedChips).map(chip => chip.getAttribute('data-day'));
+}
+
+function clearSelectedDays() {
+  const dayPickerContainer = document.getElementById('day-picker-container');
+  if (dayPickerContainer) {
+    dayPickerContainer.querySelectorAll('.day-chip.selected').forEach(chip => {
+      chip.classList.remove('selected');
+    });
+  }
 }
 
 function onWorkoutPrefChange() {

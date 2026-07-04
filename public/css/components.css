@@ -359,6 +359,21 @@
   object-fit: cover;
 }
 
+/* --- Diet Day Tabs with Color-Coded Indicators --- */
+.day-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: inherit;
+  letter-spacing: -0.02em;
+}
+
+.day-tab .diet-dot {
+  font-size: 0.9em;
+  display: inline-block;
+  line-height: 1;
+}
+
 /* --- Loading Skeleton --- */
 .skeleton {
   background: linear-gradient(90deg, var(--color-bg-card) 25%, var(--color-bg-elevated) 50%, var(--color-bg-card) 75%);

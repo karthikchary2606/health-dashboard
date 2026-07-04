@@ -12,6 +12,16 @@ const MEAL_META = {
   dinner:    { icon: "🌙",  label: "Dinner",    cls: "d", time: "07:30 PM" }
 };
 
+function getDietDot(dietType) {
+  const dotMap = {
+    'vegetarian': '🟢',
+    'eggetarian': '🟠',
+    'non-vegetarian': '🔴',
+    'vegan': '🟢'
+  };
+  return dotMap[dietType] || '⚪';
+}
+
 async function initDiet() {
   // planCache.invalidate() is called on profile save (profile-complete.js), so getPlan()
   // always fetches a fresh plan when the user returns to the dashboard after updating their profile.
@@ -71,7 +81,8 @@ function renderDietMonthView() {
   weekdays.forEach(d => {
     const btn = document.createElement("button");
     btn.className = "day-tab" + (d.day === today ? " active" : "");
-    btn.textContent = d.day.substring(0,3);
+    const dietDot = getDietDot(d.dietType);
+    btn.textContent = dietDot + " " + d.day.substring(0,3);
     btn.onclick = () => { document.querySelectorAll(".day-tab").forEach(t => t.classList.remove("active")); btn.classList.add("active"); renderDietDay(d.day); };
     tabsEl.appendChild(btn);
   });
