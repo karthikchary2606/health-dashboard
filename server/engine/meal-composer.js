@@ -123,10 +123,28 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex, dietType) {
   const rawAvoidances = (profile.culturalFoodAvoidances || []).map(a => a.toLowerCase());
   const expandedAvoidances = rawAvoidances.flatMap(a => AVOIDANCE_EXPANSION[a] || [a]);
 
+  const meetsAvoidances = (meal) =>
+    !expandedAvoidances.some(a => meal.name.toLowerCase().includes(a));
+
   let filteredPool = expandedAvoidances.length > 0
-    ? pool.filter(meal => !expandedAvoidances.some(a => meal.name.toLowerCase().includes(a)))
+    ? pool.filter(meetsAvoidances)
     : pool;
-  if (filteredPool.length === 0) filteredPool = pool;
+
+  // If the non-veg pool is fully filtered (e.g. user avoids all meat types),
+  // fall back to the veg pool from the same cuisine — never reintroduce avoided foods.
+  if (filteredPool.length === 0) {
+    const vegPool = cuisine[mealType]['veg'] || [];
+    filteredPool = vegPool.length > 0 ? vegPool : pool.filter(meetsAvoidances);
+  }
+
+  // Last resort: if still empty (shouldn't happen with current meal data), use full pool
+  // so the app doesn't crash — but log a warning for investigation.
+  if (filteredPool.length === 0) {
+    if (process.env.NODE_ENV !== 'test') {
+      console.warn(`[meal-composer] No meals left after avoidance filtering for ${mealType}/${poolKey} — using unfiltered pool`);
+    }
+    filteredPool = pool;
+  }
 
   // Strip dairy items for vegan users
   if (effectiveDiet === 'vegan') {

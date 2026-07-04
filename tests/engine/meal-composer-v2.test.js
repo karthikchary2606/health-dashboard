@@ -123,6 +123,43 @@ test('getMeals excludes meals matching culturalFoodAvoidances', () => {
   expect(result.name.length).toBeGreaterThan(0);
 });
 
+test('avoidance contract: avoided food NEVER appears across 30 rotations', () => {
+  const profile = {
+    cuisinePreference: 'north-indian', dietType: 'non-vegetarian',
+    culturalFoodAvoidances: ['mutton', 'pork', 'beef', 'prawn'],
+    foodList: []
+  };
+  const FORBIDDEN = ['mutton','lamb','goat','rogan josh','keema','seekh','pork','bacon','ham','beef','prawn','prawns','shrimp','crab'];
+  for (let w = 0; w < 6; w++) {
+    for (let d = 0; d < 7; d++) {
+      for (const mt of ['breakfast','lunch','snack','dinner']) {
+        const meal = getMeals(profile, mt, 'weight-loss', w, d);
+        const lower = meal.name.toLowerCase();
+        FORBIDDEN.forEach(term => {
+          expect(lower).not.toContain(term);
+        });
+      }
+    }
+  }
+});
+
+test('avoidance contract: south-indian non-veg with prawn avoidance — no seafood meals', () => {
+  const profile = {
+    cuisinePreference: 'south-indian', dietType: 'non-vegetarian',
+    culturalFoodAvoidances: ['prawn'],
+    foodList: []
+  };
+  for (let w = 0; w < 6; w++) {
+    for (let d = 0; d < 7; d++) {
+      const meal = getMeals(profile, 'dinner', 'weight-loss', w, d);
+      const lower = meal.name.toLowerCase();
+      ['prawn','prawns','shrimp','crab','seafood'].forEach(term => {
+        expect(lower).not.toContain(term);
+      });
+    }
+  }
+});
+
 // ─── deriveWeeklyDietPattern ──────────────────────────────────────────────
 
 describe('deriveWeeklyDietPattern', () => {
