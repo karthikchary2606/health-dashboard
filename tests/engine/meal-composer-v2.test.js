@@ -1,16 +1,18 @@
 'use strict';
-const { getMeals, deriveEffectiveDiet } = require('../../server/engine/meal-composer');
+const { getMeals, deriveEffectiveDiet, deriveWeeklyDietPattern } = require('../../server/engine/meal-composer');
 
-test('getMeals returns a string', () => {
+test('getMeals returns a meal object', () => {
   const result = getMeals({ cuisinePreference: 'south-indian', dietType: 'vegetarian', culturalFoodAvoidances: [], foodList: [] }, 'breakfast', 'weight-loss', 0, 0);
-  expect(typeof result).toBe('string');
-  expect(result.length).toBeGreaterThan(0);
+  expect(typeof result).toBe('object');
+  expect(result.name).toBeDefined();
+  expect(result.calories).toBeDefined();
 });
 
 test('getMeals works with empty foodList', () => {
   const result = getMeals({ cuisinePreference: 'south-indian', dietType: 'vegetarian', culturalFoodAvoidances: [], foodList: [] }, 'breakfast', 'weight-loss', 0, 0);
-  expect(typeof result).toBe('string');
-  expect(result.length).toBeGreaterThan(0);
+  expect(typeof result).toBe('object');
+  expect(result.name).toBeDefined();
+  expect(result.name.length).toBeGreaterThan(0);
 });
 
 test('getMeals works with large foodList (>= 10 items)', () => {
@@ -23,8 +25,9 @@ test('getMeals works with large foodList (>= 10 items)', () => {
       { name: 'Tomato' }, { name: 'Spinach' }, { name: 'Dal' }
     ]
   }, 'breakfast', 'weight-loss', 0, 0);
-  expect(typeof result).toBe('string');
-  expect(result.length).toBeGreaterThan(0);
+  expect(typeof result).toBe('object');
+  expect(result.name).toBeDefined();
+  expect(result.name.length).toBeGreaterThan(0);
 });
 
 test('getMeals active conditions filter excludes resolved conditions', () => {
@@ -108,13 +111,70 @@ describe('deriveEffectiveDiet', () => {
 });
 
 test('getMeals excludes meals matching culturalFoodAvoidances', () => {
-  // If avoidances removes some items, result should still be a non-empty string
+  // If avoidances removes some items, result should still be a valid meal object
   const profileWithAvoidance = {
     cuisinePreference: 'south-indian', dietType: 'vegetarian',
     culturalFoodAvoidances: ['onion'],
     foodList: []
   };
   const result = getMeals(profileWithAvoidance, 'breakfast', 'weight-loss', 0, 0);
-  expect(typeof result).toBe('string');
-  expect(result.length).toBeGreaterThan(0);
+  expect(typeof result).toBe('object');
+  expect(result.name).toBeDefined();
+  expect(result.name.length).toBeGreaterThan(0);
+});
+
+// ─── deriveWeeklyDietPattern ──────────────────────────────────────────────
+
+describe('deriveWeeklyDietPattern', () => {
+  test('vegetarian profile: all days return vegetarian', () => {
+    const user = {
+      profile: {
+        dietType: 'vegetarian',
+        nonVegDays: [],
+        eggDays: [],
+      }
+    };
+    const pattern = deriveWeeklyDietPattern(user);
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    days.forEach(day => {
+      expect(pattern[day]).toBe('vegetarian');
+    });
+  });
+
+  test('non-vegetarian profile: respects nonVegDays and eggDays', () => {
+    const user = {
+      profile: {
+        dietType: 'non-vegetarian',
+        nonVegDays: ['Saturday', 'Sunday'], // non-veg on weekends
+        eggDays: ['Wednesday'], // egg on Wednesday
+      }
+    };
+    const pattern = deriveWeeklyDietPattern(user);
+    
+    // Weekdays default to dietType (non-vegetarian)
+    expect(pattern['Monday']).toBe('non-vegetarian');
+    expect(pattern['Tuesday']).toBe('non-vegetarian');
+    // Wednesday is override to eggetarian
+    expect(pattern['Wednesday']).toBe('eggetarian');
+    expect(pattern['Thursday']).toBe('non-vegetarian');
+    expect(pattern['Friday']).toBe('non-vegetarian');
+    // Saturday and Sunday can stay non-veg or be in nonVegDays
+    expect(pattern['Saturday']).toBe('non-vegetarian');
+    expect(pattern['Sunday']).toBe('non-vegetarian');
+  });
+
+  test('default case: non-vegetarian with empty nonVegDays/eggDays all days are non-vegetarian', () => {
+    const user = {
+      profile: {
+        dietType: 'non-vegetarian',
+        nonVegDays: [],
+        eggDays: [],
+      }
+    };
+    const pattern = deriveWeeklyDietPattern(user);
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    days.forEach(day => {
+      expect(pattern[day]).toBe('non-vegetarian');
+    });
+  });
 });

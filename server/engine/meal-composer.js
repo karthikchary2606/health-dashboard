@@ -111,13 +111,13 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
 
   const avoidances = (profile.culturalFoodAvoidances || []).map(a => a.toLowerCase());
   let filteredPool = avoidances.length > 0
-    ? pool.filter(meal => !avoidances.some(a => meal.toLowerCase().includes(a)))
+    ? pool.filter(meal => !avoidances.some(a => meal.name.toLowerCase().includes(a)))
     : pool;
   if (filteredPool.length === 0) filteredPool = pool;
 
   // Strip dairy items for vegan users
   if (effectiveDiet === 'vegan') {
-    const veganPool = filteredPool.filter(isVeganFriendly);
+    const veganPool = filteredPool.filter(meal => isVeganFriendly(meal.name));
     if (veganPool.length > 0) filteredPool = veganPool;
   }
 
