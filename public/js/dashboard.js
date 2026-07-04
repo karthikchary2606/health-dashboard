@@ -578,3 +578,81 @@ function showQLMsg(text, type) {
   el.style.color = (type === 'error') ? '#dc2626' : '#16a34a';
   setTimeout(function() { if (el) el.textContent = ''; }, 3000);
 }
+
+// Live data refresh variables
+let liveDataInterval = null;
+
+// Fetch live data from /api/logs/today and update dashboard
+async function initLiveData() {
+  try {
+    const res = await apiFetch('/api/logs/today');
+    if (!res.ok || !res.data) {
+      console.warn('Failed to fetch live data:', res);
+      return;
+    }
+
+    const data = res.data;
+
+    // Update calorie ring
+    const calorieAmount = document.getElementById('calorieAmount');
+    const calorieRing = document.getElementById('calorieRing');
+    if (calorieAmount && calorieRing && typeof data.consumed === 'number' && typeof data.calorieTarget === 'number') {
+      calorieAmount.textContent = data.consumed.toLocaleString('en-IN') + ' / ' + data.calorieTarget.toLocaleString('en-IN') + ' kcal';
+      
+      const percentage = Math.min(100, (data.consumed / data.calorieTarget) * 100);
+      calorieRing.style.background = `conic-gradient(${getCalorieRingColor(percentage)} 0% ${percentage}%, rgba(255,255,255,0.1) ${percentage}% 100%)`;
+    }
+
+    // Update step count
+    const stepCount = document.getElementById('stepCount');
+    const stepsGoal = document.getElementById('stepsGoal');
+    if (stepCount && stepsGoal && typeof data.stepCount === 'number') {
+      const goal = 10000;
+      stepCount.textContent = data.stepCount.toLocaleString('en-IN') + ' / ' + goal.toLocaleString('en-IN') + ' steps';
+      
+      const stepPercentage = Math.min(100, (data.stepCount / goal) * 100);
+      if (stepsGoal) stepsGoal.style.width = stepPercentage + '%';
+    }
+
+    // Update meal log list
+    const mealLogList = document.getElementById('mealLogList');
+    if (mealLogList && Array.isArray(data.meals)) {
+      if (data.meals.length === 0) {
+        mealLogList.innerHTML = '<div style="color:#a0a0a0;text-align:center;padding:16px;">No meals logged yet</div>';
+      } else {
+        let mealHtml = '';
+        data.meals.forEach(function(meal) {
+          const mealType = meal.mealType || 'meal';
+          const mealName = meal.description || meal.name || mealType.charAt(0).toUpperCase() + mealType.slice(1);
+          const calories = meal.calories || 0;
+          mealHtml += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.08);">';
+          mealHtml += '<span>' + mealName + '</span>';
+          mealHtml += '<span style="color:#4ecca3;">' + calories + ' kcal</span>';
+          mealHtml += '</div>';
+        });
+        mealLogList.innerHTML = mealHtml;
+      }
+    }
+  } catch (e) {
+    console.warn('Live data fetch failed:', e);
+  }
+}
+
+// Helper function to get calorie ring color based on percentage
+function getCalorieRingColor(percentage) {
+  if (percentage <= 80) return '#52b788';  // green
+  if (percentage <= 100) return '#f4a261'; // orange
+  return '#e63946';                         // red
+}
+
+// Initialize live data on page load and set up auto-refresh every 30 seconds
+document.addEventListener('DOMContentLoaded', function() {
+  initLiveData();
+  if (liveDataInterval) clearInterval(liveDataInterval);
+  liveDataInterval = setInterval(initLiveData, 30000);
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', function() {
+  if (liveDataInterval) clearInterval(liveDataInterval);
+});
