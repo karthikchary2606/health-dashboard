@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 
 const mealEntrySchema = new mongoose.Schema({
-  mealType:   { type: String, enum: ['breakfast', 'lunch', 'dinner', 'snack'] },
+  mealType:   { type: String, enum: ['breakfast', 'lunch', 'dinner', 'snack', 'custom'] },
   recipeName: { type: String },
   calories:   { type: Number, default: 0 },
   proteinG:   { type: Number, default: 0 },
   carbsG:     { type: Number, default: 0 },
-  fatG:       { type: Number, default: 0 }
+  fatG:       { type: Number, default: 0 },
+  fromPlan:   { type: Boolean, default: false }
 }, { _id: false });
 
 const exerciseEntrySchema = new mongoose.Schema({
@@ -38,7 +39,8 @@ const HealthLogSchema = new mongoose.Schema({
     notes:           { type: String, default: '' }
   },
   meals:       { type: [mealEntrySchema], default: [] },
-  exerciseLog: { type: [exerciseEntrySchema], default: [] }
+  exerciseLog: { type: [exerciseEntrySchema], default: [] },
+  stepCount:   { type: Number, default: 0 }
 }, { timestamps: true });
 
 HealthLogSchema.index({ userId: 1, date: 1 }, { unique: true });

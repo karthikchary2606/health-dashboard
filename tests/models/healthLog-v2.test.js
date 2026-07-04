@@ -61,3 +61,45 @@ test('meals mealType enum rejects invalid values', async () => {
     HealthLog.create({ userId, date: '2026-06-30', meals: [{ mealType: 'midnight-snack', recipeName: 'Chips', calories: 100, proteinG: 1, carbsG: 15, fatG: 5 }] })
   ).rejects.toThrow();
 });
+
+test('mealEntry accepts fromPlan boolean field', async () => {
+  const userId = new mongoose.Types.ObjectId();
+  const log = await HealthLog.create({
+    userId, date: '2026-07-01',
+    meals: [{
+      mealType: 'breakfast',
+      recipeName: 'Pesarattu',
+      calories: 260,
+      proteinG: 14,
+      carbsG: 44,
+      fatG: 4,
+      fromPlan: true
+    }]
+  });
+  expect(log.meals[0].fromPlan).toBe(true);
+});
+
+test('mealType enum accepts custom value', async () => {
+  const userId = new mongoose.Types.ObjectId();
+  const log = await HealthLog.create({
+    userId, date: '2026-07-02',
+    meals: [{
+      mealType: 'custom',
+      recipeName: 'Special Dish',
+      calories: 300,
+      proteinG: 15,
+      carbsG: 45,
+      fatG: 8
+    }]
+  });
+  expect(log.meals[0].mealType).toBe('custom');
+});
+
+test('HealthLog stores stepCount field', async () => {
+  const userId = new mongoose.Types.ObjectId();
+  const log = await HealthLog.create({
+    userId, date: '2026-07-03',
+    stepCount: 8500
+  });
+  expect(log.stepCount).toBe(8500);
+});
