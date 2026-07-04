@@ -110,9 +110,21 @@ function getMeals(profile, mealType, goal, weekIndex, dayIndex, dietType) {
   const poolKey  = resolvePool(effectiveDiet);
   const pool     = cuisine[mealType][poolKey];
 
-  const avoidances = (profile.culturalFoodAvoidances || []).map(a => a.toLowerCase());
-  let filteredPool = avoidances.length > 0
-    ? pool.filter(meal => !avoidances.some(a => meal.name.toLowerCase().includes(a)))
+  // Expand avoidance keywords to cover related terms in meal names.
+  // e.g. "mutton" also covers lamb, goat, rogan josh; "prawn" covers seafood.
+  const AVOIDANCE_EXPANSION = {
+    mutton:  ['mutton', 'lamb', 'goat', 'rogan josh', 'keema', 'seekh'],
+    prawn:   ['prawn', 'prawns', 'shrimp', 'crab', 'seafood', 'lobster'],
+    beef:    ['beef'],
+    pork:    ['pork', 'bacon', 'ham', 'sausage'],
+    'non-veg': NON_VEG_TERMS,
+  };
+
+  const rawAvoidances = (profile.culturalFoodAvoidances || []).map(a => a.toLowerCase());
+  const expandedAvoidances = rawAvoidances.flatMap(a => AVOIDANCE_EXPANSION[a] || [a]);
+
+  let filteredPool = expandedAvoidances.length > 0
+    ? pool.filter(meal => !expandedAvoidances.some(a => meal.name.toLowerCase().includes(a)))
     : pool;
   if (filteredPool.length === 0) filteredPool = pool;
 
