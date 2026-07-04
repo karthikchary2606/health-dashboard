@@ -101,10 +101,11 @@ function getRotationOffset(profile, weekIndex, mealType) {
  * @param {string} goal           - e.g. 'weight-loss' (reserved for future use)
  * @param {number} weekIndex      - 0-based week number
  * @param {number} dayIndex       - 0–6 (day within the week)
+ * @param {string} [dietType]     - optional override diet type (e.g. from weekly pattern)
  * @returns {string}
  */
-function getMeals(profile, mealType, goal, weekIndex, dayIndex) {
-  const effectiveDiet = deriveEffectiveDiet(profile);
+function getMeals(profile, mealType, goal, weekIndex, dayIndex, dietType) {
+  const effectiveDiet = dietType || deriveEffectiveDiet(profile);
   const cuisine  = resolveCuisine(profile, weekIndex);
   const poolKey  = resolvePool(effectiveDiet);
   const pool     = cuisine[mealType][poolKey];

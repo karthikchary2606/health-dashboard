@@ -1,6 +1,6 @@
 'use strict';
 
-const { getMeals, deriveEffectiveDiet, hashSeed } = require('./meal-composer');
+const { getMeals, deriveEffectiveDiet, deriveWeeklyDietPattern, hashSeed } = require('./meal-composer');
 const { getExercises, getSuryaNamaskarRounds, getYogaExercises } = require('./exercise-composer');
 
 const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
@@ -583,19 +583,24 @@ function getMonthGuidelines(monthIndex) {
 // ─── buildDietPlan ────────────────────────────────────────────────────────────
 
 function buildDietPlan(profile, goal) {
+  const weeklyPattern = deriveWeeklyDietPattern({ profile });
+
   return Array.from({ length: 6 }, (_, monthIndex) => ({
     monthLabel: `Month ${monthIndex + 1}`,
     weeks: Array.from({ length: 4 }, (_, weekIdx) => {
       const globalWeekIndex = monthIndex * 4 + weekIdx;
       return {
         weekLabel: `Week ${weekIdx + 1}`,
-        weekdays: DAYS.map((day, dayIndex) => ({
-          day,
-          breakfast: getMeals(profile, 'breakfast', goal, globalWeekIndex, dayIndex).name,
-          lunch:     getMeals(profile, 'lunch',     goal, globalWeekIndex, dayIndex).name,
-          snack:     getMeals(profile, 'snack',     goal, globalWeekIndex, dayIndex).name,
-          dinner:    getMeals(profile, 'dinner',    goal, globalWeekIndex, dayIndex).name,
-        })),
+        weekdays: DAYS.map((day, dayIndex) => {
+          const dayDietType = weeklyPattern[day];
+          return {
+            day,
+            breakfast: getMeals(profile, 'breakfast', goal, globalWeekIndex, dayIndex, dayDietType).name,
+            lunch:     getMeals(profile, 'lunch',     goal, globalWeekIndex, dayIndex, dayDietType).name,
+            snack:     getMeals(profile, 'snack',     goal, globalWeekIndex, dayIndex, dayDietType).name,
+            dinner:    getMeals(profile, 'dinner',    goal, globalWeekIndex, dayIndex, dayDietType).name,
+          };
+        }),
       };
     }),
     guidelines: getMonthGuidelines(monthIndex),
