@@ -213,7 +213,8 @@
   // ========== ADD MEAL ==========
   async function addMeal(mealData) {
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const _d = new Date();
+      const today = _d.getFullYear() + '-' + String(_d.getMonth()+1).padStart(2,'0') + '-' + String(_d.getDate()).padStart(2,'0');
       const payload = {
         ...mealData,
         date: today
@@ -264,7 +265,8 @@
   // ========== ADD STEPS ==========
   async function addSteps(stepCount) {
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const _d = new Date();
+      const today = _d.getFullYear() + '-' + String(_d.getMonth()+1).padStart(2,'0') + '-' + String(_d.getDate()).padStart(2,'0');
 
       // For adding steps, we need to add to existing count
       const currentSteps = trackerData.stepCount || 0;
