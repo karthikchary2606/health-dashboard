@@ -171,7 +171,8 @@ router.post('/onboarding', authenticate, async (req, res) => {
       fitnessLevel, religion, languageCommunity, culturalFoodAvoidances,
       healthConditions, medications, secondaryGoals,
       workoutPreferences, workoutDaysPerWeek, workoutTime, yogaStyle,
-      foodAllergies, dietType, cuisinePreference, equipmentAvailable, sex
+      foodAllergies, dietType, cuisinePreference, equipmentAvailable, sex,
+      nonVegDays, eggDays, stepGoal
     } = req.body;
 
     const VALID = ['weight-loss', 'muscle-gain', 'maintenance', 'general-fitness'];
@@ -190,6 +191,9 @@ router.post('/onboarding', authenticate, async (req, res) => {
       secondaryGoals:   secondaryGoals || [],
       foodAllergies:    foodAllergies  || [],
       dietType,
+      nonVegDays: nonVegDays || [],
+      eggDays:    eggDays    || [],
+      stepGoal:   stepGoal   || 8000,
       cuisinePreference:  cuisinePreference  || 'mixed',
       equipmentAvailable: equipmentAvailable || [],
       workoutPreferences: workoutPreferences || [],

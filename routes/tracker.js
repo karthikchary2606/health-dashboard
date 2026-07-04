@@ -158,6 +158,9 @@ router.patch('/steps', async (req, res) => {
     if (stepCount === undefined || !date) {
       return res.status(400).json({ error: 'Missing required fields: stepCount, date' });
     }
+    if (typeof stepCount !== 'number' || stepCount < 0) {
+      return res.status(400).json({ error: 'stepCount must be a non-negative number' });
+    }
 
     // Find or create HealthLog for the given date
     let log = await HealthLog.findOne({ userId: req.user._id, date });
