@@ -732,8 +732,10 @@ input:checked + .wt-slider:before{transform:translateX(22px)}
           </div>
           <div id="bmiDetails" style="font-size:.78rem;color:var(--text-light);text-align:center"></div>
           <div style="margin-top:12px">
-            <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-light);margin-bottom:4px"><span>Obese &gt;30</span><span>Overweight 25–30</span><span>Normal &lt;25</span></div>
-            <div style="height:10px;background:linear-gradient(to right,#ef4444 0%,#f59e0b 40%,#22c55e 100%);border-radius:5px;position:relative">
+            <div style="display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-light);margin-bottom:4px">
+              <span>Underweight &lt;18.5</span><span>Normal 18.5–25</span><span>Overweight 25–30</span><span>Obese &gt;30</span>
+            </div>
+            <div style="height:10px;background:linear-gradient(to right,#3b82f6 0%,#22c55e 20%,#22c55e 50%,#f59e0b 72%,#ef4444 100%);border-radius:5px;position:relative">
               <div id="bmiMarker" style="position:absolute;top:-4px;width:3px;height:18px;background:var(--primary);border-radius:2px;transition:left .5s"></div>
             </div>
           </div>
@@ -1024,9 +1026,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     <span class="nav-item__icon">🥗</span>
     <span class="nav-item__label">Diet</span>
   </button>
-  <button class="nav-item" data-nav="workouts" aria-label="Workouts">
-    <span class="nav-item__icon">💪</span>
-    <span class="nav-item__label">Workouts</span>
+  <button class="nav-item" data-nav="tracker" aria-label="Tracker">
+    <span class="nav-item__icon">🔥</span>
+    <span class="nav-item__label">Tracker</span>
   </button>
   <button class="nav-item" data-nav="progress" aria-label="Progress">
     <span class="nav-item__icon">📈</span>
@@ -1053,6 +1055,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     <button class="nav-item" data-nav="diet">
       <span class="nav-item__icon">🥗</span>
       <span class="nav-item__label">Diet</span>
+    </button>
+    <button class="nav-item" data-nav="tracker">
+      <span class="nav-item__icon">🔥</span>
+      <span class="nav-item__label">Tracker</span>
     </button>
     <button class="nav-item" data-nav="workouts">
       <span class="nav-item__icon">💪</span>

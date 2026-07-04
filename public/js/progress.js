@@ -20,7 +20,8 @@ async function loadProgress() {
     const profile = (profileRes.ok && profileRes.data) || {};
     const targetWeight = profile.goalWeightKg || null;
     const startWeight  = profile.startWeightKg || profile.currentWeightKg || null;
-    const currentW = stats.latestWeight || startWeight || 0;
+    // Always fall back to profile currentWeightKg so BMI shows even for new users
+    const currentW = stats.latestWeight || profile.currentWeightKg || startWeight || 0;
 
     // Update dynamic subtitle
     const goalLabels = { 'weight-loss': 'Weight Loss Journey', 'muscle-gain': 'Muscle Gain Journey', 'maintenance': 'Maintenance Journey', 'general-fitness': 'Fitness Journey' };
@@ -145,17 +146,21 @@ function updateBMI(w, profile) {
   if (bmiEl) bmiEl.textContent = bmi;
   if (displayEl) displayEl.textContent = w + "kg";
   let cat = "Normal", color = "#22c55e";
-  if (bmi >= 30) { cat = "Obese"; color = "#ef4444"; }
-  else if (bmi >= 25) { cat = "Overweight"; color = "#f59e0b"; }
+  if (bmi !== '—') {
+    if (bmi < 18.5)  { cat = "Underweight"; color = "#3b82f6"; }
+    else if (bmi >= 30) { cat = "Obese"; color = "#ef4444"; }
+    else if (bmi >= 25) { cat = "Overweight"; color = "#f59e0b"; }
+  }
   if (catEl) { catEl.textContent = cat; catEl.style.color = color; }
-  const pct = w > 0 ? Math.min(100, Math.max(0, ((bmi - 20) / 15) * 100)) : 0;
+  // Marker: BMI 15→0%, BMI 40→100% — left=underweight, right=obese (intuitive, matches gradient)
+  const pct = w > 0 ? Math.min(100, Math.max(0, ((parseFloat(bmi) - 15) / 25) * 100)) : 0;
   if (markerEl) markerEl.style.left = pct + "%";
   if (detailsEl) {
     const heightCm = p.heightCm || '—';
     const goalW = p.goalWeightKg;
     const goalBmi = goalW && p.heightCm ? (goalW / (heightM * heightM)).toFixed(1) : null;
     detailsEl.innerHTML = `Height: ${heightCm}cm · Current: ${w > 0 ? w + 'kg' : '—'}`
-      + (goalBmi ? `<br>Target BMI at ${goalW}kg: <strong>${goalBmi}</strong> (Normal &lt;25)` : '');
+      + (goalBmi ? `<br>Target BMI at ${goalW}kg: <strong>${goalBmi}</strong>` : '');
   }
 }
 
