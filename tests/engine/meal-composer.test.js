@@ -9,21 +9,22 @@ const mixedNonVeg = { cuisinePreference: 'mixed',         dietType: 'non-vegetar
 const siEgg       = { cuisinePreference: 'south-indian',  dietType: 'eggetarian',     healthConditions: [] };
 
 describe('getMeals', () => {
-  test('returns a non-empty string', () => {
+  test('returns a meal object with name property', () => {
     const result = getMeals(siNonVeg, 'lunch', 'weight-loss', 0, 0);
-    expect(typeof result).toBe('string');
-    expect(result.length).toBeGreaterThan(0);
+    expect(typeof result).toBe('object');
+    expect(typeof result.name).toBe('string');
+    expect(result.name.length).toBeGreaterThan(0);
   });
 
   test('deterministic — same inputs return same output', () => {
     const a = getMeals(siNonVeg, 'dinner', 'weight-loss', 2, 4);
     const b = getMeals(siNonVeg, 'dinner', 'weight-loss', 2, 4);
-    expect(a).toBe(b);
+    expect(a.name).toBe(b.name);
   });
 
   test('varies across days within a week', () => {
     const meals = Array.from({ length: 7 }, (_, d) =>
-      getMeals(siVeg, 'lunch', 'muscle-gain', 0, d)
+      getMeals(siVeg, 'lunch', 'muscle-gain', 0, d).name
     );
     const unique = new Set(meals);
     expect(unique.size).toBeGreaterThan(1);
@@ -31,7 +32,7 @@ describe('getMeals', () => {
 
   test('varies across weeks', () => {
     const meals = Array.from({ length: 6 }, (_, w) =>
-      getMeals(siVeg, 'dinner', 'weight-loss', w, 0)
+      getMeals(siVeg, 'dinner', 'weight-loss', w, 0).name
     );
     const unique = new Set(meals);
     expect(unique.size).toBeGreaterThan(1);
@@ -47,7 +48,7 @@ describe('getMeals', () => {
         for (let w = 0; w < 6; w++) {
           for (let d = 0; d < 7; d++) {
             const meal = getMeals(profile, mt, 'weight-loss', w, d);
-            expect(meal).not.toMatch(meatOrEggKeywords);
+            expect(meal.name).not.toMatch(meatOrEggKeywords);
           }
         }
       });
@@ -57,7 +58,7 @@ describe('getMeals', () => {
   test('non-veg profile can get meat meals', () => {
     const meatKeywords = /chicken|mutton|fish|prawn|beef|pork|lamb/i;
     const meals = Array.from({ length: 6 }, (_, w) =>
-      Array.from({ length: 7 }, (_, d) => getMeals(siNonVeg, 'dinner', 'weight-loss', w, d))
+      Array.from({ length: 7 }, (_, d) => getMeals(siNonVeg, 'dinner', 'weight-loss', w, d).name)
     ).flat();
     const hasMeat = meals.some(m => meatKeywords.test(m));
     expect(hasMeat).toBe(true);
@@ -66,7 +67,7 @@ describe('getMeals', () => {
   test('respects north-indian cuisine preference', () => {
     const niKeywords = /dal|roti|paneer|rajma|chole|biryani|paratha|sabzi|naan|lassi|poha|khichdi/i;
     const meals = Array.from({ length: 4 }, (_, w) =>
-      Array.from({ length: 7 }, (_, d) => getMeals(niNonVeg, 'lunch', 'weight-loss', w, d))
+      Array.from({ length: 7 }, (_, d) => getMeals(niNonVeg, 'lunch', 'weight-loss', w, d).name)
     ).flat();
     const hasNI = meals.some(m => niKeywords.test(m));
     expect(hasNI).toBe(true);
@@ -96,8 +97,9 @@ describe('getMeals', () => {
     mealTypes.forEach(mt => {
       expect(() => getMeals(siVeg, mt, 'weight-loss', 0, 0)).not.toThrow();
       const result = getMeals(siVeg, mt, 'weight-loss', 0, 0);
-      expect(typeof result).toBe('string');
-      expect(result.length).toBeGreaterThan(0);
+      expect(typeof result).toBe('object');
+      expect(typeof result.name).toBe('string');
+      expect(result.name.length).toBeGreaterThan(0);
     });
   });
 
@@ -111,7 +113,7 @@ describe('getMeals', () => {
         for (let w = 0; w < 4; w++) {
           for (let d = 0; d < 7; d++) {
             const meal = getMeals(profile, mt, 'weight-loss', w, d);
-            expect(meal).not.toMatch(meatKeywords);
+            expect(meal.name).not.toMatch(meatKeywords);
           }
         }
       });
@@ -121,13 +123,13 @@ describe('getMeals', () => {
   test('undefined cuisinePreference does not crash', () => {
     const profile = { cuisinePreference: undefined, dietType: 'non-vegetarian', healthConditions: [] };
     expect(() => getMeals(profile, 'lunch', 'weight-loss', 0, 0)).not.toThrow();
-    expect(typeof getMeals(profile, 'lunch', 'weight-loss', 0, 0)).toBe('string');
+    expect(typeof getMeals(profile, 'lunch', 'weight-loss', 0, 0)).toBe('object');
   });
 
   test('unknown dietType defaults to veg pool (no meat)', () => {
     const meatKeywords = /\b(chicken|mutton|fish|prawn|beef|pork|lamb)\b/i;
     const profile = { cuisinePreference: 'south-indian', dietType: 'gluten-free', healthConditions: [] };
     const meal = getMeals(profile, 'dinner', 'weight-loss', 0, 0);
-    expect(meal).not.toMatch(meatKeywords);
+    expect(meal.name).not.toMatch(meatKeywords);
   });
 });

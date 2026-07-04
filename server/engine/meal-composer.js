@@ -218,10 +218,61 @@ function deriveEffectiveDiet(profile) {
   return baseDiet;
 }
 
+/**
+ * Derives a weekly diet pattern for a user based on their profile.
+ * Returns an object with day names as keys and diet types as values.
+ *
+ * Rules:
+ *  - If vegetarian: all days are 'vegetarian' (strict preference)
+ *  - Otherwise: default all days to user's dietType
+ *    - Override days in eggDays to 'eggetarian'
+ *    - Override days in nonVegDays to 'non-vegetarian'
+ *
+ * @param {object} user - { profile: { dietType, eggDays, nonVegDays, ... } }
+ * @returns {object} weekly pattern: { Monday: 'veg', ..., Sunday: 'non-veg' }
+ */
+function deriveWeeklyDietPattern(user) {
+  if (!user || !user.profile) return {};
+
+  const dietType = user.profile.dietType || 'vegetarian';
+  const eggDays = user.profile.eggDays || [];
+  const nonVegDays = user.profile.nonVegDays || [];
+
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const pattern = {};
+
+  // Strict vegetarian preference is never overridden
+  if (dietType === 'vegetarian') {
+    days.forEach(day => {
+      pattern[day] = 'vegetarian';
+    });
+    return pattern;
+  }
+
+  // For other diet types, build the weekly pattern with overrides
+  days.forEach(day => {
+    // Start with the default diet type
+    pattern[day] = dietType;
+
+    // Apply overrides: eggDays takes priority
+    if (eggDays.includes(day)) {
+      pattern[day] = 'eggetarian';
+    }
+
+    // Apply overrides: nonVegDays overrides everything
+    if (nonVegDays.includes(day)) {
+      pattern[day] = 'non-vegetarian';
+    }
+  });
+
+  return pattern;
+}
+
 module.exports = {
   getMeals,
   activeConditions,
   deriveEffectiveDiet,
+  deriveWeeklyDietPattern,
   normalizeFoodTokens,
   hashSeed,
   getRotationOffset,

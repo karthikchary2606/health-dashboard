@@ -591,10 +591,10 @@ function buildDietPlan(profile, goal) {
         weekLabel: `Week ${weekIdx + 1}`,
         weekdays: DAYS.map((day, dayIndex) => ({
           day,
-          breakfast: getMeals(profile, 'breakfast', goal, globalWeekIndex, dayIndex),
-          lunch:     getMeals(profile, 'lunch',     goal, globalWeekIndex, dayIndex),
-          snack:     getMeals(profile, 'snack',     goal, globalWeekIndex, dayIndex),
-          dinner:    getMeals(profile, 'dinner',    goal, globalWeekIndex, dayIndex),
+          breakfast: getMeals(profile, 'breakfast', goal, globalWeekIndex, dayIndex).name,
+          lunch:     getMeals(profile, 'lunch',     goal, globalWeekIndex, dayIndex).name,
+          snack:     getMeals(profile, 'snack',     goal, globalWeekIndex, dayIndex).name,
+          dinner:    getMeals(profile, 'dinner',    goal, globalWeekIndex, dayIndex).name,
         })),
       };
     }),
