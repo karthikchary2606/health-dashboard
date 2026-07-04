@@ -171,7 +171,6 @@
   }
 
   function handleMealDelete(mealId) {
-    if (!confirm('Delete this meal?')) return;
     deleteMeal(mealId);
   }
 
@@ -396,13 +395,11 @@
   }
 
   // ========== AUTH HELPERS ==========
-  function logout() {
-    if (window.logout) {
-      window.logout();
-    } else {
-      // Fallback: direct logout call
+  // Only define logout if not already defined (e.g., from auth.js)
+  if (!window.logout) {
+    window.logout = function () {
       window.location.href = '/logout';
-    }
+    };
   }
 
   // ========== GLOBAL EXPORTS ==========
@@ -413,7 +410,6 @@
   window.closeStepsForm = closeStepsForm;
   window.initTracker = initTracker;
   window.fetchTrackerData = fetchTrackerData;
-  window.logout = logout;
 
   // ========== INITIALIZATION ON DOM READY ==========
   if (document.readyState === 'loading') {
