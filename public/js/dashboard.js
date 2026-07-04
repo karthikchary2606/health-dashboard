@@ -177,82 +177,167 @@ async function buildTimeline() {
   }
 
   const { meta } = plan;
-  _phaseIdx   = Math.max(0, (meta.currentPhase || 1) - 1);
-  _monthIdx   = Math.max(0, (meta.currentMonth || 1) - 1);
-  _weekIdx    = Math.max(0, (meta.currentWeek  || 1) - 1);
-  _phaseTasks = plan.checklist || [];
-  _workoutPlan = plan.workout || [];
-  _dashDietPlan = plan.diet || [];
+  _phaseIdx    = Math.max(0, (meta.currentPhase || 1) - 1);
+  _monthIdx    = Math.max(0, (meta.currentMonth || 1) - 1);
+  _weekIdx     = Math.max(0, (meta.currentWeek  || 1) - 1);
+  _phaseTasks  = plan.checklist || [];
+  _workoutPlan = plan.workout   || [];
+  _dashDietPlan = plan.diet     || [];
 
   const container = document.getElementById("timelineContainer");
   container.innerHTML = "";
 
-  // ── Phase banner ──
+  // ── Phase / date banner ──
   const phaseBg     = ["#f0fdf4","#eff6ff","#fffbeb"];
   const phaseBorder = ["#bbf7d0","#bfdbfe","#fde68a"];
   const curWorkout  = _workoutPlan[_monthIdx] || {};
+  const now = new Date();
+  const dateLabel = now.toLocaleDateString("en-IN", { weekday:"long", day:"numeric", month:"long" });
   const banner = document.createElement("div");
-  banner.style.cssText = "background:" + phaseBg[_phaseIdx] + ";border:1px solid " + phaseBorder[_phaseIdx] + ";border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px";
-  banner.innerHTML = "<div><div style='font-weight:700;font-size:.85rem;color:var(--primary)'>📅 Month " + meta.currentMonth + " of " + (meta.totalMonths || 6) + " — " + meta.currentPhaseLabel + " Phase</div><div style='font-size:.72rem;color:var(--text-light);margin-top:2px'>" + (curWorkout.focus || meta.currentPhaseLabel) + "</div></div><span style='font-size:.7rem;background:var(--primary);color:#fff;padding:3px 8px;border-radius:12px;white-space:nowrap'>" + (curWorkout.phaseLabel || meta.currentPhaseLabel) + "</span>";
+  banner.style.cssText = "background:" + phaseBg[_phaseIdx] + ";border:1px solid " + phaseBorder[_phaseIdx] + ";border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:8px";
+  banner.innerHTML = "<div>"
+    + "<div style='font-weight:700;font-size:.85rem;color:var(--primary)'>📅 " + dateLabel + "</div>"
+    + "<div style='font-size:.72rem;color:var(--text-light);margin-top:2px'>Month " + meta.currentMonth + " of " + (meta.totalMonths || 6) + " · Week " + meta.currentWeek + " · " + meta.currentPhaseLabel + " Phase</div>"
+    + "</div>"
+    + "<span style='font-size:.7rem;background:var(--primary);color:#fff;padding:3px 8px;border-radius:12px;white-space:nowrap'>" + (curWorkout.phaseLabel || meta.currentPhaseLabel) + "</span>";
   container.appendChild(banner);
 
-  // ── Today's meals preview ──
-  const todayName = new Date().toLocaleDateString("en-US",{weekday:"long"});
+  // ── Resolve today's diet ──
+  const todayName = now.toLocaleDateString("en-US", { weekday: "long" });
   const md = _dashDietPlan[_monthIdx];
   let weekdays = [];
   if (md) {
-    if (md.weeks && Array.isArray(md.weeks)) {
-      const weekData = md.weeks[_weekIdx] || md.weeks[0];
-      weekdays = (weekData && weekData.weekdays) || [];
-    } else if (md.weekdays) {
-      weekdays = md.weekdays;
-    }
+    const weekData = (md.weeks && (md.weeks[_weekIdx] || md.weeks[0])) || null;
+    weekdays = (weekData && weekData.weekdays) || md.weekdays || [];
   }
   const todayDay = weekdays.find(function(d) { return d.day === todayName; });
-  if (todayDay) {
-    const mealsDiv = document.createElement("div");
-    mealsDiv.style.cssText = "background:#fafafa;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px";
-    const mealKeys = ["breakfast","lunch","snack","dinner"];
-    let rows = "";
-    mealKeys.forEach(function(k) {
-      const mealText = todayDay[k];
-      if (!mealText) return;
-      rows += "<div style='display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:.75rem'>" +
-        "<span><strong>" + k.charAt(0).toUpperCase() + k.slice(1) + "</strong></span>" +
-        "<span style='color:var(--text-med);flex:1;text-align:left;padding:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'>" + mealText + "</span></div>";
-    });
-    mealsDiv.innerHTML = "<div style='font-weight:700;font-size:.78rem;color:var(--primary);margin-bottom:8px'>🍽️ Today's Meals — " + todayName + "</div>" + rows;
-    container.appendChild(mealsDiv);
-  }
 
-  // ── Phase tasks ──
+  // ── Build unified chronological events ──
+  const MEAL_SLOTS = [
+    { key: "breakfast", time: "07:30", icon: "🍳", label: "Breakfast" },
+    { key: "lunch",     time: "13:00", icon: "🍽️", label: "Lunch"     },
+    { key: "snack",     time: "16:00", icon: "🥗", label: "Snack"     },
+    { key: "dinner",    time: "19:30", icon: "🌙", label: "Dinner"    }
+  ];
+  const HABIT_TIMES = { hydration: "08:00", sleep: "22:30", tracking: "21:00", activity: "18:00", medication: "09:00" };
+
+  // time → sort key (minutes since midnight)
+  function toMins(t) { const p = t.split(":"); return parseInt(p[0]) * 60 + parseInt(p[1]); }
+
+  var events = [];
+
+  // Wake-up anchor
+  events.push({ sortKey: toMins("06:30"), time: "06:30", icon: "☀️", title: "Wake up & drink 1 glass of water",    type: "anchor" });
+
+  // Meals
+  MEAL_SLOTS.forEach(function(slot) {
+    const mealText = todayDay && todayDay[slot.key];
+    events.push({
+      sortKey: toMins(slot.time),
+      time:    slot.time,
+      icon:    slot.icon,
+      title:   slot.label,
+      detail:  mealText || "No meal planned",
+      type:    "meal",
+      hasData: !!mealText
+    });
+  });
+
+  // Hydration reminders (mid-morning, afternoon)
+  events.push({ sortKey: toMins("11:00"), time: "11:00", icon: "💧", title: "Hydration check — drink 500ml", type: "anchor" });
+  events.push({ sortKey: toMins("15:30"), time: "15:30", icon: "💧", title: "Hydration check — drink 500ml", type: "anchor" });
+
+  // Workout
+  const workoutFocus = curWorkout.focus || (meta.currentPhaseLabel + " workout");
+  const workoutTime  = "09:00";
+  events.push({
+    sortKey: toMins(workoutTime),
+    time:    workoutTime,
+    icon:    "💪",
+    title:   "Workout — " + workoutFocus,
+    detail:  curWorkout.daysPerWeek ? curWorkout.daysPerWeek + " days/week · " + (curWorkout.sessionDuration || "45") + " min" : null,
+    type:    "workout",
+    checkIdx: -1  // handled by workoutToggle separately
+  });
+
+  // Steps goal
+  events.push({ sortKey: toMins("18:00"), time: "18:00", icon: "🚶", title: "Evening walk / Steps goal", detail: "Target: 7,000+ steps", type: "steps" });
+
+  // Sleep
+  events.push({ sortKey: toMins("22:30"), time: "22:30", icon: "😴", title: "Wind down — target 7–8h sleep", type: "anchor" });
+
+  // Checklist habits (non-meal, non-workout)
   _phaseTasks.forEach(function(task, i) {
-    const div = document.createElement("div");
-    div.className = "timeline-item";
-    div.id = "titem-" + i;
-    const timeSpan = document.createElement("span");
-    timeSpan.className = "t-time";
-    timeSpan.textContent = task.time || "";
-    const textSpan = document.createElement("span");
-    textSpan.className = "t-text";
-    textSpan.textContent = task.text;
-    const chk = document.createElement("input");
-    chk.type = "checkbox";
-    chk.id = "chk-" + i;
-    chk.setAttribute("onchange", "onCheckChange(" + i + ")");
-    div.appendChild(timeSpan);
-    div.appendChild(textSpan);
-    div.appendChild(chk);
+    const cat = task.category || "tracking";
+    const t   = task.time || HABIT_TIMES[cat] || "20:00";
+    events.push({ sortKey: toMins(t), time: t, icon: "✅", title: task.text, type: "habit", checkIdx: i });
+  });
+
+  // Sort by time
+  events.sort(function(a, b) { return a.sortKey - b.sortKey; });
+
+  // ── Render events ──
+  var nowMins = now.getHours() * 60 + now.getMinutes();
+
+  events.forEach(function(ev) {
+    var isPast = ev.sortKey < nowMins;
+    var isNow  = Math.abs(ev.sortKey - nowMins) < 60;
+    var div = document.createElement("div");
+    div.style.cssText = "display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:8px;border-left:3px solid "
+      + (isNow ? "var(--primary)" : isPast ? "var(--success)" : "var(--border)")
+      + ";background:" + (isNow ? "rgba(var(--primary-rgb,78,204,163),.06)" : isPast ? "rgba(78,204,163,.04)" : "var(--card-elevated)")
+      + ";transition:all .2s";
+
+    // Time column
+    var timeEl = document.createElement("div");
+    timeEl.style.cssText = "min-width:52px;font-size:.72rem;font-weight:700;color:" + (isNow ? "var(--primary)" : "var(--text-light)") + ";padding-top:2px";
+    timeEl.textContent = ev.time;
+
+    // Icon
+    var iconEl = document.createElement("div");
+    iconEl.style.cssText = "font-size:1rem;flex-shrink:0;padding-top:1px";
+    iconEl.textContent = ev.icon;
+
+    // Content
+    var contentEl = document.createElement("div");
+    contentEl.style.cssText = "flex:1;min-width:0";
+    var titleEl = document.createElement("div");
+    titleEl.style.cssText = "font-size:.82rem;font-weight:600;color:" + (isPast && !isNow ? "var(--text-light)" : "var(--text-dark)") + ";line-height:1.3";
+    titleEl.textContent = ev.title;
+    contentEl.appendChild(titleEl);
+    if (ev.detail) {
+      var detailEl = document.createElement("div");
+      detailEl.style.cssText = "font-size:.74rem;color:var(--text-light);margin-top:2px;line-height:1.4;word-break:break-word";
+      detailEl.textContent = ev.detail;
+      contentEl.appendChild(detailEl);
+    }
+
+    // Checkbox for habits
+    if (ev.type === "habit" && ev.checkIdx >= 0) {
+      div.id = "titem-" + ev.checkIdx;
+      var chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.id = "chk-" + ev.checkIdx;
+      chk.style.cssText = "width:18px;height:18px;accent-color:var(--success);cursor:pointer;flex-shrink:0;margin-top:2px";
+      chk.setAttribute("onchange", "onCheckChange(" + ev.checkIdx + ")");
+      div.appendChild(timeEl); div.appendChild(iconEl); div.appendChild(contentEl); div.appendChild(chk);
+    } else {
+      div.appendChild(timeEl); div.appendChild(iconEl); div.appendChild(contentEl);
+    }
+
+    // "Now" pill
+    if (isNow) {
+      var pill = document.createElement("span");
+      pill.style.cssText = "font-size:.65rem;background:var(--primary);color:#fff;padding:2px 6px;border-radius:8px;white-space:nowrap;align-self:center;flex-shrink:0";
+      pill.textContent = "Now";
+      div.appendChild(pill);
+    }
+
     container.appendChild(div);
   });
+
   updateCheckStat();
-  if (_phaseTasks.length === 0) {
-    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.EMPTY, {
-      html: renderDashboardPrompt('timeline', DASHBOARD_BLOCK_STATE.EMPTY)
-    });
-  } else {
-    setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.READY);
-  }
+  setDashboardBlockState('timelineContainer', DASHBOARD_BLOCK_STATE.READY);
 }
 
 function onCheckChange(i) {
